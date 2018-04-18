@@ -1,0 +1,6 @@
+{
+  "files.exclude": {
+      "src/": true,
+      ".vscode/": true
+  }
+}
