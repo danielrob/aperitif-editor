@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "react-app",
+    "airbnb"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "sourceType": "module"
+  },
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "object-curly-newline": "off",
+    "function-paren-newline": "off",
+    "jsx-a11y/href-no-hash": "off",
+    "import/prefer-default-export": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "no-plusplus": "off",
+    "no-shadow": "off",
+    "no-confusing-arrow": "off",
+    "arrow-parens": "off",
+    "react/jsx-filename-extension": "off",
+    "react/prefer-stateless-function": "off",
+    "react/prop-types": "off",
+    "react/no-unescaped-entities": "off",
+    "react/no-find-dom-node": "off",
+    "react/sort-comp": "off",
+    "semi": ["error", "never"]
+  }
+}
