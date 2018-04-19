@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import { Switch, Route } from 'react-router-dom'
 
-import { Header, Footer } from 'components'
-import { Editor, WelcomePage, NotFoundPage } from 'containers'
+import { Header, Footer, Workspace } from 'components'
+import { WelcomePage, NotFoundPage } from 'containers'
 
 import AppWrapper from './AppWrapper'
 
@@ -17,7 +17,7 @@ class App extends Component {
         <Header />
         <Switch>
           <Route exact path="/" component={WelcomePage} />
-          <Route path="/editor" component={Editor} />
+          <Route path="/editor" component={Workspace} />
           <Route path="" component={NotFoundPage} />
         </Switch>
         <Footer />
