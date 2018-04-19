@@ -1,19 +1,34 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-import FileExplorerWrapper from './FileExplorerWrapper'
+import { File, FileExplorerWrapper } from './components'
 
-export default class FileExplorer extends React.Component {
-  constructor() {
-    super()
-  }
+const FileExplorer = ({ files, rootFiles, switchFile, names }) => (
+  <FileExplorerWrapper>
+    <pre>
+      {rootFiles.map(fileId => (
+        <File
+          key={fileId}
+          file={files[fileId]}
+          files={files}
+          names={names}
+          initial
+          switchFile={switchFile}
+        />
+      ))}
+    </pre>
+  </FileExplorerWrapper>
+)
 
-  render() {
-    const { ...props } = this.props
+const mapStateToProps = ({ app: { files, rootFiles, currentFileId, names } }) => ({
+  files,
+  names,
+  rootFiles,
+  currentFileId,
+})
 
-    return (
-      <FileExplorerWrapper>
-         hello?
-      </FileExplorerWrapper>
-    )
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  switchFile: fileId => dispatch({ type: 'CHANGE_FILE', payload: fileId }),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(FileExplorer)

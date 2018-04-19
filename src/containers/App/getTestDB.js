@@ -15,29 +15,37 @@ export default function getTestDB() {
     appDirId,
     appIndexId,
     reactNameId,
-    irrelevantNameId,
-  ] = addNames({}, 'index', 'App', 'index', 'React', '')
+    namelessId,
+    appWrapperId,
+  ] = addNames({}, 'index', 'App', 'index', 'React', '', 'AppWrapper')
 
   // invocations
-  const invocation = { importNameId: reactNameId, source: 'react' }
-  const [initialInvocations, reactId] = addInvocations({}, invocation)
+  const importInvocation = { importNameId: reactNameId, source: 'react' }
+  const [initialInvocations, reactInvocationId] = addInvocations({}, importInvocation)
 
   // expressions
-  const reactImport = { nameId: irrelevantNameId, type: LOOKTHROUGH, exportType: false, invocationIds: [reactId] }
+  const reactImport = {
+    nameId: namelessId, type: LOOKTHROUGH, exportType: false, invocationIds: [reactInvocationId],
+  }
   const appComponent = { nameId: appDirId }
-  const [initialExpressions, reactImportId, appComponentId] = addExpressions({}, reactImport, appComponent)
+  const appWrapper = { nameId: appWrapperId }
+  const [initialExpressions, reactImportId, appComponentId] =
+    addExpressions({}, reactImport, appComponent)
 
   // files
   const indexFile = { nameId: indexNameId }
   const appFile = { nameId: appIndexId, expressionIds: [reactImportId, appComponentId] }
-  const [initialFiles, appFileId] = addFiles({}, appFile, indexFile)
+  const appWrapperFile = { nameId: appWrapperId, expressionIds: [appWrapper] }
+  const [initialFiles, appFileId, indexFileId, appWrapperFileId] =
+    addFiles({}, appFile, indexFile, appWrapperFile)
 
-  const appDir = { nameId: appDirId, type: DIR, children: [appFileId] }
-  const [initialFilesAndDirs] = addFiles(initialFiles, appDir)
+  const appDir = { nameId: appDirId, type: DIR, children: [appFileId, appWrapperFileId] }
+  const [initialFilesAndDirs, appDirFileId] = addFiles(initialFiles, appDir)
 
   return {
     names: initialNames,
     files: initialFilesAndDirs,
+    rootFiles: [appDirFileId, indexFileId],
     expressions: initialExpressions,
     invocations: initialInvocations,
     currentFileId: appFileId,
