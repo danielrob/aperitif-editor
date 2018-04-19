@@ -21,6 +21,8 @@ it('entityAdder adds entity to entities', () => {
 
   // not mutated
   expect(catsWithExtraCat).not.toEqual(cats)
+  // prior entry still ==='s current
+  expect(cats[0] === catsWithExtraCat[0]).toBeTruthy()
   // has added
   expect(Object.keys(catsWithExtraCat).length).toEqual(2)
   // has added with specified value

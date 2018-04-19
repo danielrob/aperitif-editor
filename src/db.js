@@ -2,11 +2,12 @@ import invariant from 'invariant'
 
 import { getNextId, getEntitiesAdder } from 'helpers'
 
-import { fileTypes, templateTypes, required } from './constantz'
+import { fileTypes, expressionTypes, exportTypes, required } from './constantz'
 
 /* constant imports */
 const { JS } = fileTypes
-const { STATELESS_FUNCTION_COMPONENT } = templateTypes
+const { STATELESS_FUNCTION_COMPONENT } = expressionTypes
+const { DEFAULT } = exportTypes
 
 /*
   model creation functions:
@@ -35,23 +36,14 @@ export const addExpressions = getEntitiesAdder({
   nameId: required,
   type: STATELESS_FUNCTION_COMPONENT,
   paramIds: [],
-  importIds: [],
-  exportIds: [],
+  exportType: DEFAULT,
   invocationIds: [],
 })
 
-export const addImports = getEntitiesAdder({
-  default: null, // 'name' or null
-  wildcard: false, // 'name' or null
-  named: [], // names ids
-  fromFile: false,
-  fromModule: false,
-})
-
-export const addExports = getEntitiesAdder({
-  defaultNameId: 2,
-  inline: false,
-  named: [], // names ids
-  from: null,
+export const addInvocations = getEntitiesAdder({
+  importNameId: required,
+  source: required, // expressionId or 'module-name'
+  paramIds: [],
+  invocationIds: [],
 })
 

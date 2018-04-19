@@ -1,7 +1,6 @@
+import getTestDB from './getTestDB'
 
-const initialState = {}
-
-export default function appReducer(state = initialState, action) {
+export default function appReducer(state = getTestDB(), action) {
   switch (action.type) {
     default:
       return state

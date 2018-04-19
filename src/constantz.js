@@ -5,8 +5,16 @@ export const fileTypes = {
   DIR: 'dir',
 }
 
-export const templateTypes = {
+export const expressionTypes = {
+  LOOKTHROUGH: 'ignored, but registers an invocation',
   STATELESS_FUNCTION_COMPONENT: 'stateless_function_component',
   STYLED_COMPONENT: 'styled_component',
   STANDARD: 'standard',
+}
+
+export const exportTypes = {
+  DEFAULT: 'export default',
+  DEFAULT_INLINE: 'export default <expression>',
+  INLINE: 'export when declared',
+  false: 'no export',
 }
