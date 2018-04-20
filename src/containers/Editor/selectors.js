@@ -7,8 +7,8 @@ import {
   selectInvocations,
   selectParams,
   getCurrentFileExpressions,
-  getCurrentFileInvocations,
-  getCurrentFileExpressionWithDefaultExport,
+  getCurrentFileImports,
+  getCurrentFileDefaultExport,
 } from 'containers/App/selectors'
 
 const { LOOKTHROUGH } = expressionTypes
@@ -20,9 +20,9 @@ export const selectCurrentFileForEditing = createSelector(
   getCurrentFileExpressions,
   selectParams,
   selectInvocations,
-  getCurrentFileInvocations,
-  getCurrentFileExpressionWithDefaultExport,
-  (names, expressions, params, invocations, currentFileInvocations, defaultExportExpr) => ({
+  getCurrentFileImports,
+  getCurrentFileDefaultExport,
+  (names, expressions, params, invocations, currentFileImports, defaultExportExpr) => ({
     // expressions
     expressions: expressions.map(expression => ({ // perf note map
       name: names[expression.nameId],
@@ -32,18 +32,8 @@ export const selectCurrentFileForEditing = createSelector(
       exportType: expression.exportType,
     })).filter(({ type }) => type !== LOOKTHROUGH),
     // imports
-    imports: currentFileInvocations.map(({ // perf note map
-      importNameId,
-      source,
-    }) =>
-      ({
-        importName: names[importNameId],
-        source: names[source] || source,
-      })
-    ),
+    imports: currentFileImports,
     // exports
-    defaultExport: {
-      defaultExport: defaultExportExpr && names[defaultExportExpr.nameId],
-    },
+    defaultExport: defaultExportExpr,
   })
 )

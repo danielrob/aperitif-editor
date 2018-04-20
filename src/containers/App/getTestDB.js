@@ -19,9 +19,13 @@ export default function getTestDB() {
     appWrapperId,
   ] = addNames({}, 'index', 'App', 'index', 'React', '', 'AppWrapper')
 
+  // invocation children (currently senseless)
+  const childInvocation = { nameOrNameId: 'secret', source: 'unseen' }
+  const [initialInvocations, childInvocationId] = addInvocations({}, childInvocation)
+
   // invocations
-  const importInvocation = { importNameId: reactNameId, source: 'react' }
-  const [initialInvocations, reactInvocationId] = addInvocations({}, importInvocation)
+  const importInvocation = { nameOrNameId: reactNameId, source: 'react', invocationIds:  [childInvocationId] }
+  const [allInvocations, reactInvocationId] = addInvocations(initialInvocations, importInvocation)
 
   // expressions
   const reactImport = {
@@ -47,7 +51,7 @@ export default function getTestDB() {
     files: initialFilesAndDirs,
     rootFiles: [appDirFileId, indexFileId],
     expressions: initialExpressions,
-    invocations: initialInvocations,
+    invocations: allInvocations,
     currentFileId: appFileId,
     params: {},
   }

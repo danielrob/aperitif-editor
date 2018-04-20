@@ -1,3 +1,4 @@
+import { isNumber } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { exportTypes } from 'constantz'
@@ -25,16 +26,35 @@ export const getCurrentFileExpressions = createSelector(
   (expressions, currentFile) => currentFile.expressionIds.map(id => expressions[id])
 )
 
-export const getCurrentFileInvocations = createSelector( // which also represent all imports
+export const getCurrentFileImports = createSelector( // which also represent all imports
   selectInvocations,
   getCurrentFileExpressions,
-  (invocations, expressions) => expressions.reduce((out, expression) => ([
-    ...out,
-    ...expression.invocationIds.map(id => invocations[id]),
-  ]), [])
+  selectNames,
+  (invocations, expressions, names) => expressions.reduce((out, expression) => {
+    const reduceInvocations = (innerOut, id) => {
+      const invocation = invocations[id]
+      const returnInvocation = isNumber(invocation.nameOrNameId) ? [{
+        importName: names[invocation.nameOrNameId],
+        source: names[invocation.source] || invocation.source,
+      }] : []
+      return [
+        ...innerOut,
+        ...returnInvocation,
+        ...invocation.invocationIds.reduce(reduceInvocations, []),
+      ]
+    }
+    return ([
+      ...out,
+      ...expression.invocationIds.reduce(reduceInvocations, []),
+    ])
+  }, [])
 )
 
-export const getCurrentFileExpressionWithDefaultExport = createSelector(
+export const getCurrentFileDefaultExport = createSelector(
   getCurrentFileExpressions,
-  expressions => expressions.find(({ exportType }) => exportType === DEFAULT)
+  selectNames,
+  (expressions, names) => {
+    const exprWithDefExport = expressions.find(({ exportType }) => exportType === DEFAULT)
+    return exprWithDefExport && names[exprWithDefExport.nameId]
+  }
 )

@@ -4,8 +4,8 @@ import getTestDB from '../getTestDB'
 import {
   selectNames,
   getCurrentFileExpressions,
-  getCurrentFileInvocations,
-  getCurrentFileExpressionWithDefaultExport,
+  getCurrentFileImports,
+  getCurrentFileDefaultExport,
 } from '../selectors'
 
 const { DEFAULT } = exportTypes
@@ -19,14 +19,14 @@ it('getCurrentFileExpressions', () => {
   expect(expressions[0].id).toEqual(1)
 })
 
-it('getCurrentFileInvocations', () => {
-  const names = selectNames(appState)
-  const invocations = getCurrentFileInvocations(appState)
-  expect(names[invocations[0].importNameId]).toEqual('React')
-  expect(invocations[0].source).toEqual('react')
+it('getCurrentFileImports', () => {
+  const imports = getCurrentFileImports(appState)
+  expect(imports.length).toEqual(1)
+  expect(imports[0].importName).toEqual('React')
+  expect(imports[0].source).toEqual('react')
 })
 
 it('getCurrentFileDefaultExport', () => {
-  const defaultExportingExpression = getCurrentFileExpressionWithDefaultExport(appState)
-  expect(defaultExportingExpression.exportType).toEqual(DEFAULT)
+  const defualtExportName = getCurrentFileDefaultExport(appState)
+  expect(defualtExportName).toEqual('App')
 })
