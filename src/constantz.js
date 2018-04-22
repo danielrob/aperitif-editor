@@ -1,20 +1,42 @@
 export const required = 'required'
+export const requiredOrNull = 'requiredOrNull'
 
-export const fileTypes = {
-  JS: 'js',
-  DIR: 'dir',
-}
+export const SEMIS = false
+
+/* fileTypes */
+export const JS = 'js'
+export const DIR = 'dir'
+
+export const fileTypes = { JS, DIR }
+
+/* expressionTypes */
+export const LOOKTHROUGH = 'ignored, but registers an invocation'
+export const STATELESS_FUNCTION_COMPONENT = 'stateless_function_component'
+export const STYLED_COMPONENT = 'styled_component'
+export const STANDARD = 'standard'
 
 export const expressionTypes = {
-  LOOKTHROUGH: 'ignored, but registers an invocation',
-  STATELESS_FUNCTION_COMPONENT: 'stateless_function_component',
-  STYLED_COMPONENT: 'styled_component',
-  STANDARD: 'standard',
+  LOOKTHROUGH,
+  STATELESS_FUNCTION_COMPONENT,
+  STYLED_COMPONENT,
+  STANDARD,
 }
 
+/* export types */
+export const DEFAULT = 'export default'
+export const DEFAULT_INLINE = 'export default <expression>'
+export const INLINE = 'export when declared'
+
 export const exportTypes = {
-  DEFAULT: 'export default',
-  DEFAULT_INLINE: 'export default <expression>',
-  INLINE: 'export when declared',
+  DEFAULT,
+  DEFAULT_INLINE,
+  INLINE,
   false: 'no export',
+}
+
+/* draggable types */
+export const PROP = 'prop'
+
+export const DraggableTypes = {
+  PROP,
 }

@@ -1,6 +1,6 @@
 import invariant from 'invariant'
 
-import { required } from './constantz'
+import { required, requiredOrNull } from './constantz'
 
 export const getNextId = integerKeyedObject => Math.max(0, ...Object.keys(integerKeyedObject)) + 1
 
@@ -8,7 +8,10 @@ export const getEntitiesAdder = (defaults = {}) => (entities, ...args) => {
   args.forEach(props => {
     if (process.env.NODE_ENV !== 'production') {
       Object.keys(defaults).forEach(key => {
-        if (defaults[key] === required) {
+        if (
+          defaults[key] === required ||
+          (defaults[key] === requiredOrNull && props[key] !== null)
+        ) {
           invariant(props[key], `${key} is a required field`)
         }
       })

@@ -16,30 +16,37 @@ export default function getTestDB() {
     appIndexId,
     reactNameId,
     namelessId,
-    appWrapperId,
+    appWrapperNameId,
   ] = addNames({}, 'index', 'App', 'index', 'React', '', 'AppWrapper')
 
-  // invocation children (currently senseless)
-  const childInvocation = { nameOrNameId: 'secret', source: 'unseen' }
-  const [initialInvocations, childInvocationId] = addInvocations({}, childInvocation)
-
   // invocations
-  const importInvocation = { nameOrNameId: reactNameId, source: 'react', invocationIds:  [childInvocationId] }
-  const [allInvocations, reactInvocationId] = addInvocations(initialInvocations, importInvocation)
+  const importInvocation = { nameOrNameId: reactNameId, source: 'react' }
+  const appWrapperInvocation = { nameOrNameId: appWrapperNameId, source: null }
+  const [initialInvocations, reactInvocationId, appWrapperInvocationId] =
+    addInvocations({}, importInvocation, appWrapperInvocation)
+
+  // params
+  const params = {
+    1: { id: 1, name: 'userId', payload: 1 },
+    2: { id: 2, name: 'title', payload: 'title' },
+    3: { id: 3, name: 'body', payload: 'lorem ipsumm....' },
+  }
 
   // expressions
   const reactImport = {
     nameId: namelessId, type: LOOKTHROUGH, exportType: false, invocationIds: [reactInvocationId],
   }
-  const appComponent = { nameId: appDirId }
-  const appWrapper = { nameId: appWrapperId }
-  const [initialExpressions, reactImportId, appComponentId] =
-    addExpressions({}, reactImport, appComponent)
+  const appComponent = {
+    nameId: appDirId, invocationIds: [appWrapperInvocationId], paramIds: [1, 2, 3]
+  }
+  const appWrapper = { nameId: appWrapperNameId }
+  const [initialExpressions, reactImportId, appComponentId, appWrapperId] =
+    addExpressions({}, reactImport, appComponent, appWrapper)
 
   // files
   const indexFile = { nameId: indexNameId }
   const appFile = { nameId: appIndexId, expressionIds: [reactImportId, appComponentId] }
-  const appWrapperFile = { nameId: appWrapperId, expressionIds: [appWrapper] }
+  const appWrapperFile = { nameId: appWrapperNameId, expressionIds: [appWrapperId] }
   const [initialFiles, appFileId, indexFileId, appWrapperFileId] =
     addFiles({}, appFile, indexFile, appWrapperFile)
 
@@ -51,8 +58,8 @@ export default function getTestDB() {
     files: initialFilesAndDirs,
     rootFiles: [appDirFileId, indexFileId],
     expressions: initialExpressions,
-    invocations: allInvocations,
+    invocations: initialInvocations,
     currentFileId: appFileId,
-    params: {},
+    params,
   }
 }

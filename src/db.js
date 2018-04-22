@@ -2,7 +2,7 @@ import invariant from 'invariant'
 
 import { getNextId, getEntitiesAdder } from 'helpers'
 
-import { fileTypes, expressionTypes, exportTypes, required } from './constantz'
+import { fileTypes, expressionTypes, exportTypes, required, requiredOrNull } from './constantz'
 
 /* constant imports */
 const { JS } = fileTypes
@@ -25,6 +25,8 @@ export const addNames = (names, ...args) => {
   }, [names])
 }
 
+export const addParams = addNames
+
 export const addFiles = getEntitiesAdder({
   nameId: required,
   type: JS,
@@ -42,7 +44,7 @@ export const addExpressions = getEntitiesAdder({
 
 export const addInvocations = getEntitiesAdder({
   nameOrNameId: required,
-  source: required, // expressionId or 'module-name'
+  source: requiredOrNull,
   paramIds: [],
   invocationIds: [],
 })

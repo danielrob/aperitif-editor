@@ -31,22 +31,20 @@ export const getCurrentFileImports = createSelector( // which also represent all
   getCurrentFileExpressions,
   selectNames,
   (invocations, expressions, names) => expressions.reduce((out, expression) => {
-    const reduceInvocations = (innerOut, id) => {
+    const reduceRecursively = (innerOut, id) => {
       const invocation = invocations[id]
       const returnInvocation = isNumber(invocation.nameOrNameId) ? [{
+        id: invocation.id,
         importName: names[invocation.nameOrNameId],
-        source: names[invocation.source] || invocation.source,
+        source: invocation.source || `../${names[invocation.nameOrNameId]}`, // TODO: derive paths
       }] : []
       return [
         ...innerOut,
         ...returnInvocation,
-        ...invocation.invocationIds.reduce(reduceInvocations, []),
+        ...invocation.invocationIds.reduce(reduceRecursively, []),
       ]
     }
-    return ([
-      ...out,
-      ...expression.invocationIds.reduce(reduceInvocations, []),
-    ])
+    return ([...out, ...expression.invocationIds.reduce(reduceRecursively, [])])
   }, [])
 )
 

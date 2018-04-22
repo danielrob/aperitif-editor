@@ -7,33 +7,24 @@ import {
   selectInvocations,
   selectParams,
   getCurrentFileExpressions,
-  getCurrentFileImports,
-  getCurrentFileDefaultExport,
 } from 'containers/App/selectors'
 
 const { LOOKTHROUGH } = expressionTypes
 
-// let's start with the inefficient approach,
-// the long term approach is to connect components further down
-export const selectCurrentFileForEditing = createSelector(
+export const selectCurrentFileExpressions = createSelector(
   selectNames,
   getCurrentFileExpressions,
   selectParams,
   selectInvocations,
-  getCurrentFileImports,
-  getCurrentFileDefaultExport,
-  (names, expressions, params, invocations, currentFileImports, defaultExportExpr) => ({
-    // expressions
-    expressions: expressions.map(expression => ({ // perf note map
-      name: names[expression.nameId],
-      type: expression.type,
-      invocations: expression.invocationIds.map(id => invocations[id]),
-      params: expression.paramIds.map(id => params[id]),
-      exportType: expression.exportType,
-    })).filter(({ type }) => type !== LOOKTHROUGH),
-    // imports
-    imports: currentFileImports,
-    // exports
-    defaultExport: defaultExportExpr,
-  })
+  (names, expressions, params, invocations) =>
+    expressions
+      .map(({ id, nameId, type, invocationIds, paramIds, exportType }) => ({
+        id,
+        name: names[nameId],
+        type,
+        invocations: invocationIds.map(invocationId => invocations[invocationId]),
+        params: paramIds.map(paramId => params[paramId]),
+        exportType,
+      }))
+      .filter(({ type }) => type !== LOOKTHROUGH)
 )
