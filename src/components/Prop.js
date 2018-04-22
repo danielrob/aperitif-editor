@@ -20,7 +20,7 @@ const PropStyled = styled.div`
   display: inline-block;
   margin: 0 3px;
   cursor: pointer;
-  color: #377100;
+  color: ${props => props.theme.colors.darkgreen};
   &:not(:last-child):after {
     content: ',';
   }

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 const Keyword = styled.span`
-  color: #377100;
+color: ${props => props.theme.colors.darkgreen};
 `
 
 export default Keyword

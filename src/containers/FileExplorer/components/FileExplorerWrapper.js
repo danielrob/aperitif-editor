@@ -4,8 +4,8 @@ import { addClassNames } from 'utils'
 const FileExplorerWrapper = styled.div.attrs(addClassNames(
 ))`
   padding: 50px 40px;
-  background-color: #ffc3f90a;
-  color: #010431;
+  background-color: ${props => props.theme.colors.washedpink};
+  color: ${props => props.theme.colors.darkblue};
 `
 // font-weight: 300;
 

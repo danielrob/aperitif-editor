@@ -9,7 +9,7 @@ import { createComponentBundle } from 'containers/App/duck'
 import { makeGetInvocation } from './selectors'
 
 const ComponentS = styled.div`
-  color: #377100;
+  color: ${props => props.theme.colors.darkgreen};
   margin-left: 12px;
 `
 

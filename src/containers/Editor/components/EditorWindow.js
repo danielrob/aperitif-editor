@@ -3,9 +3,9 @@ import { addClassNames } from 'utils'
 
 const EditorWindow = styled.div.attrs(addClassNames(
 ))`
-  background-color: #fff;
+  background-color: ${props => props.theme.colors.white};
   padding: 50px 100px;
-  color: #010431;
+  color: ${props => props.theme.colors.darkblue};
   >* {
     margin-bottom: 12px;
   }
