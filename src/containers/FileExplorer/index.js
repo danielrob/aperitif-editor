@@ -5,18 +5,16 @@ import { File, FileExplorerWrapper } from './components'
 
 const FileExplorer = ({ files, rootFiles, switchFile, names }) => (
   <FileExplorerWrapper>
-    <pre>
-      {rootFiles.map(fileId => (
-        <File
-          key={fileId}
-          file={files[fileId]}
-          files={files}
-          names={names}
-          initial
-          switchFile={switchFile}
-        />
-      ))}
-    </pre>
+    {rootFiles.map(fileId => (
+      <File
+        key={fileId}
+        file={files[fileId]}
+        files={files}
+        names={names}
+        initial
+        switchFile={switchFile}
+      />
+    ))}
   </FileExplorerWrapper>
 )
 

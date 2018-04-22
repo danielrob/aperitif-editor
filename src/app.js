@@ -6,6 +6,8 @@ import { IntlProvider } from 'react-intl'
 import createHistory from 'history/createBrowserHistory'
 import 'sanitize.css/sanitize.css'
 import getBrowserLocale from 'browser-locale'
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 
 import { App } from 'containers'
 
@@ -21,12 +23,14 @@ const store = configureStore(history)
 
 const locale = getBrowserLocale().substring(0, 2)
 
+const AppWithDnDContext = DragDropContext(HTML5Backend)(App)
+
 const render = (messages) => {
   ReactDOM.render(
     <Provider store={store}>
       <IntlProvider messages={messages[locale]} locale={locale} key={locale}>
         <ConnectedRouter history={history}>
-          <App />
+          <AppWithDnDContext />
         </ConnectedRouter>
       </IntlProvider>
     </Provider>,

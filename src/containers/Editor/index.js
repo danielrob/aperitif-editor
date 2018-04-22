@@ -2,47 +2,47 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import {
-  selectCurrentFileId,
-  selectNames,
-  selectFiles,
-  selectImports,
-  selectExports,
-  selectExpressions,
-  selectInvocations,
-  selectParams,
-  getCurrentFileExpressions,
-  getCurrentFileImportsCombined,
-  getCurrentFileDefaultExport,
-} from 'containers/App/selectors'
+import { StatelessFunctionComponent, Standard } from 'renderers'
+import { expressionTypes } from 'constantz'
+import { getCurrentFileImports, getCurrentFileDefaultExport } from 'containers/App/selectors'
 
-import { selectCurrentFileForEditing } from './selectors'
-import EditorWrapper from './EditorWrapper'
+import { Imports, DefaultExport, EditorWindow } from './components'
+import { selectCurrentFileExpressions } from './selectors'
+
+const { STATELESS_FUNCTION_COMPONENT } = expressionTypes
+
+const renderers = {
+  [STATELESS_FUNCTION_COMPONENT]: StatelessFunctionComponent,
+}
 
 class Editor extends React.Component {
   render() {
-    const { imports, defaultExport, expressions, } = this.props
+    const { imports, expressions, defaultExport } = this.props
+
     return (
-      <EditorWrapper>
-        {JSON.stringify(imports, null, 2)}
-        <br />
-        <br />
-        {JSON.stringify(expressions, null, 2)}
-        <br />
-        <br />
-        {JSON.stringify(defaultExport, null, 2)}
-      </EditorWrapper>
+      <EditorWindow>
+        {'Coming soon... file type switch?' && (
+          <React.Fragment>
+            <Imports key="imports" imports={imports} />
+            <br />
+            {expressions.map(expression => {
+              const Renderer = renderers[expression.type] || Standard
+              return <Renderer key={expression.id} {...expression} />
+            })}
+            <DefaultExport key="defaultExport" name={defaultExport} />
+          </React.Fragment>
+        )}
+      </EditorWindow>
     )
   }
 }
 
-const mapStateToProps = selectCurrentFileForEditing
-
-const mapDispatchToProps = dispatch => ({
-  createNewChild: payload => dispatch({ type: 'CREATE_CHILD_COMPONENT', payload }),
+const mapStateToProps = createStructuredSelector({
+  imports: getCurrentFileImports,
+  expressions: selectCurrentFileExpressions,
+  defaultExport: getCurrentFileDefaultExport,
 })
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(Editor)

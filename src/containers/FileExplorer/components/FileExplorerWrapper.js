@@ -3,10 +3,9 @@ import { addClassNames } from 'utils'
 
 const FileExplorerWrapper = styled.div.attrs(addClassNames(
 ))`
-  padding: 50px 30px;
-  border-right: 2px solid black;
-  background-color: #1e1e1e;
-  color: #fffccf;
+  padding: 50px 40px;
+  background-color: #ffc3f90a;
+  color: #010431;
 `
 // font-weight: 300;
 

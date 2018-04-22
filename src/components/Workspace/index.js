@@ -4,7 +4,7 @@ import { FileExplorer, Editor } from 'containers'
 import WorkspaceWrapper from './WorkspaceWrapper'
 
 const Workspace = () => (
-  <WorkspaceWrapper explorerWidth={250}>
+  <WorkspaceWrapper explorerWidth={290}>
     <FileExplorer />
     <Editor />
   </WorkspaceWrapper>
