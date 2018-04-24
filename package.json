@@ -23,6 +23,7 @@
     "redux-actions": "^2.3.0",
     "reselect": "^3.0.1",
     "sanitize.css": "^5.0.0",
+    "styled-as-components": "*",
     "styled-components": "^3.2.6"
   },
   "scripts": {

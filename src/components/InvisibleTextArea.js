@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-as-components'
 
 const InvisibleTextArea = styled.textarea.attrs({
   rows: 10,

@@ -1,13 +1,11 @@
 import React from 'react'
+import styled from 'styled-as-components'
 import { FormattedMessage } from 'react-intl'
 
-import WelcomeWrapper from './WelcomeWrapper'
 import messages from './messages'
 
-const Welcome = () => (
-  <WelcomeWrapper>
-    <FormattedMessage {...messages.welcome} />
-  </WelcomeWrapper>
-)
+const Welcome = () => <FormattedMessage {...messages.welcome} />
 
-export default Welcome
+export default styled(Welcome).as.div`
+
+`

@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-as-components'
 import { DragSource } from 'react-dnd'
 import { DraggableTypes } from 'constantz'
 
@@ -16,7 +16,9 @@ function collect(connect, monitor) {
   }
 }
 
-const PropStyled = styled.div`
+const Prop = ({ name, connectDragSource, isDragging }) => connectDragSource(<span>{name}</span>)
+
+const PropStyled = styled(Prop).as.div`
   display: inline-block;
   margin: 0 3px;
   cursor: pointer;
@@ -26,8 +28,4 @@ const PropStyled = styled.div`
   }
 `
 
-const Prop = ({ name, connectDragSource, isDragging }) => (
-  <PropStyled>{connectDragSource(<span>{name}</span>)}</PropStyled>
-)
-
-export default DragSource(DraggableTypes.PROP, propSource, collect)(Prop)
+export default DragSource(DraggableTypes.PROP, propSource, collect)(PropStyled)

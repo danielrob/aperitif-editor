@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-as-components'
 
 const Keyword = styled.span`
 color: ${props => props.theme.colors.darkgreen};

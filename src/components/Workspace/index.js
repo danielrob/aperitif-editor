@@ -1,13 +1,31 @@
 import React from 'react'
+import styled from 'styled-as-components'
 import { FileExplorer, Editor } from 'containers'
 
-import WorkspaceWrapper from './WorkspaceWrapper'
-
 const Workspace = () => (
-  <WorkspaceWrapper explorerWidth={290}>
+  <React.Fragment>
     <FileExplorer />
     <Editor />
-  </WorkspaceWrapper>
+  </React.Fragment>
 )
 
-export default Workspace
+const width = 290
+
+export default styled(Workspace).as.div`
+  & > div {
+    position: absolute;
+    bottom: 0;
+  }
+  & > div:first-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: ${width}px;
+  }
+  & > div:last-child {
+    top: 0;
+    left: ${width}px;
+    right: 0;
+  }
+`

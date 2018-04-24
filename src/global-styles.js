@@ -1,4 +1,4 @@
-import { injectGlobal } from 'styled-components'
+import { injectGlobal } from 'styled-as-components'
 
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`

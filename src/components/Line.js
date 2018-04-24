@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-as-components'
 import { SEMIS } from 'constantz'
 
 const Line = styled.div.attrs({

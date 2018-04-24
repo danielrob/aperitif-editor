@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
+import styled from 'styled-as-components'
 import { bindActionCreators } from 'redux'
 
 import { Dropzone } from 'components'

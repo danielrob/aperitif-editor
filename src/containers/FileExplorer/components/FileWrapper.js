@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-as-components'
 
 const FileWrapper = styled.div`
   ${props => !props.initial && 'margin-left: 10px;'}

@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-as-components'
 import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 

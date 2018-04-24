@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-as-components'
 import { addClassNames } from 'utils'
 
 const HeaderWrapper = styled.div.attrs(addClassNames(

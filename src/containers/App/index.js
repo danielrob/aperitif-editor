@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import { Switch, Route } from 'react-router-dom'
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider } from 'styled-as-components'
 
 import { Header, Footer, Workspace } from 'components'
 import { WelcomePage, NotFoundPage } from 'containers'

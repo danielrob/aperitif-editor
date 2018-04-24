@@ -1,13 +1,11 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
+import styled from 'styled-as-components'
 
-import NotFoundWrapper from './NotFoundWrapper'
 import messages from './messages'
 
-const NotFound = () => (
-  <NotFoundWrapper>
-    <FormattedMessage {...messages.header} />
-  </NotFoundWrapper>
-)
+const NotFound = () => <FormattedMessage {...messages.header} />
 
-export default NotFound
+export default styled(NotFound).as.div`
+
+`
