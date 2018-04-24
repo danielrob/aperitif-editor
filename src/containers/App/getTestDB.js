@@ -1,4 +1,4 @@
-import { addNames, addFiles, addExpressions, addInvocations } from 'db'
+import { addNames, addFiles, addExpressions, addInvocations } from 'model-utils'
 import { fileTypes, expressionTypes, exportTypes } from 'constantz'
 
 const { DIR } = fileTypes

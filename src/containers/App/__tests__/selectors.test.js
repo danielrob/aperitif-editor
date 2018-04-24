@@ -21,7 +21,7 @@ it('getCurrentFileExpressions', () => {
 
 it('getCurrentFileImports', () => {
   const imports = getCurrentFileImports(appState)
-  expect(imports.length).toEqual(1)
+  expect(imports.length).toEqual(2)
   expect(imports[0].importName).toEqual('React')
   expect(imports[0].source).toEqual('react')
 })

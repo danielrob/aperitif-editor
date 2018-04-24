@@ -10,7 +10,7 @@ export const DIR = 'dir'
 export const fileTypes = { JS, DIR }
 
 /* expressionTypes */
-export const LOOKTHROUGH = 'ignored, but registers an invocation'
+export const LOOKTHROUGH = "I'm all about my invocation, that's it"
 export const STATELESS_FUNCTION_COMPONENT = 'stateless_function_component'
 export const STYLED_COMPONENT = 'styled_component'
 export const STANDARD = 'standard'

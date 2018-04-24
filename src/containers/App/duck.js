@@ -1,7 +1,6 @@
 import { createAction } from 'redux-actions'
 
-import { addNames, addFiles, addExpressions, addInvocations } from 'db'
-import { insertAtKey, updateEntity } from 'helpers'
+import { addNames, addFiles, addExpressions, addInvocations, insertAtKey, updateEntity } from 'model-utils'
 import { DIR, STYLED_COMPONENT } from 'constantz'
 import { capitalize } from 'utils'
 

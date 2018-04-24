@@ -1,6 +1,5 @@
 import invariant from 'invariant'
-
-import { required, requiredOrNull } from './constantz'
+import { required, requiredOrNull } from 'constantz'
 
 export const getNextId = integerKeyedObject => Math.max(0, ...Object.keys(integerKeyedObject)) + 1
 
@@ -30,25 +29,3 @@ export const getEntitiesAdder = (defaults = {}) => (entities, ...args) => {
     ]
   }, [entities])
 }
-
-export const updateEntity = (entities, entityId, valuesOrFunction) => ({
-  ...entities,
-  [entityId]: typeof valuesOrFunction === 'function'
-    ? valuesOrFunction(entities[entityId])
-    : Object.assign({ id: entities[entityId].id }, entities[entityId], valuesOrFunction),
-})
-
-export const insertAt = (arrayToUpdate, position, insertValue) => ([
-  ...arrayToUpdate.slice(0, position),
-  insertValue,
-  ...arrayToUpdate.slice(position),
-])
-
-export const insertAtKey = (objectToUpdate, key, position, insertValue) => ({
-  ...objectToUpdate,
-  [key]: [
-    ...objectToUpdate[key].slice(0, position),
-    insertValue,
-    ...objectToUpdate[key].slice(position),
-  ],
-})
