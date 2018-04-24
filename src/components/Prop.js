@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-as-components'
+import theme from 'theme-proxy'
 import { DragSource } from 'react-dnd'
 import { DraggableTypes } from 'constantz'
 
@@ -22,7 +23,7 @@ const PropStyled = styled(Prop).as.div`
   display: inline-block;
   margin: 0 3px;
   cursor: pointer;
-  color: ${props => props.theme.colors.darkgreen};
+  color: ${theme.colors.darkgreen};
   &:not(:last-child):after {
     content: ',';
   }

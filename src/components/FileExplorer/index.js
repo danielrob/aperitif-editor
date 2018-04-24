@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-as-components'
+import theme from 'theme-proxy'
 
 import File from './File'
 
@@ -17,6 +18,6 @@ const FileExplorer = ({ files, rootFiles, changeFile, names }) =>
 
 export default styled(FileExplorer).as.div`
   padding: 50px 40px;
-  background-color: ${props => props.theme.colors.washedpink};
-  color: ${props => props.theme.colors.darkblue};
+  background-color: ${theme.colors.washedpink};
+  color: ${theme.colors.darkblue};
 `

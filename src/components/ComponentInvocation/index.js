@@ -3,13 +3,14 @@ import { connect } from 'react-redux'
 import styled from 'styled-as-components'
 import { bindActionCreators } from 'redux'
 
+import theme from 'theme-proxy'
 import { Dropzone } from 'components'
 import { createComponentBundle } from 'duck'
 
 import { makeGetInvocation } from './selectors'
 
 const ComponentS = styled.div`
-  color: ${props => props.theme.colors.darkgreen};
+  color: ${theme.colors.darkgreen};
   margin-left: 12px;
 `
 

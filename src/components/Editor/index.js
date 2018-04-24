@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-as-components'
+import theme from 'theme-proxy'
 
 import { StatelessFunctionComponent, Standard } from 'components'
 import { STATELESS_FUNCTION_COMPONENT } from 'constantz'
@@ -23,9 +24,9 @@ const Editor = ({ imports, expressions, defaultExport }) => (
 )
 
 export default styled(Editor).as.div`
-  background-color: ${props => props.colors.white};
+  background-color: ${theme.colors.white};
   padding: 50px 100px;
-  color: ${props => props.theme.colors.darkblue};
+  color: ${theme.colors.darkblue};
   >* {
     margin-bottom: 12px;
   }
