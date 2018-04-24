@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-as-components'
-import { FileExplorer, Editor } from 'containers'
+import { FileExplorerContainer, EditorContainer } from 'containers'
 
 const Workspace = () => (
   <React.Fragment>
-    <FileExplorer />
-    <Editor />
+    <FileExplorerContainer />
+    <EditorContainer />
   </React.Fragment>
 )
 

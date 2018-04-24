@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { selectNames, selectInvocations } from 'containers/App/selectors'
+import { selectNames, selectInvocations } from 'selectors'
 
 const selectInvocation = (state, props) => selectInvocations(state)[props.invocationId]
 

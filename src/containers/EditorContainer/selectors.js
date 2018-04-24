@@ -7,7 +7,7 @@ import {
   selectInvocations,
   selectParams,
   getCurrentFileExpressions,
-} from 'containers/App/selectors'
+} from 'selectors'
 
 const { LOOKTHROUGH } = expressionTypes
 

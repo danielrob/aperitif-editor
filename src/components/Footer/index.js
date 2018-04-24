@@ -1,11 +1,7 @@
-import React from 'react'
+import styled from 'styled-as-components'
 
-import FooterWrapper from './FooterWrapper'
+const Footer = () => null
 
-const Header = () => (
-  <FooterWrapper>
-    {}
-  </FooterWrapper>
-)
+export default styled(Footer).as.div`
 
-export default Header
+`

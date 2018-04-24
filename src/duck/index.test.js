@@ -1,5 +1,5 @@
-import appReducer from '../duck'
-import getTestDB from '../getTestDB'
+import appReducer from './'
+import getTestDB from './getTestDB'
 
 const initialState = getTestDB()
 

@@ -9,7 +9,7 @@ import getBrowserLocale from 'browser-locale'
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 
-import { App } from 'containers'
+import { App, SelectedThemeProvider } from 'containers'
 
 import registerServiceWorker from './registerServiceWorker'
 import configureStore from './configureStore'
@@ -30,7 +30,9 @@ const render = (messages) => {
     <Provider store={store}>
       <IntlProvider messages={messages[locale]} locale={locale} key={locale}>
         <ConnectedRouter history={history}>
-          <AppWithDnDContext />
+          <SelectedThemeProvider>
+            <AppWithDnDContext />
+          </SelectedThemeProvider>
         </ConnectedRouter>
       </IntlProvider>
     </Provider>,

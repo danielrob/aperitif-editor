@@ -1,38 +1,12 @@
 import React from 'react'
-import styled from 'styled-as-components'
 import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { Line, Flex } from 'components'
 import { capitalize } from 'utils'
-
 import { DraggableTypes } from 'constantz'
 
-const DropzoneS = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  height: 25px;
-  padding: 5px 0;
-  margin: -5px 0;
-  width: 100%;
-  &:hover {
-    height: 25px;
-  }
-  & > .line {
-    display: none;
-  }
-  &:hover > .line {
-    display: block;
-  }
-
-  ${props => props.isOver && 'opacity: 0.5'}
-  ${props => props.isOver && 'height: 25px'}
-
-  margin-left: ${props => Number(
-    (Object.keys(props).find(key => key.includes('ind')) || '').replace('ind', '')
-  ) * 6}px;
-`
+import DropzoneWrapper from './DropzoneWrapper'
 
 const dropzoneTarget = {
   drop(props, monitor) {
@@ -43,18 +17,18 @@ const dropzoneTarget = {
       position,
       name,
     })
-  }
-};
+  },
+}
 
 function collect(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
-    dragItem: monitor.getItem()
-  };
+    dragItem: monitor.getItem(),
+  }
 }
 
-const DropActionSelect = ({ dragItem }) => (
+const DropActionSelect = ({ dragItem }) => (
   <Flex>
     <small>
       {`{${dragItem.name}}`}
@@ -68,13 +42,13 @@ const DropActionSelect = ({ dragItem }) => (
   </Flex>
 )
 
-class DropZone extends React.Component {
+class Dropzone extends React.Component {
   render() {
     const { connectDropTarget, isOver, dragItem, onClickAction, parentId, position } = this.props
     return (
-      <DropzoneS
+      <DropzoneWrapper
         onClick={() => onClickAction({ parentId, position })}
-        innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
+        innerRef={innerRef => connectDropTarget(findDOMNode(innerRef)) /* eslint-disable-line */}
         {...this.props}
       >
         {isOver &&
@@ -83,9 +57,9 @@ class DropZone extends React.Component {
         <Line in4>
           <span>[+]</span> new component
         </Line>
-      </DropzoneS>
+      </DropzoneWrapper>
     )
   }
 }
 
-export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(DropZone)
+export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(Dropzone)

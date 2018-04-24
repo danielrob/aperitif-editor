@@ -4,12 +4,12 @@ import styled from 'styled-as-components'
 import { bindActionCreators } from 'redux'
 
 import { Dropzone } from 'components'
-import { createComponentBundle } from 'containers/App/duck'
+import { createComponentBundle } from 'duck'
 
 import { makeGetInvocation } from './selectors'
 
 const ComponentS = styled.div`
-  color: ${props => props.theme.colors.darkgreen};
+  color: ${props => props.theme.colors.darkgreen};
   margin-left: 12px;
 `
 
@@ -55,7 +55,6 @@ const makeMapStateToProps = () => {
   const getInvocation = makeGetInvocation()
   return (state, props) => getInvocation(state, props)
 }
-
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createComponentBundle,

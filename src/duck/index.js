@@ -81,3 +81,7 @@ export default function appReducer(state = getTestDB(), action) {
 export const createComponentBundle = createAction(
   CREATE_COMPONENT_BUNDLE
 )
+
+export const changeFile = createAction(
+  CHANGE_FILE
+)

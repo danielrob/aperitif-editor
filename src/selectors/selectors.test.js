@@ -1,14 +1,11 @@
-import { exportTypes } from 'constantz'
-
-import getTestDB from '../getTestDB'
+import { DEFAULT } from 'constantz'
+import getTestDB from 'duck/getTestDB'
 import {
   selectNames,
   getCurrentFileExpressions,
   getCurrentFileImports,
   getCurrentFileDefaultExport,
-} from '../selectors'
-
-const { DEFAULT } = exportTypes
+} from 'selectors'
 
 const appState = {
   app: getTestDB(),

@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 
-import appReducer from './containers/App/duck'
+import appReducer from 'duck'
 
 // eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)

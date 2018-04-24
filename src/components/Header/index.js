@@ -1,11 +1,13 @@
-import React from 'react'
+import styled from 'styled-as-components'
 
-import HeaderWrapper from './HeaderWrapper'
+const Header = () => null
 
-const Header = () => (
-  <HeaderWrapper>
-    {}
-  </HeaderWrapper>
-)
-
-export default Header
+export default styled(Header).as.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  z-index: 1;
+  opacity: 0.1;
+`

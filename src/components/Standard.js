@@ -3,7 +3,7 @@ import { Line, InvisibleTextArea } from 'components'
 
 export default class Standard extends React.Component {
   render() {
-    const { imports, exports, currentFile, expression, names, createNewChild, tag } = this.props
+    const { imports, exports, currentFile, names, tag } = this.props
 
     return (
       <div>
@@ -20,7 +20,7 @@ export default class Standard extends React.Component {
         `
         <br />
         <br />
-        {exports.map(exp => <Line key={exp.id} statement>{exp.defaultName && `export default ${exp.defaultName}`}</Line>)}
+        {exports.map(exp => <Line key={exp.id} statement>{exp.defaultName && `export default ${exp.defaultName}`}</Line>)}
       </div>
     )
   }

@@ -1,9 +1,5 @@
 import { addNames, addFiles, addExpressions, addInvocations } from 'model-utils'
-import { fileTypes, expressionTypes, exportTypes } from 'constantz'
-
-const { DIR } = fileTypes
-const { LOOKTHROUGH } = expressionTypes
-const { DEFAULT_INLINE } = exportTypes
+import { DIR, LOOKTHROUGH } from 'constantz'
 
 export default function getTestDB() {
   // initial state setup for testing
