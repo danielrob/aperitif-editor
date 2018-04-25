@@ -1,4 +1,5 @@
 export { default as App } from './App'
+export { default as ComponentInvocationTreeContainer } from './ComponentInvocationTreeContainer'
 export { default as EditorContainer } from './EditorContainer'
 export { default as FileExplorerContainer } from './FileExplorerContainer'
 export { default as NotFoundPage } from './NotFoundPage'

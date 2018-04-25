@@ -1,5 +1,6 @@
 import React from 'react'
-import { Prop, Line, ComponentInvocation, Keyword } from 'components'
+import { Prop, Line, Keyword } from 'components'
+import { ComponentInvocationTreeContainer } from 'containers'
 import { INLINE } from 'constantz'
 
 import { sortProps } from './helpers'
@@ -20,7 +21,7 @@ export default class StatelessFunctionComponent extends React.Component {
           {' })'} => (
           {componentInvocations.length > 1 && '['}
         </Line>{' '}
-        {componentInvocations.map(({ id }) => <ComponentInvocation key={id} invocationId={id} />)}
+        {componentInvocations.map(({ id }) => <ComponentInvocationTreeContainer key={id} invocationId={id} />)}
         <Line statement>{componentInvocations.length > 1 && ']'})</Line>
       </div>
     )
