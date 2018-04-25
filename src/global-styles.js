@@ -8,4 +8,7 @@ injectGlobal`
     line-height: 1.4;
     font-family: 'Oxygen Mono', monospace;
   }
+  pre {
+    font-family: 'Oxygen Mono', monospace;
+  }
 `

@@ -9,7 +9,7 @@ const Workspace = () => (
   </React.Fragment>
 )
 
-const width = 290
+const width = 150
 
 export default styled(Workspace).as.div`
   & > div {

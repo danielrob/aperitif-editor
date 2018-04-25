@@ -1,6 +1,6 @@
 import React from 'react'
 import { ComponentInvocationTreeContainer } from 'containers'
-import Dropzone from './Dropzone'
+import { PropDropzonesContainer } from '../containers'
 
 const InvocationChildren = ({ id, invocationIds, createComponentBundle }) => (
   invocationIds.reduce(
@@ -9,7 +9,7 @@ const InvocationChildren = ({ id, invocationIds, createComponentBundle }) => (
         <ComponentInvocationTreeContainer key={invocationId} invocationId={invocationId} />
       )
       out.push(
-        <Dropzone
+        <PropDropzonesContainer
           key={`invocation-${invocationId}-drop`}
           onClickAction={createComponentBundle}
           onDropAction={() => undefined}
@@ -20,7 +20,7 @@ const InvocationChildren = ({ id, invocationIds, createComponentBundle }) => (
       return out
     },
     [
-      <Dropzone
+      <PropDropzonesContainer
         key="first"
         onClickAction={createComponentBundle}
         onDropAction={() => undefined}

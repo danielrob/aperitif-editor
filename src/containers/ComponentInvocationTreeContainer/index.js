@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { createComponentBundle } from 'duck'
 import { ComponentInvocationTree } from 'components'
+
 import { makeGetInvocation } from './selectors'
 
 const makeMapStateToProps = () => {

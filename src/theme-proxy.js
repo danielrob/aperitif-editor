@@ -7,6 +7,7 @@ const colors = new Proxy({}, {
 const themeProxy = new Proxy({}, {
   get(target, name) {
     switch (name) {
+      case 'color': return colors
       case 'colors': return colors
       default: return props => props.theme[name]
     }
