@@ -3,14 +3,15 @@ import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
+import { OpenTagContainer } from './containers'
 import { InvocationChildren } from './components'
 
-const ComponentInvocationTree = ({ name, ...props }) => (
-  <React.Fragment>
-    {`<${name}>`}
-    <InvocationChildren {...props} />
+const ComponentInvocationTree = ({ name, connectDropTarget, isOver, ...props }) => connectDropTarget(
+  <div>
+    <OpenTagContainer name={name} isSupremeOver={isOver} />
+    <InvocationChildren {...props} isSupremeOver={isOver} />
     {`</${name}>`}
-  </React.Fragment>
+  </div>
 )
 
 export default styled(ComponentInvocationTree).as.div`

@@ -1,7 +1,10 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { createComponentBundle } from 'duck'
+import { DropTarget } from 'react-dnd'
+
 import { ComponentInvocationTree } from 'components'
+import { DraggableTypes } from 'constantz'
 
 import { makeGetInvocation } from './selectors'
 
@@ -16,4 +19,19 @@ const ComponentInvocationTreeContainer = connect(makeMapStateToProps, mapDispatc
   ComponentInvocationTree
 )
 
-export default ComponentInvocationTreeContainer
+const dropzoneTarget = {
+  hover(props, monitor) {
+    console.log('ekrekjrhekjh')
+  },
+  canDrop() {
+    return false
+  }
+}
+
+const collect = (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  dragItem: monitor.getItem(),
+})
+
+export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(ComponentInvocationTreeContainer)

@@ -4,29 +4,26 @@ import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 import { DraggableTypes } from 'constantz'
 
-import { PropDropzones } from '../components'
+import { OpenTag } from '../components'
 
-class PropDropzonesContainer extends React.Component {
+class OpenTagContainer extends React.Component {
   render() {
     const { connectDropTarget, children } = this.props
     return (
-      <PropDropzones
+      <OpenTag
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
         {...this.props}
       >
         {children}
-      </PropDropzones>
+      </OpenTag>
     )
   }
 }
 
 const dropzoneTarget = {
   hover(props, monitor) {
-    console.log('hovering opensdfsdfsfsftag')
+    console.log('hovering open tag')
   },
-  canDrop() {
-    return false
-  }
 }
 
 const collect = (connect, monitor) => ({
@@ -35,4 +32,4 @@ const collect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(PropDropzonesContainer)
+export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(OpenTagContainer)

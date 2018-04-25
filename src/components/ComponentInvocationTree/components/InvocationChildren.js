@@ -2,7 +2,7 @@ import React from 'react'
 import { ComponentInvocationTreeContainer } from 'containers'
 import { PropDropzonesContainer } from '../containers'
 
-const InvocationChildren = ({ id, invocationIds, createComponentBundle }) => (
+const InvocationChildren = ({ id, invocationIds, createComponentBundle, ...props }) => (
   invocationIds.reduce(
     (out, invocationId, i) => {
       out.push(
@@ -15,6 +15,7 @@ const InvocationChildren = ({ id, invocationIds, createComponentBundle }) => (
           onDropAction={() => undefined}
           parentId={id}
           position={i + 1}
+          {...props}
         />
       )
       return out
@@ -26,6 +27,7 @@ const InvocationChildren = ({ id, invocationIds, createComponentBundle }) => (
         onDropAction={() => undefined}
         parentId={id}
         position={0}
+        {...props}
       />,
     ]
   )

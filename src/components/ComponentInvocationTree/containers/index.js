@@ -1,2 +1,3 @@
-export { default as PropDropzonesContainer } from './PropDropzonesContainer.js'
-export { default as SimplePropDropzone } from './SimplePropDropzone.js'
+export { default as OpenTagContainer } from './OpenTagContainer'
+export { default as PropDropzonesContainer } from './PropDropzonesContainer'
+export { default as SimplePropDropzone } from './SimplePropDropzone'
