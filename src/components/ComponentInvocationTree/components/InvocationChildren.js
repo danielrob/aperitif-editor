@@ -1,5 +1,7 @@
 import React from 'react'
+
 import { ComponentInvocationTreeContainer } from 'containers'
+
 import { PropDropzonesContainer } from '../containers'
 
 const InvocationChildren = ({ id, invocationIds, createComponentBundle, ...props }) => (
@@ -21,6 +23,7 @@ const InvocationChildren = ({ id, invocationIds, createComponentBundle, ...props
       return out
     },
     [
+      // the starting dropzone
       <PropDropzonesContainer
         key="first"
         onClickAction={createComponentBundle}

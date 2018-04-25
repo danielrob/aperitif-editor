@@ -15,12 +15,6 @@ export default function getTestDB() {
     appWrapperNameId,
   ] = addNames({}, 'index', 'App', 'index', 'React', '', 'AppWrapper')
 
-  // invocations
-  const importInvocation = { nameOrNameId: reactNameId, source: 'react' }
-  const appWrapperInvocation = { nameOrNameId: appWrapperNameId, source: null }
-  const [initialInvocations, reactInvocationId, appWrapperInvocationId] =
-    addInvocations({}, importInvocation, appWrapperInvocation)
-
   // params
   const params = {
     1: { id: 1, name: 'userId', payload: 1 },
@@ -28,12 +22,18 @@ export default function getTestDB() {
     3: { id: 3, name: 'body', payload: 'lorem ipsumm....' },
   }
 
+  // invocations
+  const importInvocation = { nameOrNameId: reactNameId, source: 'react' }
+  const appWrapperInvocation = { nameOrNameId: appWrapperNameId, source: null, paramIds: [] }
+  const [initialInvocations, reactInvocationId, appWrapperInvocationId] =
+    addInvocations({}, importInvocation, appWrapperInvocation)
+
   // expressions
   const reactImport = {
     nameId: namelessId, type: LOOKTHROUGH, exportType: false, invocationIds: [reactInvocationId],
   }
   const appComponent = {
-    nameId: appDirId, invocationIds: [appWrapperInvocationId], paramIds: [1, 2, 3]
+    nameId: appDirId, invocationIds: [appWrapperInvocationId], paramIds: Object.keys(params),
   }
   const appWrapper = { nameId: appWrapperNameId }
   const [initialExpressions, reactImportId, appComponentId, appWrapperId] =

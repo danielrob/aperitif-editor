@@ -8,31 +8,23 @@ import { PropDropzones } from '../components'
 
 class PropDropzonesContainer extends React.Component {
   render() {
-    const { connectDropTarget, children } = this.props
+    const { connectDropTarget } = this.props
     return (
       <PropDropzones
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
         {...this.props}
-      >
-        {children}
-      </PropDropzones>
+      />
     )
   }
 }
 
 const dropzoneTarget = {
-  hover(props, monitor) {
-    console.log('hovering opensdfsdfsfsftag')
-  },
-  canDrop() {
-    return false
-  }
+
 }
 
 const collect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  dragItem: monitor.getItem(),
+  isOverDropZones: monitor.isOver(),
 })
 
 export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(PropDropzonesContainer)

@@ -8,6 +8,7 @@ import { getNewComponentName } from './helpers'
 import getTestDB from './getTestDB'
 
 export const CREATE_COMPONENT_BUNDLE = 'CREATE_COMPONENT_BUNDLE'
+export const ADD_PARAM_TO_COMPONENT_INVOCATION = 'ADD_PARAM_TO_COMPONENT_INVOCATION'
 export const CHANGE_FILE = 'CHANGE_FILE'
 
 export default function appReducer(state = getTestDB(), action) {
@@ -19,9 +20,22 @@ export default function appReducer(state = getTestDB(), action) {
       }
     }
 
+    case ADD_PARAM_TO_COMPONENT_INVOCATION: {
+      const { invocations } = state
+      const { payload: { parentId, item: { id: itemId } } } = action
+
+      const updater = oldInvocation => insertAtKey(oldInvocation, 'paramIds', 0, itemId)
+      const nextInvocations = updateEntity(invocations, parentId, updater)
+
+      return {
+        ...state,
+        invocations: nextInvocations,
+      }
+    }
+
     case CREATE_COMPONENT_BUNDLE: {
       const { names, files, rootFiles, expressions, invocations, params } = state
-      const { payload: { parentId, position, name } } = action
+      const { payload: { parentId, position, item: { name, id: itemId } } } = action
 
       /* CREATES */
       /* eslint-disable prefer-const */
@@ -34,14 +48,14 @@ export default function appReducer(state = getTestDB(), action) {
         addNames(names, dirName, indexName, wrapperName)
 
       // invocations
-      let invoke = { nameOrNameId: dirName, source: null }
+      let invoke = { nameOrNameId: dirName, source: null, paramIds: [] }
       let wrapperInvoke = { nameOrNameId: wrapperName, source: null }
       let nextInvocations
       [nextInvocations, invoke, wrapperInvoke] =
         addInvocations(invocations, invoke, wrapperInvoke)
 
       // expressions
-      let expression = { nameId: dirName, invocationIds: [wrapperInvoke] }
+      let expression = { nameId: dirName, invocationIds: [wrapperInvoke], paramIds: [itemId] }
       let wrapperExpression = { nameId: wrapperName, invocationIds: [], type: STYLED_COMPONENT }
       let nextExpressions
       [nextExpressions, expression, wrapperExpression] =
@@ -84,4 +98,8 @@ export const createComponentBundle = createAction(
 
 export const changeFile = createAction(
   CHANGE_FILE
+)
+
+export const addParamToComponentInvocation = createAction(
+  ADD_PARAM_TO_COMPONENT_INVOCATION
 )

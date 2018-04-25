@@ -24,7 +24,11 @@ export const addNames = (names, ...args) => {
   }, [names])
 }
 
-export const addParams = addNames
+export const addParams = getEntitiesAdder({
+  name: required,
+  payload: null,
+})
+
 
 export const addFiles = getEntitiesAdder({
   nameId: required,

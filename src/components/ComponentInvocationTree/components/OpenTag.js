@@ -1,25 +1,33 @@
 import React from 'react'
-import styled from 'styled-as-components'
+import styled, { css } from 'styled-as-components'
+import theme from 'theme-proxy'
 import { buffer } from 'styleUtils'
 
-const ComponentInvocationOpen = ({ name, isSupremeOver, dragItem }) => (
-  isSupremeOver ?
+const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params }) => (
+  isSupremeOver && !paramIds.includes(dragItem.id) ?
     <React.Fragment>
       {`<${name} `}
       <span className="new-prop">
-        {`${dragItem.name}={${dragItem.name}}`}
+        {`${dragItem.name}={${dragItem.name}} `}
       </span>
+      {params.map(param => <span key={param.id} className="param">{` ${param.name}={${param.name}}`}</span>)}
       {'>'}
     </React.Fragment> :
-    `<${name}>`
+    <React.Fragment>
+      {`<${name}`}
+      {params.map(param => <span key={param.id} className="param">{` ${param.name}={${param.name}}`}</span>)}
+      {'>'}
+    </React.Fragment>
 )
 
-export default styled(ComponentInvocationOpen).as.span`
+export default styled(OpenTag).as.span`
   width: 100%;
-  ${buffer(30)}
+  ${buffer(5)}
+
   .new-prop {
+    color: ${theme.color.darkblue};
     ${props => props.isSupremeOver && !props.isOver && 'font-size: 14px'};
-    ${props => props.isSupremeOver && !props.isOver && 'color: #ccc;'}
-    transition: color 50ms, font-size 50ms;
+    ${props => props.isSupremeOver && !props.isOver && css`color: ${theme.color.grey};`}
+    transition: 130ms;
   }
 `
