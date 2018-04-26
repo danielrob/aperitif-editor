@@ -1,6 +1,5 @@
 
 import React from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
@@ -38,9 +37,9 @@ const collect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = {
   newWithPropAsChild: createComponentBundle,
-}, dispatch)
+}
 
 export default connect(null, mapDispatchToProps)(
   DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(

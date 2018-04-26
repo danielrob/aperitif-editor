@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
@@ -38,8 +37,9 @@ const collect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ addParamToComponentInvocation }, dispatch)
+const mapDispatchToProps = {
+  addParamToComponentInvocation,
+}
 
 export default compose(
   connect(null, mapDispatchToProps),

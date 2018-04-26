@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { createComponentBundle } from 'duck'
 import { DropTarget } from 'react-dnd'
 
@@ -15,8 +14,7 @@ const makeMapStateToProps = () => {
   return (state, props) => getInvocation(state, props)
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ createComponentBundle }, dispatch)
+const mapDispatchToProps = { createComponentBundle }
 
 /* dnd */
 const dropzoneTarget = {}

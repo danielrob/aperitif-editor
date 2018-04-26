@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
 import { changeFile } from 'duck'
@@ -16,6 +15,6 @@ const mapStateToProps = createStructuredSelector({
   currentFileId: selectCurrentFileId,
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({ changeFile }, dispatch)
+const mapDispatchToProps = { changeFile }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FileExplorerContainer)
