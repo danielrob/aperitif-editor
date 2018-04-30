@@ -4,18 +4,17 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 import { buffer } from 'styleUtils'
 
-import { In } from 'components'
-
 import { OpenTagContainer } from '../containers'
-import { InvocationChildren } from './'
+import { InvocationChildren, InvocationPropChildren } from './'
 
 const ComponentInvocationTree = ({ connectDropTarget, modelChildren, ...props }) =>
   connectDropTarget(
     <div>
       <OpenTagContainer {...props} />
-      {modelChildren.length ? <React.Fragment><br /><In /></React.Fragment> : null}
-      {modelChildren.map(child => `{${child.name}}`)}
+      {/* TODO: Invocation can have a child expression which evaluates to all of this: */}
+      <InvocationPropChildren modelChildren={modelChildren} />
       <InvocationChildren {...props} />
+      {/* End TODO */}
       {`</${props.name}>`}
     </div>
   )
