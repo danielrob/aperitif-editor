@@ -2,13 +2,14 @@ import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
-import { StatelessFunctionComponent, Standard } from 'components'
-import { STATELESS_FUNCTION_COMPONENT } from 'constantz'
+import { StatelessFunctionComponent, StyledComponent, Standard } from 'components'
+import { STATELESS_FUNCTION_COMPONENT, STYLED_COMPONENT } from 'constantz'
 
 import { Imports, DefaultExport } from './components'
 
 const renderers = {
   [STATELESS_FUNCTION_COMPONENT]: StatelessFunctionComponent,
+  [STYLED_COMPONENT]: StyledComponent,
 }
 
 const Editor = ({ imports, expressions, defaultExport }) => (
@@ -19,6 +20,7 @@ const Editor = ({ imports, expressions, defaultExport }) => (
       const Renderer = renderers[expression.type] || Standard
       return <Renderer key={expression.id} {...expression} />
     })}
+    <br />
     <DefaultExport key="defaultExport" name={defaultExport} />
   </React.Fragment>
 )

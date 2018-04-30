@@ -43,6 +43,8 @@ export const addExpressions = getEntitiesAdder({
   paramIds: [],
   exportType: DEFAULT,
   invocationIds: [],
+  // type specific items
+  tag: null,
 })
 
 export const addInvocations = getEntitiesAdder({

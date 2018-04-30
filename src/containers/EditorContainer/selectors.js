@@ -18,7 +18,8 @@ export const selectCurrentFileExpressions = createSelector(
   selectInvocations,
   (names, expressions, params, invocations) =>
     expressions
-      .map(({ id, nameId, type, invocationIds, paramIds, exportType }) => ({
+      .map(({ id, nameId, type, invocationIds, paramIds, exportType, ...rest }) => ({
+        ...rest,
         id,
         name: names[nameId],
         type,

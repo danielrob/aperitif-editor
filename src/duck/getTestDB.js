@@ -1,19 +1,21 @@
 import { addNames, addFiles, addExpressions, addInvocations } from 'model-utils'
-import { DIR, LOOKTHROUGH } from 'constantz'
+import { DIR, LOOKTHROUGH, STYLED_COMPONENT } from 'constantz'
 
 export default function getTestDB() {
   // initial state setup for testing
 
+  /* eslint-disable prefer-const */
   // names
   const [
     initialNames,
-    indexNameId,
-    appDirId,
-    appIndexId,
-    reactNameId,
-    namelessId,
-    appWrapperNameId,
-  ] = addNames({}, 'index', 'App', 'index', 'React', '', 'AppWrapper')
+    indexName,
+    appDirName,
+    appIndexIdName,
+    reactName,
+    styledName,
+    noName,
+    appWrapperName,
+  ] = addNames({}, 'index', 'App', 'index', 'React', 'styled', '', 'AppWrapper')
 
   // params
   const params = {
@@ -23,31 +25,38 @@ export default function getTestDB() {
   }
 
   // invocations
-  const importInvocation = { nameOrNameId: reactNameId, source: 'react' }
-  const appWrapperInvocation = { nameOrNameId: appWrapperNameId, source: null, paramIds: [] }
-  const [initialInvocations, reactInvocationId, appWrapperInvocationId] =
-    addInvocations({}, importInvocation, appWrapperInvocation)
+  let importReact = { nameOrNameId: reactName, source: 'react' }
+  let importStyled = { nameOrNameId: styledName, source: 'styled-components' }
+  let appWrapperInvocation = { nameOrNameId: appWrapperName, source: null, paramIds: [] }
+  let initialInvocations
+  [initialInvocations, importReact, appWrapperInvocation, importStyled] =
+    addInvocations({}, importReact, appWrapperInvocation, importStyled)
 
   // expressions
-  const reactImport = {
-    nameId: namelessId, type: LOOKTHROUGH, exportType: false, invocationIds: [reactInvocationId],
+  let reactImport = {
+    nameId: noName, type: LOOKTHROUGH, exportType: false, invocationIds: [importReact],
   }
-  const appComponent = {
-    nameId: appDirId, invocationIds: [appWrapperInvocationId], paramIds: Object.keys(params),
+  let styledImport = {
+    nameId: noName, type: LOOKTHROUGH, exportType: false, invocationIds: [importStyled],
   }
-  const appWrapper = { nameId: appWrapperNameId }
-  const [initialExpressions, reactImportId, appComponentId, appWrapperId] =
-    addExpressions({}, reactImport, appComponent, appWrapper)
+  let appComponent = {
+    nameId: appDirName, invocationIds: [appWrapperInvocation], paramIds: [1, 2, 3],
+  }
+  let appWrapper = { nameId: appWrapperName, type: STYLED_COMPONENT, tag: 'div' }
+  let initialExpressions
+  [initialExpressions, reactImport, appComponent, appWrapper, styledImport] =
+    addExpressions({}, reactImport, appComponent, appWrapper, styledImport)
 
   // files
-  const indexFile = { nameId: indexNameId }
-  const appFile = { nameId: appIndexId, expressionIds: [reactImportId, appComponentId] }
-  const appWrapperFile = { nameId: appWrapperNameId, expressionIds: [appWrapperId] }
+  const indexFile = { nameId: indexName }
+  const appFile = { nameId: appIndexIdName, expressionIds: [reactImport, appComponent] }
+  const appWrapperFile = { nameId: appWrapperName, expressionIds: [appWrapper, styledImport] }
   const [initialFiles, appFileId, indexFileId, appWrapperFileId] =
     addFiles({}, appFile, indexFile, appWrapperFile)
 
-  const appDir = { nameId: appDirId, type: DIR, children: [appFileId, appWrapperFileId] }
+  const appDir = { nameId: appDirName, type: DIR, children: [appFileId, appWrapperFileId] }
   const [initialFilesAndDirs, appDirFileId] = addFiles(initialFiles, appDir)
+  /* eslint-enable prefer-const */
 
   return {
     names: initialNames,

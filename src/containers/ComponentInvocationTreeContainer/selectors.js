@@ -9,9 +9,10 @@ export const makeGetInvocation = () => createSelector(
   selectParams,
   selectInvocation,
   (names, allParams, invocation) => {
-    const { id, nameOrNameId, invocationIds, paramIds } = invocation
+    const { id, nameOrNameId, invocationIds, paramIds, ...rest } = invocation
 
     return {
+      ...rest,
       id,
       name: names[nameOrNameId],
       invocationIds,
