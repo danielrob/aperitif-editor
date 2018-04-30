@@ -18,6 +18,7 @@ export const selectCurrentFileExpressions = createSelector(
   selectInvocations,
   (names, expressions, params, invocations) =>
     expressions
+      .filter(({ type }) => type !== LOOKTHROUGH)
       .map(({ id, nameId, type, invocationIds, paramIds, exportType, ...rest }) => ({
         ...rest,
         id,
@@ -27,5 +28,4 @@ export const selectCurrentFileExpressions = createSelector(
         params: paramIds.map(paramId => params[paramId]),
         exportType,
       }))
-      .filter(({ type }) => type !== LOOKTHROUGH)
 )

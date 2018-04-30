@@ -1,13 +1,13 @@
 import React from 'react'
-import { Prop, Line, Keyword } from 'components'
+import { Line, Keyword } from 'components'
 import { ComponentInvocationTreeContainer } from 'containers'
 import { INLINE } from 'constantz'
 
-import { sortProps } from './helpers'
+import { Props } from './components'
 
 export default class StatelessFunctionComponent extends React.Component {
   render() {
-    const { exportType, name, params, invocations } = this.props
+    const { id, exportType, name, params, invocations, restIds } = this.props
 
     const componentInvocations = invocations // TODO => create invocationExpressions index && filter by expression type
     return (
@@ -17,7 +17,7 @@ export default class StatelessFunctionComponent extends React.Component {
           {exportType === INLINE && <Keyword>export</Keyword>}{' '}
           <Keyword>const</Keyword>{' '}
           {name} = {'({ '}
-          <span>{params.sort(sortProps).map(prop => <Prop key={prop.name} {...prop} />)}</span>
+          <Props params={params} expressionId={id} spreadProps={restIds} />
           {' })'} => (
           {componentInvocations.length > 1 && '['}
         </Line>{' '}
