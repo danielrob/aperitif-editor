@@ -4,7 +4,7 @@ import theme from 'theme-proxy'
 import { buffer } from 'styleUtils'
 
 const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params }) => (
-  isSupremeOver && !paramIds.includes(dragItem.id) ?
+  isSupremeOver && dragItem && !paramIds.includes(dragItem.id) ?
     <React.Fragment>
       {`<${name} `}
       <span className="new-prop">
