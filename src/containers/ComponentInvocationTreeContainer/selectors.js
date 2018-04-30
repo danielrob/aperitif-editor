@@ -9,7 +9,7 @@ export const makeGetInvocation = () => createSelector(
   selectParams,
   selectInvocation,
   (names, allParams, invocation) => {
-    const { id, nameOrNameId, invocationIds, paramIds, ...rest } = invocation
+    const { id, nameOrNameId, invocationIds, paramIds, modelChildren, ...rest } = invocation
 
     return {
       ...rest,
@@ -18,6 +18,7 @@ export const makeGetInvocation = () => createSelector(
       invocationIds,
       paramIds,
       params: paramIds.map(id => allParams[id]),
+      modelChildren: modelChildren.map(id => allParams[id]),
     }
   }
 )

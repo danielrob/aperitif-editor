@@ -48,14 +48,15 @@ export default function appReducer(state = getTestDB(), action) {
         addNames(names, dirName, indexName, wrapperName)
 
       // invocations
-      let invoke = { nameOrNameId: dirName, source: null, paramIds: [] }
+      let invoke = { nameOrNameId: dirName, source: null, paramIds: [], modelChildren: [itemId] }
       let wrapperInvoke = { nameOrNameId: wrapperName, source: null }
       let nextInvocations
       [nextInvocations, invoke, wrapperInvoke] =
         addInvocations(invocations, invoke, wrapperInvoke)
 
       // expressions
-      let expression = { nameId: dirName, invocationIds: [wrapperInvoke], paramIds: [itemId] }
+      let expression =
+        { nameId: dirName, invocationIds: [wrapperInvoke], paramIds: [itemId] }
       let wrapperExpression = { nameId: wrapperName, invocationIds: [], type: STYLED_COMPONENT }
       let nextExpressions
       [nextExpressions, expression, wrapperExpression] =
