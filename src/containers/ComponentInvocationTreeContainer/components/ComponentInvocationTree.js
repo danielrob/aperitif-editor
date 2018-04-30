@@ -4,8 +4,8 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 import { buffer } from 'styleUtils'
 
-import { OpenTagContainer } from './containers'
-import { InvocationChildren } from './components'
+import { OpenTagContainer } from '../containers'
+import { InvocationChildren } from './'
 
 const ComponentInvocationTree = ({ connectDropTarget, ...props }) =>
   connectDropTarget(

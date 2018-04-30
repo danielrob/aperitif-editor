@@ -2,10 +2,10 @@ import { connect } from 'react-redux'
 import { createComponentBundle } from 'duck'
 import { DropTarget } from 'react-dnd'
 
-import { ComponentInvocationTree } from 'components'
 import { DraggableTypes } from 'constantz'
 import { compose } from 'utils'
 
+import { ComponentInvocationTree } from './components'
 import { makeGetInvocation } from './selectors'
 
 /* connect */
