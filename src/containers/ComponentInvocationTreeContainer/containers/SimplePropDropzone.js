@@ -20,6 +20,7 @@ class SimplePropDropzone extends React.Component {
   }
 }
 
+/* dnd */
 const dropzoneTarget = {
   drop() {},
 }
@@ -30,5 +31,6 @@ const collect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
+/* export */
 export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(SimplePropDropzone)
 

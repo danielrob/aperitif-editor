@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
+import { compose } from 'utils'
 import { DraggableTypes } from 'constantz'
 import { createComponentBundle } from 'duck'
 
@@ -23,8 +24,13 @@ class NewWithPropDropzone extends React.Component {
   }
 }
 
-const dropzoneTarget = {
+/* connect */
+const mapDispatchToProps = {
+  newWithPropAsChild: createComponentBundle,
+}
 
+/* dnd */
+const dropzoneTarget = {
   drop(props, monitor) {
     const { parentId, newWithPropAsChild, position } = props
     newWithPropAsChild({ parentId, position, item: monitor.getItem(), closed: true })
@@ -37,13 +43,9 @@ const collect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-const mapDispatchToProps = {
-  newWithPropAsChild: createComponentBundle,
-}
-
-export default connect(null, mapDispatchToProps)(
-  DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(
-    NewWithPropDropzone
-  )
-)
+/* compose */
+export default compose(
+  connect(null, mapDispatchToProps),
+  DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)
+)(NewWithPropDropzone)
 

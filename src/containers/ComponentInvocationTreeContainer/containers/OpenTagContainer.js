@@ -18,6 +18,12 @@ class OpenTagContainer extends React.Component {
   }
 }
 
+/* connect */
+const mapDispatchToProps = {
+  addParamToComponentInvocation,
+}
+
+/* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
     const { id: parentId, addParamToComponentInvocation } = props
@@ -37,10 +43,7 @@ const collect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-const mapDispatchToProps = {
-  addParamToComponentInvocation,
-}
-
+/* compose */
 export default compose(
   connect(null, mapDispatchToProps),
   DropTarget(DraggableTypes.PROP, dropzoneTarget, collect),

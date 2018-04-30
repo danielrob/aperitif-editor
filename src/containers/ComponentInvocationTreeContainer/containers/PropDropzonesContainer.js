@@ -18,6 +18,7 @@ class PropDropzonesContainer extends React.Component {
   }
 }
 
+/* dnd */
 const dropzoneTarget = {
 
 }
@@ -27,4 +28,5 @@ const collect = (connect, monitor) => ({
   isOverDropZones: monitor.isOver(),
 })
 
+/* export */
 export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(PropDropzonesContainer)
