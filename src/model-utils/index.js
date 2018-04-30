@@ -45,6 +45,7 @@ export const addExpressions = getEntitiesAdder({
   invocationIds: [],
   // type specific items
   tag: null,
+  restIds: [],
 })
 
 export const addInvocations = getEntitiesAdder({

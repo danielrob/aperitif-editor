@@ -9,6 +9,7 @@ import getTestDB from './getTestDB'
 
 export const CREATE_COMPONENT_BUNDLE = 'CREATE_COMPONENT_BUNDLE'
 export const ADD_PARAM_TO_COMPONENT_INVOCATION = 'ADD_PARAM_TO_COMPONENT_INVOCATION'
+export const MOVE_PARAM_TO_SPREAD = 'MOVE_PARAM_TO_SPREAD'
 export const CHANGE_FILE = 'CHANGE_FILE'
 
 export default function appReducer(state = getTestDB(), action) {
@@ -17,6 +18,23 @@ export default function appReducer(state = getTestDB(), action) {
       return {
         ...state,
         currentFileId: action.payload,
+      }
+    }
+
+    case MOVE_PARAM_TO_SPREAD: {
+      const { expressions } = state
+      const { expressionId, paramId } = action.payload
+
+      const updater = ({ paramIds, restIds = [], ...rest }) => ({
+        ...rest,
+        paramIds: paramIds.filter(id => id !== paramId),
+        restIds: [...restIds, paramId],
+      })
+      const nextExpressions = updateEntity(expressions, expressionId, updater)
+
+      return {
+        ...state,
+        expressions: nextExpressions,
       }
     }
 
@@ -121,4 +139,8 @@ export const changeFile = createAction(
 
 export const addParamToComponentInvocation = createAction(
   ADD_PARAM_TO_COMPONENT_INVOCATION
+)
+
+export const moveParamToSpread = createAction(
+  MOVE_PARAM_TO_SPREAD
 )
