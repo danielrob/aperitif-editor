@@ -6,20 +6,21 @@ import { PropDropzonesContainer } from '../containers'
 
 const InvocationChildren = ({ id, invocationIds, createComponentBundle, ...props }) => (
   invocationIds.reduce(
-    (out, invocationId, i) => {
+    (out, invocationId) => {
       out.push(
         <ComponentInvocationTreeContainer key={invocationId} invocationId={invocationId} />
       )
-      out.push(
-        <PropDropzonesContainer
-          key={`invocation-${invocationId}-drop`}
-          onClickAction={createComponentBundle}
-          onDropAction={() => undefined}
-          parentId={id}
-          position={i + 1}
-          {...props}
-        />
-      )
+      // This will probably be replaced by draggable reordering.
+      // out.push(
+      //   <PropDropzonesContainer
+      //     key={`invocation-${invocationId}-drop`}
+      //     onClickAction={createComponentBundle}
+      //     onDropAction={() => undefined}
+      //     parentId={id}
+      //     position={i + 1}
+      //     {...props}
+      //   />
+      // )
       return out
     },
     [
