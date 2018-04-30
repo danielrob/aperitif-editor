@@ -4,7 +4,11 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 import { In } from 'components'
 import { capitalize } from 'utils'
-import { SimplePropDropzone, NewWithPropAsChildPropDropzone } from '../containers'
+import {
+  // SimplePropDropzone,
+  NewWithPropDropzone,
+  NewWithPropAsChildPropDropzone,
+} from '../containers'
 
 const PropDropzonesReveal = ({ dragItem, ...props }) => (
   <React.Fragment>
@@ -18,14 +22,14 @@ const PropDropzonesReveal = ({ dragItem, ...props }) => (
         {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
       </div>
     </NewWithPropAsChildPropDropzone>
-    <SimplePropDropzone {...props}>
+    <NewWithPropDropzone {...props}>
       <div>
         {'<'}{capitalize(dragItem.name)}<br />
         <In />
         {`${dragItem.name}={${dragItem.name}}`}<br />
         {'/>'}
       </div>
-    </SimplePropDropzone>
+    </NewWithPropDropzone>
   </React.Fragment>
 )
 

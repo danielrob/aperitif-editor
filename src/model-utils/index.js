@@ -52,7 +52,9 @@ export const addInvocations = getEntitiesAdder({
   source: requiredOrNull,
   paramIds: [],
   invocationIds: [],
+  // type specific items
   modelChildren: [],
+  closed: false,
 })
 
 

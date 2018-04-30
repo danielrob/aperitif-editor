@@ -9,7 +9,7 @@ import { createComponentBundle } from 'duck'
 
 import { PropDropzone } from '../components'
 
-class NewWithPropAsChildPropDropzone extends React.Component {
+class NewWithPropDropzone extends React.Component {
   render() {
     const { connectDropTarget, children } = this.props
     return (
@@ -27,7 +27,7 @@ const dropzoneTarget = {
 
   drop(props, monitor) {
     const { parentId, newWithPropAsChild, position } = props
-    newWithPropAsChild({ parentId, position, item: monitor.getItem(), propAsChild: true })
+    newWithPropAsChild({ parentId, position, item: monitor.getItem(), closed: true })
   },
 }
 
@@ -43,7 +43,7 @@ const mapDispatchToProps = {
 
 export default connect(null, mapDispatchToProps)(
   DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(
-    NewWithPropAsChildPropDropzone
+    NewWithPropDropzone
   )
 )
 

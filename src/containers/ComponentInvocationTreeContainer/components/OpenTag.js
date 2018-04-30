@@ -3,20 +3,20 @@ import styled, { css } from 'styled-as-components'
 import theme from 'theme-proxy'
 import { buffer } from 'styleUtils'
 
-const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params }) => (
+const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params, closed }) => (
   isSupremeOver && dragItem && !paramIds.includes(dragItem.id) ?
     <React.Fragment>
       {`<${name} `}
       <span className="new-prop">
-        {`${dragItem.name}={${dragItem.name}} `}
+        {`${dragItem.name}={${dragItem.name}}`}
       </span>
       {params.map(param => <span key={param.id} className="param">{` ${param.name}={${param.name}}`}</span>)}
-      {'>'}
+      {closed && ' /'}{'>'}
     </React.Fragment> :
     <React.Fragment>
       {`<${name}`}
       {params.map(param => <span key={param.id} className="param">{` ${param.name}={${param.name}}`}</span>)}
-      {'>'}
+      {closed && ' /'}{'>'}
     </React.Fragment>
 )
 

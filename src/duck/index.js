@@ -35,7 +35,19 @@ export default function appReducer(state = getTestDB(), action) {
 
     case CREATE_COMPONENT_BUNDLE: {
       const { names, files, rootFiles, expressions, invocations, params } = state
-      const { payload: { parentId, position, item: { name, id: itemId } } } = action
+      const {
+        payload: {
+          parentId,
+          position,
+          item: {
+            name,
+            id: itemId,
+          },
+          // #couldchangeinrefactor
+          propAsChild,
+          closed,
+        },
+      } = action
 
       /* CREATES */
       /* eslint-disable prefer-const */
@@ -48,7 +60,13 @@ export default function appReducer(state = getTestDB(), action) {
         addNames(names, dirName, indexName, wrapperName)
 
       // invocations
-      let invoke = { nameOrNameId: dirName, source: null, paramIds: [], modelChildren: [itemId] }
+      let invoke = {
+        nameOrNameId: dirName,
+        source: null,
+        paramIds: propAsChild ? [] : [itemId],
+        modelChildren: propAsChild ? [itemId] : [],
+        closed,
+      }
       let wrapperInvoke = { nameOrNameId: wrapperName, source: null }
       let nextInvocations
       [nextInvocations, invoke, wrapperInvoke] =

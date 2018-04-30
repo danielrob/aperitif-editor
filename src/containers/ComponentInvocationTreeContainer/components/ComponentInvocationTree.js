@@ -15,7 +15,7 @@ const ComponentInvocationTree = ({ connectDropTarget, modelChildren, ...props })
       <InvocationPropChildren modelChildren={modelChildren} />
       <InvocationChildren {...props} />
       {/* End TODO */}
-      {`</${props.name}>`}
+      {props.closed || `</${props.name}>`}
     </div>
   )
 
@@ -33,6 +33,7 @@ ComponentInvocationTree.propTypes = {
   paramIds: T.arrayOf(T.number).isRequired,
   params: T.arrayOf(T.object).isRequired,
   modelChildren: T.arrayOf(T.number),
+  isClosed: T.bool,
   // Injected by React DnD:
   connectDropTarget: T.func.isRequired,
   isSupremeOver: T.bool.isRequired,
