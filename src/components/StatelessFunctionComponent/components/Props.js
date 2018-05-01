@@ -8,19 +8,22 @@ import { SpreadPropsContainer, PropContainer } from '../containers'
 
 const Props = ({ params, spreadParamIds, expressionId }) => (
   <React.Fragment>
-    <span>
-      {params.sort(sortProps).map(prop => <PropContainer key={prop.name} {...prop} />)}
-    </span>
+    {' '}
+    {!!params.length && '({'}
+    {' '}
+    <span>{params.sort(sortProps).map(prop => <PropContainer key={prop.name} {...prop} />)}</span>
     <SpreadPropsContainer
       spreadParamIds={spreadParamIds}
       expressionId={expressionId}
       params={params}
     />
+    {' '}
+    {!!params.length && '})'}
+    {' '}
   </React.Fragment>
 )
 
 export default styled(Props).as.span`
-  position: relative;
 `
 
 Props.propTypes = {

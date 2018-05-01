@@ -13,7 +13,7 @@ const InvocationPropChildren = ({ modelChildren }) => (
       </React.Fragment>
     ) : null}
     {modelChildren.map(child => (
-      <span>
+      <span key={child.id}>
         {'{'}
         <span className="prop-as-child">{child.name}</span>
         {'}'}

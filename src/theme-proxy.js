@@ -1,6 +1,14 @@
+import invariant from 'invariant'
+
 const colors = new Proxy({}, {
   get(target, name) {
-    return props => props.theme.colors[name]
+    return props => {
+      invariant(
+        props.theme.colors[name],
+        `${name} is not a color \npossible colors: ${Object.keys(props.theme.colors)}`
+      )
+      return props.theme.colors[name]
+    }
   },
 })
 
@@ -9,7 +17,10 @@ const themeProxy = new Proxy({}, {
     switch (name) {
       case 'color': return colors
       case 'colors': return colors
-      default: return props => props.theme[name]
+      default: return props => {
+        invariant(props.theme[name], `${name} is not a theme property`)
+        return props.theme[name]
+      }
     }
   },
 })

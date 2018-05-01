@@ -16,9 +16,9 @@ export default class StatelessFunctionComponent extends React.Component {
         <Line>
           {exportType === INLINE && <Keyword>export</Keyword>}{' '}
           <Keyword>const</Keyword>{' '}
-          {name} = {'({ '}
+          {name} =
           <Props params={params} expressionId={id} spreadParamIds={spreadParamIds} />
-          {' })'} => (
+           => (
           {componentInvocations.length > 1 && '['}
         </Line>{' '}
         {componentInvocations.map(({ id }) => <ComponentInvocationTreeContainer key={id} invocationId={id} />)}
