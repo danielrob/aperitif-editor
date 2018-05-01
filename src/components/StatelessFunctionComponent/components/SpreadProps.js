@@ -1,7 +1,7 @@
 import styled from 'styled-as-components'
 
-const SpreadProps = ({ isOver, params, spreadParamIds }) =>
-  (spreadParamIds.length || isOver) ? `${params.length ? ', ...' : ''}props` : null
+const SpreadProps = ({ isOver, params, spreadParams }) =>
+  (spreadParams.length || isOver) ? `${params.length ? ', ...' : ''}props` : null
 
 export default styled(SpreadProps).as.span`
   position: relative;

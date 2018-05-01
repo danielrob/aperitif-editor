@@ -3,21 +3,32 @@ import styled, { css } from 'styled-as-components'
 import theme from 'theme-proxy'
 import { buffer } from 'styleUtils'
 
-const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params, closed }) => (
-  isSupremeOver && dragItem && !paramIds.includes(dragItem.id) ?
-    <React.Fragment>
-      {`<${name} `}
+const OpenTag = ({ name, dragItem, paramIds, params, closed }) => (
+  <React.Fragment>
+    {`<${name}`}
+    {dragItem && !paramIds.includes(dragItem.id) && (
       <span className="new-prop">
-        {`${dragItem.name}={${dragItem.name}}`}
+        {' '}
+        {dragItem.name}={'{'}
+        {dragItem.isSpreadMember && 'props.'}
+        {dragItem.name}
+        {'}'}
       </span>
-      {params.map(param => <span key={param.id} className="param">{` ${param.name}={${param.name}}`}</span>)}
-      {closed && ' /'}{'>'}
-    </React.Fragment> :
-    <React.Fragment>
-      {`<${name}`}
-      {params.map(param => <span key={param.id} className="param">{` ${param.name}={${param.name}}`}</span>)}
-      {closed && ' /'}{'>'}
-    </React.Fragment>
+      )}
+    {params.map(param => (
+      <span key={param.id}>
+        {' '}
+        {param.name}
+        =
+        {'{'}
+        {param.isSpreadMember && 'props.'}
+        {param.name}
+        {'}'}
+      </span>
+    ))}
+    {closed && ' /'}
+    {'>'}
+  </React.Fragment>
 )
 
 export default styled(OpenTag).as.span`

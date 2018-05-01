@@ -1,3 +1,4 @@
+import { partition } from 'lodash'
 import React from 'react'
 import { Line, Keyword } from 'components'
 import { ComponentInvocationTreeContainer } from 'containers'
@@ -7,7 +8,8 @@ import { Props } from './components'
 
 export default class StatelessFunctionComponent extends React.Component {
   render() {
-    const { id, exportType, name, params, invocations, spreadParamIds } = this.props
+    const { id, exportType, name, params: allParams, invocations } = this.props
+    const [spreadParams, params] = partition(allParams, p => p.isSpreadMember)
 
     const componentInvocations = invocations // TODO => create invocationExpressions index && filter by expression type
     return (
@@ -17,7 +19,7 @@ export default class StatelessFunctionComponent extends React.Component {
           {exportType === INLINE && <Keyword>export</Keyword>}{' '}
           <Keyword>const</Keyword>{' '}
           {name} =
-          <Props params={params} expressionId={id} spreadParamIds={spreadParamIds} />
+          <Props params={params} spreadParams={spreadParams} expressionId={id} />
            => (
           {componentInvocations.length > 1 && '['}
         </Line>{' '}

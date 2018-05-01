@@ -27,6 +27,8 @@ export const addNames = (names, ...args) => {
 export const addParams = getEntitiesAdder({
   name: required,
   payload: null,
+  // type specific items
+  isSpreadMember: false, // react component expressions
 })
 
 
@@ -44,8 +46,7 @@ export const addExpressions = getEntitiesAdder({
   exportType: DEFAULT,
   invocationIds: [],
   // type specific items
-  tag: null,
-  spreadParamIds: [],
+  tag: null, // styled-component
 })
 
 export const addInvocations = getEntitiesAdder({
@@ -54,8 +55,8 @@ export const addInvocations = getEntitiesAdder({
   paramIds: [],
   invocationIds: [],
   // type specific items
-  modelChildren: [],
-  closed: false,
+  modelChildren: [], // component-invocation
+  closed: false, // component-invocation
 })
 
 

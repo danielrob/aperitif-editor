@@ -22,19 +22,17 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
     case MOVE_PARAM_TO_SPREAD: {
-      const { expressions } = state
-      const { expressionId, paramId } = action.payload
+      const { params } = state
+      const { paramId } = action.payload
 
-      const updater = ({ paramIds, spreadParamIds = [], ...rest }) => ({
-        ...rest,
-        paramIds: paramIds.filter(id => id !== paramId),
-        spreadParamIds: [...spreadParamIds, paramId],
+      const nextParams = updateEntity(params, paramId, {
+        ...params[paramId],
+        isSpreadMember: true,
       })
-      const nextExpressions = updateEntity(expressions, expressionId, updater)
 
       return {
         ...state,
-        expressions: nextExpressions,
+        params: nextParams,
       }
     }
 
