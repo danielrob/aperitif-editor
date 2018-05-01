@@ -6,13 +6,13 @@ import { sortProps } from '../helpers'
 
 import { SpreadPropsContainer, PropContainer } from '../containers'
 
-const Props = ({ params, spreadProps, expressionId }) => (
+const Props = ({ params, spreadParamIds, expressionId }) => (
   <React.Fragment>
     <span>
       {params.sort(sortProps).map(prop => <PropContainer key={prop.name} {...prop} />)}
     </span>
     <SpreadPropsContainer
-      spreadProps={spreadProps}
+      spreadParamIds={spreadParamIds}
       expressionId={expressionId}
       params={params}
     />
@@ -25,6 +25,6 @@ export default styled(Props).as.span`
 
 Props.propTypes = {
   params: T.arrayOf(T.object).isRequired,
-  spreadProps: T.arrayOf(T.number).isRequired,
+  spreadParamIds: T.arrayOf(T.number).isRequired,
   expressionId: T.number.isRequired,
 }

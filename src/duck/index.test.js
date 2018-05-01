@@ -19,7 +19,7 @@ it('responds to the moveParamToSpread action', () => {
     expressions: {
       1: {
         paramIds: [2],
-        restIds: [],
+        spreadParamIds: [],
       },
     },
   }
@@ -30,5 +30,5 @@ it('responds to the moveParamToSpread action', () => {
 
   const updatedExpression = newState.expressions[1]
   expect(updatedExpression.paramIds).toHaveLength(0)
-  expect(updatedExpression.restIds).toHaveLength(1)
+  expect(updatedExpression.spreadParamIds).toHaveLength(1)
 })

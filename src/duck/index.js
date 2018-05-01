@@ -25,10 +25,10 @@ export default function appReducer(state = getTestDB(), action) {
       const { expressions } = state
       const { expressionId, paramId } = action.payload
 
-      const updater = ({ paramIds, restIds = [], ...rest }) => ({
+      const updater = ({ paramIds, spreadParamIds = [], ...rest }) => ({
         ...rest,
         paramIds: paramIds.filter(id => id !== paramId),
-        restIds: [...restIds, paramId],
+        spreadParamIds: [...spreadParamIds, paramId],
       })
       const nextExpressions = updateEntity(expressions, expressionId, updater)
 

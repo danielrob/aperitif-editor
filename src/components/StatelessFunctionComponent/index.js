@@ -7,7 +7,7 @@ import { Props } from './components'
 
 export default class StatelessFunctionComponent extends React.Component {
   render() {
-    const { id, exportType, name, params, invocations, restIds } = this.props
+    const { id, exportType, name, params, invocations, spreadParamIds } = this.props
 
     const componentInvocations = invocations // TODO => create invocationExpressions index && filter by expression type
     return (
@@ -17,7 +17,7 @@ export default class StatelessFunctionComponent extends React.Component {
           {exportType === INLINE && <Keyword>export</Keyword>}{' '}
           <Keyword>const</Keyword>{' '}
           {name} = {'({ '}
-          <Props params={params} expressionId={id} spreadProps={restIds} />
+          <Props params={params} expressionId={id} spreadParamIds={spreadParamIds} />
           {' })'} => (
           {componentInvocations.length > 1 && '['}
         </Line>{' '}
