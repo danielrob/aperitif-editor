@@ -22,6 +22,9 @@ const propSource = {
   beginDrag(props) {
     return props
   },
+  canDrag(props) {
+    return !props.isRoot
+  },
 }
 
 const sourceCollect = (connect, monitor) => ({

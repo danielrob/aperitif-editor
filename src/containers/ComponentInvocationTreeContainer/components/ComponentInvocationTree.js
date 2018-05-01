@@ -6,20 +6,25 @@ import theme from 'theme-proxy'
 import { OpenTagContainer } from '../containers'
 import { InvocationChildren, InvocationPropChildren } from './'
 
-const renderCIT = ({ modelChildren, ...props }) => (
-  <div>
-    <OpenTagContainer {...props} />
-    {/* TODO: Invocation can have a child expression which evaluates to all of this: */}
-    <InvocationPropChildren modelChildren={modelChildren} />
-    <InvocationChildren {...props} />
-    {/* End TODO */}
-    {props.closed || `</${props.name}>`}
-  </div>
-)
-const ComponentInvocationTree = ({ isRoot, connectDragSource, connectDropTarget, ...props }) =>
-  isRoot
-    ? connectDropTarget(renderCIT(props))
-    : connectDragSource(connectDropTarget(renderCIT(props)))
+const ComponentInvocationTree = ({
+  isRoot,
+  connectDragSource,
+  connectDropTarget,
+  modelChildren,
+  ...props
+}) =>
+  connectDragSource(
+    connectDropTarget(
+      <div>
+        <OpenTagContainer {...props} />
+        {/* TODO: Invocation can have a child expression which evaluates to all of this: */}
+        <InvocationPropChildren modelChildren={modelChildren} />
+        <InvocationChildren {...props} />
+        {/* End TODO */}
+        {props.closed || `</${props.name}>`}
+      </div>
+    )
+  )
 
 export default styled(ComponentInvocationTree).as.div`
   display: table;
@@ -27,7 +32,7 @@ export default styled(ComponentInvocationTree).as.div`
   color: ${theme.colors.darkgreen};
   margin-left: 10px;
   padding-left: 0;
-  cursor: ${props => props.isRoot ? 'inherit' : 'pointer'}
+  cursor: ${props => (props.isRoot ? 'inherit' : 'pointer')}
 `
 
 ComponentInvocationTree.propTypes = {
