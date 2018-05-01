@@ -21,7 +21,6 @@ const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params, closed }) =>
 )
 
 export default styled(OpenTag).as.span`
-  width: 100%;
   ${buffer(5)}
 
   .new-prop {

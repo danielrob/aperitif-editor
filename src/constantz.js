@@ -36,7 +36,9 @@ export const exportTypes = {
 
 /* draggable types */
 export const PROP = 'prop'
+export const COMPONENT_INVOCATION = 'component invocation'
 
 export const DraggableTypes = {
   PROP,
+  COMPONENT_INVOCATION,
 }

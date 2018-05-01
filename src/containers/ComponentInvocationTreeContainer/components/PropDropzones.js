@@ -12,7 +12,6 @@ export default styled(PropDropzones).as.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  width: 100%;
   ${props => props.isSupremeOver && 'min-height: 35px'}
   ${props => props.isSupremeOver && 'padding: 5px'}
   transition: min-height 50ms;

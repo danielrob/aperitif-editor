@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { createComponentBundle } from 'duck'
-import { DropTarget } from 'react-dnd'
+import { DropTarget, DragSource } from 'react-dnd'
 
 import { DraggableTypes } from 'constantz'
 import { compose } from 'utils'
@@ -17,9 +17,22 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = { createComponentBundle }
 
 /* dnd */
+// source
+const propSource = {
+  beginDrag(props) {
+    return props
+  },
+}
+
+const sourceCollect = (connect, monitor) => ({
+  connectDragSource: connect.dragSource(),
+  isDragging: monitor.isDragging(),
+})
+
+// target
 const dropzoneTarget = {}
 
-const collect = (connect, monitor) => ({
+const targetCollect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isSupremeOver: monitor.isOver(),
   dragItem: monitor.getItem(),
@@ -28,5 +41,6 @@ const collect = (connect, monitor) => ({
 /* compose */
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
-  DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)
+  DragSource(DraggableTypes.COMPONENT_INVOCATION, propSource, sourceCollect),
+  DropTarget(DraggableTypes.PROP, dropzoneTarget, targetCollect)
 )(ComponentInvocationTree)
