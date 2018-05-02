@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { DropTarget } from 'react-dnd'
+import { DropTarget, DragSource } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
@@ -28,6 +28,19 @@ class SpreadPropsContainer extends React.Component {
 const mapStateToProps = { moveParamToSpread }
 
 /* dnd */
+// source
+const sourceSpec = {
+  beginDrag(props) {
+    return props
+  },
+}
+
+const sourceCollect = (connect, monitor) => ({
+  connectDragSource: connect.dragSource(),
+  isDragging: monitor.isDragging(),
+})
+
+// target
 const dropzoneTarget = {
   drop(props, monitor) {
     const { expressionId, moveParamToSpread } = props
@@ -39,7 +52,7 @@ const dropzoneTarget = {
   },
 }
 
-const collect = (connect, monitor) => ({
+const targetCollect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
   dragItem: monitor.getItem(),
@@ -48,6 +61,7 @@ const collect = (connect, monitor) => ({
 /* compose */
 export default compose(
   connect(null, mapStateToProps),
-  DropTarget(DraggableTypes.PROP, dropzoneTarget, collect),
+  DragSource(DraggableTypes.PROPS_SPREAD, sourceSpec, sourceCollect),
+  DropTarget(DraggableTypes.PROP, dropzoneTarget, targetCollect),
 )(SpreadPropsContainer)
 
