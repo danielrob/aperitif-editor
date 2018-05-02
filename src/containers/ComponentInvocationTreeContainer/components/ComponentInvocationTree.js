@@ -11,17 +11,22 @@ const ComponentInvocationTree = ({
   connectDragSource,
   connectDropTarget,
   modelChildren,
+  isDragging,
   ...props
 }) =>
   connectDragSource(
     connectDropTarget(
       <div>
-        <OpenTagContainer {...props} />
-        {/* TODO: Invocation can have a child expression which evaluates to all of this: */}
-        <InvocationPropChildren modelChildren={modelChildren} />
-        <InvocationChildren {...props} />
-        {/* End TODO */}
-        {props.closed || `</${props.name}>`}
+        {!isDragging && (
+          <React.Fragment>
+            <OpenTagContainer {...props} />
+            {/* TODO: Invocation can have a child expression which evaluates to all of this: */}
+            <InvocationPropChildren modelChildren={modelChildren} />
+            <InvocationChildren {...props} />
+            {/* End TODO */}
+            {props.closed || `</${props.name}>`}
+          </React.Fragment>
+        )}
       </div>
     )
   )
@@ -48,6 +53,7 @@ ComponentInvocationTree.propTypes = {
   connectDragSource: T.func.isRequired,
   connectDropTarget: T.func.isRequired,
   isSupremeOver: T.bool.isRequired,
+  isDragging: T.bool.isRequired,
 }
 
 ComponentInvocationTree.defaultProps = {
