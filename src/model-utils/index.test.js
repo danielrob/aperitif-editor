@@ -1,4 +1,4 @@
-import { addNames, updateEntity, insertAt, insertAtKey } from './'
+import { addNames, updateEntity, updateEntityAtKey, insertAt, insertAtKey } from './'
 
 it('addName adds name to names', () => {
   const names = { 1: 'index', 2: 'app' }
@@ -32,6 +32,15 @@ it('updateEntity updates entity via function in entities', () => {
   expect(betterCats[2].legs).toEqual(4)
 })
 
+it('updateEntityAtKey updates an entities key', () => {
+  const cats = { 1: {}, 2: { hi: 'bonjour' }, 3: {} }
+
+  const betterCats = updateEntityAtKey(cats, 2, 'hi', 'hello')
+  // not mutated
+  expect(cats).not.toEqual(betterCats)
+  // is updated
+  expect(betterCats[2].hi).toEqual('hello')
+})
 
 it('insertAt inserts element to array', () => {
   const cats = [1, 2, 3, 4, 5]

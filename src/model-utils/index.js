@@ -57,6 +57,7 @@ export const addInvocations = getEntitiesAdder({
   // type specific items
   modelChildren: [], // component-invocation
   closed: false, // component-invocation
+  hasPropsSpread: false,
 })
 
 
@@ -73,7 +74,27 @@ export const updateEntity = (entities, entityId, valueOrUpdater) => ({
   ...entities,
   [entityId]: typeof valueOrUpdater === 'function'
     ? valueOrUpdater(entities[entityId])
-    : Object.assign({ id: entities[entityId].id }, entities[entityId], valueOrUpdater),
+    : {
+      ...entities[entityId],
+      ...valueOrUpdater,
+      id: [entityId],
+    },
+})
+
+/**
+ * @function updateEntityAtKey: { ..., [id]: { ...oldEntity, key: newValue }, }
+ * @param {Object} entities: e.g. a model table
+ * @param {integer} entityId: id of entity to be updated
+ * @param {string|number} key: corresponding key in entity for which value shall be set
+ * @param {*} newValue: value to set
+ */
+export const updateEntityAtKey = (entities, entityId, key, newValue) => ({
+  ...entities,
+  [entityId]: {
+    ...entities[entityId],
+    [key]: newValue,
+    id: entityId,
+  },
 })
 
 /**
