@@ -9,6 +9,7 @@
   },
   "rules": {
     "comma-dangle": ["error", "always-multiline"],
+    "consistent-return": "off",
     "object-curly-newline": "off",
     "function-paren-newline": "off",
     "jsx-a11y/href-no-hash": "off",

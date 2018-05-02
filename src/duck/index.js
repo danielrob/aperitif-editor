@@ -1,6 +1,14 @@
 import { createAction } from 'redux-actions'
 
-import { addNames, addFiles, addExpressions, addInvocations, insertAtKey, updateEntity } from 'model-utils'
+import {
+  addNames,
+  addFiles,
+  addExpressions,
+  addInvocations,
+  insertAtKey,
+  updateEntity,
+  updateEntityAtKey,
+} from 'model-utils'
 import { DIR, STYLED_COMPONENT } from 'constantz'
 import { capitalize } from 'utils'
 
@@ -8,8 +16,9 @@ import { getNewComponentName } from './helpers'
 import getTestDB from './getTestDB'
 
 export const CREATE_COMPONENT_BUNDLE = 'CREATE_COMPONENT_BUNDLE'
-export const ADD_PARAM_TO_COMPONENT_INVOCATION = 'ADD_PARAM_TO_COMPONENT_INVOCATION'
+export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const MOVE_PARAM_TO_SPREAD = 'MOVE_PARAM_TO_SPREAD'
+export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const CHANGE_FILE = 'CHANGE_FILE'
 
 export default function appReducer(state = getTestDB(), action) {
@@ -23,20 +32,30 @@ export default function appReducer(state = getTestDB(), action) {
 
     case MOVE_PARAM_TO_SPREAD: {
       const { params } = state
-      const { paramId } = action.payload
-
-      const nextParams = updateEntity(params, paramId, {
-        ...params[paramId],
-        isSpreadMember: true,
-      })
+      const { payload: { paramId } } = action
 
       return {
         ...state,
-        params: nextParams,
+        params: updateEntityAtKey(params, paramId, 'isSpreadMember', true),
       }
     }
 
-    case ADD_PARAM_TO_COMPONENT_INVOCATION: {
+    case ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
+      const { invocations } = state
+      const { payload: { invocationId } } = action
+
+      return {
+        ...state,
+        invocations: updateEntityAtKey(
+          invocations,
+          invocationId,
+          'hasPropsSpread',
+          true
+        ),
+      }
+    }
+
+    case ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
       const { invocations } = state
       const { payload: { parentId, item: { id: itemId } } } = action
 
@@ -135,8 +154,12 @@ export const changeFile = createAction(
   CHANGE_FILE
 )
 
-export const addParamToComponentInvocation = createAction(
-  ADD_PARAM_TO_COMPONENT_INVOCATION
+export const addAttributeToComponentInvocation = createAction(
+  ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION
+)
+
+export const addPropsSpreadToComponentInvocation = createAction(
+  ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION
 )
 
 export const moveParamToSpread = createAction(

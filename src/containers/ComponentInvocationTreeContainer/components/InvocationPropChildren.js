@@ -15,7 +15,10 @@ const InvocationPropChildren = ({ modelChildren }) => (
     {modelChildren.map(child => (
       <span key={child.id}>
         {'{'}
-        <span className="prop-as-child">{child.name}</span>
+        <span className="prop-as-child">
+          {child.isSpreadMember && 'props.'}
+          {child.name}
+        </span>
         {'}'}
       </span>
     ))}

@@ -1,13 +1,24 @@
 import React from 'react'
 import styled, { css } from 'styled-as-components'
+
 import theme from 'theme-proxy'
+import { PROP, PROPS_SPREAD } from 'constantz'
 import { buffer } from 'styleUtils'
 
-const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params, closed }) => (
+const OpenTag = ({
+  name,
+  isSupremeOver,
+  isShallowOver,
+  dragItem,
+  paramIds,
+  params,
+  closed,
+  hasPropsSpread,
+}) => (
   <React.Fragment>
     {`<${name}`}
-    {isSupremeOver && dragItem && !paramIds.includes(dragItem.id) && (
-      <span className="new-prop">
+    {isSupremeOver && (dragItem || {}).type === PROP && !paramIds.includes(dragItem.id) && (
+      <span className="new-attribute">
         {' '}
         {dragItem.name}={'{'}
         {dragItem.isSpreadMember && 'props.'}
@@ -15,7 +26,12 @@ const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params, closed }) =>
         {'}'}
       </span>
       )}
-    {params.map(param => (
+    {(hasPropsSpread || (isShallowOver && (dragItem || {}).type === PROPS_SPREAD)) && (
+      <span className="spread-props-attribute">
+        {' {'}...props{'}'}
+      </span>
+      )}
+    {params.map(param => !(hasPropsSpread && param.isSpreadMember) ? (
       <span key={param.id}>
         {' '}
         {param.name}
@@ -25,7 +41,7 @@ const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params, closed }) =>
         {param.name}
         {'}'}
       </span>
-    ))}
+    ) : null )}
     {closed && ' /'}
     {'>'}
   </React.Fragment>
@@ -34,7 +50,7 @@ const OpenTag = ({ name, isSupremeOver, dragItem, paramIds, params, closed }) =>
 export default styled(OpenTag).as.span`
   ${buffer(5)}
 
-  .new-prop {
+  .new-attribute {
     color: ${theme.color.darkblue};
     ${props => props.isSupremeOver && !props.isOver && 'font-size: 14px'};
     ${props => props.isSupremeOver && !props.isOver && css`color: ${theme.color.grey};`}

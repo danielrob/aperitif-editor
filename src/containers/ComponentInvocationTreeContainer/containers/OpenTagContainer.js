@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
-import { addParamToComponentInvocation } from 'duck'
+import { addAttributeToComponentInvocation, addPropsSpreadToComponentInvocation } from 'duck'
 import { DraggableTypes } from 'constantz'
 import { compose } from 'utils'
 
@@ -20,14 +20,24 @@ class OpenTagContainer extends React.Component {
 
 /* connect */
 const mapDispatchToProps = {
-  addParamToComponentInvocation,
+  addAttributeToComponentInvocation,
+  addPropsSpreadToComponentInvocation,
 }
 
 /* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { id: parentId, addParamToComponentInvocation } = props
-    addParamToComponentInvocation({ parentId, item: monitor.getItem() })
+    switch (monitor.getItemType()) {
+      case DraggableTypes.PROP: {
+        const { id: parentId, addAttributeToComponentInvocation } = props
+        return addAttributeToComponentInvocation({ parentId, item: monitor.getItem() })
+      }
+      case DraggableTypes.PROPS_SPREAD: {
+        const { id, addPropsSpreadToComponentInvocation } = props
+        return addPropsSpreadToComponentInvocation({ invocationId: id })
+      }
+      default:
+    }
   },
 
   canDrop(props, monitor) {
@@ -40,11 +50,19 @@ const dropzoneTarget = {
 const collect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
-  dragItem: monitor.getItem(),
+  isShallowOver: monitor.isOver({ shallow: true }),
+  dragItem: {
+    ...monitor.getItem(),
+    type: monitor.getItemType(),
+  },
+
 })
 
 /* compose */
 export default compose(
   connect(null, mapDispatchToProps),
-  DropTarget(DraggableTypes.PROP, dropzoneTarget, collect),
+  DropTarget([
+    DraggableTypes.PROP,
+    DraggableTypes.PROPS_SPREAD,
+  ], dropzoneTarget, collect)
 )(OpenTagContainer)

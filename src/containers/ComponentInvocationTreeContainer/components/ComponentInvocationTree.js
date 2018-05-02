@@ -43,6 +43,7 @@ ComponentInvocationTree.propTypes = {
   params: T.arrayOf(T.object).isRequired,
   modelChildren: T.arrayOf(T.object),
   isClosed: T.bool,
+  hasPropsSpread: T.bool,
   // Injected by React DnD:
   connectDragSource: T.func.isRequired,
   connectDropTarget: T.func.isRequired,
