@@ -1,7 +1,7 @@
 export const required = 'required'
 export const requiredOrNull = 'requiredOrNull'
 
-export const SEMIS = false
+export const SEMIS = true
 
 /* fileTypes */
 export const JS = 'js'
