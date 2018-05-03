@@ -1,15 +1,15 @@
 import React from 'react'
 import styled from 'styled-as-components'
+
 import theme from 'theme-proxy'
+import { indent } from 'utils'
 
-import { In } from 'components'
-
-const InvocationPropChildren = ({ modelChildren }) => (
+const InvocationPropChildren = ({ modelChildren, depth }) => (
   <React.Fragment>
     {modelChildren.length ? (
       <React.Fragment>
         <br />
-        <In />
+        {indent(depth + 1)}
       </React.Fragment>
     ) : null}
     {modelChildren.map(child => (

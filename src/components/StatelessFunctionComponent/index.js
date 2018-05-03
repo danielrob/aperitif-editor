@@ -24,7 +24,7 @@ export default class StatelessFunctionComponent extends React.Component {
           {componentInvocations.length > 1 && '['}
         </Line>{' '}
         {componentInvocations.map(({ id }) =>
-          <ComponentInvocationTreeContainer key={id} invocationId={id} isRoot />)
+          <ComponentInvocationTreeContainer key={id} invocationId={id} depth={1} />)
         }
         <Line statement>{componentInvocations.length > 1 && ']'})</Line>
       </div>

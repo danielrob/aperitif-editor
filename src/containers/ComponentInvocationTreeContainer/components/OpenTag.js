@@ -3,6 +3,7 @@ import styled, { css } from 'styled-as-components'
 
 import theme from 'theme-proxy'
 import { PROP, PROPS_SPREAD } from 'constantz'
+import { indent } from 'utils'
 import { buffer } from 'styleUtils'
 
 const OpenTag = ({
@@ -14,9 +15,10 @@ const OpenTag = ({
   params,
   closed,
   hasPropsSpread,
+  depth,
 }) => (
   <React.Fragment>
-    {`<${name}`}
+    {indent(depth)}{`<${name}`}
     {isSupremeOver && (dragItem || {}).type === PROP && !paramIds.includes(dragItem.id) && (
       <span className="new-attribute">
         {' '}
@@ -31,7 +33,7 @@ const OpenTag = ({
         {' {'}...props{'}'}
       </span>
       )}
-    {params.map(param => !(hasPropsSpread && param.isSpreadMember) ? (
+    {params.map(param => !(hasPropsSpread && param.isSpreadMember) && (
       <span key={param.id}>
         {' '}
         {param.name}
@@ -41,13 +43,13 @@ const OpenTag = ({
         {param.name}
         {'}'}
       </span>
-    ) : null )}
+    ))}
     {closed && ' /'}
     {'>'}
   </React.Fragment>
 )
 
-export default styled(OpenTag).as.span`
+export default styled(OpenTag).as.span.attrs({ style: { userSelect: 'text' } })`
   ${buffer(5)}
 
   .new-attribute {

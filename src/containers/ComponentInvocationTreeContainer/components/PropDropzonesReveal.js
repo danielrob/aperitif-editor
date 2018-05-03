@@ -2,8 +2,7 @@ import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
-import { In } from 'components'
-import { capitalize } from 'utils'
+import { capitalize, indent } from 'utils'
 import {
   // SimplePropDropzone,
   NewWithPropDropzone,
@@ -25,8 +24,7 @@ const PropDropzonesReveal = ({ dragItem, ...props }) => (
     <NewWithPropDropzone {...props}>
       <div>
         {'<'}{capitalize(dragItem.name)}<br />
-        <In />
-        {`${dragItem.name}={${dragItem.name}}`}<br />
+        {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
         {'/>'}
       </div>
     </NewWithPropDropzone>

@@ -1,13 +1,13 @@
 import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
+
 import theme from 'theme-proxy'
 
 import { OpenTagContainer } from '../containers'
-import { InvocationChildren, InvocationPropChildren } from './'
+import { InvocationChildren, InvocationPropChildren, CloseTag } from './'
 
 const ComponentInvocationTree = ({
-  isRoot,
   connectDragSource,
   connectDropTarget,
   modelChildren,
@@ -16,15 +16,15 @@ const ComponentInvocationTree = ({
 }) =>
   connectDragSource(
     connectDropTarget(
-      <div>
+      <div style={{ userSelect: 'text' }}>
         {!isDragging && (
           <React.Fragment>
             <OpenTagContainer {...props} />
             {/* TODO: Invocation can have a child expression which evaluates to all of this: */}
-            <InvocationPropChildren modelChildren={modelChildren} />
+            <InvocationPropChildren modelChildren={modelChildren} depth={props.depth} />
             <InvocationChildren {...props} />
             {/* End TODO */}
-            {props.closed || `</${props.name}>`}
+            {!props.closed && <CloseTag name={props.name} depth={props.depth} />}
           </React.Fragment>
         )}
       </div>
@@ -35,9 +35,8 @@ export default styled(ComponentInvocationTree).as.div`
   display: table;
   width: auto;
   color: ${theme.colors.darkgreen};
-  margin-left: 10px;
   padding-left: 0;
-  cursor: ${props => (props.isRoot ? 'inherit' : 'pointer')}
+  cursor: ${props => (props.depth === 0 ? 'inherit' : 'pointer')}
 `
 
 ComponentInvocationTree.propTypes = {

@@ -30,7 +30,4 @@ export default styled(Editor).as.div`
   padding: 50px 100px;
   color: ${theme.colors.darkblue};
   min-width: 960px;
-  >* {
-    margin-bottom: 12px;
-  }
 `

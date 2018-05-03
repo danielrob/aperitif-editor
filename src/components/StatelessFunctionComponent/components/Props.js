@@ -9,17 +9,16 @@ import { SpreadPropsContainer, PropContainer } from '../containers'
 const Props = ({ params, spreadParams, expressionId }) => (
   <React.Fragment>
     {' '}
-    {!!params.length && '({'}
-    {' '}
-    <span>{params.sort(sortProps).map(prop => <PropContainer key={prop.name} {...prop} />)}</span>
-    <SpreadPropsContainer
-      spreadParams={spreadParams}
-      expressionId={expressionId}
-      params={params}
-    />
-    {' '}
-    {!!params.length && '})'}
-    {' '}
+    {!!params.length && '({'}{' '}
+    <span>
+      {params
+        .sort(sortProps)
+        .map((prop, i) => (
+          <PropContainer key={prop.name} isLast={i === params.length - 1} {...prop} />
+        ))}
+    </span>
+    <SpreadPropsContainer spreadParams={spreadParams} expressionId={expressionId} params={params} />{' '}
+    {!!params.length && '})'}{' '}
   </React.Fragment>
 )
 

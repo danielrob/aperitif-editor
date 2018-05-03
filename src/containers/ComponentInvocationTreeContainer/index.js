@@ -23,7 +23,7 @@ const propSource = {
     return props
   },
   canDrag(props) {
-    return !props.isRoot
+    return !!props.depth
   },
 }
 

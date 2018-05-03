@@ -1,4 +1,5 @@
 export { default as ComponentInvocationTree } from './ComponentInvocationTree'
+export { default as CloseTag } from './CloseTag'
 export { default as InvocationChildren } from './InvocationChildren'
 export { default as InvocationPropChildren } from './InvocationPropChildren'
 export { default as OpenTag } from './OpenTag'
