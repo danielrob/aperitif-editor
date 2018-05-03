@@ -3,8 +3,8 @@ import { Helmet } from 'react-helmet'
 import { Switch, Route } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { Header, Footer, Workspace } from 'components'
-import { WelcomePage, NotFoundPage } from 'containers'
+import { Header, Footer } from 'components'
+import { WelcomePage, NotFoundPage, WorkspaceContainer } from 'containers'
 
 const AppWrapper = styled.div`
   position: absolute;
@@ -24,7 +24,7 @@ export default class App extends Component {
         <Header />
         <Switch>
           <Route exact path="/" component={WelcomePage} />
-          <Route path="/editor" component={Workspace} />
+          <Route path="/editor" component={WorkspaceContainer} />
           <Route path="" component={NotFoundPage} />
         </Switch>
         <Footer />

@@ -2,14 +2,15 @@ import React from 'react'
 import styled from 'styled-as-components'
 import { FileExplorerContainer, EditorContainer } from 'containers'
 
-const Workspace = () => (
+import Divider from './Divider'
+
+const Workspace = props => (
   <React.Fragment>
     <FileExplorerContainer />
+    <Divider {...props} />
     <EditorContainer />
   </React.Fragment>
 )
-
-const width = 150
 
 export default styled(Workspace).as.div`
   & > div {
@@ -21,11 +22,11 @@ export default styled(Workspace).as.div`
     top: 0;
     left: 0;
     bottom: 0;
-    width: ${width}px;
+    width: ${props => props.width}px;
   }
   & > div:last-child {
     top: 0;
-    left: ${width}px;
+    left: ${props => props.width}px;
     right: 0;
   }
 `
