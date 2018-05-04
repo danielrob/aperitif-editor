@@ -25,7 +25,7 @@ class SpreadPropsContainer extends React.Component {
 }
 
 /* connect */
-const mapStateToProps = { moveParamToSpread }
+const mapDispatchToProps = { moveParamToSpread }
 
 /* dnd */
 // source
@@ -60,7 +60,7 @@ const targetCollect = (connect, monitor) => ({
 
 /* compose */
 export default compose(
-  connect(null, mapStateToProps),
+  connect(null, mapDispatchToProps),
   DragSource(DraggableTypes.PROPS_SPREAD, sourceSpec, sourceCollect),
   DropTarget(DraggableTypes.PROP, dropzoneTarget, targetCollect),
 )(SpreadPropsContainer)
