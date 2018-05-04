@@ -9,7 +9,7 @@ import {
   NewWithPropAsChildPropDropzone,
 } from '../containers'
 
-const PropDropzonesReveal = ({ dragItem, ...props }) => (
+const CIDropzonesReveal = ({ dragItem, ...props }) => (
   <React.Fragment>
     {/* <SimplePropDropzone>
       <div>
@@ -31,13 +31,13 @@ const PropDropzonesReveal = ({ dragItem, ...props }) => (
   </React.Fragment>
 )
 
-export default styled(PropDropzonesReveal).as.div`
+export default styled(CIDropzonesReveal).as.div`
   color: ${theme.color.grey};
   height: 100%;
   display: flex;
   flex-direction: column;
 `
 
-PropDropzonesReveal.propTypes = {
+CIDropzonesReveal.propTypes = {
   dragItem: T.shape({ name: T.string }).isRequired,
 }

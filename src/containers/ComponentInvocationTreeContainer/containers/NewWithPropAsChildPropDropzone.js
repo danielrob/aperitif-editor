@@ -8,18 +8,18 @@ import { compose } from 'utils'
 import { DraggableTypes } from 'constantz'
 import { createComponentBundle } from 'duck'
 
-import { PropDropzone } from '../components'
+import { CIDropzone } from '../components'
 
 class NewWithPropAsChildPropDropzone extends React.Component {
   render() {
     const { connectDropTarget, children } = this.props
     return (
-      <PropDropzone
+      <CIDropzone
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
         {...this.props}
       >
         {children}
-      </PropDropzone>
+      </CIDropzone>
     )
   }
 }

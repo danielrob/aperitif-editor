@@ -4,13 +4,13 @@ import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 import { DraggableTypes } from 'constantz'
 
-import { PropDropzones } from '../components'
+import { CIDropzones } from '../components'
 
-class PropDropzonesContainer extends React.Component {
+class CIDropzonesContainer extends React.Component {
   render() {
     const { connectDropTarget } = this.props
     return (
-      <PropDropzones
+      <CIDropzones
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
         {...this.props}
       />
@@ -29,4 +29,4 @@ const collect = (connect, monitor) => ({
 })
 
 /* export */
-export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(PropDropzonesContainer)
+export default DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)(CIDropzonesContainer)

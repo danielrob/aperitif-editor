@@ -4,18 +4,18 @@ import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 import { DraggableTypes } from 'constantz'
 
-import { PropDropzone } from '../components'
+import { CIDropzone } from '../components'
 
 class SimplePropDropzone extends React.Component {
   render() {
     const { connectDropTarget, children } = this.props
     return (
-      <PropDropzone
+      <CIDropzone
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
         {...this.props}
       >
         {children}
-      </PropDropzone>
+      </CIDropzone>
     )
   }
 }

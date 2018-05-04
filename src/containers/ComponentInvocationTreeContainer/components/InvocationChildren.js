@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ComponentInvocationTreeContainer } from 'containers'
 
-import { PropDropzonesContainer } from '../containers'
+import { CIDropzonesContainer } from '../containers'
 
 const InvocationChildren = ({ id, invocationIds, depth, createComponentBundle, ...props }) =>
   invocationIds.reduce(
@@ -16,7 +16,7 @@ const InvocationChildren = ({ id, invocationIds, depth, createComponentBundle, .
       )
       // This will probably be replaced by draggable reordering.
       // out.push(
-      //   <PropDropzonesContainer
+      //   <CIDropzonesContainer
       //     key={`invocation-${invocationId}-drop`}
       //     onClickAction={createComponentBundle}
       //     onDropAction={() => undefined}
@@ -29,7 +29,7 @@ const InvocationChildren = ({ id, invocationIds, depth, createComponentBundle, .
     },
     [
       // the starting dropzone
-      <PropDropzonesContainer
+      <CIDropzonesContainer
         key="first"
         onClickAction={createComponentBundle}
         onDropAction={() => undefined}

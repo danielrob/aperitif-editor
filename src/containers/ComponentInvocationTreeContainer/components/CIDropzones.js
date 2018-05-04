@@ -3,17 +3,17 @@ import styled from 'styled-as-components'
 
 import { indent } from 'utils'
 
-import { PropDropzonesReveal } from './'
+import { CIDropzonesReveal } from './'
 
-const PropDropzones = ({ parentId, dragItem, position, isOverCI, depth }) =>
+const CIDropzones = ({ parentId, dragItem, position, isOverCI, depth }) =>
   isOverCI ? (
     <React.Fragment>
       {indent(depth)}
-      <PropDropzonesReveal dragItem={dragItem} parentId={parentId} position={position} />
+      <CIDropzonesReveal dragItem={dragItem} parentId={parentId} position={position} />
     </React.Fragment>
   ) : null
 
-export default styled(PropDropzones).as.div`
+export default styled(CIDropzones).as.div`
   display: flex;
   align-items: center;
   cursor: pointer;
