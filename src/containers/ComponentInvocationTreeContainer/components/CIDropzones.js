@@ -2,23 +2,46 @@ import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
-import { indent } from 'utils'
+import theme from 'theme-proxy'
+import { capitalize, indent } from 'utils'
+import {
+  // SimplePropDropzone,
+  NewWithPropDropzone,
+  NewWithPropAsChildPropDropzone,
+} from '../containers'
 
-import { CIDropzonesReveal } from './'
-
-const CIDropzones = ({ id, depth, isOverCI, ...props }) => isOverCI ? (
+const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisplay ? (
   <React.Fragment>
     {indent(depth + 1)}
-    <CIDropzonesReveal parentId={id} position={0} {...props} />
+    <div className="zones">
+      {/* <SimplePropDropzone>
+          {`{${dragItem.name}}`}
+      </SimplePropDropzone> */}
+      <NewWithPropAsChildPropDropzone {...props}>
+        {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
+      </NewWithPropAsChildPropDropzone>
+      <NewWithPropDropzone {...props}>
+        {'<'}{capitalize(dragItem.name)}<br />
+        {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
+        {'/>'}
+      </NewWithPropDropzone>
+    </div>
   </React.Fragment>
 ) : null
 
 export default styled(CIDropzones).as.div`
   display: flex;
+  .zones {
+    display: flex;
+    flex-direction: column;
+    color: ${theme.color.grey};
+  }
 `
+
+
 CIDropzones.propTypes = {
   id: T.number.isRequired,
-  isOverCI: T.bool.isRequired,
+  shouldDisplay: T.bool.isRequired,
   dragItem: T.shape({ name: T.string }),
 }
 

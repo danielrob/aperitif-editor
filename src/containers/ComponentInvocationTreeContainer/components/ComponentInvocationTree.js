@@ -12,14 +12,18 @@ const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, 
     {connectDropTarget(
       <div>
         <OpenTagContainer {...props} />
-        <CIDropzones {...props} isOverCI={props.isOverCIT1} />
+        <CIDropzones {...props} position={0} shouldDisplay={props.isOverCIT1} />
         <InvocationPropChildren {...props} />
       </div>
     )}
     <InvocationChildren {...props} />
     {connectClosingDropTarget(
       <div>
-        <CIDropzones {...props} isOverCI={props.isOverCIT2} />
+        <CIDropzones
+          {...props}
+          position={props.invocationIds.length}
+          shouldDisplay={props.isOverCIT2}
+        />
         <CloseTag name={props.name} depth={props.depth} shouldDisplay={!props.closed} />
       </div>
     )}

@@ -32,7 +32,7 @@ const mapDispatchToProps = {
 /* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { parentId, newWithPropAsChild, position } = props
+    const { id: parentId, newWithPropAsChild, position } = props
     newWithPropAsChild({ parentId, position, item: monitor.getItem(), closed: true })
   },
 }
