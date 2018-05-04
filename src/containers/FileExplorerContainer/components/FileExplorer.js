@@ -2,11 +2,11 @@ import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
-import File from './File'
+import { FileContainer } from '../containers'
 
 const FileExplorer = ({ files, rootFiles, changeFile, names }) =>
   rootFiles.map(fileId => (
-    <File
+    <FileContainer
       key={fileId}
       file={files[fileId]}
       files={files}

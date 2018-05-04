@@ -1,5 +1,4 @@
 export { default as Flex } from './Flex'
-export { default as FileExplorer } from './FileExplorer'
 export { default as Footer } from './Footer'
 export { default as Header } from './Header'
 export { default as Keyword } from './Keyword'

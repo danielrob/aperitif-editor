@@ -38,9 +38,12 @@ export const exportTypes = {
 export const PROP = 'prop'
 export const COMPONENT_INVOCATION = 'component invocation'
 export const PROPS_SPREAD = '...props'
+export const FILE = 'file'
 
 export const DraggableTypes = {
   PROP,
   COMPONENT_INVOCATION,
   PROPS_SPREAD,
+  FILE,
+  DIR,
 }

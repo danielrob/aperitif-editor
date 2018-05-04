@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
 import { changeFile } from 'duck'
-import { FileExplorer } from 'components'
 import { selectFiles, selectNames, selectRootFiles, selectCurrentFileId } from 'selectors'
+
+import { FileExplorer } from './components'
 
 const FileExplorerContainer = props => <FileExplorer {...props} />
 
