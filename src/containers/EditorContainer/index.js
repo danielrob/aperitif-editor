@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import { Editor } from 'components'
 import { getCurrentFileImports, getCurrentFileDefaultExport } from 'selectors'
 
+import { Editor } from './components'
 import { selectCurrentFileExpressions } from './selectors'
 
 const EditorContainer = props => <Editor {...props} />

@@ -5,7 +5,7 @@ import theme from 'theme-proxy'
 import { StatelessFunctionComponent, StyledComponent, Standard } from 'components'
 import { STATELESS_FUNCTION_COMPONENT, STYLED_COMPONENT } from 'constantz'
 
-import { Imports, DefaultExport } from './components'
+import { Imports, DefaultExport } from './'
 
 const renderers = {
   [STATELESS_FUNCTION_COMPONENT]: StatelessFunctionComponent,
