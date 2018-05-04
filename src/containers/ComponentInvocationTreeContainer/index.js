@@ -37,7 +37,7 @@ const dropzoneTarget = {}
 
 const targetCollect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
-  isSupremeOver: monitor.isOver(),
+  isOverCI: monitor.isOver(),
   dragItem: monitor.getItem(),
 })
 

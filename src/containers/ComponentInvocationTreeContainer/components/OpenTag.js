@@ -8,54 +8,59 @@ import { buffer } from 'styleUtils'
 
 const OpenTag = ({
   name,
-  isSupremeOver,
-  isShallowOver,
+  isOverCI,
+  isOverOpenTag,
   dragItem,
   paramIds,
   params,
   closed,
   hasPropsSpread,
   depth,
-}) => (
-  <React.Fragment>
-    {indent(depth)}{`<${name}`}
-    {isSupremeOver && (dragItem || {}).type === PROP && !paramIds.includes(dragItem.id) && (
-      <span className="new-attribute">
-        {' '}
-        {dragItem.name}={'{'}
-        {dragItem.isSpreadMember && 'props.'}
-        {dragItem.name}
-        {'}'}
-      </span>
-      )}
-    {(hasPropsSpread || (isShallowOver && (dragItem || {}).type === PROPS_SPREAD)) && (
-      <span className="spread-props-attribute">
-        {' {'}...props{'}'}
-      </span>
-      )}
-    {params.map(param => !(hasPropsSpread && param.isSpreadMember) && (
-      <span key={param.id}>
-        {' '}
-        {param.name}
-        =
-        {'{'}
-        {param.isSpreadMember && 'props.'}
-        {param.name}
-        {'}'}
-      </span>
-    ))}
-    {closed && ' /'}
-    {'>'}
-  </React.Fragment>
-)
+}) => {
+  const spreadPropsIsOver = isOverOpenTag && dragItem.type === PROPS_SPREAD
+  const propIsOver = isOverCI && dragItem.type === PROP && !paramIds.includes(dragItem.id)
+
+  return (
+    <React.Fragment>
+      {indent(depth)}{`<${name}`}
+      {propIsOver && (
+        <span className="new-attribute-preview">
+          {' '}
+          {dragItem.name}={'{'}
+          {dragItem.isSpreadMember && 'props.'}
+          {dragItem.name}
+          {'}'}
+        </span>
+        )}
+      {(hasPropsSpread || spreadPropsIsOver) && (
+        <span className="spread-props-attribute">
+          {' {'}...props{'}'}
+        </span>
+        )}
+      {params.map(param => !(hasPropsSpread && param.isSpreadMember) && (
+        <span key={param.id}>
+          {' '}
+          {param.name}
+          =
+          {'{'}
+          {param.isSpreadMember && 'props.'}
+          {param.name}
+          {'}'}
+        </span>
+      ))}
+      {closed && ' /'}
+      {'>'}
+    </React.Fragment>
+  )
+}
 
 export default styled(OpenTag).as.span.attrs({ style: { userSelect: 'text' } })`
   ${buffer(5)}
 
-  .new-attribute {
+  .new-attribute-preview {
     color: ${theme.color.darkblue};
-    ${props => props.isSupremeOver && !props.isOver && 'font-size: 14px'};
-    ${props => props.isSupremeOver && !props.isOver && css`color: ${theme.color.grey};`}
+    ${props => props.isOverCIButNotOpenTag && 'font-size: 14px'};
+    ${props => props.isOverCIButNotOpenTag && css`color: ${theme.color.grey};`}
     transition: 130ms;
   }
 `

@@ -31,12 +31,6 @@ const PropDropzonesReveal = ({ dragItem, ...props }) => (
   </React.Fragment>
 )
 
-PropDropzonesReveal.propTypes = {
-  dragItem: T.shape({
-    name: T.string,
-  }).isRequired,
-}
-
 export default styled(PropDropzonesReveal).as.div`
   color: ${theme.color.grey};
   height: 100%;
@@ -44,3 +38,6 @@ export default styled(PropDropzonesReveal).as.div`
   flex-direction: column;
 `
 
+PropDropzonesReveal.propTypes = {
+  dragItem: T.shape({ name: T.string }).isRequired,
+}

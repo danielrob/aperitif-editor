@@ -51,7 +51,7 @@ ComponentInvocationTree.propTypes = {
   // Injected by React DnD:
   connectDragSource: T.func.isRequired,
   connectDropTarget: T.func.isRequired,
-  isSupremeOver: T.bool.isRequired,
+  isOverCI: T.bool.isRequired,
   isDragging: T.bool.isRequired,
 }
 

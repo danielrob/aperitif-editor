@@ -5,8 +5,8 @@ import { indent } from 'utils'
 
 import { PropDropzonesReveal } from './'
 
-const PropDropzones = ({ parentId, dragItem, position, isSupremeOver, depth }) =>
-  isSupremeOver ? (
+const PropDropzones = ({ parentId, dragItem, position, isOverCI, depth }) =>
+  isOverCI ? (
     <React.Fragment>
       {indent(depth)}
       <PropDropzonesReveal dragItem={dragItem} parentId={parentId} position={position} />
@@ -17,6 +17,6 @@ export default styled(PropDropzones).as.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  ${props => props.isSupremeOver && 'min-height: 35px'}
+  ${props => props.isOverCI && 'min-height: 35px'}
   transition: min-height 50ms;
 `

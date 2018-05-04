@@ -11,9 +11,13 @@ import { OpenTag } from '../components'
 
 class OpenTagContainer extends React.Component {
   render() {
-    const { connectDropTarget } = this.props
+    const { connectDropTarget, ...props } = this.props
     return (
-      <OpenTag innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))} {...this.props} />
+      <OpenTag
+        innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
+        isOverCIButNotOpenTag={props.isOverCI && !props.isOverOpenTag}
+        {...props}
+      />
     )
   }
 }
@@ -49,8 +53,7 @@ const dropzoneTarget = {
 
 const collect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  isShallowOver: monitor.isOver({ shallow: true }),
+  isOverOpenTag: monitor.isOver(),
   dragItem: {
     ...monitor.getItem(),
     type: monitor.getItemType(),
