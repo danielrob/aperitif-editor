@@ -1,42 +1,46 @@
 import React from 'react'
-// import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 import { DragSource } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { DraggableTypes } from 'constantz'
-// import { moveParamToSpread } from 'duck'
+import { changeFile } from 'duck'
 
+import { makeGetFile } from '../selectors'
 import { File } from '../components'
 
 class FileContainer extends React.Component {
   onClickHandler = e => {
-    const { changeFile, file } = this.props
+    const { changeFile, id } = this.props
     e.stopPropagation()
-    changeFile(file.id)
+    changeFile(id)
   }
 
   render() {
-    const { file, connectDragSource, ...props } = this.props
+    const { connectDragSource, ...props } = this.props
 
     return (
       <File
-        file={file}
-        {...props}
-        onClick={this.onClickHandler}
-        isDirectory={!!file.children.length}
         innerRef={innerRef => connectDragSource(findDOMNode(innerRef))}
+        onClick={this.onClickHandler}
+        {...props}
       />
     )
   }
 }
 
-// /* connect */
-// const mapStateToProps = { }
+/* connect */
+const makeMapStateToProps = () => {
+  const getFile = makeGetFile()
+  return (state, props) => getFile(state, props)
+}
+
+const mapDispatchToProps = { changeFile }
 
 /* dnd */
 // source
-const getTypes = ({ file }) => (file.children.length ? DraggableTypes.DIR : DraggableTypes.FILE)
+const getTypes = ({ isDirectory }) => (isDirectory ? DraggableTypes.DIR : DraggableTypes.FILE)
 
 const sourceSpec = {
   beginDrag(props) {
@@ -66,7 +70,7 @@ const sourceCollect = (connect, monitor) => ({
 
 /* compose */
 export default compose(
-  // connect(null, mapStateToProps),
+  connect(makeMapStateToProps, mapDispatchToProps),
   DragSource(getTypes, sourceSpec, sourceCollect)
   // DropTarget([], dropzoneTarget, targetCollect),
 )(FileContainer)

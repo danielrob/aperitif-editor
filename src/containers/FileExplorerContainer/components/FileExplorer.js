@@ -4,15 +4,12 @@ import theme from 'theme-proxy'
 
 import { FileContainer } from '../containers'
 
-const FileExplorer = ({ files, rootFiles, changeFile, names }) =>
+const FileExplorer = ({ rootFiles }) =>
   rootFiles.map(fileId => (
     <FileContainer
       key={fileId}
-      file={files[fileId]}
-      files={files}
-      names={names}
+      fileId={fileId}
       initial
-      changeFile={changeFile}
     />
   ))
 

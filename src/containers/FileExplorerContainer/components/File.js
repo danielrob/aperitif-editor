@@ -1,3 +1,4 @@
+import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
@@ -20,8 +21,16 @@ class File extends React.Component {
   }
 
   render() {
-    const { file, files, names, changeFile, isDirectory, connectDragPreview, parentSnapshotElement, initial } = this.props
-    const name = names[file.nameId]
+    const {
+      name,
+      type,
+      fileChildren,
+      isDirectory,
+      isCurrent, // TODO
+      connectDragPreview,
+      parentSnapshotElement,
+      initial,
+    } = this.props
     const useParentSnapshot = name.includes('index') && !initial
     if (useParentSnapshot) {
       connectDragPreview(parentSnapshotElement)
@@ -30,14 +39,11 @@ class File extends React.Component {
     return (
       <React.Fragment>
         {useParentSnapshot ? name : connectDragPreview(<span ref={this.setRef}>{name}</span>)}
-        {file.type && file.type !== fileTypes.DIR && `.${file.type}`}
-        {file.children.map(fileId => (
+        {type && type !== fileTypes.DIR && `.${type}`}
+        {fileChildren.map(fileId => (
           <FileContainer
             key={fileId}
-            file={files[fileId]}
-            files={files}
-            names={names}
-            changeFile={changeFile}
+            fileId={fileId}
             parentSnapshotElement={isDirectory && this.state.ref}
           />
         ))}
@@ -51,3 +57,17 @@ export default styled(File).as.div`
   ${props => !props.initial && 'margin-left: 10px;'}
   ${props => props.isDirectory && 'padding: 5px 0;'}
 `
+
+File.propTypes = {
+  name: T.string.isRequired,
+  fileChildren: T.arrayOf(T.number).isRequired,
+  isDirectory: T.bool.isRequired,
+  isCurrent: T.bool.isRequired,
+  initial: T.bool,
+  // Injected by React DnD:
+  connectDragPreview: T.func.isRequired,
+}
+
+File.defaultProps = {
+  initial: false,
+}
