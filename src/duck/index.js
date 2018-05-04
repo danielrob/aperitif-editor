@@ -24,9 +24,17 @@ export const CHANGE_FILE = 'CHANGE_FILE'
 export default function appReducer(state = getTestDB(), action) {
   switch (action.type) {
     case CHANGE_FILE: {
+      const { currentFileId, files, names } = state
+      let { payload: nextId } = action
+      const { type, children } = files[nextId]
+
+      if (type === DIR) {
+        nextId = children.find(fileId => names[files[fileId].nameId].includes('index'))
+      }
+
       return {
         ...state,
-        currentFileId: action.payload,
+        currentFileId: nextId || currentFileId,
       }
     }
 
