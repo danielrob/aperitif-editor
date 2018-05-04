@@ -1,3 +1,4 @@
+import React from 'react'
 import { connect } from 'react-redux'
 import { createComponentBundle } from 'duck'
 import { DropTarget, DragSource } from 'react-dnd'
@@ -7,6 +8,19 @@ import { compose } from 'utils'
 
 import { ComponentInvocationTree } from './components'
 import { makeGetInvocation } from './selectors'
+
+class ComponentInvocationTreeContainer extends React.Component {
+  render() {
+    const { connectDragSource, isDragging, ...props } = this.props
+    const { isOverCIT1, isOverCIT2 } = props
+
+    return !isDragging ? connectDragSource(
+      <div>
+        <ComponentInvocationTree {...props} isOverCI={isOverCIT1 || isOverCIT2} />
+      </div>
+    ) : null
+  }
+}
 
 /* connect */
 const makeMapStateToProps = () => {
@@ -23,7 +37,7 @@ const propSource = {
     return props
   },
   canDrag(props) {
-    return !!props.depth
+    return props.depth !== 1
   },
 }
 
@@ -37,7 +51,13 @@ const dropzoneTarget = {}
 
 const targetCollect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
-  isOverCI: monitor.isOver(),
+  isOverCIT1: monitor.isOver(),
+  dragItem: monitor.getItem(),
+})
+
+const targetTwoCollect = (connect, monitor) => ({
+  connectClosingDropTarget: connect.dropTarget(),
+  isOverCIT2: monitor.isOver(),
   dragItem: monitor.getItem(),
 })
 
@@ -45,5 +65,6 @@ const targetCollect = (connect, monitor) => ({
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
   DragSource(DraggableTypes.COMPONENT_INVOCATION, propSource, sourceCollect),
-  DropTarget(DraggableTypes.PROP, dropzoneTarget, targetCollect)
-)(ComponentInvocationTree)
+  DropTarget(DraggableTypes.PROP, dropzoneTarget, targetCollect),
+  DropTarget(DraggableTypes.PROP, dropzoneTarget, targetTwoCollect)
+)(ComponentInvocationTreeContainer)

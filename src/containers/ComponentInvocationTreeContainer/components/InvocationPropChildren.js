@@ -6,12 +6,7 @@ import { indent } from 'utils'
 
 const InvocationPropChildren = ({ modelChildren, depth }) => (
   <React.Fragment>
-    {modelChildren.length ? (
-      <React.Fragment>
-        <br />
-        {indent(depth + 1)}
-      </React.Fragment>
-    ) : null}
+    {!!modelChildren.length && indent(depth + 1)}
     {modelChildren.map(child => (
       <span key={child.id}>
         {'{'}
@@ -25,7 +20,7 @@ const InvocationPropChildren = ({ modelChildren, depth }) => (
   </React.Fragment>
 )
 
-export default styled(InvocationPropChildren).as.span`
+export default styled(InvocationPropChildren).as.div`
   .prop-as-child {
     color: ${theme.colors.darkblue}
   }

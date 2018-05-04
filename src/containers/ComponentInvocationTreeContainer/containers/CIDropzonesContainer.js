@@ -8,13 +8,13 @@ import { CIDropzones } from '../components'
 
 class CIDropzonesContainer extends React.Component {
   render() {
-    const { connectDropTarget } = this.props
-    return (
+    const { connectDropTarget, isOverCI, ...props } = this.props
+    return isOverCI ? (
       <CIDropzones
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        {...this.props}
+        {...props}
       />
-    )
+    ) : null
   }
 }
 

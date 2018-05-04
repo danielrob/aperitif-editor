@@ -12,30 +12,23 @@ import {
 const CIDropzonesReveal = ({ dragItem, ...props }) => (
   <React.Fragment>
     {/* <SimplePropDropzone>
-      <div>
         {`{${dragItem.name}}`}
-      </div>
     </SimplePropDropzone> */}
     <NewWithPropAsChildPropDropzone {...props}>
-      <div>
-        {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
-      </div>
+      {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
     </NewWithPropAsChildPropDropzone>
     <NewWithPropDropzone {...props}>
-      <div>
-        {'<'}{capitalize(dragItem.name)}<br />
-        {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
-        {'/>'}
-      </div>
+      {'<'}{capitalize(dragItem.name)}<br />
+      {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
+      {'/>'}
     </NewWithPropDropzone>
   </React.Fragment>
 )
 
 export default styled(CIDropzonesReveal).as.div`
-  color: ${theme.color.grey};
-  height: 100%;
   display: flex;
   flex-direction: column;
+  color: ${theme.color.grey};
 `
 
 CIDropzonesReveal.propTypes = {

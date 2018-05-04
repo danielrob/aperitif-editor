@@ -19,6 +19,7 @@ export const makeGetInvocation = () => createSelector(
       paramIds,
       params: paramIds.map(id => allParams[id]),
       modelChildren: modelChildren.map(id => allParams[id]),
+      closed: false,
     }
   }
 )

@@ -1,3 +1,4 @@
+import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
@@ -5,18 +6,22 @@ import { indent } from 'utils'
 
 import { CIDropzonesReveal } from './'
 
-const CIDropzones = ({ parentId, dragItem, position, isOverCI, depth }) =>
-  isOverCI ? (
-    <React.Fragment>
-      {indent(depth)}
-      <CIDropzonesReveal dragItem={dragItem} parentId={parentId} position={position} />
-    </React.Fragment>
-  ) : null
+const CIDropzones = ({ id, depth, isOverCI, ...props }) => isOverCI ? (
+  <React.Fragment>
+    {indent(depth + 1)}
+    <CIDropzonesReveal parentId={id} position={0} {...props} />
+  </React.Fragment>
+) : null
 
 export default styled(CIDropzones).as.div`
   display: flex;
-  align-items: center;
-  cursor: pointer;
-  ${props => props.isOverCI && 'min-height: 35px'}
-  transition: min-height 50ms;
 `
+CIDropzones.propTypes = {
+  id: T.number.isRequired,
+  isOverCI: T.bool.isRequired,
+  dragItem: T.shape({ name: T.string }),
+}
+
+CIDropzones.defaultProps = {
+  dragItem: {},
+}

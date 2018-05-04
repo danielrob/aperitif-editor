@@ -1,3 +1,4 @@
+import T from 'prop-types'
 import React from 'react'
 import styled, { css } from 'styled-as-components'
 
@@ -64,3 +65,17 @@ export default styled(OpenTag).as.span.attrs({ style: { userSelect: 'text' } })`
     transition: 130ms;
   }
 `
+
+OpenTag.propTypes = {
+  name: T.string.isRequired,
+  isOverCI: T.bool.isRequired,
+  paramIds: T.arrayOf(T.number).isRequired,
+  params: T.arrayOf(T.object).isRequired,
+  closed: T.bool.isRequired,
+  hasPropsSpread: T.bool.isRequired,
+  dragItem: T.shape({ type: T.string }).isRequired,
+  depth: T.number.isRequired,
+
+  // Injected by React DnD:
+  isOverOpenTag: T.bool.isRequired,
+}

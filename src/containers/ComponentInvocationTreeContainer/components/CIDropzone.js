@@ -1,10 +1,6 @@
 import styled from 'styled-components'
 
 export default styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   padding: 10px;
   margin: 0 2px;
   border: 1px dotted;

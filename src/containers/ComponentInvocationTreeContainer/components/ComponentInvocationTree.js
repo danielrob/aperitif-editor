@@ -5,38 +5,34 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
 import { OpenTagContainer } from '../containers'
-import { InvocationChildren, InvocationPropChildren, CloseTag } from './'
+import { InvocationChildren, InvocationPropChildren, CloseTag, CIDropzones } from './'
 
-const ComponentInvocationTree = ({
-  connectDragSource,
-  connectDropTarget,
-  modelChildren,
-  isDragging,
-  ...props
-}) =>
-  connectDragSource(
-    connectDropTarget(
-      <div style={{ userSelect: 'text' }}>
-        {!isDragging && (
-          <React.Fragment>
-            <OpenTagContainer {...props} />
-            {/* TODO: Invocation can have a child expression which evaluates to all of this: */}
-            <InvocationPropChildren modelChildren={modelChildren} depth={props.depth} />
-            <InvocationChildren {...props} />
-            {/* End TODO */}
-            {!props.closed && <CloseTag name={props.name} depth={props.depth} />}
-          </React.Fragment>
-        )}
+const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, ...props }) => (
+  <React.Fragment>
+    {connectDropTarget(
+      <div>
+        <OpenTagContainer {...props} />
+        <CIDropzones {...props} isOverCI={props.isOverCIT1} />
+        <InvocationPropChildren {...props} />
       </div>
-    )
-  )
+    )}
+    <InvocationChildren {...props} />
+    {connectClosingDropTarget(
+      <div>
+        <CIDropzones {...props} isOverCI={props.isOverCIT2} />
+        <CloseTag name={props.name} depth={props.depth} shouldDisplay={!props.closed} />
+      </div>
+    )}
+  </React.Fragment>
+)
 
 export default styled(ComponentInvocationTree).as.div`
   display: table;
   width: auto;
   color: ${theme.colors.darkgreen};
   padding-left: 0;
-  cursor: ${props => (props.depth === 0 ? 'inherit' : 'pointer')}
+  cursor: ${props => (props.depth === 1 ? 'inherit' : 'pointer')}
+  user-select: text;
 `
 
 ComponentInvocationTree.propTypes = {
@@ -46,13 +42,13 @@ ComponentInvocationTree.propTypes = {
   paramIds: T.arrayOf(T.number).isRequired,
   params: T.arrayOf(T.object).isRequired,
   modelChildren: T.arrayOf(T.object),
-  isClosed: T.bool,
-  hasPropsSpread: T.bool,
+  closed: T.bool.isRequired,
+  hasPropsSpread: T.bool.isRequired,
+
   // Injected by React DnD:
-  connectDragSource: T.func.isRequired,
   connectDropTarget: T.func.isRequired,
-  isOverCI: T.bool.isRequired,
-  isDragging: T.bool.isRequired,
+  isOverCIT1: T.bool.isRequired,
+  isOverCIT2: T.bool.isRequired,
 }
 
 ComponentInvocationTree.defaultProps = {
