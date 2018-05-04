@@ -7,44 +7,29 @@ import { fileTypes } from 'constantz'
 import { FileContainer } from '../containers'
 
 class File extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      ref: null,
-    }
-  }
-
-  setRef = ref => {
-    if (!this.state.ref) {
-      this.setState({ ref })
-    }
-  }
-
   render() {
     const {
       name,
+      parentName,
       type,
       fileChildren,
-      isDirectory,
-      isCurrent, // TODO
+      isDragging,
       connectDragPreview,
-      parentSnapshotElement,
       initial,
     } = this.props
-    const useParentSnapshot = name.includes('index') && !initial
-    if (useParentSnapshot) {
-      connectDragPreview(parentSnapshotElement)
-    }
+    const switchName = name.includes('index') && !initial
 
     return (
       <React.Fragment>
-        {useParentSnapshot ? name : connectDragPreview(<span ref={this.setRef}>{name}</span>)}
+        {connectDragPreview(<span>{switchName && isDragging ? parentName : name}</span>, {
+          captureDraggingState: true,
+        })}
         {type && type !== fileTypes.DIR && `.${type}`}
         {fileChildren.map(fileId => (
           <FileContainer
             key={fileId}
             fileId={fileId}
-            parentSnapshotElement={isDirectory && this.state.ref}
+            parentName={name}
           />
         ))}
       </React.Fragment>
@@ -61,11 +46,10 @@ export default styled(File).as.div`
 File.propTypes = {
   name: T.string.isRequired,
   fileChildren: T.arrayOf(T.number).isRequired,
-  isDirectory: T.bool.isRequired,
-  isCurrent: T.bool.isRequired,
   initial: T.bool,
   // Injected by React DnD:
   connectDragPreview: T.func.isRequired,
+  isDragging: T.bool.isRequired,
 }
 
 File.defaultProps = {
