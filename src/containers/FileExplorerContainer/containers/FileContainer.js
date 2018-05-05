@@ -45,7 +45,6 @@ const getType = ({ isDirectory }) => (isDirectory ? DIR : FILE)
 const sourceSpec = {
   beginDrag(props) {
     const { name, initial, parentName } = props
-
     return {
       ...props,
       dropName: name.includes('index') && !initial ? parentName : name,

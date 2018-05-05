@@ -9,7 +9,7 @@ import {
   updateEntity,
   updateEntityAtKey,
 } from 'model-utils'
-import { DIR, STYLED_COMPONENT, STATELESS_FUNCTION_COMPONENT, componentExpressionTypes } from 'constantz'
+import { DIR, STYLED_COMPONENT, componentExpressionTypes } from 'constantz'
 import { capitalize } from 'utils'
 
 import { getNewComponentName } from './helpers'
@@ -78,10 +78,14 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
     case ADD_INVOCATION_FROM_FILE_TO_CI: {
-      const { invocations, files, expressions } = state
-      const { payload: { cIId, position, item: { fileId } } } = action
+      const { names, invocations, files, expressions } = state
+      const { payload: { cIId, position, item: { fileId, isDirectory } } } = action
 
-      const file = files[fileId]
+      let file = files[fileId]
+      if (isDirectory) {
+        file = files[file.children.find(id => names[files[id].nameId] === 'index')]
+      }
+
       const expressionId = file.expressionIds.find(
         id => componentExpressionTypes.includes(expressions[id].type)
       )

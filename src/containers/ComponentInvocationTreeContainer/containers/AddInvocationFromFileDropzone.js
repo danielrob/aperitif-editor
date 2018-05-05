@@ -4,7 +4,7 @@ import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { DraggableTypes } from 'constantz'
+import { FILE, DIR } from 'constantz'
 import { addInvocationFromFileToCI } from 'duck'
 
 import { CIDropzone } from '../components'
@@ -45,6 +45,6 @@ const collect = (connect, monitor) => ({
 /* compose */
 export default compose(
   connect(null, mapDispatchToProps),
-  DropTarget(DraggableTypes.FILE, dropzoneTarget, collect)
+  DropTarget([FILE, DIR], dropzoneTarget, collect)
 )(AddInvocationFromFileDropzone)
 

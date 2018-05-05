@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { createComponentBundle } from 'duck'
 import { DropTarget, DragSource } from 'react-dnd'
 
-import { DraggableTypes, PROP, FILE } from 'constantz'
+import { COMPONENT_INVOCATION, PROP, FILE, DIR } from 'constantz'
 import { compose } from 'utils'
 
 import { ComponentInvocationTree } from './components'
@@ -67,7 +67,7 @@ const targetTwoCollect = (connect, monitor) => ({
 /* compose */
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
-  DragSource(DraggableTypes.COMPONENT_INVOCATION, propSource, sourceCollect),
-  DropTarget([PROP, FILE], dropzoneTarget, targetCollect),
-  DropTarget([PROP, FILE], dropzoneTarget, targetTwoCollect)
+  DragSource(COMPONENT_INVOCATION, propSource, sourceCollect),
+  DropTarget([PROP, FILE, DIR], dropzoneTarget, targetCollect),
+  DropTarget([PROP, FILE, DIR], dropzoneTarget, targetTwoCollect)
 )(ComponentInvocationTreeContainer)
