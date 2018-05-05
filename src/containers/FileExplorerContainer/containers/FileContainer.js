@@ -4,7 +4,7 @@ import { DragSource } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { DraggableTypes } from 'constantz'
+import { DIR, FILE } from 'constantz'
 import { changeFile } from 'duck'
 
 import { makeGetFile } from '../selectors'
@@ -40,7 +40,7 @@ const mapDispatchToProps = { changeFile }
 
 /* dnd */
 // source
-const getTypes = ({ isDirectory }) => (isDirectory ? DraggableTypes.DIR : DraggableTypes.FILE)
+const getType = ({ isDirectory }) => (isDirectory ? DIR : FILE)
 
 const sourceSpec = {
   beginDrag(props) {
@@ -76,6 +76,6 @@ const sourceCollect = (connect, monitor) => ({
 /* compose */
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
-  DragSource(getTypes, sourceSpec, sourceCollect)
+  DragSource(getType, sourceSpec, sourceCollect)
   // DropTarget([], dropzoneTarget, targetCollect),
 )(FileContainer)

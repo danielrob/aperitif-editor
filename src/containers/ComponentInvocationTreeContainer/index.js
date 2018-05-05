@@ -49,15 +49,18 @@ const sourceCollect = (connect, monitor) => ({
 // target
 const dropzoneTarget = {}
 
+const getIsValidOver = monitor =>
+  monitor.isOver() && !(monitor.getItemType() === FILE && !(monitor.getItem()).expressionIds.length)
+
 const targetCollect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
-  isOverCIT1: monitor.isOver(),
+  isOverCIT1: getIsValidOver(monitor),
   dragItem: monitor.getItem(),
 })
 
 const targetTwoCollect = (connect, monitor) => ({
   connectClosingDropTarget: connect.dropTarget(),
-  isOverCIT2: monitor.isOver(),
+  isOverCIT2: getIsValidOver(monitor),
   dragItem: monitor.getItem(),
 })
 
