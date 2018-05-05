@@ -22,6 +22,11 @@ export const expressionTypes = {
   STANDARD,
 }
 
+export const componentExpressionTypes = [
+  STATELESS_FUNCTION_COMPONENT,
+  STYLED_COMPONENT,
+]
+
 /* export types */
 export const DEFAULT = 'export default'
 export const DEFAULT_INLINE = 'export default <expression>'

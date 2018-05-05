@@ -1,9 +1,8 @@
-import { isNumber } from 'lodash'
+import { isNumber, uniqBy } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { LOOKTHROUGH, DEFAULT } from 'constantz'
 
-// 'dumb' selectors
 export const selectCurrentFileId = s => s.app.currentFileId
 export const selectRootFiles = s => s.app.rootFiles
 export const selectNames = s => s.app.names
@@ -11,7 +10,6 @@ export const selectFiles = s => s.app.files
 export const selectExpressions = s => s.app.expressions
 export const selectInvocations = s => s.app.invocations
 export const selectParams = s => s.app.params
-
 
 export const selectCurrentFile = createSelector(
   selectFiles,
@@ -29,22 +27,22 @@ export const getCurrentFileImports = createSelector( // which also represent all
   selectInvocations,
   getCurrentFileExpressions,
   selectNames,
-  (invocations, expressions, names) => expressions.reduce((out, expression) => {
-    const reduceRecursively = (innerOut, id) => {
-      const invocation = invocations[id]
-      const returnInvocation = isNumber(invocation.nameOrNameId) ? [{
-        id: invocation.id,
-        importName: names[invocation.nameOrNameId],
-        source: invocation.source || `../${names[invocation.nameOrNameId]}`, // TODO: derive paths
+  (invocations, expressions, names) => uniqBy(expressions.reduce((out, expression) => {
+    const reduceRecursively = (priorInvocations, id) => {
+      const { nameOrNameId, source, invocationIds } = invocations[id]
+      const thisInvocation = isNumber(nameOrNameId) && expression.nameId !== nameOrNameId ? [{
+        id,
+        importName: names[nameOrNameId],
+        source: source || `../${names[nameOrNameId]}`, // TODO: derive paths
       }] : []
       return [
-        ...innerOut,
-        ...returnInvocation,
-        ...invocation.invocationIds.reduce(reduceRecursively, []),
+        ...priorInvocations,
+        ...thisInvocation,
+        ...invocationIds.reduce(reduceRecursively, []),
       ]
     }
     return ([...out, ...expression.invocationIds.reduce(reduceRecursively, [])])
-  }, [])
+  }, []), 'importName')
 )
 
 export const getCurrentFileDefaultExport = createSelector(

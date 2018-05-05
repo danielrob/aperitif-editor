@@ -17,13 +17,11 @@ class File extends React.Component {
       connectDragPreview,
       initial,
     } = this.props
-    const switchName = name.includes('index') && !initial
+    const displayName = name.includes('index') && !initial && isDragging ? parentName : name
 
     return (
       <React.Fragment>
-        {connectDragPreview(<span>{switchName && isDragging ? parentName : name}</span>, {
-          captureDraggingState: true,
-        })}
+        {connectDragPreview(<span>{displayName}</span>, { captureDraggingState: true })}
         {type && type !== fileTypes.DIR && `.${type}`}
         {fileChildren.map(fileId => (
           <FileContainer

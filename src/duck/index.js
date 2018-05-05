@@ -9,7 +9,7 @@ import {
   updateEntity,
   updateEntityAtKey,
 } from 'model-utils'
-import { DIR, STYLED_COMPONENT } from 'constantz'
+import { DIR, STYLED_COMPONENT, STATELESS_FUNCTION_COMPONENT, componentExpressionTypes } from 'constantz'
 import { capitalize } from 'utils'
 
 import { getNewComponentName } from './helpers'
@@ -19,6 +19,7 @@ export const CREATE_COMPONENT_BUNDLE = 'CREATE_COMPONENT_BUNDLE'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const MOVE_PARAM_TO_SPREAD = 'MOVE_PARAM_TO_SPREAD'
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
+export const ADD_INVOCATION_FROM_FILE_TO_CI = 'ADD_INVOCATION_FROM_FILE_TO_CI'
 export const CHANGE_FILE = 'CHANGE_FILE'
 
 export default function appReducer(state = getTestDB(), action) {
@@ -69,6 +70,33 @@ export default function appReducer(state = getTestDB(), action) {
 
       const updater = oldInvocation => insertAtKey(oldInvocation, 'paramIds', 0, itemId)
       const nextInvocations = updateEntity(invocations, parentId, updater)
+
+      return {
+        ...state,
+        invocations: nextInvocations,
+      }
+    }
+
+    case ADD_INVOCATION_FROM_FILE_TO_CI: {
+      const { invocations, files, expressions } = state
+      const { payload: { cIId, position, item: { fileId } } } = action
+
+      const file = files[fileId]
+      const expressionId = file.expressionIds.find(
+        id => componentExpressionTypes.includes(expressions[id].type)
+      )
+
+      /* CREATES */
+      let [nextInvocations, newInvocationId] = // eslint-disable-line prefer-const
+        addInvocations(invocations, {
+          nameOrNameId: expressions[expressionId].nameId,
+          source: null,
+          closed: true,
+        })
+
+      /* UPDATES */
+      const updater = ivn => insertAtKey(ivn, 'invocationIds', position, newInvocationId)
+      nextInvocations = updateEntity(nextInvocations, cIId, updater)
 
       return {
         ...state,
@@ -168,6 +196,10 @@ export const addAttributeToComponentInvocation = createAction(
 
 export const addPropsSpreadToComponentInvocation = createAction(
   ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION
+)
+
+export const addInvocationFromFileToCI = createAction(
+  ADD_INVOCATION_FROM_FILE_TO_CI
 )
 
 export const moveParamToSpread = createAction(

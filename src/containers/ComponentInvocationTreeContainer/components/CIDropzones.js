@@ -33,7 +33,7 @@ const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisp
       {dragItem.fileId !== undefined && (
         <React.Fragment>
           <AddInvocationFromFileDropzone {...props}>
-            {'<'}{dragItem.fileId}{' />'}
+            {'<'}{dragItem.dropName}{' />'}
           </AddInvocationFromFileDropzone>
         </React.Fragment>
       )}

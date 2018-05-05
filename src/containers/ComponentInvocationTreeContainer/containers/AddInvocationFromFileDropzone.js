@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
@@ -6,7 +5,7 @@ import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { DraggableTypes } from 'constantz'
-import { createComponentBundle } from 'duck'
+import { addInvocationFromFileToCI } from 'duck'
 
 import { CIDropzone } from '../components'
 
@@ -26,14 +25,14 @@ class AddInvocationFromFileDropzone extends React.Component {
 
 /* connect */
 const mapDispatchToProps = {
-  newWithPropAsChild: createComponentBundle,
+  addInvocationFromFileToCI,
 }
 
 /* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { id: parentId, newWithPropAsChild, position } = props
-    newWithPropAsChild({ parentId, position, item: monitor.getItem(), propAsChild: true })
+    const { id: cIId, addInvocationFromFileToCI, position } = props
+    addInvocationFromFileToCI({ cIId, position, item: monitor.getItem() })
   },
 }
 

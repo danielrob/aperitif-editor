@@ -44,7 +44,12 @@ const getTypes = ({ isDirectory }) => (isDirectory ? DraggableTypes.DIR : Dragga
 
 const sourceSpec = {
   beginDrag(props) {
-    return props
+    const { name, initial, parentName } = props
+
+    return {
+      ...props,
+      dropName: name.includes('index') && !initial ? parentName : name,
+    }
   },
 }
 
