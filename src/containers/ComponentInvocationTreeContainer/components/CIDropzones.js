@@ -8,23 +8,35 @@ import {
   // SimplePropDropzone,
   NewWithPropDropzone,
   NewWithPropAsChildPropDropzone,
+  AddInvocationFromFileDropzone,
 } from '../containers'
 
-const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisplay ? (
+const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisplay && dragItem ? (
   <React.Fragment>
     {indent(depth + 1)}
     <div className="zones">
       {/* <SimplePropDropzone>
           {`{${dragItem.name}}`}
       </SimplePropDropzone> */}
-      <NewWithPropAsChildPropDropzone {...props}>
-        {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
-      </NewWithPropAsChildPropDropzone>
-      <NewWithPropDropzone {...props}>
-        {'<'}{capitalize(dragItem.name)}<br />
-        {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
-        {'/>'}
-      </NewWithPropDropzone>
+      {dragItem.isLast !== undefined && (
+        <React.Fragment>
+          <NewWithPropAsChildPropDropzone {...props}>
+            {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
+          </NewWithPropAsChildPropDropzone>
+          <NewWithPropDropzone {...props}>
+            {'<'}{capitalize(dragItem.name)}<br />
+            {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
+            {'/>'}
+          </NewWithPropDropzone>
+        </React.Fragment>
+      )}
+      {dragItem.fileId !== undefined && (
+        <React.Fragment>
+          <AddInvocationFromFileDropzone {...props}>
+            {'<'}{dragItem.fileId}{' />'}
+          </AddInvocationFromFileDropzone>
+        </React.Fragment>
+      )}
     </div>
   </React.Fragment>
 ) : null
@@ -37,7 +49,6 @@ export default styled(CIDropzones).as.div`
     color: ${theme.color.grey};
   }
 `
-
 
 CIDropzones.propTypes = {
   id: T.number.isRequired,

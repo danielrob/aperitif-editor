@@ -12,7 +12,7 @@ const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, 
     {connectDropTarget(
       <div>
         <OpenTagContainer {...props} />
-        <CIDropzones {...props} position={0} shouldDisplay={props.isOverCIT1} />
+        <CIDropzones {...props} position={0} shouldDisplay={props.isOverCIT1 && !props.closed} />
         <InvocationPropChildren {...props} />
       </div>
     )}
@@ -22,7 +22,7 @@ const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, 
         <CIDropzones
           {...props}
           position={props.invocationIds.length}
-          shouldDisplay={props.isOverCIT2}
+          shouldDisplay={props.isOverCIT2 && !props.closed}
         />
         <CloseTag name={props.name} depth={props.depth} shouldDisplay={!props.closed} />
       </div>
