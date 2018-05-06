@@ -1,4 +1,5 @@
 import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
@@ -31,16 +32,18 @@ const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, 
 )
 
 export default styled(ComponentInvocationTree).as.div`
-  display: table;
-  width: auto;
   color: ${theme.colors.darkgreen};
   padding-left: 0;
   cursor: ${props => (props.depth === 1 ? 'inherit' : 'pointer')}
   user-select: text;
 `
 
-ComponentInvocationTree.propTypes = {
-  id: T.number.isRequired,
+ComponentInvocationTree.propTypes = forbidExtraProps({
+  // passed by parent
+  invocationId: T.number.isRequired,
+  depth: T.number.isRequired,
+
+  // injected by makeGetInvocation
   name: T.string.isRequired,
   invocationIds: T.arrayOf(T.number).isRequired,
   paramIds: T.arrayOf(T.number).isRequired,
@@ -51,10 +54,17 @@ ComponentInvocationTree.propTypes = {
 
   // Injected by React DnD:
   connectDropTarget: T.func.isRequired,
-  isOverCIT1: T.bool.isRequired,
-  isOverCIT2: T.bool.isRequired,
-}
+  connectClosingDropTarget: T.func.isRequired,
+  isOverCIT1: T.bool.isRequired, // opening tag down
+  isOverCIT2: T.bool.isRequired, // closing tag up
+  dragItem: T.shape({ name: T.string }),
+
+  // injected by container
+  ciDimensions: T.shape({ clientWidth: T.number, clientHeight: T.number }).isRequired,
+  isOverCI: T.bool.isRequired, // whole component
+})
 
 ComponentInvocationTree.defaultProps = {
   modelChildren: [],
+  dragItem: null,
 }

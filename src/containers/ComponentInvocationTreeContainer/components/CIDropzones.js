@@ -9,6 +9,7 @@ import {
   NewWithPropDropzone,
   NewWithPropAsChildPropDropzone,
   AddInvocationFromFileDropzone,
+  ReorderDropzoneContainer,
 } from '../containers'
 
 const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisplay && dragItem ? (
@@ -31,11 +32,15 @@ const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisp
         </React.Fragment>
       )}
       {dragItem.fileId !== undefined && (
-        <React.Fragment>
-          <AddInvocationFromFileDropzone {...props}>
-            {'<'}{dragItem.dropName}{' />'}
-          </AddInvocationFromFileDropzone>
-        </React.Fragment>
+        <AddInvocationFromFileDropzone {...props}>
+          {'<'}{dragItem.dropName}{' />'}
+        </AddInvocationFromFileDropzone>
+      )}
+      {dragItem.ciDimensions && (
+        <ReorderDropzoneContainer
+          {...dragItem}
+          targetInvocationId={props.invocationId}
+        />
       )}
     </div>
   </React.Fragment>
@@ -51,7 +56,7 @@ export default styled(CIDropzones).as.div`
 `
 
 CIDropzones.propTypes = {
-  id: T.number.isRequired,
+  invocationId: T.number.isRequired,
   shouldDisplay: T.bool.isRequired,
   dragItem: T.shape({ name: T.string }),
 }

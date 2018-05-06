@@ -4,23 +4,24 @@ import { selectNames, selectParams, selectInvocations } from 'selectors'
 
 const selectInvocation = (state, props) => selectInvocations(state)[props.invocationId]
 
-export const makeGetInvocation = () => createSelector(
-  selectNames,
-  selectParams,
-  selectInvocation,
-  (names, allParams, invocation) => {
-    const { id, nameOrNameId, invocationIds, paramIds, modelChildren, closed, ...rest } = invocation
+export const makeGetInvocation = () =>
+  createSelector(selectNames, selectParams, selectInvocation, (names, allParams, invocation) => {
+    const {
+      nameOrNameId,
+      invocationIds,
+      paramIds,
+      modelChildren,
+      closed,
+      hasPropsSpread,
+    } = invocation
 
     return {
-      ...rest,
-      id,
       name: names[nameOrNameId],
       invocationIds,
       paramIds,
       params: paramIds.map(id => allParams[id]),
       modelChildren: modelChildren.map(id => allParams[id]),
       closed: !!closed,
+      hasPropsSpread,
     }
-  }
-)
-
+  })

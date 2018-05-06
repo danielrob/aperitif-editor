@@ -55,7 +55,7 @@ const OpenTag = ({
   )
 }
 
-export default styled(OpenTag).as.span.attrs({ style: { userSelect: 'text' } })`
+export default styled(OpenTag).as.div.attrs({ style: { userSelect: 'text' } })`
   ${buffer(5)}
 
   .new-attribute-preview {

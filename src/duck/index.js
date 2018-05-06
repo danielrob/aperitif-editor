@@ -20,6 +20,7 @@ export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT
 export const MOVE_PARAM_TO_SPREAD = 'MOVE_PARAM_TO_SPREAD'
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_CI = 'ADD_INVOCATION_FROM_FILE_TO_CI'
+export const MOVE_INVOCATION = 'MOVE_INVOCATION'
 export const CHANGE_FILE = 'CHANGE_FILE'
 
 export default function appReducer(state = getTestDB(), action) {
@@ -105,6 +106,12 @@ export default function appReducer(state = getTestDB(), action) {
       return {
         ...state,
         invocations: nextInvocations,
+      }
+    }
+
+    case MOVE_INVOCATION: {
+      return {
+        ...state,
       }
     }
 
@@ -208,4 +215,8 @@ export const addInvocationFromFileToCI = createAction(
 
 export const moveParamToSpread = createAction(
   MOVE_PARAM_TO_SPREAD
+)
+
+export const moveInvocation = createAction(
+  MOVE_INVOCATION
 )

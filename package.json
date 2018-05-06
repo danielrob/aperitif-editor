@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "airbnb-prop-types": "^2.9.0",
     "browser-locale": "^1.0.3",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
