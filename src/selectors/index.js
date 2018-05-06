@@ -1,6 +1,7 @@
 import { isNumber, uniqBy, sortBy } from 'lodash'
 import { createSelector } from 'reselect'
 
+import { composed } from 'utils'
 import { LOOKTHROUGH, DEFAULT } from 'constantz'
 
 export const selectCurrentFileId = s => s.app.currentFileId
@@ -27,23 +28,27 @@ export const getCurrentFileImports = createSelector( // which also represent all
   selectInvocations,
   getCurrentFileExpressions,
   selectNames,
-  (invocations, expressions, names) => sortBy(uniqBy(expressions.reduce((out, expression) => {
-    const reduceRecursively = (priorInvocations, id) => {
-      const { nameOrNameId, source, invocationIds } = invocations[id]
-      const thisInvocation = isNumber(nameOrNameId) && expression.nameId !== nameOrNameId ? [{
-        id,
-        importName: names[nameOrNameId],
-        source: source || `../${names[nameOrNameId]}`, // TODO: derive paths
-        order: nameOrNameId,
-      }] : []
-      return [
-        ...priorInvocations,
-        ...thisInvocation,
-        ...invocationIds.reduce(reduceRecursively, []),
-      ]
-    }
-    return ([...out, ...expression.invocationIds.reduce(reduceRecursively, [])])
-  }, []), 'importName'), 'order')
+  composed(
+    (invocations, expressions, names) => expressions.reduce((out, expression) => {
+      const reduceRecursively = (priorInvocations, id) => {
+        const { nameOrNameId, source, invocationIds } = invocations[id]
+        const thisInvocation = isNumber(nameOrNameId) && expression.nameId !== nameOrNameId ? [{
+          id,
+          importName: names[nameOrNameId],
+          source: source || `../${names[nameOrNameId]}`, // TODO: derive paths
+          order: nameOrNameId,
+        }] : []
+        return [
+          ...priorInvocations,
+          ...thisInvocation,
+          ...invocationIds.reduce(reduceRecursively, []),
+        ]
+      }
+      return ([...out, ...expression.invocationIds.reduce(reduceRecursively, [])])
+    }, []),
+    imports => uniqBy(imports, 'importName'),
+    imports => sortBy(imports, 'order'),
+  )
 )
 
 export const getCurrentFileDefaultExport = createSelector(
