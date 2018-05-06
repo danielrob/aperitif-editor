@@ -6,8 +6,8 @@ import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { DraggableTypes } from 'constantz'
-import { addParamAsComponentInvocationChild } from 'duck'
+import { PROP, PARAM_INVOCATION } from 'constantz'
+import { addParamAsComponentInvocationChild, moveParamInvocation } from 'duck'
 
 import { CIDropzone } from '../components'
 
@@ -15,10 +15,7 @@ class SimplePropDropzone extends React.Component {
   render() {
     const { connectDropTarget, children } = this.props
     return (
-      <CIDropzone
-        innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        {...this.props}
-      >
+      <CIDropzone innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))} {...this.props}>
         {children}
       </CIDropzone>
     )
@@ -28,14 +25,31 @@ class SimplePropDropzone extends React.Component {
 /* connect */
 const mapDispatchToProps = {
   addParamAsComponentInvocationChild,
+  moveParamInvocation,
 }
 
 /* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { addParamAsComponentInvocationChild, targetInvocationId, targetPosition } = props
-    const { id: paramId } = monitor.getItem()
-    addParamAsComponentInvocationChild({ targetInvocationId, targetPosition, paramId })
+    switch (monitor.getItemType()) {
+      case PROP: {
+        const { addParamAsComponentInvocationChild, targetInvocationId, targetPosition } = props
+        const { id: paramId } = monitor.getItem()
+        return addParamAsComponentInvocationChild({ targetInvocationId, targetPosition, paramId })
+      }
+
+      case PARAM_INVOCATION: {
+        const { moveParamInvocation, targetInvocationId, targetPosition } = props
+        const { paramId, sourceInvocationId } = monitor.getItem()
+        return moveParamInvocation({
+          paramId,
+          sourceInvocationId,
+          targetInvocationId,
+          targetPosition,
+        })
+      }
+      default:
+    }
   },
 }
 
@@ -47,9 +61,8 @@ const collect = (connect, monitor) => ({
 /* compose export */
 export default compose(
   connect(null, mapDispatchToProps),
-  DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)
+  DropTarget([PROP, PARAM_INVOCATION], dropzoneTarget, collect)
 )(SimplePropDropzone)
-
 
 /* propTypes */
 SimplePropDropzone.propTypes = forbidExtraProps({
@@ -60,6 +73,7 @@ SimplePropDropzone.propTypes = forbidExtraProps({
 
   // connect
   addParamAsComponentInvocationChild: T.func.isRequired,
+  moveParamInvocation: T.func.isRequired,
 
   // React Dnd
   connectDropTarget: T.func.isRequired,

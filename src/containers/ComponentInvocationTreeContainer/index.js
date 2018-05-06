@@ -4,7 +4,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget, DragSource } from 'react-dnd'
 
-import { COMPONENT_INVOCATION, PROP, FILE, DIR } from 'constantz'
+import { COMPONENT_INVOCATION, PROP, FILE, DIR, PARAM_INVOCATION } from 'constantz'
 import { compose } from 'utils'
 
 import { ComponentInvocationTree } from './components'
@@ -85,8 +85,8 @@ export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
   getCIDimensionsInjector,
   DragSource(COMPONENT_INVOCATION, propSource, sourceCollect),
-  DropTarget([PROP, FILE, DIR, COMPONENT_INVOCATION], dropzoneTarget, targetCollect),
-  DropTarget([PROP, FILE, DIR, COMPONENT_INVOCATION], dropzoneTarget, targetTwoCollect)
+  DropTarget([PROP, FILE, DIR, COMPONENT_INVOCATION, PARAM_INVOCATION], dropzoneTarget, targetCollect),
+  DropTarget([PROP, FILE, DIR, COMPONENT_INVOCATION, PARAM_INVOCATION], dropzoneTarget, targetTwoCollect)
 )(ComponentInvocationTreeContainer)
 
 

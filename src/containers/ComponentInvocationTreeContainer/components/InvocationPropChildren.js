@@ -5,11 +5,17 @@ import { indent } from 'utils'
 
 import { ParamInvocationContainer } from '../containers'
 
-const InvocationPropChildren = ({ paramChildren, depth }) => (
+const InvocationPropChildren = ({ paramChildren, depth, invocationId }) => (
   <React.Fragment>
     {!!paramChildren.length && indent(depth + 1)}
-    {paramChildren.map(({ name, displayId, isSpreadMember }) => (
-      <ParamInvocationContainer key={displayId} name={name} isSpreadMember={isSpreadMember} />
+    {paramChildren.map(({ id, name, displayId, isSpreadMember }) => (
+      <ParamInvocationContainer
+        key={displayId}
+        paramId={id}
+        name={name}
+        invocationId={invocationId}
+        isSpreadMember={isSpreadMember}
+      />
     ))}
   </React.Fragment>
 )

@@ -127,16 +127,20 @@ export default function appReducer(state = getTestDB(), action) {
 
 
     case MOVE_PARAM_INVOCATION: {
+      const { invocations } = state
       const {
         paramId,
         sourceInvocationId,
-        sourcePosition,
         targetInvocationId,
         targetPosition,
-      } = action
+      } = action.payload
 
-      let { invocations: nextInvocations } = state
+      let nextInvocations = invocations
       let updater
+
+      const sourcePosition = invocations[sourceInvocationId].paramChildren.findIndex(
+        id => id === paramId,
+      )
 
       updater = ivn => removeAtKey(ivn, 'paramChildren', sourcePosition)
       nextInvocations = updateEntity(nextInvocations, sourceInvocationId, updater)

@@ -4,7 +4,7 @@ import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
-const ParamInvocation = ({ isSpreadMember, name }) => (
+const ParamInvocation = ({ isSpreadMember, isPIDragging, name }) => isPIDragging ? null : (
   <React.Fragment>
     {'{'}
     <span className="prop-as-child">
@@ -22,6 +22,7 @@ export default styled(ParamInvocation).as.div`
 
 ParamInvocation.propTypes = forbidExtraProps({
   name: T.string.isRequired,
+  isPIDragging: T.bool.isRequired,
   isSpreadMember: T.bool.isRequired,
 
   innerRef: T.func.isRequired, // eslint-disable-line react/no-unused-prop-types

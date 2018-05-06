@@ -4,6 +4,7 @@ import styled from 'styled-as-components'
 
 import theme from 'theme-proxy'
 import { capitalize, indent } from 'utils'
+import { PARAM_INVOCATION } from 'constantz'
 import {
   SimplePropDropzone,
   NewWithPropDropzone,
@@ -16,9 +17,11 @@ const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisp
   <React.Fragment>
     {indent(depth + 1)}
     <div className="zones">
-      <SimplePropDropzone targetInvocationId={props.invocationId} targetPosition={props.position}>
-        {`{${dragItem.name}}`}
-      </SimplePropDropzone>
+      {(dragItem.isLast !== undefined || dragItem.type === PARAM_INVOCATION) && (
+        <SimplePropDropzone targetInvocationId={props.invocationId} targetPosition={props.position}>
+          {`{${dragItem.name}}`}
+        </SimplePropDropzone>
+      )}
       {dragItem.isLast !== undefined && (
         <React.Fragment>
           <NewWithPropAsChildPropDropzone {...props}>
