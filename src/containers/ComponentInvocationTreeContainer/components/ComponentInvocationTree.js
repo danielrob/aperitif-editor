@@ -36,6 +36,7 @@ export default styled(ComponentInvocationTree).as.div`
   padding-left: 0;
   cursor: ${props => (props.depth === 1 ? 'inherit' : 'pointer')}
   user-select: text;
+  line-height: 2;
 `
 
 ComponentInvocationTree.propTypes = forbidExtraProps({
