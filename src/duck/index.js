@@ -18,6 +18,7 @@ import getTestDB from './getTestDB'
 
 export const CREATE_COMPONENT_BUNDLE = 'CREATE_COMPONENT_BUNDLE'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
+export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
 export const MOVE_PARAM_TO_SPREAD = 'MOVE_PARAM_TO_SPREAD'
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_CI = 'ADD_INVOCATION_FROM_FILE_TO_CI'
@@ -72,6 +73,19 @@ export default function appReducer(state = getTestDB(), action) {
 
       const updater = oldInvocation => insertAtKey(oldInvocation, 'paramIds', 0, itemId)
       const nextInvocations = updateEntity(invocations, parentId, updater)
+
+      return {
+        ...state,
+        invocations: nextInvocations,
+      }
+    }
+
+    case ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD: {
+      let { invocations: nextInvocations } = state
+      const { targetInvocationId, targetPosition, paramId } = action.payload
+
+      const updater = ivn => insertAtKey(ivn, 'paramChildren', targetPosition, paramId)
+      nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
 
       return {
         ...state,
@@ -228,6 +242,10 @@ export const changeFile = createAction(
 
 export const addAttributeToComponentInvocation = createAction(
   ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION
+)
+
+export const addParamAsComponentInvocationChild = createAction(
+  ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD
 )
 
 export const addPropsSpreadToComponentInvocation = createAction(

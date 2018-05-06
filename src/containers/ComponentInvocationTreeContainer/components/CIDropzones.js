@@ -5,7 +5,7 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 import { capitalize, indent } from 'utils'
 import {
-  // SimplePropDropzone,
+  SimplePropDropzone,
   NewWithPropDropzone,
   NewWithPropAsChildPropDropzone,
   AddInvocationFromFileDropzone,
@@ -16,9 +16,9 @@ const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisp
   <React.Fragment>
     {indent(depth + 1)}
     <div className="zones">
-      {/* <SimplePropDropzone>
-          {`{${dragItem.name}}`}
-      </SimplePropDropzone> */}
+      <SimplePropDropzone targetInvocationId={props.invocationId} targetPosition={props.position}>
+        {`{${dragItem.name}}`}
+      </SimplePropDropzone>
       {dragItem.isLast !== undefined && (
         <React.Fragment>
           <NewWithPropAsChildPropDropzone {...props}>
@@ -49,6 +49,7 @@ const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisp
 
 export default styled(CIDropzones).as.div`
   display: flex;
+  line-height: 1.4;
   .zones {
     display: flex;
     flex-direction: column;

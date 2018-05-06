@@ -8,7 +8,7 @@ const InvocationPropChildren = ({ paramChildren, depth }) => (
   <React.Fragment>
     {!!paramChildren.length && indent(depth + 1)}
     {paramChildren.map(child => (
-      <span key={child.id}>
+      <span key={child.displayId}>
         {'{'}
         <span className="prop-as-child">
           {child.isSpreadMember && 'props.'}
