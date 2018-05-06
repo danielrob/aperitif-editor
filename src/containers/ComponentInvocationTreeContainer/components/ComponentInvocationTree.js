@@ -50,7 +50,7 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
   invocationIds: T.arrayOf(T.number).isRequired,
   paramIds: T.arrayOf(T.number).isRequired,
   params: T.arrayOf(T.object).isRequired,
-  modelChildren: T.arrayOf(T.object),
+  paramChildren: T.arrayOf(T.object),
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
 
@@ -67,7 +67,7 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
 })
 
 ComponentInvocationTree.defaultProps = {
-  modelChildren: [],
+  paramChildren: [],
   dragItem: null,
   parentId: null,
 }

@@ -4,10 +4,10 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 import { indent } from 'utils'
 
-const InvocationPropChildren = ({ modelChildren, depth }) => (
+const InvocationPropChildren = ({ paramChildren, depth }) => (
   <React.Fragment>
-    {!!modelChildren.length && indent(depth + 1)}
-    {modelChildren.map(child => (
+    {!!paramChildren.length && indent(depth + 1)}
+    {paramChildren.map(child => (
       <span key={child.id}>
         {'{'}
         <span className="prop-as-child">

@@ -22,7 +22,9 @@ class SimplePropDropzone extends React.Component {
 
 /* dnd */
 const dropzoneTarget = {
-  drop() {},
+  drop(props, monitor) {
+    
+  },
 }
 
 const collect = (connect, monitor) => ({

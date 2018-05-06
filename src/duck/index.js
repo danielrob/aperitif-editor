@@ -171,7 +171,7 @@ export default function appReducer(state = getTestDB(), action) {
         nameOrNameId: dirName,
         source: null,
         paramIds: propAsChild ? [] : [itemId],
-        modelChildren: propAsChild ? [itemId] : [],
+        paramChildren: propAsChild ? [itemId] : [],
         closed,
       }
       let wrapperInvoke = { nameOrNameId: wrapperName, source: null }

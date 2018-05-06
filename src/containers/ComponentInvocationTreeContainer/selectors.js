@@ -10,7 +10,7 @@ export const makeGetInvocation = () =>
       nameOrNameId,
       invocationIds,
       paramIds,
-      modelChildren,
+      paramChildren,
       closed,
       hasPropsSpread,
     } = invocation
@@ -20,7 +20,7 @@ export const makeGetInvocation = () =>
       invocationIds,
       paramIds,
       params: paramIds.map(id => allParams[id]),
-      modelChildren: modelChildren.map(id => allParams[id]),
+      paramChildren: paramChildren.map(id => allParams[id]),
       closed: !!closed,
       hasPropsSpread,
     }

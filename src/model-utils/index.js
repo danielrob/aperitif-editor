@@ -55,7 +55,7 @@ export const addInvocations = getEntitiesAdder({
   paramIds: [],
   invocationIds: [],
   // type specific items
-  modelChildren: [], // component-invocation
+  paramChildren: [], // component-invocation
   closed: false, // component-invocation
   hasPropsSpread: false,
 })
