@@ -40,6 +40,7 @@ const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisp
         <ReorderDropzoneContainer
           {...dragItem}
           targetInvocationId={props.invocationId}
+          targetPosition={props.position}
         />
       )}
     </div>

@@ -42,6 +42,7 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
   // passed by parent
   invocationId: T.number.isRequired,
   depth: T.number.isRequired,
+  parentId: T.number,
 
   // injected by makeGetInvocation
   name: T.string.isRequired,
@@ -67,4 +68,5 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
 ComponentInvocationTree.defaultProps = {
   modelChildren: [],
   dragItem: null,
+  parentId: null,
 }

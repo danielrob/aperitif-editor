@@ -121,3 +121,24 @@ export const insertAtKey = (objectToUpdate, key, position, insertValue) => ({
   [key]: insertAt(objectToUpdate[key], position, insertValue),
 })
 
+/**
+ * @function removeAt: [...n, ,n+1...]
+ * @param {Array} arrayToUpdate: array to be updated
+ * @param {number} position: array position to remove
+ */
+export const removeAt = (arrayToUpdate, position) => ([
+  ...arrayToUpdate.slice(0, position),
+  ...arrayToUpdate.slice(position + 1),
+])
+
+/**
+ * @function removeAtKey: { ..., [key]: [...n, ...n+1] }
+ * @param {Object} objectToUpdate: object to be updated
+ * @param {*} key: object key at which to apply removeAt
+ * @param {number} position: array position to remove
+ */
+export const removeAtKey = (objectToUpdate, key, position) => ({
+  ...objectToUpdate,
+  [key]: removeAt(objectToUpdate[key], position),
+})
+

@@ -44,11 +44,12 @@ const mapDispatchToProps = { }
 // source
 const propSource = {
   beginDrag(props) {
-    const { invocationId, ciDimensions, depth } = props
+    const { invocationId, ciDimensions, depth, parentId } = props
     return {
       sourceInvocationId: invocationId,
       ciDimensions,
       depth,
+      parentId,
     }
   },
   canDrag(props) {
@@ -94,6 +95,7 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
   // passed by parent
   invocationId: T.number.isRequired,
   depth: T.number.isRequired,
+  parentId: T.number,
 
   // injected by getCIDimensionsInjector
   componentInvocationRef: T.shape({ current: T.any }).isRequired,
@@ -119,6 +121,7 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
 })
 
 ComponentInvocationTreeContainer.defaultProps = {
+  parentId: null,
   modelChildren: [],
   dragItem: null,
   isDragging: false,

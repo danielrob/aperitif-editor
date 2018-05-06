@@ -30,12 +30,23 @@ const mapDispatchToProps = { moveInvocation }
 /* dnd */
 const dropzoneTarget = {
   drop(props) {
-    const { moveInvocation, sourceInvocationId, targetInvocationId } = props
-    moveInvocation({ sourceInvocationId, targetInvocationId })
+    const {
+      moveInvocation,
+      sourceInvocationId,
+      targetInvocationId,
+      targetPosition,
+      parentId,
+    } = props
+    moveInvocation({
+      sourceParentId: parentId,
+      sourceInvocationId,
+      targetInvocationId,
+      targetPosition,
+    })
   },
 }
 
-const collect = (connect) => ({
+const collect = connect => ({
   connectDropTarget: connect.dropTarget(),
 })
 
@@ -50,6 +61,8 @@ export default compose(
 ReorderDropzoneContainer.propTypes = forbidExtraProps({
   // passed by parent
   targetInvocationId: T.number.isRequired,
+  position: T.number.isRequired,
+  parentId: T.number.isRequired,
 
   // from dragItem via parent
   sourceInvocationId: T.number.isRequired,
@@ -62,4 +75,3 @@ ReorderDropzoneContainer.propTypes = forbidExtraProps({
   // React Dnd
   connectDropTarget: T.func.isRequired,
 })
-

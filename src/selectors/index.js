@@ -1,4 +1,4 @@
-import { isNumber, uniqBy } from 'lodash'
+import { isNumber, uniqBy, sortBy } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { LOOKTHROUGH, DEFAULT } from 'constantz'
@@ -27,13 +27,14 @@ export const getCurrentFileImports = createSelector( // which also represent all
   selectInvocations,
   getCurrentFileExpressions,
   selectNames,
-  (invocations, expressions, names) => uniqBy(expressions.reduce((out, expression) => {
+  (invocations, expressions, names) => sortBy(uniqBy(expressions.reduce((out, expression) => {
     const reduceRecursively = (priorInvocations, id) => {
       const { nameOrNameId, source, invocationIds } = invocations[id]
       const thisInvocation = isNumber(nameOrNameId) && expression.nameId !== nameOrNameId ? [{
         id,
         importName: names[nameOrNameId],
         source: source || `../${names[nameOrNameId]}`, // TODO: derive paths
+        order: nameOrNameId,
       }] : []
       return [
         ...priorInvocations,
@@ -42,7 +43,7 @@ export const getCurrentFileImports = createSelector( // which also represent all
       ]
     }
     return ([...out, ...expression.invocationIds.reduce(reduceRecursively, [])])
-  }, []), 'importName')
+  }, []), 'importName'), 'order')
 )
 
 export const getCurrentFileDefaultExport = createSelector(

@@ -6,6 +6,7 @@ import {
   addExpressions,
   addInvocations,
   insertAtKey,
+  removeAtKey,
   updateEntity,
   updateEntityAtKey,
 } from 'model-utils'
@@ -110,8 +111,32 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
     case MOVE_INVOCATION: {
+      const { invocations } = state
+      const {
+        sourceParentId,
+        sourceInvocationId,
+        targetInvocationId,
+        targetPosition,
+      } = action.payload
+      let updater
+      let nextInvocations
+
+      const sourcePosition = invocations[sourceParentId].invocationIds.findIndex(
+        id => id === sourceInvocationId,
+      )
+
+      /* UPDATES */
+      // remove
+      updater = ivn => removeAtKey(ivn, 'invocationIds', sourcePosition)
+      nextInvocations = updateEntity(invocations, sourceParentId, updater)
+
+      // insert
+      updater = ivn => insertAtKey(ivn, 'invocationIds', targetPosition, sourceInvocationId)
+      nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
+
       return {
         ...state,
+        invocations: nextInvocations,
       }
     }
 
