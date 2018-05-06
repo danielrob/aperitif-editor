@@ -4,9 +4,10 @@ import React from 'react'
 import styled from 'styled-as-components'
 
 import theme from 'theme-proxy'
+import { COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
 
 import { OpenTagContainer } from '../containers'
-import { InvocationChildren, InvocationPropChildren, CloseTag, CIDropzones } from './'
+import { InvocationChildren, CloseTag, CIDropzones } from './'
 
 const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, ...props }) => (
   <React.Fragment>
@@ -14,7 +15,6 @@ const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, 
       <div>
         <OpenTagContainer {...props} />
         <CIDropzones {...props} position={0} shouldDisplay={props.isOverCIT1 && !props.closed} />
-        <InvocationPropChildren {...props} />
       </div>
     )}
     <InvocationChildren {...props} />
@@ -22,7 +22,7 @@ const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, 
       <div>
         <CIDropzones
           {...props}
-          position={props.invocationIds.length}
+          position={props.childInvocations.length}
           shouldDisplay={props.isOverCIT2 && !props.closed}
         />
         <CloseTag name={props.name} depth={props.depth} shouldDisplay={!props.closed} />
@@ -44,10 +44,11 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
   invocationId: T.number.isRequired,
   depth: T.number.isRequired,
   parentId: T.number,
+  type: T.oneOf([COMPONENT_INVOCATION, PARAM_INVOCATION]),
 
   // injected by makeGetInvocation
   name: T.string.isRequired,
-  invocationIds: T.arrayOf(T.number).isRequired,
+  childInvocations: T.arrayOf(T.object).isRequired,
   paramIds: T.arrayOf(T.number).isRequired,
   params: T.arrayOf(T.object).isRequired,
   paramChildren: T.arrayOf(T.object),
@@ -70,4 +71,5 @@ ComponentInvocationTree.defaultProps = {
   paramChildren: [],
   dragItem: null,
   parentId: null,
+  type: null,
 }

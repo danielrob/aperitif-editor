@@ -7,7 +7,7 @@ import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { PROP, PARAM_INVOCATION } from 'constantz'
-import { addParamAsComponentInvocationChild, moveParamInvocation } from 'duck'
+import { addParamAsComponentInvocationChild, moveInvocation } from 'duck'
 
 import { CIDropzone } from '../components'
 
@@ -25,7 +25,7 @@ class SimplePropDropzone extends React.Component {
 /* connect */
 const mapDispatchToProps = {
   addParamAsComponentInvocationChild,
-  moveParamInvocation,
+  moveInvocation,
 }
 
 /* dnd */
@@ -39,10 +39,11 @@ const dropzoneTarget = {
       }
 
       case PARAM_INVOCATION: {
-        const { moveParamInvocation, targetInvocationId, targetPosition } = props
-        const { paramId, sourceInvocationId } = monitor.getItem()
-        return moveParamInvocation({
+        const { moveInvocation, targetInvocationId, targetPosition } = props
+        const { paramId, sourceParentId, sourceInvocationId } = monitor.getItem()
+        return moveInvocation({
           paramId,
+          sourceParentId,
           sourceInvocationId,
           targetInvocationId,
           targetPosition,
@@ -73,7 +74,7 @@ SimplePropDropzone.propTypes = forbidExtraProps({
 
   // connect
   addParamAsComponentInvocationChild: T.func.isRequired,
-  moveParamInvocation: T.func.isRequired,
+  moveInvocation: T.func.isRequired,
 
   // React Dnd
   connectDropTarget: T.func.isRequired,

@@ -1,6 +1,6 @@
 import invariant from 'invariant'
 
-import { JS, STATELESS_FUNCTION_COMPONENT, DEFAULT, required, requiredOrNull } from 'constantz'
+import { JS, STATELESS_FUNCTION_COMPONENT, DEFAULT, COMPONENT_INVOCATION, required, requiredOrNull } from 'constantz'
 import { getNextId, getEntitiesAdder } from './helpers'
 
 
@@ -55,7 +55,7 @@ export const addInvocations = getEntitiesAdder({
   paramIds: [],
   invocationIds: [],
   // type specific items
-  paramChildren: [], // component-invocation
+  type: COMPONENT_INVOCATION,
   closed: false, // component-invocation
   hasPropsSpread: false,
 })

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { createAction } from 'redux-actions'
 
 import {
@@ -10,7 +11,7 @@ import {
   updateEntity,
   updateEntityAtKey,
 } from 'model-utils'
-import { DIR, STYLED_COMPONENT, componentExpressionTypes } from 'constantz'
+import { DIR, STYLED_COMPONENT, componentExpressionTypes, PARAM_INVOCATION } from 'constantz'
 import { capitalize } from 'utils'
 
 import { getNewComponentName } from './helpers'
@@ -22,7 +23,7 @@ export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_I
 export const MOVE_PARAM_TO_SPREAD = 'MOVE_PARAM_TO_SPREAD'
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_CI = 'ADD_INVOCATION_FROM_FILE_TO_CI'
-export const MOVE_COMPONENT_INVOCATION = 'MOVE_COMPONENT_INVOCATION'
+export const MOVE_INVOCATION = 'MOVE_INVOCATION'
 export const MOVE_PARAM_INVOCATION = 'MOVE_PARAM_INVOCATION'
 export const CHANGE_FILE = 'CHANGE_FILE'
 
@@ -82,10 +83,16 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
     case ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD: {
-      let { invocations: nextInvocations } = state
+      const { invocations } = state
       const { targetInvocationId, targetPosition, paramId } = action.payload
 
-      const updater = ivn => insertAtKey(ivn, 'paramChildren', targetPosition, paramId)
+      /* Creates */
+      let paramInvocation = { nameOrNameId: paramId, type: PARAM_INVOCATION, source: null }
+      let nextInvocations
+      [nextInvocations, paramInvocation] = addInvocations(invocations, paramInvocation)
+
+      /* Update */
+      const updater = ivn => insertAtKey(ivn, 'invocationIds', targetPosition, paramInvocation)
       nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
 
       return {
@@ -125,36 +132,7 @@ export default function appReducer(state = getTestDB(), action) {
       }
     }
 
-
-    case MOVE_PARAM_INVOCATION: {
-      const { invocations } = state
-      const {
-        paramId,
-        sourceInvocationId,
-        targetInvocationId,
-        targetPosition,
-      } = action.payload
-
-      let nextInvocations = invocations
-      let updater
-
-      const sourcePosition = invocations[sourceInvocationId].paramChildren.findIndex(
-        id => id === paramId,
-      )
-
-      updater = ivn => removeAtKey(ivn, 'paramChildren', sourcePosition)
-      nextInvocations = updateEntity(nextInvocations, sourceInvocationId, updater)
-
-      updater = ivn => insertAtKey(ivn, 'paramChildren', targetPosition, paramId)
-      nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
-
-      return {
-        ...state,
-        invocations: nextInvocations,
-      }
-    }
-
-    case MOVE_COMPONENT_INVOCATION: {
+    case MOVE_INVOCATION: {
       const { invocations } = state
       const {
         sourceParentId,
@@ -211,17 +189,26 @@ export default function appReducer(state = getTestDB(), action) {
         addNames(names, dirName, indexName, wrapperName)
 
       // invocations
+      let nextInvocations = invocations
+      let invocationIds = []
+
+      // paramInvocation if adding now
+      if (propAsChild) {
+        let paramInvocation = { nameOrNameId: itemId, type: PARAM_INVOCATION, source: null };
+        [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
+        invocationIds.push(paramInvocation)
+      }
+
       let invoke = {
         nameOrNameId: dirName,
         source: null,
         paramIds: propAsChild ? [] : [itemId],
-        paramChildren: propAsChild ? [itemId] : [],
+        invocationIds,
         closed,
       }
-      let wrapperInvoke = { nameOrNameId: wrapperName, source: null }
-      let nextInvocations
+      let wrapperInvoke = { nameOrNameId: wrapperName, source: null };
       [nextInvocations, invoke, wrapperInvoke] =
-        addInvocations(invocations, invoke, wrapperInvoke)
+        addInvocations(nextInvocations, invoke, wrapperInvoke)
 
       // expressions
       let expression =
@@ -290,10 +277,6 @@ export const moveParamToSpread = createAction(
   MOVE_PARAM_TO_SPREAD
 )
 
-export const moveComponentInvocation = createAction(
-  MOVE_COMPONENT_INVOCATION
-)
-
-export const moveParamInvocation = createAction(
-  MOVE_PARAM_INVOCATION
+export const moveInvocation = createAction(
+  MOVE_INVOCATION
 )

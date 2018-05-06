@@ -96,6 +96,7 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
   invocationId: T.number.isRequired,
   depth: T.number.isRequired,
   parentId: T.number,
+  type: T.oneOf([COMPONENT_INVOCATION, PARAM_INVOCATION]),
 
   // injected by getCIDimensionsInjector
   componentInvocationRef: T.shape({ current: T.any }).isRequired,
@@ -103,7 +104,7 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
 
   // injected by makeGetInvocation
   name: T.string.isRequired,
-  invocationIds: T.arrayOf(T.number).isRequired,
+  childInvocations: T.arrayOf(T.object).isRequired,
   paramIds: T.arrayOf(T.number).isRequired,
   params: T.arrayOf(T.object).isRequired,
   paramChildren: T.arrayOf(T.object),
@@ -125,4 +126,5 @@ ComponentInvocationTreeContainer.defaultProps = {
   paramChildren: [],
   dragItem: null,
   isDragging: false,
+  type: null,
 }
