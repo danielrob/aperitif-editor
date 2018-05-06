@@ -22,7 +22,8 @@ export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_I
 export const MOVE_PARAM_TO_SPREAD = 'MOVE_PARAM_TO_SPREAD'
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_CI = 'ADD_INVOCATION_FROM_FILE_TO_CI'
-export const MOVE_INVOCATION = 'MOVE_INVOCATION'
+export const MOVE_COMPONENT_INVOCATION = 'MOVE_COMPONENT_INVOCATION'
+export const MOVE_PARAM_INVOCATION = 'MOVE_PARAM_INVOCATION'
 export const CHANGE_FILE = 'CHANGE_FILE'
 
 export default function appReducer(state = getTestDB(), action) {
@@ -124,7 +125,32 @@ export default function appReducer(state = getTestDB(), action) {
       }
     }
 
-    case MOVE_INVOCATION: {
+
+    case MOVE_PARAM_INVOCATION: {
+      const {
+        paramId,
+        sourceInvocationId,
+        sourcePosition,
+        targetInvocationId,
+        targetPosition,
+      } = action
+
+      let { invocations: nextInvocations } = state
+      let updater
+
+      updater = ivn => removeAtKey(ivn, 'paramChildren', sourcePosition)
+      nextInvocations = updateEntity(nextInvocations, sourceInvocationId, updater)
+
+      updater = ivn => insertAtKey(ivn, 'paramChildren', targetPosition, paramId)
+      nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
+
+      return {
+        ...state,
+        invocations: nextInvocations,
+      }
+    }
+
+    case MOVE_COMPONENT_INVOCATION: {
       const { invocations } = state
       const {
         sourceParentId,
@@ -260,6 +286,10 @@ export const moveParamToSpread = createAction(
   MOVE_PARAM_TO_SPREAD
 )
 
-export const moveInvocation = createAction(
-  MOVE_INVOCATION
+export const moveComponentInvocation = createAction(
+  MOVE_COMPONENT_INVOCATION
+)
+
+export const moveParamInvocation = createAction(
+  MOVE_PARAM_INVOCATION
 )

@@ -1,4 +1,4 @@
-import { addNames, addFiles, addExpressions, addInvocations } from 'model-utils'
+import { addNames, addParams, addFiles, addExpressions, addInvocations } from 'model-utils'
 import { DIR, LOOKTHROUGH, STYLED_COMPONENT } from 'constantz'
 
 export default function getTestDB() {
@@ -18,11 +18,13 @@ export default function getTestDB() {
   ] = addNames({}, 'index', 'App', 'index', 'React', 'styled', '', 'AppWrapper')
 
   // params
-  const params = {
-    1: { id: 1, name: 'userId', payload: 1 },
-    2: { id: 2, name: 'title', payload: 'title' },
-    3: { id: 3, name: 'body', payload: 'lorem ipsumm....' },
-  }
+  let params = [
+    { name: 'userId', payload: 1 },
+    { name: 'title', payload: 'title' },
+    { name: 'body', payload: 'lorem ipsumm....' },
+  ];
+
+  [params] = addParams({}, ...params)
 
   // invocations
   let importReact = { nameOrNameId: reactName, source: 'react' }

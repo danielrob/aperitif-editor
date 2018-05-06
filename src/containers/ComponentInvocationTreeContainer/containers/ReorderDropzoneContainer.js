@@ -7,7 +7,7 @@ import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { COMPONENT_INVOCATION } from 'constantz'
-import { moveInvocation } from 'duck'
+import { moveComponentInvocation } from 'duck'
 
 import { ReorderDropzone } from '../components'
 
@@ -25,19 +25,19 @@ class ReorderDropzoneContainer extends React.Component {
 }
 
 /* connect */
-const mapDispatchToProps = { moveInvocation }
+const mapDispatchToProps = { moveComponentInvocation }
 
 /* dnd */
 const dropzoneTarget = {
   drop(props) {
     const {
-      moveInvocation,
+      moveComponentInvocation,
       sourceInvocationId,
       targetInvocationId,
       targetPosition,
       parentId,
     } = props
-    moveInvocation({
+    moveComponentInvocation({
       sourceParentId: parentId,
       sourceInvocationId,
       targetInvocationId,
@@ -70,7 +70,7 @@ ReorderDropzoneContainer.propTypes = forbidExtraProps({
   depth: T.number.isRequired,
 
   // connect
-  moveInvocation: T.func.isRequired,
+  moveComponentInvocation: T.func.isRequired,
 
   // React Dnd
   connectDropTarget: T.func.isRequired,
