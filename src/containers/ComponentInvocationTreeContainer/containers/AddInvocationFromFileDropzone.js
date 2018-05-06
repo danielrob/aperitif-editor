@@ -31,8 +31,10 @@ const mapDispatchToProps = {
 /* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { id: cIId, addInvocationFromFileToCI, position } = props
-    addInvocationFromFileToCI({ cIId, position, item: monitor.getItem() })
+    const { addInvocationFromFileToCI, invocationId, position } = props
+    const { fileId, isDirectory } = monitor.getItem()
+
+    addInvocationFromFileToCI({ invocationId, position, fileId, isDirectory })
   },
 }
 
