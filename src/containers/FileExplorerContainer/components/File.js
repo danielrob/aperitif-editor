@@ -1,8 +1,9 @@
 import T from 'prop-types'
+import { forbidExtraProps, or, explicitNull } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
-import { fileTypes } from 'constantz'
+import { fileTypes, fileTypesArray } from 'constantz'
 
 import { FileContainer } from '../containers'
 
@@ -41,15 +42,23 @@ export default styled(File).as.div`
   ${props => props.isDirectory && 'padding: 5px 0;'}
 `
 
-File.propTypes = {
+File.propTypes = forbidExtraProps({
+  // passed by parent / file explorer
   name: T.string.isRequired,
+  type: T.oneOf(fileTypesArray).isRequired,
+  // eslint-disable-next-line react/require-default-props
+  parentName: or([T.string.isRequired, explicitNull()]),
   fileChildren: T.arrayOf(T.number).isRequired,
-  initial: T.bool,
+  initial: T.bool.isRequired,
+
   // Injected by React DnD:
   connectDragPreview: T.func.isRequired,
   isDragging: T.bool.isRequired,
-}
 
-File.defaultProps = {
-  initial: false,
-}
+  // for wrapper
+  /* eslint-disable react/no-unused-prop-types */
+  innerRef: T.func.isRequired,
+  onClick: T.func.isRequired,
+  isDirectory: T.bool.isRequired,
+  /* eslint-enable react/no-unused-prop-types */
+})

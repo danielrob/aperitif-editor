@@ -13,7 +13,6 @@ export const makeGetFile = () => createSelector(
     const { id, nameId, type, children, expressionIds } = file
 
     return {
-      id,
       name: names[nameId],
       type,
       fileChildren: children,

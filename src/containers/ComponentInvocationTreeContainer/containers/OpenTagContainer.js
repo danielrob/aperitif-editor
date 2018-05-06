@@ -61,7 +61,7 @@ const collect = (connect, monitor) => ({
 
 })
 
-/* compose */
+/* compose export */
 export default compose(
   connect(null, mapDispatchToProps),
   DropTarget([

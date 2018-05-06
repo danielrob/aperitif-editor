@@ -1,10 +1,12 @@
+import T from 'prop-types'
+import { forbidExtraProps, or, explicitNull } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DragSource } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { DIR, FILE } from 'constantz'
+import { fileTypesArray, DIR, FILE } from 'constantz'
 import { changeFile } from 'duck'
 
 import { makeGetFile } from '../selectors'
@@ -12,13 +14,20 @@ import { File } from '../components'
 
 class FileContainer extends React.Component {
   onClickHandler = e => {
-    const { changeFile, id } = this.props
+    const { changeFile, fileId } = this.props
     e.stopPropagation()
-    changeFile(id)
+    changeFile(fileId)
   }
 
   render() {
-    const { connectDragSource, ...props } = this.props
+    const {
+      connectDragSource,
+      fileId, // eslint-disable-line no-unused-vars
+      isCurrent, // eslint-disable-line no-unused-vars
+      expressionIds, // eslint-disable-line no-unused-vars
+      changeFile, // eslint-disable-line no-unused-vars
+      ...props
+    } = this.props
 
     return (
       <File
@@ -72,9 +81,38 @@ const sourceCollect = (connect, monitor) => ({
 //   dragItem: monitor.getItem(),
 // })
 
-/* compose */
+/* compose export */
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
   DragSource(getType, sourceSpec, sourceCollect)
   // DropTarget([], dropzoneTarget, targetCollect),
 )(FileContainer)
+
+/* propTypes */
+FileContainer.propTypes = forbidExtraProps({
+  // passed by parent / file explorer
+  fileId: T.number.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  parentName: or([T.string.isRequired, explicitNull()]),
+  initial: T.bool,
+
+  // from makeGetFile
+  name: T.string.isRequired,
+  type: T.oneOf(fileTypesArray).isRequired,
+  fileChildren: T.arrayOf(T.number).isRequired,
+  isDirectory: T.bool.isRequired,
+  isCurrent: T.bool.isRequired,
+  expressionIds: T.arrayOf(T.number).isRequired,
+
+  // mapDispatchToProps
+  changeFile: T.func.isRequired,
+
+  // injected by React DnD
+  connectDragSource: T.func.isRequired,
+  connectDragPreview: T.func.isRequired,
+  isDragging: T.bool.isRequired,
+})
+
+FileContainer.defaultProps = {
+  initial: false,
+}

@@ -42,7 +42,7 @@ const collect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-/* compose */
+/* compose export */
 export default compose(
   connect(null, mapDispatchToProps),
   DropTarget([FILE, DIR], dropzoneTarget, collect)

@@ -8,6 +8,7 @@ export const JS = 'js'
 export const DIR = 'dir'
 
 export const fileTypes = { JS, DIR }
+export const fileTypesArray = [JS, DIR]
 
 /* expressionTypes */
 export const LOOKTHROUGH = "I'm all about my invocation, that's it"
