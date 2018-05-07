@@ -5,7 +5,6 @@ import styled, { css } from 'styled-as-components'
 import theme from 'theme-proxy'
 import { PROP, PROPS_SPREAD } from 'constantz'
 import { indent } from 'utils'
-import { buffer } from 'styleUtils'
 
 const OpenTag = ({
   name,
@@ -56,8 +55,6 @@ const OpenTag = ({
 }
 
 export default styled(OpenTag).as.div.attrs({ style: { userSelect: 'text' } })`
-  ${buffer(5)}
-
   .new-attribute-preview {
     color: ${theme.color.darkblue};
     ${props => props.isOverCIButNotOpenTag && 'font-size: 14px'};
