@@ -6,6 +6,7 @@ import {
   addFiles,
   addExpressions,
   addInvocations,
+  insertAt,
   insertAtKey,
   removeAtKey,
   updateEntity,
@@ -92,7 +93,11 @@ export default function appReducer(state = getTestDB(), action) {
       [nextInvocations, paramInvocation] = addInvocations(invocations, paramInvocation)
 
       /* Update */
-      const updater = ivn => insertAtKey(ivn, 'invocationIds', targetPosition, paramInvocation)
+      const updater = ivn => ({
+        ...ivn,
+        invocationIds: insertAt(ivn.invocationIds, targetPosition, paramInvocation),
+        closed: false,
+      })
       nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
 
       return {
@@ -230,7 +235,11 @@ export default function appReducer(state = getTestDB(), action) {
       /* eslint-enable prefer-const */
 
       /* UPDATES */
-      const updater = ivn => insertAtKey(ivn, 'invocationIds', position, invoke)
+      const updater = ivn => ({
+        ...ivn,
+        invocationIds: insertAt(ivn.invocationIds, position, invoke),
+        closed: false,
+      })
       nextInvocations = updateEntity(nextInvocations, parentId, updater)
 
       return {

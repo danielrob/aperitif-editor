@@ -19,13 +19,15 @@ class ComponentInvocationTreeContainer extends React.Component {
       isDragging,
       ...props
     } = this.props
-    const { isOverCIT1, isOverCIT2 } = props
+    const { isOverCIT1, isOverCIT2, closed } = props
+    const isOverCI = isOverCIT1 || isOverCIT2
+    const isClosed = closed && !isOverCI
 
     //  https://github.com/react-dnd/react-dnd/issues/998
     return !isDragging ? connectDragSource(
       <div>
         <div ref={componentInvocationRef} style={{ display: 'table', width: 'auto' }}>
-          <ComponentInvocationTree {...props} isOverCI={isOverCIT1 || isOverCIT2} />
+          <ComponentInvocationTree {...props} isOverCI={isOverCI} closed={isClosed} />
         </div>
       </div>
     ) : null
