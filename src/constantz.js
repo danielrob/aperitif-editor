@@ -40,7 +40,7 @@ export const exportTypes = {
   false: 'no export',
 }
 
-/* draggable types */
+/* draggable / invocation types */
 export const PROP = 'prop'
 export const COMPONENT_INVOCATION = 'component invocation'
 export const PARAM_INVOCATION = 'param invocation'
