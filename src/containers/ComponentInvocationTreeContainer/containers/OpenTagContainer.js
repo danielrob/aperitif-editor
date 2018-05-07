@@ -15,7 +15,6 @@ class OpenTagContainer extends React.Component {
     return (
       <OpenTag
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        isOverCIButNotOpenTag={props.isOverCI && !props.isOverOpenTag}
         {...props}
       />
     )

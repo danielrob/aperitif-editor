@@ -29,7 +29,7 @@ export default function getTestDB() {
   // invocations
   let importReact = { nameOrNameId: reactName, source: 'react' }
   let importStyled = { nameOrNameId: styledName, source: 'styled-components' }
-  let appWrapperInvocation = { nameOrNameId: appWrapperName, source: null, paramIds: [] }
+  let appWrapperInvocation = { nameOrNameId: appWrapperName, source: null, paramIds: [], closed: true }
   let initialInvocations
   [initialInvocations, importReact, appWrapperInvocation, importStyled] =
     addInvocations({}, importReact, appWrapperInvocation, importStyled)

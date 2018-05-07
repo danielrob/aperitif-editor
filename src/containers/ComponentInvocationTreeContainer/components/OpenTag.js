@@ -8,7 +8,6 @@ import { indent } from 'utils'
 
 const OpenTag = ({
   name,
-  isOverCI,
   isOverOpenTag,
   dragItem,
   paramIds,
@@ -18,7 +17,7 @@ const OpenTag = ({
   depth,
 }) => {
   const spreadPropsIsOver = isOverOpenTag && dragItem.type === PROPS_SPREAD
-  const propIsOver = isOverCI && dragItem.type === PROP && !paramIds.includes(dragItem.id)
+  const propIsOver = isOverOpenTag && dragItem.type === PROP && !paramIds.includes(dragItem.id)
 
   return (
     <React.Fragment>
@@ -56,16 +55,13 @@ const OpenTag = ({
 
 export default styled(OpenTag).as.div.attrs({ style: { userSelect: 'text' } })`
   .new-attribute-preview {
-    color: ${theme.color.darkblue};
-    ${props => props.isOverCIButNotOpenTag && 'font-size: 14px'};
-    ${props => props.isOverCIButNotOpenTag && css`color: ${theme.color.grey};`}
-    transition: 130ms;
+    color: ${theme.color.darkgreen};
+    transition: 250ms;
   }
 `
 
 OpenTag.propTypes = {
   name: T.string.isRequired,
-  isOverCI: T.bool.isRequired,
   paramIds: T.arrayOf(T.number).isRequired,
   params: T.arrayOf(T.object).isRequired,
   closed: T.bool.isRequired,

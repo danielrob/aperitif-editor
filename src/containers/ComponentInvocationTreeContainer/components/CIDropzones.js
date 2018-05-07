@@ -26,16 +26,18 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
           </SimplePropDropzone>
         )}
         {dragItem.isLast !== undefined && (
-          <React.Fragment>
-            <NewWithPropAsChildPropDropzone {...dropZoneProps}>
-              {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
-            </NewWithPropAsChildPropDropzone>
-            <NewWithPropDropzone {...dropZoneProps} >
-              {'<'}{capitalize(dragItem.name)}<br />
-              {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
-              {'/>'}
-            </NewWithPropDropzone>
-          </React.Fragment>
+          <NewWithPropDropzone {...dropZoneProps} >
+            {'<'}{capitalize(dragItem.name)}
+            {` ${dragItem.name}={${dragItem.name}}`}
+            {'/>'}
+          </NewWithPropDropzone>
+        )}
+        {dragItem.isLast !== undefined && (
+          <NewWithPropAsChildPropDropzone {...dropZoneProps}>
+            {'<'}{capitalize(dragItem.name)}{'>'}<br />
+            {indent(1)}{'{'}{dragItem.name}{'}'}<br />
+            {'</'}{capitalize(dragItem.name)}{'>'}
+          </NewWithPropAsChildPropDropzone>
         )}
         {dragItem.fileId !== undefined && (
           <AddInvocationFromFileDropzone {...dropZoneProps}>
@@ -56,7 +58,7 @@ export default styled(CIDropzones).as.div`
   .zones {
     display: flex;
     flex-direction: column;
-    color: ${theme.color.grey};
+    color: ${theme.color.washedDarkGreen};
   }
 `
 

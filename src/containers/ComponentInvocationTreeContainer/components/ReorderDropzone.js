@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
 const ReorderDropzone = styled.div`
-  border-top: 1px dotted black;
-  border-bottom: 1px dotted black;
+  border-left: 1px dotted black;
   padding: 5px 5px;
   min-height: ${props => props.ciDimensions.clientHeight}px;
   min-width: ${props => props.ciDimensions.clientWidth - (props.depth * 20)}px;
