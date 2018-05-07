@@ -13,42 +13,42 @@ import {
   ReorderDropzoneContainer,
 } from '../containers'
 
-const CIDropzones = ({ dragItem, depth, shouldDisplay, ...props }) => shouldDisplay && dragItem ? (
-  <React.Fragment>
-    {indent(depth + 1)}
-    <div className="zones">
-      {(dragItem.isLast !== undefined || dragItem.type === PARAM_INVOCATION) && (
-        <SimplePropDropzone targetInvocationId={props.invocationId} targetPosition={props.position}>
-          {`{${dragItem.name}}`}
-        </SimplePropDropzone>
-      )}
-      {dragItem.isLast !== undefined && (
-        <React.Fragment>
-          <NewWithPropAsChildPropDropzone {...props}>
-            {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
-          </NewWithPropAsChildPropDropzone>
-          <NewWithPropDropzone {...props}>
-            {'<'}{capitalize(dragItem.name)}<br />
-            {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
-            {'/>'}
-          </NewWithPropDropzone>
-        </React.Fragment>
-      )}
-      {dragItem.fileId !== undefined && (
-        <AddInvocationFromFileDropzone {...props}>
-          {'<'}{dragItem.dropName}{' />'}
-        </AddInvocationFromFileDropzone>
-      )}
-      {dragItem.ciDimensions && (
-        <ReorderDropzoneContainer
-          {...dragItem}
-          targetInvocationId={props.invocationId}
-          targetPosition={props.position}
-        />
-      )}
-    </div>
-  </React.Fragment>
-) : null
+const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay }) => {
+  const dropZoneProps = { targetInvocationId: invocationId, targetPosition: position }
+
+  return shouldDisplay && dragItem ? (
+    <React.Fragment>
+      {indent(depth + 1)}
+      <div className="zones">
+        {(dragItem.isLast !== undefined || dragItem.type === PARAM_INVOCATION) && (
+          <SimplePropDropzone {...dropZoneProps}>
+            {`{${dragItem.name}}`}
+          </SimplePropDropzone>
+        )}
+        {dragItem.isLast !== undefined && (
+          <React.Fragment>
+            <NewWithPropAsChildPropDropzone {...dropZoneProps}>
+              {'<'}{capitalize(dragItem.name)}{'>'}{'{'}{dragItem.name}{'}'}{'</'}{capitalize(dragItem.name)}{'>'}
+            </NewWithPropAsChildPropDropzone>
+            <NewWithPropDropzone {...dropZoneProps} >
+              {'<'}{capitalize(dragItem.name)}<br />
+              {indent(1)}{`${dragItem.name}={${dragItem.name}}`}<br />
+              {'/>'}
+            </NewWithPropDropzone>
+          </React.Fragment>
+        )}
+        {dragItem.fileId !== undefined && (
+          <AddInvocationFromFileDropzone {...dropZoneProps}>
+            {'<'}{dragItem.dropName}{' />'}
+          </AddInvocationFromFileDropzone>
+        )}
+        {dragItem.ciDimensions && (
+          <ReorderDropzoneContainer {...dropZoneProps} {...dragItem} />
+        )}
+      </div>
+    </React.Fragment>
+  ) : null
+}
 
 export default styled(CIDropzones).as.div`
   display: flex;
@@ -60,12 +60,16 @@ export default styled(CIDropzones).as.div`
   }
 `
 
+/* propTypes */
 CIDropzones.propTypes = {
   invocationId: T.number.isRequired,
   shouldDisplay: T.bool.isRequired,
   dragItem: T.shape({ name: T.string }),
+  depth: T.number.isRequired,
+  position: T.number.isRequired,
+  // ...props - see ComponentInvocationTree
 }
 
 CIDropzones.defaultProps = {
-  dragItem: {},
+  dragItem: null,
 }

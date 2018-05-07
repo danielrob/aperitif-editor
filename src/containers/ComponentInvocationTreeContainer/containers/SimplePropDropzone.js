@@ -13,9 +13,9 @@ import { CIDropzone } from '../components'
 
 class SimplePropDropzone extends React.Component {
   render() {
-    const { connectDropTarget, children } = this.props
+    const { connectDropTarget, isOver, children } = this.props
     return (
-      <CIDropzone innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))} {...this.props}>
+      <CIDropzone innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))} isOver={isOver}>
         {children}
       </CIDropzone>
     )

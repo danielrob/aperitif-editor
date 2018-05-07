@@ -26,6 +26,7 @@
     "react/no-unescaped-entities": "off",
     "react/no-find-dom-node": "off",
     "react/sort-comp": "off",
+    "react/no-unused-prop-types": "off",
     "semi": ["error", "never"]
   }
 }

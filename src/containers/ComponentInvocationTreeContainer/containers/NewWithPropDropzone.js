@@ -1,4 +1,5 @@
-
+import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
@@ -12,11 +13,11 @@ import { CIDropzone } from '../components'
 
 class NewWithPropDropzone extends React.Component {
   render() {
-    const { connectDropTarget, children } = this.props
+    const { connectDropTarget, isOver, children } = this.props
     return (
       <CIDropzone
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        {...this.props}
+        isOver={isOver}
       >
         {children}
       </CIDropzone>
@@ -26,21 +27,20 @@ class NewWithPropDropzone extends React.Component {
 
 /* connect */
 const mapDispatchToProps = {
-  newWithPropAsChild: createComponentBundle,
+  newWithProp: createComponentBundle,
 }
 
 /* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { invocationId: parentId, newWithPropAsChild, position } = props
-    newWithPropAsChild({ parentId, position, item: monitor.getItem(), closed: true })
+    const { targetInvocationId: parentId, newWithProp, targetPosition: position } = props
+    newWithProp({ parentId, position, item: monitor.getItem(), closed: true })
   },
 }
 
 const collect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
-  dragItem: monitor.getItem(),
 })
 
 /* compose export */
@@ -49,3 +49,18 @@ export default compose(
   DropTarget(DraggableTypes.PROP, dropzoneTarget, collect)
 )(NewWithPropDropzone)
 
+
+/* propTypes */
+NewWithPropDropzone.propTypes = forbidExtraProps({
+  // passed by parent
+  targetInvocationId: T.number.isRequired,
+  targetPosition: T.number.isRequired,
+  children: T.node.isRequired,
+
+  // mapDispatchToProps
+  newWithProp: T.func.isRequired,
+
+  // Injected by React DnD:
+  connectDropTarget: T.func.isRequired,
+  isOver: T.bool.isRequired,
+})

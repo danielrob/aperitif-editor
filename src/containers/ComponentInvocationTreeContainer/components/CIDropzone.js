@@ -1,6 +1,8 @@
+import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import styled from 'styled-components'
 
-export default styled.div`
+const CIDropzone = styled.div`
   padding: 10px;
   margin: 0 2px;
   border: 1px dotted;
@@ -9,3 +11,10 @@ export default styled.div`
   transition: font-size 50ms;
   ${props => props.isOver && 'color: #333;'}
 `
+export default CIDropzone
+
+CIDropzone.propTypes = forbidExtraProps({
+  isOver: T.bool.isRequired,
+  children: T.node.isRequired,
+  innerRef: T.func.isRequired,
+})

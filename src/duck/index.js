@@ -103,7 +103,7 @@ export default function appReducer(state = getTestDB(), action) {
 
     case ADD_INVOCATION_FROM_FILE_TO_CI: {
       const { names, invocations, files, expressions } = state
-      const { invocationId, position, fileId, isDirectory } = action.payload
+      const { targetInvocationId, targetPosition, fileId, isDirectory } = action.payload
 
       let file = files[fileId]
       if (isDirectory) {
@@ -123,8 +123,8 @@ export default function appReducer(state = getTestDB(), action) {
         })
 
       /* UPDATES */
-      const updater = ivn => insertAtKey(ivn, 'invocationIds', position, newInvocationId)
-      nextInvocations = updateEntity(nextInvocations, invocationId, updater)
+      const updater = ivn => insertAtKey(ivn, 'invocationIds', targetPosition, newInvocationId)
+      nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
 
       return {
         ...state,

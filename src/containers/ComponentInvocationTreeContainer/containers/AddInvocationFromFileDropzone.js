@@ -1,3 +1,5 @@
+import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
@@ -11,11 +13,11 @@ import { CIDropzone } from '../components'
 
 class AddInvocationFromFileDropzone extends React.Component {
   render() {
-    const { connectDropTarget, children } = this.props
+    const { connectDropTarget, isOver, children } = this.props
     return (
       <CIDropzone
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        {...this.props}
+        isOver={isOver}
       >
         {children}
       </CIDropzone>
@@ -31,17 +33,16 @@ const mapDispatchToProps = {
 /* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { addInvocationFromFileToCI, invocationId, position } = props
+    const { addInvocationFromFileToCI, targetInvocationId, targetPosition } = props
     const { fileId, isDirectory } = monitor.getItem()
 
-    addInvocationFromFileToCI({ invocationId, position, fileId, isDirectory })
+    addInvocationFromFileToCI({ targetInvocationId, targetPosition, fileId, isDirectory })
   },
 }
 
 const collect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
-  dragItem: monitor.getItem(),
 })
 
 /* compose export */
@@ -50,3 +51,17 @@ export default compose(
   DropTarget([FILE, DIR], dropzoneTarget, collect)
 )(AddInvocationFromFileDropzone)
 
+/* propTypes */
+AddInvocationFromFileDropzone.propTypes = forbidExtraProps({
+  // passed by parent
+  targetInvocationId: T.number.isRequired,
+  targetPosition: T.number.isRequired,
+  children: T.node.isRequired,
+
+  // mapDispatchToProps
+  addInvocationFromFileToCI: T.func.isRequired,
+
+  // Injected by React DnD:
+  connectDropTarget: T.func.isRequired,
+  isOver: T.bool.isRequired,
+})

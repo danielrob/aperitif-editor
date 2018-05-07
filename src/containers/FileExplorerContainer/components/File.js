@@ -56,9 +56,7 @@ File.propTypes = forbidExtraProps({
   isDragging: T.bool.isRequired,
 
   // for wrapper
-  /* eslint-disable react/no-unused-prop-types */
   innerRef: T.func.isRequired,
   onClick: T.func.isRequired,
   isDirectory: T.bool.isRequired,
-  /* eslint-enable react/no-unused-prop-types */
 })
