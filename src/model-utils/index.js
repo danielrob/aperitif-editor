@@ -1,3 +1,4 @@
+import { isFunction, isPlainObject } from 'lodash'
 import invariant from 'invariant'
 
 import { JS, STATELESS_FUNCTION_COMPONENT, DEFAULT, COMPONENT_INVOCATION, required, requiredOrNull } from 'constantz'
@@ -72,13 +73,14 @@ export const addInvocations = getEntitiesAdder({
  */
 export const updateEntity = (entities, entityId, valueOrUpdater) => ({
   ...entities,
-  [entityId]: typeof valueOrUpdater === 'function'
-    ? valueOrUpdater(entities[entityId])
-    : {
+  [entityId]:
+    (isFunction(valueOrUpdater) && valueOrUpdater(entities[entityId])) ||
+    (isPlainObject(valueOrUpdater) && {
       ...entities[entityId],
       ...valueOrUpdater,
       id: [entityId],
-    },
+    }) ||
+    valueOrUpdater,
 })
 
 /**

@@ -1,6 +1,6 @@
 import T from 'prop-types'
 import React from 'react'
-import styled, { css } from 'styled-as-components'
+import styled from 'styled-as-components'
 
 import theme from 'theme-proxy'
 import { PROP, PROPS_SPREAD } from 'constantz'

@@ -27,9 +27,19 @@ export const ADD_INVOCATION_FROM_FILE_TO_CI = 'ADD_INVOCATION_FROM_FILE_TO_CI'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
 export const MOVE_PARAM_INVOCATION = 'MOVE_PARAM_INVOCATION'
 export const CHANGE_FILE = 'CHANGE_FILE'
+export const CHANGE_NAME = 'CHANGE_NAME'
 
 export default function appReducer(state = getTestDB(), action) {
   switch (action.type) {
+    case CHANGE_NAME: {
+      const { names } = state
+      const { nameId, value } = action.payload
+
+      return {
+        ...state,
+        names: updateEntity(names, nameId, value),
+      }
+    }
     case CHANGE_FILE: {
       const { currentFileId, files, names } = state
       let { payload: nextId } = action
@@ -288,4 +298,8 @@ export const moveParamToSpread = createAction(
 
 export const moveInvocation = createAction(
   MOVE_INVOCATION
+)
+
+export const changeName = createAction(
+  CHANGE_NAME
 )

@@ -10,6 +10,8 @@ export const selectExpressions = s => s.app.expressions
 export const selectInvocations = s => s.app.invocations
 export const selectParams = s => s.app.params
 
+export const makeSelectName = () => (state, props) => selectNames(state)[props.nameId]
+
 export const selectCurrentFile = createSelector(
   selectFiles,
   selectCurrentFileId,

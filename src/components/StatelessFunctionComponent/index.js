@@ -5,10 +5,11 @@ import { ComponentInvocationTreeContainer } from 'containers'
 import { INLINE } from 'constantz'
 
 import { Props } from './components'
+import { Input } from './containers'
 
 export default class StatelessFunctionComponent extends React.Component {
   render() {
-    const { id, exportType, name, params: allParams, invocations } = this.props
+    const { id, exportType, nameId, params: allParams, invocations } = this.props
     const [spreadParams, params] = partition(allParams, p => p.isSpreadMember)
 
     const componentInvocations = invocations // TODO => create invocationExpressions index && filter by expression type
@@ -18,7 +19,7 @@ export default class StatelessFunctionComponent extends React.Component {
         <Line>
           {exportType === INLINE && <Keyword>export</Keyword>}{' '}
           <Keyword>const</Keyword>{' '}
-          {name} =
+          <Input nameId={nameId} /> =
           <Props params={params} spreadParams={spreadParams} expressionId={id} />
            => (
           {componentInvocations.length > 1 && '['}
