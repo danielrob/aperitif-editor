@@ -1,10 +1,11 @@
 import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
+import { singular } from 'pluralize'
 
 import theme from 'theme-proxy'
 import { capitalize, indent } from 'utils'
-import { PARAM_INVOCATION } from 'constantz'
+import { PROP, PARAM_INVOCATION, DIR, FILE, COMPONENT_INVOCATION } from 'constantz'
 import {
   SimplePropDropzone,
   NewWithPropDropzone,
@@ -15,39 +16,57 @@ import {
 
 const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay }) => {
   const dropZoneProps = { targetInvocationId: invocationId, targetPosition: position }
+  const { type, name, dropName, propType } = dragItem || {}
 
-  return shouldDisplay && dragItem ? (
+  return shouldDisplay && type ? (
     <React.Fragment>
       {indent(depth + 1)}
-      <div className="zones">
-        {(dragItem.isLast !== undefined || dragItem.type === PARAM_INVOCATION) && (
-          <SimplePropDropzone {...dropZoneProps}>
-            {`{${dragItem.name}}`}
-          </SimplePropDropzone>
-        )}
-        {dragItem.isLast !== undefined && (
-          <NewWithPropDropzone {...dropZoneProps} >
-            {'<'}{capitalize(dragItem.name)}
-            {` ${dragItem.name}={${dragItem.name}}`}
-            {'/>'}
-          </NewWithPropDropzone>
-        )}
-        {dragItem.isLast !== undefined && (
-          <NewWithPropAsChildPropDropzone {...dropZoneProps}>
-            {'<'}{capitalize(dragItem.name)}{'>'}<br />
-            {indent(1)}{'{'}{dragItem.name}{'}'}<br />
-            {'</'}{capitalize(dragItem.name)}{'>'}
-          </NewWithPropAsChildPropDropzone>
-        )}
-        {dragItem.fileId !== undefined && (
-          <AddInvocationFromFileDropzone {...dropZoneProps}>
-            {'<'}{dragItem.dropName}{' />'}
-          </AddInvocationFromFileDropzone>
-        )}
-        {dragItem.ciDimensions && (
+      <Zones>
+        {/* reordering */}
+        {[COMPONENT_INVOCATION].includes(type) && (
           <ReorderDropzoneContainer {...dropZoneProps} {...dragItem} />
         )}
-      </div>
+        {[PARAM_INVOCATION].includes(type) && (
+          <SimplePropDropzone {...dropZoneProps}>
+            {`{${name}}`}
+          </SimplePropDropzone>
+        )}
+        {/* prop options */}
+        {[PROP].includes(type) && (
+          ([T.object, T.string, T.number, null].includes(propType) && (
+            <React.Fragment>
+              <SimplePropDropzone {...dropZoneProps}>
+                {`{${name}}`}
+              </SimplePropDropzone>
+              <NewWithPropDropzone {...dropZoneProps} >
+                {'<'}{capitalize(name)}
+                {` ${name}={${name}}`}
+                {'/>'}
+              </NewWithPropDropzone>
+              <NewWithPropAsChildPropDropzone {...dropZoneProps}>
+                {'<'}{capitalize(name)}{'>'}<br />
+                {indent(1)}{'{'}{name}{'}'}<br />
+                {'</'}{capitalize(name)}{'>'}
+              </NewWithPropAsChildPropDropzone>
+            </React.Fragment>
+          )) ||
+          ([T.array].includes(propType) && (
+            <React.Fragment>
+              <SimplePropDropzone {...dropZoneProps}>
+                {'{'}{name}.map({singular(name)} => (<br />
+                {indent(1)}{'<'}{capitalize(singular(name))}{` ...{${singular(name)}} />`}<br />
+                )){'}'}
+              </SimplePropDropzone>
+            </React.Fragment>
+          )
+        ))}
+        {/* file */}
+        {[DIR, FILE].includes(type) && (
+          <AddInvocationFromFileDropzone {...dropZoneProps}>
+            {'<'}{dropName}{' />'}
+          </AddInvocationFromFileDropzone>
+        )}
+      </Zones>
     </React.Fragment>
   ) : null
 }
@@ -55,11 +74,12 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
 export default styled(CIDropzones).as.div`
   display: flex;
   line-height: 1.4;
-  .zones {
-    display: flex;
-    flex-direction: column;
-    color: ${theme.color.washedDarkGreen};
-  }
+`
+
+const Zones = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: ${theme.color.washedDarkGreen};
 `
 
 /* propTypes */
@@ -73,5 +93,5 @@ CIDropzones.propTypes = {
 }
 
 CIDropzones.defaultProps = {
-  dragItem: null,
+  dragItem: {},
 }

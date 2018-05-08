@@ -1,12 +1,17 @@
 import { DragSource } from 'react-dnd'
-import { DraggableTypes } from 'constantz'
+import { PROP } from 'constantz'
+import { getPropType } from 'utils'
 
 import { Prop } from '../components'
 
 /* dnd */
 const propSource = {
   beginDrag(props) {
-    return props
+    return {
+      ...props,
+      type: PROP,
+      propType: getPropType(props.payload),
+    }
   },
 }
 
@@ -16,4 +21,4 @@ const collect = (connect, monitor) => ({
 })
 
 /* export */
-export default DragSource(DraggableTypes.PROP, propSource, collect)(Prop)
+export default DragSource(PROP, propSource, collect)(Prop)

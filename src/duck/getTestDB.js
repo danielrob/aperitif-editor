@@ -12,27 +12,34 @@ export default function getTestDB() {
     appDirName,
     appIndexIdName,
     reactName,
+    propTypesName,
     styledName,
     noName,
     appWrapperName,
-  ] = addNames({}, 'index', 'App', 'index', 'React', 'styled', '', 'AppWrapper')
+  ] = addNames({}, 'index', 'App', 'index', 'React', 'PropTypes', 'styled', '', 'AppWrapper')
 
   // params
+  let paramIds
   let params = [
-    { name: 'userId', payload: 1 },
-    { name: 'title', payload: 'title' },
-    { name: 'body', payload: 'lorem ipsumm....' },
+    { name: 'bool', payload: true },
+    { name: 'string', payload: 'strrrrrriiing' },
+    { name: 'null', payload: null },
+    { name: 'arrays', payload: [] },
+    { name: 'object', payload: {} },
   ];
 
-  [params] = addParams({}, ...params)
+  [params, ...paramIds] = addParams({}, ...params)
 
   // invocations
+  let propTypes = { nameOrNameId: propTypesName, source: 'prop-types' }
   let importReact = { nameOrNameId: reactName, source: 'react' }
   let importStyled = { nameOrNameId: styledName, source: 'styled-components' }
-  let appWrapperInvocation = { nameOrNameId: appWrapperName, source: null, paramIds: [], closed: true }
+  let appWrapperInvocation = {
+    nameOrNameId: appWrapperName, source: null, paramIds: [], closed: true
+  }
   let initialInvocations
-  [initialInvocations, importReact, appWrapperInvocation, importStyled] =
-    addInvocations({}, importReact, appWrapperInvocation, importStyled)
+  [initialInvocations, importReact, propTypes, appWrapperInvocation, importStyled] =
+    addInvocations({}, importReact, propTypes, appWrapperInvocation, importStyled)
 
   // expressions
   let reactImport = {
@@ -42,7 +49,7 @@ export default function getTestDB() {
     nameId: noName, type: LOOKTHROUGH, exportType: false, invocationIds: [importStyled],
   }
   let appComponent = {
-    nameId: appDirName, invocationIds: [appWrapperInvocation], paramIds: [1, 2, 3],
+    nameId: appDirName, invocationIds: [appWrapperInvocation], paramIds,
   }
   let appWrapper = { nameId: appWrapperName, type: STYLED_COMPONENT, tag: 'div' }
   let initialExpressions

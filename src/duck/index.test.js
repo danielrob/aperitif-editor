@@ -7,8 +7,8 @@ const initialState = getTestDB()
 it('initial state for tests', () => {
   const { names, files, expressions, invocations } = appReducer(initialState, {})
   expect(Object.keys(files).length).toBe(4)
-  expect(Object.keys(names).length).toBe(7)
-  expect(Object.keys(invocations).length).toBe(3)
+  expect(Object.keys(names).length).toBe(8)
+  expect(Object.keys(invocations).length).toBe(4)
   expect(Object.keys(expressions).length).toBe(4)
 })
 

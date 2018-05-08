@@ -56,6 +56,7 @@ const sourceSpec = {
     const { fileId, isDirectory, expressionIds, name, initial, parentName } = props
     const dropName = (name.includes('index') && !initial) ? parentName : name
     return {
+      type: getType(props),
       fileId,
       isDirectory,
       expressionIds,
