@@ -1,10 +1,11 @@
 import T from 'prop-types'
+import C from 'check-types'
 import React from 'react'
 import styled from 'styled-as-components'
 import { singular } from 'pluralize'
 
 import theme from 'theme-proxy'
-import { capitalize, indent } from 'utils'
+import { capitalize, indent, oneOf } from 'utils'
 import { PROP, PARAM_INVOCATION, DIR, FILE, COMPONENT_INVOCATION } from 'constantz'
 import {
   SimplePropDropzone,
@@ -16,7 +17,7 @@ import {
 
 const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay }) => {
   const dropZoneProps = { targetInvocationId: invocationId, targetPosition: position }
-  const { type, name, dropName, propType } = dragItem || {}
+  const { type, name, dropName, payload } = dragItem || {}
 
   return shouldDisplay && type ? (
     <React.Fragment>
@@ -33,33 +34,40 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
         )}
         {/* prop options */}
         {[PROP].includes(type) && (
-          ([T.object, T.string, T.number, null].includes(propType) && (
-            <React.Fragment>
+          <React.Fragment>
+            {oneOf(C.string, C.number, C.null)(payload) && (
               <SimplePropDropzone {...dropZoneProps}>
                 {`{${name}}`}
               </SimplePropDropzone>
+            )}
+            {oneOf(C.string, C.number, C.null)(payload) && (
               <NewWithPropDropzone {...dropZoneProps} >
                 {'<'}{capitalize(name)}
                 {` ${name}={${name}}`}
                 {'/>'}
               </NewWithPropDropzone>
+            )}
+            {C.object(payload) && (
+              <NewWithPropDropzone {...dropZoneProps}>
+                {`<${capitalize(name)} ...{${name}} />`}
+              </NewWithPropDropzone>
+            )}
+            {oneOf(C.string, C.number, C.null)(payload) && (
               <NewWithPropAsChildPropDropzone {...dropZoneProps}>
                 {'<'}{capitalize(name)}{'>'}<br />
                 {indent(1)}{'{'}{name}{'}'}<br />
                 {'</'}{capitalize(name)}{'>'}
               </NewWithPropAsChildPropDropzone>
-            </React.Fragment>
-          )) ||
-          ([T.array].includes(propType) && (
-            <React.Fragment>
+            )}
+            {oneOf(C.array.of.object)(payload) && (
               <SimplePropDropzone {...dropZoneProps}>
                 {'{'}{name}.map({singular(name)} => (<br />
-                {indent(1)}{'<'}{capitalize(singular(name))}{` ...{${singular(name)}} />`}<br />
+                {indent(1)}{'<'}{capitalize(singular(name))}{` key={${singular(name)}.id} {...${singular(name)}} />`}<br />
                 )){'}'}
               </SimplePropDropzone>
-            </React.Fragment>
-          )
-        ))}
+            )}
+          </React.Fragment>
+        )}
         {/* file */}
         {[DIR, FILE].includes(type) && (
           <AddInvocationFromFileDropzone {...dropZoneProps}>
@@ -82,8 +90,8 @@ const Zones = styled.div`
   color: ${theme.color.washedDarkGreen};
 `
 
-/* propTypes */
-CIDropzones.propTypes = {
+/* payloads */
+CIDropzones.payloads = {
   invocationId: T.number.isRequired,
   shouldDisplay: T.bool.isRequired,
   dragItem: T.shape({ name: T.string }),

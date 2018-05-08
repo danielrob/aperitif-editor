@@ -1,4 +1,5 @@
 import T from 'prop-types'
+import C from 'check-types'
 import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -21,7 +22,7 @@ class ComponentInvocationTreeContainer extends React.Component {
     } = this.props
     const { isOverCIT1, isOverCIT2, closed } = props
     const isOverCI = isOverCIT1 || isOverCIT2
-    const isClosed = closed && !isOverCI
+    const isClosed = closed && (!isOverCI || C.boolean(props.dragItem.payload))
 
     //  https://github.com/react-dnd/react-dnd/issues/998
     return !isDragging ? connectDragSource(
@@ -48,6 +49,7 @@ const propSource = {
   beginDrag(props) {
     const { invocationId, ciDimensions, depth, parentId } = props
     return {
+      type: COMPONENT_INVOCATION,
       sourceInvocationId: invocationId,
       ciDimensions,
       depth,

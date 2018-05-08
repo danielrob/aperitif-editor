@@ -1,6 +1,5 @@
 import { DragSource } from 'react-dnd'
 import { PROP } from 'constantz'
-import { getPropType } from 'utils'
 
 import { Prop } from '../components'
 
@@ -10,7 +9,6 @@ const propSource = {
     return {
       ...props,
       type: PROP,
-      propType: getPropType(props.payload),
     }
   },
 }

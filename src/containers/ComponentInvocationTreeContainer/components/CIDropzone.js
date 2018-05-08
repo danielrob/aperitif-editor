@@ -8,12 +8,12 @@ const CIDropzone = ({ children }) => <div>{children}</div>
 
 export default styled(CIDropzone).as.div`
   position: relative;
-  padding: 0 200px 0 200px;
+  padding: 0 300px 0 200px;
   margin-left: -200px;
   > * {
     display: inline-block;
     border-radius: 6px;
-    border: 1px dotted; 
+    border: 1px dotted;
     padding: 10px;
   }
   transition: 70ms ease-in-out;

@@ -61,8 +61,9 @@ export default compose(
 ReorderDropzoneContainer.propTypes = forbidExtraProps({
   // passed by parent
   targetInvocationId: T.number.isRequired,
-  position: T.number.isRequired,
+  targetPosition: T.number.isRequired,
   parentId: T.number.isRequired,
+  type: T.oneOf([COMPONENT_INVOCATION]).isRequired,
 
   // from dragItem via parent
   sourceInvocationId: T.number.isRequired,
