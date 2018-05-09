@@ -6,7 +6,7 @@ const SpreadProps = ({ isOver, params, spreadParams, connectDragSource }) =>
     <span>
       {!!params.length && ', '}
       {connectDragSource(
-        <div style={{ display: 'inline-block' }}>
+        <div className="dragsource">
           {!!params.length && '...'}props
         </div>
       )}
@@ -19,4 +19,8 @@ export default styled(SpreadProps).as.span`
   padding: 25px 50px 25px 0;
   margin: -25px -50px -25px 0;
   color: ${props => (props.isOver ? props.theme.colors.darkblue : props.theme.colors.darkgreen)}
+  .dragsource {
+    display: inline-block;
+    user-select: text;
+  }
 `

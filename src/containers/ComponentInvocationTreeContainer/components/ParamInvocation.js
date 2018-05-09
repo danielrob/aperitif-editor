@@ -11,7 +11,7 @@ const ParamInvocation = ({ isSpreadMember, connectDragSource, isPIDragging, name
       {indent(depth)}
       {'{'}
       {connectDragSource(
-        <div className="prop-as-child">
+        <div className="dragsource">
           {isSpreadMember && 'props.'}
           {name}
         </div>
@@ -22,8 +22,9 @@ const ParamInvocation = ({ isSpreadMember, connectDragSource, isPIDragging, name
 
 export default styled(ParamInvocation).as.div`
   color: ${theme.colors.darkblue}
-  .prop-as-child {
+  .dragsource {
     display: inline-block;
+    user-select: text;
   }
 `
 
