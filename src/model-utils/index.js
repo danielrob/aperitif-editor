@@ -26,7 +26,7 @@ export const addNames = (names, ...args) => {
 }
 
 export const addParams = getEntitiesAdder({
-  name: required,
+  nameId: required,
   payload: null,
   // type specific items
   isSpreadMember: false, // react component expressions

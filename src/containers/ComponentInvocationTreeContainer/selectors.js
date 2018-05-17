@@ -24,7 +24,10 @@ export const makeGetInvocation = () => createSelector(
       type,
       childInvocations: invocationIds.map(id => invocations[id]),
       paramIds,
-      params: paramIds.map(id => allParams[id]),
+      params: paramIds.map(id => ({
+        name: names[allParams[id].nameId],
+        ...allParams[id],
+      })),
       closed: !!closed,
       hasPropsSpread,
     }
@@ -36,11 +39,11 @@ export const makeGetParamInvocation = () => createSelector(
   selectInvocation,
   (names, allParams, invocation) => {
     const { nameOrNameId } = invocation
-    const { id: paramId, name, isSpreadMember } = allParams[nameOrNameId]
+    const { id: paramId, nameId, isSpreadMember } = allParams[nameOrNameId]
 
     return {
       paramId,
-      name,
+      name: names[nameId],
       isSpreadMember,
     }
   })

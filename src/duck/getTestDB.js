@@ -16,16 +16,31 @@ export default function getTestDB() {
     styledName,
     noName,
     appWrapperName,
-  ] = addNames({}, 'index', 'App', 'index', 'React', 'PropTypes', 'styled', '', 'AppWrapper')
+    p1, p2, p3, p4, p5,
+  ] = addNames({},
+    'index',
+    'App',
+    'index',
+    'React',
+    'PropTypes',
+    'styled',
+    '',
+    'AppWrapper',
+    'bool',
+    'string',
+    'null',
+    'arrays',
+    'object'
+  )
 
   // params
   let paramIds
   let params = [
-    { name: 'bool', payload: true },
-    { name: 'string', payload: 'strrrrrriiing' },
-    { name: 'null', payload: null },
-    { name: 'arrays', payload: [] },
-    { name: 'object', payload: {} },
+    { nameId: p1, payload: true },
+    { nameId: p2, payload: 'strrrrrriiing' },
+    { nameId: p3, payload: null },
+    { nameId: p4, payload: [] },
+    { nameId: p5, payload: {} },
   ];
 
   [params, ...paramIds] = addParams({}, ...params)

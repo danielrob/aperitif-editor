@@ -26,7 +26,10 @@ export const selectCurrentFileExpressions = createSelector(
         name: names[nameId],
         type,
         invocations: invocationIds.map(invocationId => invocations[invocationId]),
-        params: paramIds.map(paramId => params[paramId]),
+        params: paramIds.map(paramId => ({
+          name: names[params[paramId].nameId],
+          ...params[paramId],
+        })),
         exportType,
       }))
 )
