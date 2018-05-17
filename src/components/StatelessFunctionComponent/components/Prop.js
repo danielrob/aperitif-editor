@@ -1,3 +1,4 @@
+import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
@@ -24,3 +25,8 @@ export default styled(Prop).as.div`
   cursor: pointer;
   color: ${theme.colors.darkgreen};
 `
+Prop.propTypes = {
+  name: T.string.isRequired,
+  isLast: T.bool.isRequired,
+  connectDragSource: T.func.isRequired,
+}

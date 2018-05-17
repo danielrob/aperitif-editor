@@ -1,3 +1,4 @@
+import T from 'prop-types'
 import { DragSource } from 'react-dnd'
 import { PROP } from 'constantz'
 
@@ -5,9 +6,12 @@ import { Prop } from '../components'
 
 /* dnd */
 const propSource = {
-  beginDrag(props) {
+  beginDrag({ id, name, nameId, payload }) {
     return {
-      ...props,
+      id,
+      name,
+      nameId,
+      payload,
       type: PROP,
     }
   },
@@ -18,5 +22,16 @@ const collect = (connect, monitor) => ({
   isDragging: monitor.isDragging(),
 })
 
+
 /* export */
-export default DragSource(PROP, propSource, collect)(Prop)
+const PropContainer = DragSource(PROP, propSource, collect)(Prop)
+
+export default PropContainer
+
+Prop.propTypes = {
+  id: T.number.isRequired,
+  name: T.string.isRequired,
+  nameId: T.number.isRequired,
+  isLast: T.bool.isRequired,
+  isSpreadMember: T.bool.isRequired,
+}
