@@ -260,7 +260,7 @@ export default function appReducer(state = getTestDB(), action) {
       [nextInvocations, wrapperInvoke] = addInvocations(nextInvocations, wrapperInvoke)
 
       // NEW COMPONENT
-      let newComponentInvocationInvocationIds = []
+      const newComponentInvocationInvocationIds = []
 
       if (asChild) {
         // create an invocation of the dragged prop to place inside the new component invocation
