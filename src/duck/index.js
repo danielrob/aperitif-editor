@@ -80,14 +80,42 @@ export default function appReducer(state = getTestDB(), action) {
 
 
     case ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
-      const { invocations } = state
+      const { invocations, expressions, params } = state
       const { targetInvocationId, prop: { paramId } } = action.payload
+      const { nameId, payload } = params[paramId]
+      const invocationExpressionId = invocations[targetInvocationId].expressionId
 
+      let nextState = state
 
+      // update the target invocation
       const updater = invocation => insertAtKey(invocation, 'paramIds', 0, paramId)
       const nextInvocations = update(invocations, targetInvocationId, updater)
 
-      return update(state, 'invocations', nextInvocations)
+      // update the target invocations expression with new param info if relevant
+      if (invocationExpressionId) {
+        const { paramIds, ...expression } = expressions[invocationExpressionId]
+        const nameMatchParamId = paramIds.find(id => params[id].nameId === nameId)
+
+        if (nameMatchParamId) {
+          const paramUpdater = ({ count, ...param }) => ({
+            ...param,
+            count: count ? count + 1 : 1,
+          })
+          nextState = updateAtKey(nextState, 'params', nameMatchParamId, paramUpdater)
+        } else {
+          let nextParams = params
+          let newParam = { nameId, count: 1, payload };
+          [nextParams, newParam] = addParams(nextParams, newParam)
+          nextState = update(nextState, 'params', nextParams)
+
+          nextState = updateAtKey(nextState, 'expressions', invocationExpressionId, ({
+            ...expression,
+            paramIds: [...paramIds, newParam],
+          }))
+        }
+      }
+
+      return update(nextState, 'invocations', nextInvocations)
     }
 
 
@@ -130,6 +158,7 @@ export default function appReducer(state = getTestDB(), action) {
           nameId: expressions[expressionId].nameId,
           source: null,
           closed: true,
+          expressionId,
         })
 
       /* UPDATES */
@@ -188,6 +217,7 @@ export default function appReducer(state = getTestDB(), action) {
           paramId,
           name,
           nameId,
+          payload,
           asChild,
         },
       } = action.payload
@@ -206,10 +236,28 @@ export default function appReducer(state = getTestDB(), action) {
       let nextParams = params
       let newComponentExprParamId
 
-      [nextParams, newComponentExprParamId] = addParams(nextParams, { nameId })
+      [nextParams, newComponentExprParamId] = addParams(nextParams, { nameId, payload })
 
-      /* invocations */
+      /* expressions & invocations */
+      let nextExpressions = expressions
       let nextInvocations = invocations
+
+      // NEW COMPONENT WRAPPER
+      let wrapperExpression = { nameId: wrapperName, type: STYLED_COMPONENT };
+      [nextExpressions, wrapperExpression] = addExpressions(expressions, wrapperExpression)
+
+      // the invocation of the wrapper component in the new component definition
+      let wrapperInvoke = {
+        nameId: wrapperName,
+        source: null,
+        invocationIds: asChild ? [REACT_CHILDREN_INVOCATION_ID] : [],
+        closed: !asChild,
+        expressionId: wrapperExpression,
+      };
+
+      [nextInvocations, wrapperInvoke] = addInvocations(nextInvocations, wrapperInvoke)
+
+      // NEW COMPONENT
       let newComponentInvocationInvocationIds = []
 
       if (asChild) {
@@ -224,6 +272,12 @@ export default function appReducer(state = getTestDB(), action) {
         newComponentInvocationInvocationIds.push(paramInvocation)
       }
 
+      let newComponentExpression =
+        { nameId: dirName, invocationIds: [wrapperInvoke], paramIds: [newComponentExprParamId] };
+
+      [nextExpressions, newComponentExpression] =
+        addExpressions(expressions, newComponentExpression)
+
       // the invocation of the newly created component to be placed at the drop target position
       let newComponentInvocation = {
         nameId: dirName,
@@ -231,29 +285,11 @@ export default function appReducer(state = getTestDB(), action) {
         paramIds: !asChild ? [paramId] : [],
         invocationIds: newComponentInvocationInvocationIds,
         closed: !asChild,
-      }
-
-      // the invocation of the wrapper component in the new component definition
-      let wrapperInvoke = {
-        nameId: wrapperName,
-        source: null,
-        invocationIds: asChild ? [REACT_CHILDREN_INVOCATION_ID] : [],
-        closed: !asChild,
+        expressionId: newComponentExpression,
       };
 
-      [nextInvocations, newComponentInvocation, wrapperInvoke] =
-        addInvocations(nextInvocations, newComponentInvocation, wrapperInvoke)
-
-      /* expressions - for the new component and it's wrapper */
-      let nextExpressions = expressions
-
-      let newComponentExpression =
-        { nameId: dirName, invocationIds: [wrapperInvoke], paramIds: [newComponentExprParamId] }
-
-      let wrapperExpression = { nameId: wrapperName, type: STYLED_COMPONENT };
-
-      [nextExpressions, newComponentExpression, wrapperExpression] =
-        addExpressions(expressions, newComponentExpression, wrapperExpression)
+      [nextInvocations, newComponentInvocation] =
+        addInvocations(nextInvocations, newComponentInvocation)
 
       /* files - for each expression + index */
       let indexFile = { nameId: indexName, expressionIds: [newComponentExpression] }

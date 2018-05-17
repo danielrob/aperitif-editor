@@ -30,6 +30,7 @@ export const addParams = getEntitiesAdder({
   payload: null,
   // type specific items
   isSpreadMember: false, // react component expressions
+  count: null,
 })
 
 
@@ -59,6 +60,7 @@ export const addInvocations = getEntitiesAdder({
   type: COMPONENT_INVOCATION,
   closed: false, // component-invocation
   hasPropsSpread: false,
+  expressionId: null,
 })
 
 
