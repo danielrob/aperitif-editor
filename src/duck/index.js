@@ -152,11 +152,23 @@ export default function appReducer(state = getTestDB(), action) {
 
       /* UPDATES */
       // remove
-      updater = ivn => removeAtKey(ivn, 'invocationIds', sourcePosition)
+      updater = ivn => {
+        let nextIvn = removeAtKey(ivn, 'invocationIds', sourcePosition)
+        if (!nextIvn.invocationIds.length) {
+          nextIvn = {
+            ...nextIvn,
+            closed: true,
+          }
+        }
+        return nextIvn
+      }
       nextInvocations = update(invocations, sourceParentId, updater)
 
       // insert
-      updater = ivn => insertAtKey(ivn, 'invocationIds', targetPosition, sourceInvocationId)
+      updater = ivn => ({
+        ...insertAtKey(ivn, 'invocationIds', targetPosition, sourceInvocationId),
+        closed: false,
+      })
       nextInvocations = update(nextInvocations, targetInvocationId, updater)
 
       return update(state, 'invocations', nextInvocations)
