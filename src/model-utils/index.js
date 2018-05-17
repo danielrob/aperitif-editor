@@ -71,17 +71,12 @@ export const addInvocations = getEntitiesAdder({
  * @function update: { ..., [id]: newValue|cb(oldValue), }
  * @param {Object} entities: object to update, e.g. a model table
  * @param {integer} entityId: object key, e.g. id of entity to be updated
- * @param {Object|Function} valueOrUpdater: value to set, or function to be called with prior value
+ * @param {*} valueOrUpdater: value to set, or function to be called with prior value
  */
 export const update = (entities, entityId, valueOrUpdater) => ({
   ...entities,
   [entityId]:
     (isFunction(valueOrUpdater) && valueOrUpdater(entities[entityId])) ||
-    (isPlainObject(valueOrUpdater) && {
-      ...entities[entityId],
-      ...valueOrUpdater,
-      id: [entityId],
-    }) ||
     valueOrUpdater,
 })
 
