@@ -232,11 +232,13 @@ export default function appReducer(state = getTestDB(), action) {
       [nextNames, dirName, indexName, wrapperName] =
         addNames(names, dirName, indexName, wrapperName)
 
-      /* params - for new component, it's invocation in the target invocation, wrapper {children} */
+      /* params - a new one if the initial prop is being passed as an attribute */
       let nextParams = params
-      let newComponentExprParamId
+      let newParam
 
-      [nextParams, newComponentExprParamId] = addParams(nextParams, { nameId, payload })
+      if (!asChild) {
+        [nextParams, newParam] = addParams(nextParams, { nameId, payload })
+      }
 
       /* expressions & invocations */
       let nextExpressions = expressions
@@ -262,18 +264,16 @@ export default function appReducer(state = getTestDB(), action) {
 
       if (asChild) {
         // create an invocation of the dragged prop to place inside the new component invocation
-        let paramInvocation = {
-          nameId,
-          type: PARAM_INVOCATION,
-          paramIds: [newComponentExprParamId],
-          source: null,
-        };
+        let paramInvocation = { nameId, type: PARAM_INVOCATION, paramIds: [paramId], source: null };
         [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
         newComponentInvocationInvocationIds.push(paramInvocation)
       }
 
-      let newComponentExpression =
-        { nameId: dirName, invocationIds: [wrapperInvoke], paramIds: [newComponentExprParamId] };
+      let newComponentExpression = {
+        nameId: dirName,
+        invocationIds: [wrapperInvoke],
+        paramIds: !asChild ? [newParam] : [],
+      };
 
       [nextExpressions, newComponentExpression] =
         addExpressions(expressions, newComponentExpression)

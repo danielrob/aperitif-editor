@@ -16,6 +16,7 @@ const Props = ({ params, spreadParams, expressionId }) => (
         .map((prop, i) => (
           <PropContainer key={prop.name} isLast={i === params.length - 1} {...prop} />
         ))}
+      {!params.length && '()'}
     </span>
     <SpreadPropsContainer spreadParams={spreadParams} expressionId={expressionId} params={params} />{' '}
     {!!params.length && '})'}{' '}
