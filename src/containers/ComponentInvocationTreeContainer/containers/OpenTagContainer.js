@@ -32,8 +32,8 @@ const dropzoneTarget = {
   drop(props, monitor) {
     switch (monitor.getItemType()) {
       case DraggableTypes.PROP: {
-        const { invocationId: parentId, addAttributeToComponentInvocation } = props
-        return addAttributeToComponentInvocation({ parentId, item: monitor.getItem() })
+        const { invocationId: targetInvocationId, addAttributeToComponentInvocation } = props
+        return addAttributeToComponentInvocation({ targetInvocationId, prop: monitor.getItem() })
       }
       case DraggableTypes.PROPS_SPREAD: {
         const { invocationId, addPropsSpreadToComponentInvocation } = props

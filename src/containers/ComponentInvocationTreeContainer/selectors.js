@@ -38,8 +38,8 @@ export const makeGetParamInvocation = () => createSelector(
   selectParams,
   selectInvocation,
   (names, allParams, invocation) => {
-    const { nameId } = invocation
-    const { id: paramId, isSpreadMember } = allParams[nameId]
+    const { nameId, paramIds } = invocation
+    const { id: paramId, isSpreadMember } = allParams[paramIds] // singleton: so allParams[[1]] 🕊
 
     return {
       paramId,

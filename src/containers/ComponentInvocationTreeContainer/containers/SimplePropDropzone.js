@@ -34,8 +34,9 @@ const dropzoneTarget = {
     switch (monitor.getItemType()) {
       case PROP: {
         const { addParamAsComponentInvocationChild, targetInvocationId, targetPosition } = props
-        const { id: paramId } = monitor.getItem()
-        return addParamAsComponentInvocationChild({ targetInvocationId, targetPosition, paramId })
+        const prop = monitor.getItem()
+
+        return addParamAsComponentInvocationChild({ targetInvocationId, targetPosition, prop })
       }
 
       case PARAM_INVOCATION: {

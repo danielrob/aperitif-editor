@@ -3,6 +3,7 @@ import { createAction } from 'redux-actions'
 
 import {
   addNames,
+  addParams,
   addFiles,
   addExpressions,
   addInvocations,
@@ -18,12 +19,14 @@ import { capitalize } from 'utils'
 import { getNewComponentName } from './helpers'
 import getTestDB from './getTestDB'
 
+export const REACT_CHILDREN_INVOCATION_ID = 1
+
 // Editor
 export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
 
 // ORM
 // create-esk
-export const ADD_COMPONENT_BUNDLE = 'ADD_COMPONENT_BUNDLE'
+export const ADD_NEW_COMPONENT_TO_COMPONENT_INVOCATION_FROM_PROP = 'ADD_NEW_COMPONENT_TO_COMPONENT_INVOCATION_FROM_PROP'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
@@ -78,10 +81,11 @@ export default function appReducer(state = getTestDB(), action) {
 
     case ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
       const { invocations } = state
-      const { payload: { parentId, item: { id: itemId } } } = action
+      const { targetInvocationId, prop: { paramId } } = action.payload
 
-      const updater = oldInvocation => insertAtKey(oldInvocation, 'paramIds', 0, itemId)
-      const nextInvocations = update(invocations, parentId, updater)
+
+      const updater = invocation => insertAtKey(invocation, 'paramIds', 0, paramId)
+      const nextInvocations = update(invocations, targetInvocationId, updater)
 
       return update(state, 'invocations', nextInvocations)
     }
@@ -89,10 +93,10 @@ export default function appReducer(state = getTestDB(), action) {
 
     case ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD: {
       const { invocations } = state
-      const { targetInvocationId, targetPosition, paramId } = action.payload
+      const { targetInvocationId, targetPosition, prop: { paramId, nameId } } = action.payload
 
       /* Creates */
-      let paramInvocation = { nameId: paramId, type: PARAM_INVOCATION, source: null }
+      let paramInvocation = { nameId, paramIds: [paramId], type: PARAM_INVOCATION, source: null }
       let nextInvocations
       [nextInvocations, paramInvocation] = addInvocations(invocations, paramInvocation)
 
@@ -175,80 +179,99 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
 
-    case ADD_COMPONENT_BUNDLE: {
+    case ADD_NEW_COMPONENT_TO_COMPONENT_INVOCATION_FROM_PROP: {
       const { names, files, rootFiles, expressions, invocations, params } = state
       const {
-        payload: {
-          parentId,
-          position,
-          item: {
-            name,
-            id: itemId,
-          },
-          // #couldchangeinrefactor
-          propAsChild,
-          closed,
+        targetInvocationId,
+        targetPosition,
+        prop: {
+          paramId,
+          name,
+          nameId,
+          asChild,
         },
-      } = action
+      } = action.payload
 
-      /* CREATES */
-      /* eslint-disable prefer-const */
-      // names
+      /* CREATE */
+      /* names - for the new component bundle */
       let dirName = getNewComponentName(names, capitalize(name))
       let indexName = 'index'
       let wrapperName = `${dirName}Wrapper`
       let nextNames
+
       [nextNames, dirName, indexName, wrapperName] =
         addNames(names, dirName, indexName, wrapperName)
 
-      // invocations
-      let nextInvocations = invocations
-      let invocationIds = []
+      /* params - for new component, it's invocation in the target invocation, wrapper {children} */
+      let nextParams = params
+      let newComponentExprParamId
 
-      // paramInvocation if adding now
-      if (propAsChild) {
-        let paramInvocation = { nameId: itemId, type: PARAM_INVOCATION, source: null };
+      [nextParams, newComponentExprParamId] = addParams(nextParams, { nameId })
+
+      /* invocations */
+      let nextInvocations = invocations
+      let newComponentInvocationInvocationIds = []
+
+      if (asChild) {
+        // create an invocation of the dragged prop to place inside the new component invocation
+        let paramInvocation = {
+          nameId,
+          type: PARAM_INVOCATION,
+          paramIds: [newComponentExprParamId],
+          source: null,
+        };
         [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
-        invocationIds.push(paramInvocation)
+        newComponentInvocationInvocationIds.push(paramInvocation)
       }
 
-      let invoke = {
+      // the invocation of the newly created component to be placed at the drop target position
+      let newComponentInvocation = {
         nameId: dirName,
         source: null,
-        paramIds: propAsChild ? [] : [itemId],
-        invocationIds,
-        closed,
+        paramIds: !asChild ? [paramId] : [],
+        invocationIds: newComponentInvocationInvocationIds,
+        closed: !asChild,
       }
-      let wrapperInvoke = { nameId: wrapperName, source: null };
-      [nextInvocations, invoke, wrapperInvoke] =
-        addInvocations(nextInvocations, invoke, wrapperInvoke)
 
-      // expressions
-      let expression =
-        { nameId: dirName, invocationIds: [wrapperInvoke], paramIds: [itemId] }
-      let wrapperExpression = { nameId: wrapperName, invocationIds: [], type: STYLED_COMPONENT }
-      let nextExpressions
-      [nextExpressions, expression, wrapperExpression] =
-        addExpressions(expressions, expression, wrapperExpression)
+      // the invocation of the wrapper component in the new component definition
+      let wrapperInvoke = {
+        nameId: wrapperName,
+        source: null,
+        invocationIds: asChild ? [REACT_CHILDREN_INVOCATION_ID] : [],
+        closed: !asChild,
+      };
 
-      // files
-      let indexFile = { nameId: indexName, expressionIds: [expression] }
+      [nextInvocations, newComponentInvocation, wrapperInvoke] =
+        addInvocations(nextInvocations, newComponentInvocation, wrapperInvoke)
+
+      /* expressions - for the new component and it's wrapper */
+      let nextExpressions = expressions
+
+      let newComponentExpression =
+        { nameId: dirName, invocationIds: [wrapperInvoke], paramIds: [newComponentExprParamId] }
+
+      let wrapperExpression = { nameId: wrapperName, type: STYLED_COMPONENT };
+
+      [nextExpressions, newComponentExpression, wrapperExpression] =
+        addExpressions(expressions, newComponentExpression, wrapperExpression)
+
+      /* files - for each expression + index */
+      let indexFile = { nameId: indexName, expressionIds: [newComponentExpression] }
       let wrapperFile = { nameId: wrapperName, expressionIds: [wrapperExpression] }
       let nextFiles
       [nextFiles, indexFile, wrapperFile] = addFiles(files, indexFile, wrapperFile)
 
-      // dirs
+      /* dirs */
       let directory = { nameId: dirName, type: DIR, children: [wrapperFile, indexFile] };
       [nextFiles, directory] = addFiles(nextFiles, directory)
-      /* eslint-enable prefer-const */
 
-      /* UPDATES */
-      const updater = ivn => ({
-        ...ivn,
-        invocationIds: insertAt(ivn.invocationIds, position, invoke),
+      /* UPDATE */
+      // add the new component invocation to the target position
+      const updater = invocation => ({
+        ...insertAtKey(invocation, 'invocationIds', targetPosition, newComponentInvocation),
         closed: false,
       })
-      nextInvocations = update(nextInvocations, parentId, updater)
+      nextInvocations = update(nextInvocations, targetInvocationId, updater)
 
       return {
         ...state,
@@ -257,7 +280,7 @@ export default function appReducer(state = getTestDB(), action) {
         invocations: nextInvocations,
         rootFiles: [directory, ...rootFiles],
         files: nextFiles,
-        params, // todo
+        params: nextParams,
       }
     }
 
@@ -267,8 +290,8 @@ export default function appReducer(state = getTestDB(), action) {
   }
 }
 
-export const createComponentBundle = createAction(
-  ADD_COMPONENT_BUNDLE
+export const addNewComponentFromPropToInvocation = createAction(
+  ADD_NEW_COMPONENT_TO_COMPONENT_INVOCATION_FROM_PROP
 )
 
 export const changeFile = createAction(

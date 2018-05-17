@@ -1,5 +1,5 @@
 import { addNames, addParams, addFiles, addExpressions, addInvocations } from 'model-utils'
-import { DIR, LOOKTHROUGH, STYLED_COMPONENT } from 'constantz'
+import { DIR, LOOKTHROUGH, STYLED_COMPONENT, PARAM_INVOCATION } from 'constantz'
 
 export default function getTestDB() {
   // initial state setup for testing
@@ -8,6 +8,7 @@ export default function getTestDB() {
   // names
   const [
     initialNames,
+    childrenNameId, // eslint-disable-line no-unused-vars
     indexName,
     appDirName,
     appIndexIdName,
@@ -17,7 +18,9 @@ export default function getTestDB() {
     noName,
     appWrapperName,
     p1, p2, p3, p4, p5,
-  ] = addNames({},
+  ] = addNames(
+    {},
+    'children',
     'index',
     'App',
     'index',
@@ -35,7 +38,9 @@ export default function getTestDB() {
 
   // params
   let paramIds
+  let childrenParamId
   let params = [
+    { nameId: childrenNameId },
     { nameId: p1, payload: true },
     { nameId: p2, payload: 'strrrrrriiing' },
     { nameId: p3, payload: null },
@@ -43,18 +48,24 @@ export default function getTestDB() {
     { nameId: p5, payload: {} },
   ];
 
-  [params, ...paramIds] = addParams({}, ...params)
+  [params, childrenParamId, ...paramIds] = addParams({}, ...params)
 
   // invocations
+  let reactChildren = {
+    nameId: childrenNameId,
+    type: PARAM_INVOCATION,
+    paramIds: [childrenParamId],
+    source: null,
+  }
   let propTypes = { nameId: propTypesName, source: 'prop-types' }
   let importReact = { nameId: reactName, source: 'react' }
   let importStyled = { nameId: styledName, source: 'styled-components' }
   let appWrapperInvocation = {
-    nameId: appWrapperName, source: null, paramIds: [], closed: true
+    nameId: appWrapperName, source: null, paramIds: [], closed: true,
   }
   let initialInvocations
-  [initialInvocations, importReact, propTypes, appWrapperInvocation, importStyled] =
-    addInvocations({}, importReact, propTypes, appWrapperInvocation, importStyled)
+  [initialInvocations, reactChildren, importReact, propTypes, appWrapperInvocation, importStyled] =
+    addInvocations({}, reactChildren, importReact, propTypes, appWrapperInvocation, importStyled)
 
   // expressions
   let reactImport = {

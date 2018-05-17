@@ -8,7 +8,7 @@ import { Prop } from '../components'
 const propSource = {
   beginDrag({ id, name, nameId, payload }) {
     return {
-      id,
+      paramId: id,
       name,
       nameId,
       payload,

@@ -1,16 +1,9 @@
-import { isNumber, uniqBy, sortBy } from 'lodash'
+import { uniqBy, sortBy } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { PARAM_INVOCATION } from 'constantz'
 import { composed } from 'utils'
 import { selectInvocations, getCurrentFileExpressions, selectNames } from './baseSelectors'
-
-
-const isAnImportInvocation = (nameId, type, expressionNameId) =>
-  isNumber(nameId) &&
-  expressionNameId !== nameId &&
-  ![PARAM_INVOCATION].includes(type)
-
 
 const getCurrentFileImports = createSelector( // which also represent all imports
   selectInvocations,
@@ -38,5 +31,10 @@ const getCurrentFileImports = createSelector( // which also represent all import
     imports => sortBy(imports, 'order'),
   )
 )
+
+
+const isAnImportInvocation = (nameId, type, expressionNameId) =>
+  expressionNameId !== nameId &&
+  ![PARAM_INVOCATION].includes(type)
 
 export default getCurrentFileImports

@@ -19,6 +19,7 @@
     "no-plusplus": "off",
     "no-shadow": "off",
     "no-confusing-arrow": "off",
+    "no-use-before-define": ["error", { "variables": false } ],
     "arrow-parens": "off",
     "react/jsx-filename-extension": "off",
     "react/prefer-stateless-function": "off",
