@@ -9,8 +9,8 @@ import {
   insertAt,
   insertAtKey,
   removeAtKey,
-  updateEntity,
-  updateEntityAtKey,
+  update,
+  updateAtKey,
 } from 'model-utils'
 import { DIR, STYLED_COMPONENT, componentExpressionTypes, PARAM_INVOCATION } from 'constantz'
 import { capitalize } from 'utils'
@@ -18,29 +18,34 @@ import { capitalize } from 'utils'
 import { getNewComponentName } from './helpers'
 import getTestDB from './getTestDB'
 
-export const CREATE_COMPONENT_BUNDLE = 'CREATE_COMPONENT_BUNDLE'
+// Editor
+export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
+
+// ORM
+// create-esk
+export const ADD_COMPONENT_BUNDLE = 'ADD_COMPONENT_BUNDLE'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
+export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
-export const MOVE_PARAM_TO_SPREAD = 'MOVE_PARAM_TO_SPREAD'
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
-export const ADD_INVOCATION_FROM_FILE_TO_CI = 'ADD_INVOCATION_FROM_FILE_TO_CI'
-export const MOVE_INVOCATION = 'MOVE_INVOCATION'
-export const MOVE_PARAM_INVOCATION = 'MOVE_PARAM_INVOCATION'
-export const CHANGE_FILE = 'CHANGE_FILE'
+
+// update-esk
 export const CHANGE_NAME = 'CHANGE_NAME'
+export const MOVE_INVOCATION = 'MOVE_INVOCATION'
+export const SET_PARAM_IS_SPREAD_MEMBER_TRUE = 'SET_PARAM_IS_SPREAD_MEMBER_TRUE'
 
 export default function appReducer(state = getTestDB(), action) {
   switch (action.type) {
     case CHANGE_NAME: {
-      const { names } = state
       const { nameId, value } = action.payload
 
-      return {
-        ...state,
-        names: updateEntity(names, nameId, value),
-      }
+      return update(state, 'names',
+        names => update(names, nameId, value)
+      )
     }
-    case CHANGE_FILE: {
+
+
+    case CHANGE_EDITOR_CURRENT_FILE: {
       const { currentFileId, files, names } = state
       let { payload: nextId } = action
       const { type, children } = files[nextId]
@@ -49,49 +54,38 @@ export default function appReducer(state = getTestDB(), action) {
         nextId = children.find(fileId => names[files[fileId].nameId].includes('index'))
       }
 
-      return {
-        ...state,
-        currentFileId: nextId || currentFileId,
-      }
+      return update(state, 'currentFileId', nextId || currentFileId)
     }
 
-    case MOVE_PARAM_TO_SPREAD: {
-      const { params } = state
-      const { payload: { paramId } } = action
 
-      return {
-        ...state,
-        params: updateEntityAtKey(params, paramId, 'isSpreadMember', true),
-      }
+    case SET_PARAM_IS_SPREAD_MEMBER_TRUE: {
+      const { paramId } = action.payload
+
+      return update(state, 'params',
+        params => updateAtKey(params, paramId, 'isSpreadMember', true)
+      )
     }
+
 
     case ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
-      const { invocations } = state
-      const { payload: { invocationId } } = action
+      const { invocationId } = action.payload
 
-      return {
-        ...state,
-        invocations: updateEntityAtKey(
-          invocations,
-          invocationId,
-          'hasPropsSpread',
-          true
-        ),
-      }
+      return update(state, 'invocations',
+        invocations => updateAtKey(invocations, invocationId, 'hasPropsSpread', true)
+      )
     }
+
 
     case ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
       const { invocations } = state
       const { payload: { parentId, item: { id: itemId } } } = action
 
       const updater = oldInvocation => insertAtKey(oldInvocation, 'paramIds', 0, itemId)
-      const nextInvocations = updateEntity(invocations, parentId, updater)
+      const nextInvocations = update(invocations, parentId, updater)
 
-      return {
-        ...state,
-        invocations: nextInvocations,
-      }
+      return update(state, 'invocations', nextInvocations)
     }
+
 
     case ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD: {
       const { invocations } = state
@@ -108,15 +102,12 @@ export default function appReducer(state = getTestDB(), action) {
         invocationIds: insertAt(ivn.invocationIds, targetPosition, paramInvocation),
         closed: false,
       })
-      nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
 
-      return {
-        ...state,
-        invocations: nextInvocations,
-      }
+      return update(state, 'invocations', update(nextInvocations, targetInvocationId, updater))
     }
 
-    case ADD_INVOCATION_FROM_FILE_TO_CI: {
+
+    case ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION: {
       const { names, invocations, files, expressions } = state
       const { targetInvocationId, targetPosition, fileId, isDirectory } = action.payload
 
@@ -139,13 +130,10 @@ export default function appReducer(state = getTestDB(), action) {
 
       /* UPDATES */
       const updater = ivn => insertAtKey(ivn, 'invocationIds', targetPosition, newInvocationId)
-      nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
 
-      return {
-        ...state,
-        invocations: nextInvocations,
-      }
+      return update(state, 'invocations', update(nextInvocations, targetInvocationId, updater))
     }
+
 
     case MOVE_INVOCATION: {
       const { invocations } = state
@@ -165,19 +153,17 @@ export default function appReducer(state = getTestDB(), action) {
       /* UPDATES */
       // remove
       updater = ivn => removeAtKey(ivn, 'invocationIds', sourcePosition)
-      nextInvocations = updateEntity(invocations, sourceParentId, updater)
+      nextInvocations = update(invocations, sourceParentId, updater)
 
       // insert
       updater = ivn => insertAtKey(ivn, 'invocationIds', targetPosition, sourceInvocationId)
-      nextInvocations = updateEntity(nextInvocations, targetInvocationId, updater)
+      nextInvocations = update(nextInvocations, targetInvocationId, updater)
 
-      return {
-        ...state,
-        invocations: nextInvocations,
-      }
+      return update(state, 'invocations', nextInvocations)
     }
 
-    case CREATE_COMPONENT_BUNDLE: {
+
+    case ADD_COMPONENT_BUNDLE: {
       const { names, files, rootFiles, expressions, invocations, params } = state
       const {
         payload: {
@@ -250,7 +236,7 @@ export default function appReducer(state = getTestDB(), action) {
         invocationIds: insertAt(ivn.invocationIds, position, invoke),
         closed: false,
       })
-      nextInvocations = updateEntity(nextInvocations, parentId, updater)
+      nextInvocations = update(nextInvocations, parentId, updater)
 
       return {
         ...state,
@@ -263,17 +249,18 @@ export default function appReducer(state = getTestDB(), action) {
       }
     }
 
+
     default:
       return state
   }
 }
 
 export const createComponentBundle = createAction(
-  CREATE_COMPONENT_BUNDLE
+  ADD_COMPONENT_BUNDLE
 )
 
 export const changeFile = createAction(
-  CHANGE_FILE
+  CHANGE_EDITOR_CURRENT_FILE
 )
 
 export const addAttributeToComponentInvocation = createAction(
@@ -289,11 +276,11 @@ export const addPropsSpreadToComponentInvocation = createAction(
 )
 
 export const addInvocationFromFileToCI = createAction(
-  ADD_INVOCATION_FROM_FILE_TO_CI
+  ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION
 )
 
 export const moveParamToSpread = createAction(
-  MOVE_PARAM_TO_SPREAD
+  SET_PARAM_IS_SPREAD_MEMBER_TRUE
 )
 
 export const moveInvocation = createAction(

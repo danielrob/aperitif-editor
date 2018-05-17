@@ -66,12 +66,12 @@ export const addInvocations = getEntitiesAdder({
   Generic limited immutable helpers
 */
 /**
- * @function updateEntity: { ..., [id]: newValue|cb(oldValue), }
- * @param {Object} entities: e.g. a model table
- * @param {integer} entityId: id of entity to be updated
+ * @function update: { ..., [id]: newValue|cb(oldValue), }
+ * @param {Object} entities: object to update, e.g. a model table
+ * @param {integer} entityId: object key, e.g. id of entity to be updated
  * @param {Object|Function} valueOrUpdater: value to set, or function to be called with prior value
  */
-export const updateEntity = (entities, entityId, valueOrUpdater) => ({
+export const update = (entities, entityId, valueOrUpdater) => ({
   ...entities,
   [entityId]:
     (isFunction(valueOrUpdater) && valueOrUpdater(entities[entityId])) ||
@@ -84,13 +84,13 @@ export const updateEntity = (entities, entityId, valueOrUpdater) => ({
 })
 
 /**
- * @function updateEntityAtKey: { ..., [id]: { ...oldEntity, key: newValue }, }
- * @param {Object} entities: e.g. a model table
- * @param {integer} entityId: id of entity to be updated
+ * @function updateAtKey: { ..., [id]: { ...oldEntity, key: newValue }, }
+ * @param {Object} entities: object to update, e.g. a model table
+ * @param {integer} entityId: object key, e.g. id of entity to be updated
  * @param {string|number} key: corresponding key in entity for which value shall be set
  * @param {*} newValue: value to set
  */
-export const updateEntityAtKey = (entities, entityId, key, newValue) => ({
+export const updateAtKey = (entities, entityId, key, newValue) => ({
   ...entities,
   [entityId]: {
     ...entities[entityId],

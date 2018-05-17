@@ -1,4 +1,4 @@
-import { addNames, updateEntity, updateEntityAtKey, insertAt, insertAtKey } from './'
+import { addNames, update, updateAtKey, insertAt, insertAtKey } from './'
 
 it('addName adds name to names', () => {
   const names = { 1: 'index', 2: 'app' }
@@ -11,10 +11,10 @@ it('addName adds name to names', () => {
   expect(nextNames[newId]).toEqual(nextName)
 })
 
-it('updateEntity updates entity with value in entities', () => {
+it('update updates entity with value in entities', () => {
   const cats = { 1: {}, 2: {}, 3: {} }
 
-  const betterCats = updateEntity(cats, 2, { legs: 4 })
+  const betterCats = update(cats, 2, { legs: 4 })
   // not mutated
   expect(cats).not.toEqual(betterCats)
   // is updated
@@ -22,20 +22,20 @@ it('updateEntity updates entity with value in entities', () => {
 })
 
 
-it('updateEntity updates entity via function in entities', () => {
+it('update updates entity via function in entities', () => {
   const cats = { 1: {}, 2: {}, 3: {} }
 
-  const betterCats = updateEntity(cats, 2, cat => ({ ...cat, legs: 4 }))
+  const betterCats = update(cats, 2, cat => ({ ...cat, legs: 4 }))
   // not mutated
   expect(cats).not.toEqual(betterCats)
   // is updated
   expect(betterCats[2].legs).toEqual(4)
 })
 
-it('updateEntityAtKey updates an entities key', () => {
+it('updateAtKey updates an entities key', () => {
   const cats = { 1: {}, 2: { hi: 'bonjour' }, 3: {} }
 
-  const betterCats = updateEntityAtKey(cats, 2, 'hi', 'hello')
+  const betterCats = updateAtKey(cats, 2, 'hi', 'hello')
   // not mutated
   expect(cats).not.toEqual(betterCats)
   // is updated
@@ -57,14 +57,14 @@ it('insertAt inserts element to array', () => {
 })
 
 
-it('can combine updateEntity with insertAtKey', () => {
+it('can combine update with insertAtKey', () => {
   const cats = { 1: {}, 2: { children: [1, 2, 3] } }
   const catGivingBirth = 2
   const insertKittenPosition = 3
   const newKitten = 4
 
   const givesBirth = cat => insertAtKey(cat, 'children', insertKittenPosition, newKitten)
-  const catsAfterCatGivesBirth = updateEntity(cats, catGivingBirth, givesBirth)
+  const catsAfterCatGivesBirth = update(cats, catGivingBirth, givesBirth)
 
   // not mutated
   expect(cats).not.toEqual(catsAfterCatGivesBirth)
