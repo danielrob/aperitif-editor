@@ -7,7 +7,7 @@ import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { PROP, PARAM_INVOCATION } from 'constantz'
-import { addParamAsComponentInvocationChild, moveInvocation } from 'duck'
+import { addParamAsComponentInvocationChild, moveInvocation, REACT_CHILDREN_INVOCATION_ID } from 'duck'
 
 import { CIDropzone } from '../components'
 
@@ -52,6 +52,17 @@ const dropzoneTarget = {
       }
       default:
     }
+  },
+  canDrop(props, monitor) {
+    const { targetInvocationId } = props
+    const item = monitor.getItem()
+
+    // Throw together for disabling moving {children} outside of it's parent invocation.
+    return !(
+      monitor.getItemType() === PARAM_INVOCATION &&
+      item.paramId === REACT_CHILDREN_INVOCATION_ID &&
+      item.sourceParentId !== targetInvocationId
+    )
   },
 }
 
