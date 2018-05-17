@@ -51,7 +51,7 @@ export const addExpressions = getEntitiesAdder({
 })
 
 export const addInvocations = getEntitiesAdder({
-  nameOrNameId: required,
+  nameId: required,
   source: requiredOrNull,
   paramIds: [],
   invocationIds: [],

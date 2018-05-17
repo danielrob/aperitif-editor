@@ -46,11 +46,11 @@ export default function getTestDB() {
   [params, ...paramIds] = addParams({}, ...params)
 
   // invocations
-  let propTypes = { nameOrNameId: propTypesName, source: 'prop-types' }
-  let importReact = { nameOrNameId: reactName, source: 'react' }
-  let importStyled = { nameOrNameId: styledName, source: 'styled-components' }
+  let propTypes = { nameId: propTypesName, source: 'prop-types' }
+  let importReact = { nameId: reactName, source: 'react' }
+  let importStyled = { nameId: styledName, source: 'styled-components' }
   let appWrapperInvocation = {
-    nameOrNameId: appWrapperName, source: null, paramIds: [], closed: true
+    nameId: appWrapperName, source: null, paramIds: [], closed: true
   }
   let initialInvocations
   [initialInvocations, importReact, propTypes, appWrapperInvocation, importStyled] =

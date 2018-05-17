@@ -6,9 +6,9 @@ import { composed } from 'utils'
 import { selectInvocations, getCurrentFileExpressions, selectNames } from './baseSelectors'
 
 
-const isAnImportInvocation = (nameOrNameId, type, expressionNameId) =>
-  isNumber(nameOrNameId) &&
-  expressionNameId !== nameOrNameId &&
+const isAnImportInvocation = (nameId, type, expressionNameId) =>
+  isNumber(nameId) &&
+  expressionNameId !== nameId &&
   ![PARAM_INVOCATION].includes(type)
 
 
@@ -19,12 +19,12 @@ const getCurrentFileImports = createSelector( // which also represent all import
   composed(
     (invocations, expressions, names) => expressions.reduce((out, expression) => {
       const reduceRecursively = (priorInvocations, id) => {
-        const { nameOrNameId, type, source, invocationIds } = invocations[id]
-        const thisInvocation = isAnImportInvocation(nameOrNameId, type, expression.nameId) ? [{
+        const { nameId, type, source, invocationIds } = invocations[id]
+        const thisInvocation = isAnImportInvocation(nameId, type, expression.nameId) ? [{
           id,
-          importName: names[nameOrNameId],
-          source: source || `../${names[nameOrNameId]}`, // TODO: derive paths
-          order: nameOrNameId,
+          importName: names[nameId],
+          source: source || `../${names[nameId]}`, // TODO: derive paths
+          order: nameId,
         }] : []
         return [
           ...priorInvocations,

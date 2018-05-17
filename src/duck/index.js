@@ -92,7 +92,7 @@ export default function appReducer(state = getTestDB(), action) {
       const { targetInvocationId, targetPosition, paramId } = action.payload
 
       /* Creates */
-      let paramInvocation = { nameOrNameId: paramId, type: PARAM_INVOCATION, source: null }
+      let paramInvocation = { nameId: paramId, type: PARAM_INVOCATION, source: null }
       let nextInvocations
       [nextInvocations, paramInvocation] = addInvocations(invocations, paramInvocation)
 
@@ -123,7 +123,7 @@ export default function appReducer(state = getTestDB(), action) {
       /* CREATES */
       let [nextInvocations, newInvocationId] = // eslint-disable-line prefer-const
         addInvocations(invocations, {
-          nameOrNameId: expressions[expressionId].nameId,
+          nameId: expressions[expressionId].nameId,
           source: null,
           closed: true,
         })
@@ -207,19 +207,19 @@ export default function appReducer(state = getTestDB(), action) {
 
       // paramInvocation if adding now
       if (propAsChild) {
-        let paramInvocation = { nameOrNameId: itemId, type: PARAM_INVOCATION, source: null };
+        let paramInvocation = { nameId: itemId, type: PARAM_INVOCATION, source: null };
         [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
         invocationIds.push(paramInvocation)
       }
 
       let invoke = {
-        nameOrNameId: dirName,
+        nameId: dirName,
         source: null,
         paramIds: propAsChild ? [] : [itemId],
         invocationIds,
         closed,
       }
-      let wrapperInvoke = { nameOrNameId: wrapperName, source: null };
+      let wrapperInvoke = { nameId: wrapperName, source: null };
       [nextInvocations, invoke, wrapperInvoke] =
         addInvocations(nextInvocations, invoke, wrapperInvoke)
 
