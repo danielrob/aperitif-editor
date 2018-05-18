@@ -7,7 +7,8 @@ import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { PROP, PARAM_INVOCATION } from 'constantz'
-import { addParamAsComponentInvocationChild, moveInvocation, REACT_CHILDREN_INVOCATION_ID } from 'duck'
+import { addParamAsComponentInvocationChild, moveInvocation } from 'duck'
+import { REACT_CHILDREN_INVOCATION_ID } from 'duck/getTestDB'
 
 import { CIDropzone } from '../components'
 
