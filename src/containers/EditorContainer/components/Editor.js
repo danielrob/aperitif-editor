@@ -12,22 +12,29 @@ const renderers = {
   [STYLED_COMPONENT]: StyledComponent,
 }
 
-const Editor = ({ imports, expressions, defaultExport }) => (
-  <React.Fragment>
-    <Imports key="imports" imports={imports} />
-    <br />
-    {expressions.map(expression => {
-      const Renderer = renderers[expression.type] || Standard
-      return <Renderer key={expression.id} {...expression} />
-    })}
-    <br />
-    <DefaultExport key="defaultExport" name={defaultExport} />
-  </React.Fragment>
-)
+const Editor = ({ imports, expressions, defaultExport, connectActiveEditorAreaTarget }) =>
+  connectActiveEditorAreaTarget(
+    <div className="active-zone">
+      <Imports key="imports" imports={imports} />
+      <br />
+      {expressions.map(expression => {
+        const Renderer = renderers[expression.type] || Standard
+        return <Renderer key={expression.id} {...expression} />
+      })}
+      <br />
+      <DefaultExport key="defaultExport" name={defaultExport} />
+    </div>
+  )
 
 export default styled(Editor).as.div`
   background-color: ${theme.colors.white};
   padding: 50px 100px;
   color: ${theme.colors.darkblue};
   min-width: 960px;
+
+  .active-zone {
+    display: inline-block;
+    padding: 50px 100px;
+    margin: -50px -100px;
+  }   
 `
