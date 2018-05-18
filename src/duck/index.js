@@ -30,6 +30,7 @@ export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
 // create-esk
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
@@ -224,6 +225,84 @@ export default function appReducer(state = getTestDB(), action) {
       return update(state, 'invocations', nextInvocations)
     }
 
+    case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD: {
+      let nextState = state
+      const {
+        targetInvocationId,
+        targetPosition,
+        prop: { paramId, name, payload },
+      } = action.payload
+
+      const payloadKeys = Object.keys(payload)
+
+      // names
+      const baseName = singular(name)
+      let pseudoSpreadPropsName = baseName
+      let newPayloadParamNames = payloadKeys
+
+      nextState = update(nextState, 'names',
+        names => {
+          let nextNames = names;
+          [nextNames, pseudoSpreadPropsName, ...newPayloadParamNames] =
+            addNames(nextNames, pseudoSpreadPropsName, ...newPayloadParamNames)
+          return nextNames
+        }
+      )
+
+      // params
+      let payloadDeclParams = payloadKeys.map((key, id) => ({
+        nameId: newPayloadParamNames[id],
+        payload: payload[key],
+        count: 1,
+      }))
+
+      let droppedCallParam = { declParamId: paramId }
+
+      nextState = update(nextState, 'params', params => {
+        let nextParams = params;
+        [nextParams, droppedCallParam] = addCallParams(nextParams, droppedCallParam);
+        [nextParams, ...payloadDeclParams] = addDeclParams(nextParams, ...payloadDeclParams)
+        return nextParams
+      })
+
+
+      // new component bundle
+      let componentName
+      let newComponentExpressionId
+      [nextState, componentName, newComponentExpressionId] =
+        createComponentBundle({
+          baseName,
+          state: nextState,
+          declParamIds: payloadDeclParams,
+          invocationIds: [],
+        })
+
+      // add / update invocations
+      let newComponentInvocation = {
+        nameId: componentName,
+        expressionId: newComponentExpressionId,
+        callParamIds: [],
+        pseudoSpreadPropsNameId: pseudoSpreadPropsName,
+        closed: true,
+      }
+
+      nextState = update(nextState, 'invocations',
+        invocations => {
+          let nextInvocations = invocations;
+          [nextInvocations, newComponentInvocation] =
+            addInvocations(nextInvocations, newComponentInvocation)
+
+          // add the new component invocation to the target position
+          const updater = invocation => ({
+            ...insertAtKey(invocation, 'invocationIds', targetPosition, newComponentInvocation),
+            closed: false,
+          })
+          return update(nextInvocations, targetInvocationId, updater)
+        }
+      )
+
+      return nextState
+    }
 
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP: {
       let nextState = state
@@ -435,6 +514,10 @@ export const addNewComponentToInvocationWithChildren = createAction(
 
 export const addNewComponentToInvocationWithAttribute = createAction(
   ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE
+)
+
+export const addNewComponentToInvocationWithSpread = createAction(
+  ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD
 )
 
 export const addNewComponentToInvocationWithMap = createAction(

@@ -55,7 +55,7 @@ export default function getTestDB() {
     { nameId: p2, payload: 'strrrrrriiing' },
     { nameId: p3, payload: null },
     { nameId: p4, payload: [{ id: 2, name: 'woot', height: '1.82m' }] },
-    { nameId: p5, payload: {} },
+    { nameId: p5, payload: { yes: 'yes', we: 'we', spread: 'spread', array: [] } },
   ];
 
   [params, childrenParamId, ...declParamIds] = addDeclParams({

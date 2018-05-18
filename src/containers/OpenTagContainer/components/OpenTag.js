@@ -22,7 +22,7 @@ const OpenTag = ({
 }) => {
   const spreadPropsIsOver = isOverOpenTag && dragItem.type === PROPS_SPREAD
   const propIsOver = isOverOpenTag && dragItem.type === PROP &&
-    canDropPropToOpenTag(callParams, dragItem)
+    canDropPropToOpenTag(callParams, pseudoSpreadPropsName, dragItem)
 
   const [keyParams, standardCallParams] = partition(callParams, p => p.name === 'key')
   const keyParam = keyParams[0]

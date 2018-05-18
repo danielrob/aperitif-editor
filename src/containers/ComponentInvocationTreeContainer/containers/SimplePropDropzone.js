@@ -10,6 +10,7 @@ import { PROP, PARAM_INVOCATION } from 'constantz'
 import {
   addParamAsComponentInvocationChild,
   addNewComponentToInvocationWithMap,
+  addNewComponentToInvocationWithSpread,
   moveInvocation,
 } from 'duck'
 import { REACT_CHILDREN_INVOCATION_ID } from 'duck/getTestDB'
@@ -31,12 +32,14 @@ class SimplePropDropzone extends React.Component {
 const mapDispatchToProps = {
   addParamAsComponentInvocationChild,
   addNewComponentToInvocationWithMap,
+  addNewComponentToInvocationWithSpread,
   moveInvocation,
 }
 
 /* dnd */
 const dropActionMap = {
   asParamInvocation: 'addParamAsComponentInvocationChild',
+  spread: 'addNewComponentToInvocationWithSpread',
   newWithMap: 'addNewComponentToInvocationWithMap',
 }
 
@@ -98,6 +101,7 @@ SimplePropDropzone.propTypes = forbidExtraProps({
   // connect
   addParamAsComponentInvocationChild: T.func.isRequired,
   addNewComponentToInvocationWithMap: T.func.isRequired,
+  addNewComponentToInvocationWithSpread: T.func.isRequired,
   moveInvocation: T.func.isRequired,
 
   // React Dnd

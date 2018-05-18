@@ -48,9 +48,9 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
               </NewWithPropDropzone>
             )}
             {C.object(payload) && (
-              <NewWithPropDropzone {...dropZoneProps}>
+              <SimplePropDropzone {...dropZoneProps} dropActionKey="spread">
                 {`<${capitalize(name)} ...{${name}} />`}
-              </NewWithPropDropzone>
+              </SimplePropDropzone>
             )}
             {oneOf(C.string, C.number, C.null)(payload) && (
               <NewWithPropAsChildPropDropzone {...dropZoneProps}>

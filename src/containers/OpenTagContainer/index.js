@@ -64,8 +64,8 @@ const dropzoneTarget = {
   },
 
   canDrop(props, monitor) {
-    const { callParams } = props
-    return canDropPropToOpenTag(callParams, monitor.getItem())
+    const { callParams, pseudoSpreadPropsName } = props
+    return canDropPropToOpenTag(callParams, pseudoSpreadPropsName, monitor.getItem())
   },
 }
 
