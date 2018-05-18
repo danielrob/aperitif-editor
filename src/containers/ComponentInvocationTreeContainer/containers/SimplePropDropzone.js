@@ -41,9 +41,8 @@ const dropzoneTarget = {
 
       case PARAM_INVOCATION: {
         const { moveInvocation, targetInvocationId, targetPosition } = props
-        const { paramId, sourceParentId, sourceInvocationId } = monitor.getItem()
+        const { sourceParentId, sourceInvocationId } = monitor.getItem()
         return moveInvocation({
-          paramId,
           sourceParentId,
           sourceInvocationId,
           targetInvocationId,
@@ -60,7 +59,7 @@ const dropzoneTarget = {
     // Throw together for disabling moving {children} outside of it's parent invocation.
     return !(
       monitor.getItemType() === PARAM_INVOCATION &&
-      item.paramId === REACT_CHILDREN_INVOCATION_ID &&
+      item.callParamId === REACT_CHILDREN_INVOCATION_ID &&
       item.sourceParentId !== targetInvocationId
     )
   },

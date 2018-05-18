@@ -5,14 +5,14 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 import { indent } from 'utils'
 
-const ParamInvocation = ({ isSpreadMember, connectDragSource, isPIDragging, name, depth }) =>
+const ParamInvocation = ({ declIsSpreadMember, connectDragSource, isPIDragging, name, depth }) =>
   isPIDragging ? null : (
     <React.Fragment>
       {indent(depth)}
       {'{'}
       {connectDragSource(
         <div className="dragsource">
-          {isSpreadMember && 'props.'}
+          {declIsSpreadMember && 'props.'}
           {name}
         </div>
       )}

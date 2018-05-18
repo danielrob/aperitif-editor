@@ -14,7 +14,7 @@ export const makeGetInvocation = () => createSelector(
       nameId,
       type,
       invocationIds,
-      paramIds,
+      callParamIds,
       closed,
       hasPropsSpread,
     } = invocation
@@ -23,11 +23,17 @@ export const makeGetInvocation = () => createSelector(
       name: names[nameId],
       type,
       childInvocations: invocationIds.map(id => invocations[id]),
-      paramIds,
-      params: paramIds.map(id => ({
-        name: names[allParams[id].nameId],
-        ...allParams[id],
-      })),
+      callParamIds,
+      callParams: callParamIds.map(id => {
+        const { declParamId } = allParams[id]
+        const { nameId, isSpreadMember } = allParams[declParamId]
+        return {
+          id,
+          name: names[nameId],
+          declParamId,
+          declIsSpreadMember: isSpreadMember,
+        }
+      }),
       closed: !!closed,
       hasPropsSpread,
     }
@@ -38,12 +44,14 @@ export const makeGetParamInvocation = () => createSelector(
   selectParams,
   selectInvocation,
   (names, allParams, invocation) => {
-    const { nameId, paramIds } = invocation
-    const { id: paramId, isSpreadMember } = allParams[paramIds] // singleton: so allParams[[1]] 🕊
+    const { nameId, callParamIds } = invocation
+    // callParamIds is a singleton for paramInvocations so e.g. allParams[[1]] is fine 🕊
+    const { id, declParamId } = allParams[callParamIds]
+    const { isSpreadMember } = allParams[declParamId]
 
     return {
-      paramId,
+      id,
       name: names[nameId],
-      isSpreadMember,
+      declIsSpreadMember: isSpreadMember,
     }
   })

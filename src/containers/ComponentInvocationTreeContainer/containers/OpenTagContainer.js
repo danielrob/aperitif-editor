@@ -7,6 +7,7 @@ import { addAttributeToComponentInvocation, addPropsSpreadToComponentInvocation 
 import { DraggableTypes } from 'constantz'
 import { compose } from 'utils'
 
+import { canDropPropToOpenTag } from '../helpers'
 import { OpenTag } from '../components'
 
 class OpenTagContainer extends React.Component {
@@ -44,9 +45,8 @@ const dropzoneTarget = {
   },
 
   canDrop(props, monitor) {
-    const { paramIds } = props
-    const { id: itemId } = monitor.getItem()
-    return !paramIds.includes(itemId)
+    const { callParams } = props
+    return canDropPropToOpenTag(callParams, monitor.getItem())
   },
 }
 

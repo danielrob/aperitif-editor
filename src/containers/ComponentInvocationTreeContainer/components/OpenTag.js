@@ -6,18 +6,20 @@ import theme from 'theme-proxy'
 import { PROP, PROPS_SPREAD } from 'constantz'
 import { indent } from 'utils'
 
+import { canDropPropToOpenTag } from '../helpers'
+
 const OpenTag = ({
   name,
   isOverOpenTag,
   dragItem,
-  paramIds,
-  params,
+  callParams,
   closed,
   hasPropsSpread,
   depth,
 }) => {
   const spreadPropsIsOver = isOverOpenTag && dragItem.type === PROPS_SPREAD
-  const propIsOver = isOverOpenTag && dragItem.type === PROP && !paramIds.includes(dragItem.id)
+  const propIsOver = isOverOpenTag && dragItem.type === PROP &&
+    canDropPropToOpenTag(callParams, dragItem)
 
   return (
     <React.Fragment>
@@ -36,17 +38,18 @@ const OpenTag = ({
           {' {'}...props{'}'}
         </span>
         )}
-      {params.map(param => !(hasPropsSpread && param.isSpreadMember) && (
-        <span key={param.id}>
-          {' '}
-          {param.name}
-          =
-          {'{'}
-          {param.isSpreadMember && 'props.'}
-          {param.name}
-          {'}'}
-        </span>
-      ))}
+      {callParams.map(({ id, declIsSpreadMember, name }) =>
+        !(hasPropsSpread && declIsSpreadMember) && (
+          <span key={id}>
+            {' '}
+            {name}
+            =
+            {'{'}
+            {declIsSpreadMember && 'props.'}
+            {name}
+            {'}'}
+          </span>
+        ))}
       {closed && ' /'}
       {'>'}
     </React.Fragment>
@@ -62,8 +65,7 @@ export default styled(OpenTag).as.div.attrs({ style: { userSelect: 'text' } })`
 
 OpenTag.propTypes = {
   name: T.string.isRequired,
-  paramIds: T.arrayOf(T.number).isRequired,
-  params: T.arrayOf(T.object).isRequired,
+  callParams: T.arrayOf(T.object).isRequired,
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
   dragItem: T.shape({ type: T.string }).isRequired,

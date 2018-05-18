@@ -30,6 +30,10 @@ export const addParams = getEntitiesAdder({
   count: null,
 })
 
+export const addCallParams = getEntitiesAdder({
+  declParamId: requiredOrNull,
+})
+
 
 export const addFiles = getEntitiesAdder({
   nameId: required,
@@ -50,8 +54,8 @@ export const addExpressions = getEntitiesAdder({
 
 export const addInvocations = getEntitiesAdder({
   nameId: required,
-  source: requiredOrNull,
-  paramIds: [],
+  source: null,
+  callParamIds: [],
   invocationIds: [],
   // type specific items
   type: COMPONENT_INVOCATION,

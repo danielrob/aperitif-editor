@@ -54,14 +54,14 @@ export default function getTestDB() {
   let reactChildren = {
     nameId: childrenNameId,
     type: PARAM_INVOCATION,
-    paramIds: [childrenParamId],
+    callParamIds: [childrenParamId],
     source: null,
   }
   let propTypes = { nameId: propTypesName, source: 'prop-types' }
   let importReact = { nameId: reactName, source: 'react' }
   let importStyled = { nameId: styledName, source: 'styled-components' }
   let appWrapperInvocation = {
-    nameId: appWrapperName, source: null, paramIds: [], closed: true,
+    nameId: appWrapperName, source: null, callParamIds: [], closed: true,
   }
   let initialInvocations
   [initialInvocations, reactChildren, importReact, propTypes, appWrapperInvocation, importStyled] =

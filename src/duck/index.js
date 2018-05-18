@@ -4,6 +4,7 @@ import { createAction } from 'redux-actions'
 import {
   addNames,
   addParams,
+  addCallParams,
   addFiles,
   addExpressions,
   addInvocations,
@@ -86,10 +87,17 @@ export default function appReducer(state = getTestDB(), action) {
       const invocationExpressionId = invocations[targetInvocationId].expressionId
 
       let nextState = state
+      let nextParams = params
+      let nextInvocations = invocations
+
+      // create new call param referencing the dropped prop
+      let callParam = { declParamId: paramId };
+      [nextParams, callParam] = addCallParams(nextParams, callParam)
+      nextState = update(nextState, 'params', nextParams)
 
       // update the target invocation
-      const updater = invocation => insertAtKey(invocation, 'paramIds', 0, paramId)
-      const nextInvocations = update(invocations, targetInvocationId, updater)
+      const updater = invocation => insertAtKey(invocation, 'callParamIds', 0, callParam)
+      nextInvocations = update(nextInvocations, targetInvocationId, updater)
 
       // update the target invocations expression with new param info if relevant
       if (invocationExpressionId) {
@@ -103,7 +111,6 @@ export default function appReducer(state = getTestDB(), action) {
           })
           nextState = updateAtKey(nextState, 'params', nameMatchParamId, paramUpdater)
         } else {
-          let nextParams = params
           let newParam = { nameId, count: 1, payload };
           [nextParams, newParam] = addParams(nextParams, newParam)
           nextState = update(nextState, 'params', nextParams)
@@ -120,11 +127,19 @@ export default function appReducer(state = getTestDB(), action) {
 
 
     case ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD: {
-      const { invocations } = state
+      const { invocations, params } = state
       const { targetInvocationId, targetPosition, prop: { paramId, nameId } } = action.payload
+      let nextState = state
 
       /* Creates */
-      let paramInvocation = { nameId, paramIds: [paramId], type: PARAM_INVOCATION, source: null }
+      // create new call param referencing the dropped prop
+      let nextParams = params
+      let callParam = { declParamId: paramId };
+      [nextParams, callParam] = addCallParams(nextParams, callParam)
+      nextState = update(nextState, 'params', nextParams)
+
+      // create param invocation
+      let paramInvocation = { nameId, callParamIds: [callParam], type: PARAM_INVOCATION }
       let nextInvocations
       [nextInvocations, paramInvocation] = addInvocations(invocations, paramInvocation)
 
@@ -135,7 +150,7 @@ export default function appReducer(state = getTestDB(), action) {
         closed: false,
       })
 
-      return update(state, 'invocations', update(nextInvocations, targetInvocationId, updater))
+      return update(nextState, 'invocations', update(nextInvocations, targetInvocationId, updater))
     }
 
 
@@ -235,6 +250,9 @@ export default function appReducer(state = getTestDB(), action) {
       /* params - a new one if the initial prop is being passed as an attribute */
       let nextParams = params
       let newParam
+      let newCallParam = { declParamId: paramId }; // callParam of the dropped declParamId
+
+      [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
 
       if (!asChild) {
         [nextParams, newParam] = addParams(nextParams, { nameId, payload })
@@ -264,7 +282,7 @@ export default function appReducer(state = getTestDB(), action) {
 
       if (asChild) {
         // create an invocation of the dragged prop to place inside the new component invocation
-        let paramInvocation = { nameId, type: PARAM_INVOCATION, paramIds: [paramId], source: null };
+        let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [newCallParam] };
         [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
         newComponentInvocationInvocationIds.push(paramInvocation)
       }
@@ -282,7 +300,7 @@ export default function appReducer(state = getTestDB(), action) {
       let newComponentInvocation = {
         nameId: dirName,
         source: null,
-        paramIds: !asChild ? [paramId] : [],
+        callParamIds: asChild ? [] : [newCallParam],
         invocationIds: newComponentInvocationInvocationIds,
         closed: !asChild,
         expressionId: newComponentExpression,

@@ -11,7 +11,7 @@ import { ParamInvocation } from '../components'
 import { makeGetParamInvocation } from '../selectors'
 
 const ParamInvocationContainer = ({
-  paramId, // eslint-disable-line no-unused-vars
+  callParamId, // eslint-disable-line no-unused-vars
   parentId, // eslint-disable-line no-unused-vars
   invocationId, // eslint-disable-line no-unused-vars
   ...props
@@ -26,13 +26,13 @@ const makeMapStateToProps = () => {
 /* dnd */
 const propSource = {
   beginDrag(props) {
-    const { paramId, name, parentId, invocationId } = props
+    const { callParamId, name, parentId, invocationId } = props
     return {
       // hover preview
       name,
       type: PARAM_INVOCATION,
       // drop
-      paramId,
+      callParamId,
       sourceParentId: parentId,
       sourceInvocationId: invocationId,
     }
@@ -52,7 +52,7 @@ export default compose(
 
 
 ParamInvocationContainer.propTypes = forbidExtraProps({
-  paramId: T.number.isRequired,
+  callParamId: T.number.isRequired,
   depth: T.number.isRequired,
   parentId: T.number.isRequired,
   invocationId: T.number.isRequired,
