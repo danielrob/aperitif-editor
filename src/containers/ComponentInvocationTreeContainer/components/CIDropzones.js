@@ -90,8 +90,8 @@ const Zones = styled.div`
   color: ${theme.color.washedDarkGreen};
 `
 
-/* payloads */
-CIDropzones.payloads = {
+/* propTypes */
+CIDropzones.propTypes = {
   invocationId: T.number.isRequired,
   shouldDisplay: T.bool.isRequired,
   dragItem: T.shape({ name: T.string }),

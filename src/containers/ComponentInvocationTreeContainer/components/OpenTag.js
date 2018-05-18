@@ -1,4 +1,5 @@
 import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
@@ -39,7 +40,7 @@ const OpenTag = ({
         </span>
         )}
       {callParams.map(({ id, declIsSpreadMember, name }) =>
-        !(hasPropsSpread && declIsSpreadMember) && (
+        !((hasPropsSpread || spreadPropsIsOver) && declIsSpreadMember) && (
           <span key={id}>
             {' '}
             {name}
@@ -63,14 +64,23 @@ export default styled(OpenTag).as.div.attrs({ style: { userSelect: 'text' } })`
   }
 `
 
-OpenTag.propTypes = {
+/* propTypes */
+OpenTag.propTypes = forbidExtraProps({
   name: T.string.isRequired,
-  callParams: T.arrayOf(T.object).isRequired,
+  callParams: T.arrayOf(T.shape({
+    id: T.number.isRequired,
+    declParamId: T.number.isRequired,
+    declIsSpreadMember: T.bool.isRequired,
+    name: T.string.isRequired,
+  }).isRequired).isRequired,
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
-  dragItem: T.shape({ type: T.string }).isRequired,
   depth: T.number.isRequired,
+
+  // for wrapper
+  innerRef: T.func.isRequired,
 
   // Injected by React DnD:
   isOverOpenTag: T.bool.isRequired,
-}
+  dragItem: T.shape({ type: T.string }).isRequired,
+})

@@ -32,6 +32,6 @@ ParamInvocation.propTypes = forbidExtraProps({
   name: T.string.isRequired,
   depth: T.number.isRequired,
   isPIDragging: T.bool.isRequired,
-  isSpreadMember: T.bool.isRequired,
+  declIsSpreadMember: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
 })

@@ -11,9 +11,9 @@ import { ParamInvocation } from '../components'
 import { makeGetParamInvocation } from '../selectors'
 
 const ParamInvocationContainer = ({
-  callParamId, // eslint-disable-line no-unused-vars
-  parentId, // eslint-disable-line no-unused-vars
-  invocationId, // eslint-disable-line no-unused-vars
+  id,
+  parentId,
+  invocationId,
   ...props
 }) => <ParamInvocation {...props} />
 
@@ -26,15 +26,16 @@ const makeMapStateToProps = () => {
 /* dnd */
 const propSource = {
   beginDrag(props) {
-    const { callParamId, name, parentId, invocationId } = props
+    const { id, name, parentId, invocationId } = props
     return {
       // hover preview
       name,
       type: PARAM_INVOCATION,
       // drop
-      callParamId,
       sourceParentId: parentId,
       sourceInvocationId: invocationId,
+      // canDrop
+      callParamId: id,
     }
   },
 }
@@ -50,14 +51,14 @@ export default compose(
   DragSource(PARAM_INVOCATION, propSource, collect),
 )(ParamInvocationContainer)
 
-
+/* propTypes */
 ParamInvocationContainer.propTypes = forbidExtraProps({
-  callParamId: T.number.isRequired,
+  id: T.number.isRequired,
   depth: T.number.isRequired,
   parentId: T.number.isRequired,
   invocationId: T.number.isRequired,
   name: T.string.isRequired,
-  isSpreadMember: T.bool.isRequired,
+  declIsSpreadMember: T.bool.isRequired,
   isPIDragging: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
 })

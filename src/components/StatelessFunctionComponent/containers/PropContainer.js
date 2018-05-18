@@ -23,12 +23,14 @@ const collect = (connect, monitor) => ({
 })
 
 
-/* export */
+/* compose */
 const PropContainer = DragSource(PROP, propSource, collect)(Prop)
 
+/* export */
 export default PropContainer
 
-Prop.propTypes = {
+/* propTypes */
+PropContainer.propTypes = {
   id: T.number.isRequired,
   name: T.string.isRequired,
   nameId: T.number.isRequired,

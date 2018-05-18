@@ -1,3 +1,4 @@
+import T from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
@@ -12,11 +13,27 @@ import { OpenTag } from '../components'
 
 class OpenTagContainer extends React.Component {
   render() {
-    const { connectDropTarget, ...props } = this.props
+    const {
+      connectDropTarget,
+      name,
+      callParams,
+      closed,
+      hasPropsSpread,
+      depth,
+      dragItem,
+      isOverOpenTag,
+    } = this.props
+
     return (
       <OpenTag
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        {...props}
+        name={name}
+        callParams={callParams}
+        closed={closed}
+        hasPropsSpread={hasPropsSpread}
+        depth={depth}
+        dragItem={dragItem}
+        isOverOpenTag={isOverOpenTag}
       />
     )
   }
@@ -57,7 +74,6 @@ const collect = (connect, monitor) => ({
     ...monitor.getItem(),
     type: monitor.getItemType(),
   },
-
 })
 
 /* compose export */
@@ -68,3 +84,27 @@ export default compose(
     DraggableTypes.PROPS_SPREAD,
   ], dropzoneTarget, collect)
 )(OpenTagContainer)
+
+/* propTypes */
+OpenTagContainer.propTypes = {
+  name: T.string.isRequired,
+  callParams: T.arrayOf(T.shape({
+    id: T.number.isRequired,
+    declParamId: T.number.isRequired,
+    declIsSpreadMember: T.bool.isRequired,
+    name: T.string.isRequired,
+  })).isRequired,
+  closed: T.bool.isRequired,
+  hasPropsSpread: T.bool.isRequired,
+  depth: T.number.isRequired,
+  // ...spread - see ComponentInvocationTree
+
+  // Injected by connect:
+  addAttributeToComponentInvocation: T.func.isRequired,
+  addPropsSpreadToComponentInvocation: T.func.isRequired,
+
+  // Injected by React DnD:
+  connectDropTarget: T.func.isRequired,
+  isOverOpenTag: T.bool.isRequired,
+  dragItem: T.shape({ type: T.string }).isRequired,
+}
