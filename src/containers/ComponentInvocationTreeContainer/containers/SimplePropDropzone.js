@@ -11,6 +11,8 @@ import {
   addParamAsComponentInvocationChild,
   addNewComponentToInvocationWithMap,
   addNewComponentToInvocationWithSpread,
+  addNewComponentToInvocationWithAttribute,
+  addNewComponentToInvocationWithChildren,
   moveInvocation,
 } from 'duck'
 import { REACT_CHILDREN_INVOCATION_ID } from 'duck/getTestDB'
@@ -33,14 +35,18 @@ const mapDispatchToProps = {
   addParamAsComponentInvocationChild,
   addNewComponentToInvocationWithMap,
   addNewComponentToInvocationWithSpread,
+  addNewComponentToInvocationWithAttribute,
+  addNewComponentToInvocationWithChildren,
   moveInvocation,
 }
 
 /* dnd */
 const dropActionMap = {
   asParamInvocation: 'addParamAsComponentInvocationChild',
-  spread: 'addNewComponentToInvocationWithSpread',
+  newWithSpread: 'addNewComponentToInvocationWithSpread',
   newWithMap: 'addNewComponentToInvocationWithMap',
+  newWithAttribute: 'addNewComponentToInvocationWithAttribute',
+  newWithChild: 'addNewComponentToInvocationWithChildren',
 }
 
 const dropzoneTarget = {
@@ -102,6 +108,8 @@ SimplePropDropzone.propTypes = forbidExtraProps({
   addParamAsComponentInvocationChild: T.func.isRequired,
   addNewComponentToInvocationWithMap: T.func.isRequired,
   addNewComponentToInvocationWithSpread: T.func.isRequired,
+  addNewComponentToInvocationWithAttribute: T.func.isRequired,
+  addNewComponentToInvocationWithChildren: T.func.isRequired,
   moveInvocation: T.func.isRequired,
 
   // React Dnd

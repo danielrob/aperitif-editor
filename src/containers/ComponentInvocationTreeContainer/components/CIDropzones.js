@@ -9,8 +9,6 @@ import { capitalize, indent, oneOf } from 'utils'
 import { PROP, PARAM_INVOCATION, DIR, FILE, COMPONENT_INVOCATION } from 'constantz'
 import {
   SimplePropDropzone,
-  NewWithPropDropzone,
-  NewWithPropAsChildPropDropzone,
   AddInvocationFromFileDropzone,
   ReorderDropzoneContainer,
 } from '../containers'
@@ -41,23 +39,23 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
               </SimplePropDropzone>
             )}
             {oneOf(C.string, C.number, C.null)(payload) && (
-              <NewWithPropDropzone {...dropZoneProps} >
+              <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithAttribute">
                 {'<'}{capitalize(name)}
                 {` ${name}={${name}}`}
                 {'/>'}
-              </NewWithPropDropzone>
+              </SimplePropDropzone>
             )}
             {C.object(payload) && (
-              <SimplePropDropzone {...dropZoneProps} dropActionKey="spread">
+              <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithSpread">
                 {`<${capitalize(name)} ...{${name}} />`}
               </SimplePropDropzone>
             )}
             {oneOf(C.string, C.number, C.null)(payload) && (
-              <NewWithPropAsChildPropDropzone {...dropZoneProps}>
+              <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithChild">
                 {'<'}{capitalize(name)}{'>'}<br />
                 {indent(1)}{'{'}{name}{'}'}<br />
                 {'</'}{capitalize(name)}{'>'}
-              </NewWithPropAsChildPropDropzone>
+              </SimplePropDropzone>
             )}
             {oneOf(C.array.of.object)(payload) && (
               <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithMap">
