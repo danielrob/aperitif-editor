@@ -22,7 +22,7 @@ export const addNames = (names, ...args) => {
   }, [names])
 }
 
-export const addParams = getEntitiesAdder({
+export const addDeclParams = getEntitiesAdder({
   nameId: required,
   payload: null,
   // type specific items
@@ -45,7 +45,7 @@ export const addFiles = getEntitiesAdder({
 export const addExpressions = getEntitiesAdder({
   nameId: required,
   type: STATELESS_FUNCTION_COMPONENT,
-  paramIds: [],
+  declParamIds: [],
   exportType: DEFAULT,
   invocationIds: [],
   // type specific items

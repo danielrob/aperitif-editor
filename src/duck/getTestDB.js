@@ -1,5 +1,9 @@
-import { addNames, addParams, addFiles, addExpressions, addInvocations } from 'model-utils'
+import { addNames, addDeclParams, addFiles, addExpressions, addInvocations } from 'model-utils'
 import { DIR, LOOKTHROUGH, STYLED_COMPONENT, PARAM_INVOCATION } from 'constantz'
+
+export const REACT_CHILDREN_DECLARATION_PARAM_ID = 2
+export const REACT_CHILDREN_CALL_PARAM_ID = 1
+export const REACT_CHILDREN_INVOCATION_ID = 1
 
 export default function getTestDB() {
   // initial state setup for testing
@@ -37,8 +41,8 @@ export default function getTestDB() {
   )
 
   // params
-  let paramIds
-  let childrenParamId
+  let declParamIds
+  let childrenParamId // eslint-disable-line no-unused-vars
   let params = [
     { nameId: childrenNameId },
     { nameId: p1, payload: true },
@@ -48,13 +52,15 @@ export default function getTestDB() {
     { nameId: p5, payload: {} },
   ];
 
-  [params, childrenParamId, ...paramIds] = addParams({}, ...params)
+  [params, childrenParamId, ...declParamIds] = addDeclParams({
+    1: { id: 1, declParamId: REACT_CHILDREN_DECLARATION_PARAM_ID }, // children id hack
+  }, ...params)
 
   // invocations
   let reactChildren = {
     nameId: childrenNameId,
     type: PARAM_INVOCATION,
-    callParamIds: [childrenParamId],
+    callParamIds: [REACT_CHILDREN_CALL_PARAM_ID],
     source: null,
   }
   let propTypes = { nameId: propTypesName, source: 'prop-types' }
@@ -75,7 +81,7 @@ export default function getTestDB() {
     nameId: noName, type: LOOKTHROUGH, exportType: false, invocationIds: [importStyled],
   }
   let appComponent = {
-    nameId: appDirName, invocationIds: [appWrapperInvocation], paramIds,
+    nameId: appDirName, invocationIds: [appWrapperInvocation], declParamIds,
   }
   let appWrapper = { nameId: appWrapperName, type: STYLED_COMPONENT, tag: 'div' }
   let initialExpressions

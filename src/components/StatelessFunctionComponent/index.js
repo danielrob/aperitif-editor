@@ -9,7 +9,7 @@ import { Input } from './containers'
 
 export default class StatelessFunctionComponent extends React.Component {
   render() {
-    const { id, exportType, nameId, params: allParams, invocations } = this.props
+    const { id, exportType, nameId, declParams: allParams, invocations } = this.props
     const [spreadParams, params] = partition(allParams, p => p.isSpreadMember)
 
     const componentInvocations = invocations // TODO => create invocationExpressions index && filter by expression type

@@ -40,12 +40,12 @@ export const selectCurrentFileExpressions = createSelector(
   selectInvocations,
   (names, expressions, params, invocations) =>
     expressions
-      .map(({ id, nameId, type, invocationIds, paramIds, exportType }) => ({
+      .map(({ id, nameId, type, invocationIds, declParamIds, exportType }) => ({
         id,
         name: names[nameId],
         type,
         invocations: invocationIds.map(invocationId => invocations[invocationId]),
-        params: paramIds.map(paramId => params[paramId]),
+        declParams: declParamIds.map(paramId => params[paramId]),
         exportType,
       }))
       .filter(({ type }) => type !== LOOKTHROUGH)

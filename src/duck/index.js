@@ -3,7 +3,7 @@ import { createAction } from 'redux-actions'
 
 import {
   addNames,
-  addParams,
+  addDeclParams,
   addCallParams,
   addFiles,
   addExpressions,
@@ -18,9 +18,11 @@ import { DIR, STYLED_COMPONENT, componentExpressionTypes, PARAM_INVOCATION } fro
 import { capitalize } from 'utils'
 
 import { getNewComponentName } from './helpers'
-import getTestDB from './getTestDB'
-
-export const REACT_CHILDREN_INVOCATION_ID = 1
+import getTestDB, {
+  REACT_CHILDREN_INVOCATION_ID,
+  REACT_CHILDREN_CALL_PARAM_ID,
+  REACT_CHILDREN_DECLARATION_PARAM_ID,
+} from './getTestDB'
 
 // Editor
 export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
@@ -101,8 +103,8 @@ export default function appReducer(state = getTestDB(), action) {
 
       // update the target invocations expression with new param info if relevant
       if (invocationExpressionId) {
-        const { paramIds, ...expression } = expressions[invocationExpressionId]
-        const nameMatchParamId = paramIds.find(id => params[id].nameId === nameId)
+        const { declParamIds, ...expression } = expressions[invocationExpressionId]
+        const nameMatchParamId = declParamIds.find(id => params[id].nameId === nameId)
 
         if (nameMatchParamId) {
           const paramUpdater = ({ count, ...param }) => ({
@@ -112,12 +114,12 @@ export default function appReducer(state = getTestDB(), action) {
           nextState = updateAtKey(nextState, 'params', nameMatchParamId, paramUpdater)
         } else {
           let newParam = { nameId, count: 1, payload };
-          [nextParams, newParam] = addParams(nextParams, newParam)
+          [nextParams, newParam] = addDeclParams(nextParams, newParam)
           nextState = update(nextState, 'params', nextParams)
 
           nextState = updateAtKey(nextState, 'expressions', invocationExpressionId, ({
             ...expression,
-            paramIds: [...paramIds, newParam],
+            declParamIds: [...declParamIds, newParam],
           }))
         }
       }
@@ -255,7 +257,7 @@ export default function appReducer(state = getTestDB(), action) {
       [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
 
       if (!asChild) {
-        [nextParams, newParam] = addParams(nextParams, { nameId, payload })
+        [nextParams, newParam] = addDeclParams(nextParams, { nameId, payload })
       }
 
       /* expressions & invocations */
@@ -290,7 +292,7 @@ export default function appReducer(state = getTestDB(), action) {
       let newComponentExpression = {
         nameId: dirName,
         invocationIds: [wrapperInvoke],
-        paramIds: !asChild ? [newParam] : [],
+        declParamIds: !asChild ? [newParam] : [],
       };
 
       [nextExpressions, newComponentExpression] =

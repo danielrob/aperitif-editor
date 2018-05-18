@@ -1,4 +1,4 @@
-import { addParams } from 'model-utils'
+import { addDeclParams } from 'model-utils'
 import getTestDB from './getTestDB'
 import appReducer, { moveParamToSpread } from './'
 
@@ -13,7 +13,7 @@ it('initial state for tests', () => {
 })
 
 it('moveParamToSpread sets isSpreadMember flag to true', () => {
-  const previousState = { params: addParams({}, { nameId: 'a' }) }
+  const previousState = { params: addDeclParams({}, { nameId: 'a' }) }
   const newState = appReducer(previousState, moveParamToSpread({ paramId: 1 }))
 
   expect(newState).not.toBe(initialState)
