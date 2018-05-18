@@ -8,8 +8,8 @@ import { addAttributeToComponentInvocation, addPropsSpreadToComponentInvocation 
 import { DraggableTypes } from 'constantz'
 import { compose } from 'utils'
 
-import { canDropPropToOpenTag } from '../helpers'
-import { OpenTag } from '../components'
+import { canDropPropToOpenTag } from './helpers'
+import { OpenTag } from './components'
 
 class OpenTagContainer extends React.Component {
   render() {

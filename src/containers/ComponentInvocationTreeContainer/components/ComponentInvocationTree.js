@@ -5,8 +5,8 @@ import styled from 'styled-as-components'
 
 import theme from 'theme-proxy'
 import { COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
+import { OpenTagContainer } from 'containers'
 
-import { OpenTagContainer } from '../containers'
 import { InvocationChildren, CloseTag, CIDropzones } from './'
 
 const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, ...props }) => (
