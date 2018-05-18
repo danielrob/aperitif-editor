@@ -4,6 +4,8 @@ import { DIR, LOOKTHROUGH, STYLED_COMPONENT, PARAM_INVOCATION } from 'constantz'
 export const REACT_CHILDREN_DECLARATION_PARAM_ID = 2
 export const REACT_CHILDREN_CALL_PARAM_ID = 1
 export const REACT_CHILDREN_INVOCATION_ID = 1
+export const KEY_NAME_ID = 2
+export const ID_NAME_ID = 3
 
 export default function getTestDB() {
   // initial state setup for testing
@@ -12,7 +14,9 @@ export default function getTestDB() {
   // names
   const [
     initialNames,
-    childrenNameId, // eslint-disable-line no-unused-vars
+    childrenNameId,
+    keyNameId, // eslint-disable-line no-unused-vars
+    idNameId, // eslint-disable-line no-unused-vars
     indexName,
     appDirName,
     appIndexIdName,
@@ -25,6 +29,8 @@ export default function getTestDB() {
   ] = addNames(
     {},
     'children',
+    'key',
+    'id',
     'index',
     'App',
     'index',
@@ -48,7 +54,7 @@ export default function getTestDB() {
     { nameId: p1, payload: true },
     { nameId: p2, payload: 'strrrrrriiing' },
     { nameId: p3, payload: null },
-    { nameId: p4, payload: [] },
+    { nameId: p4, payload: [{ id: 2, name: 'woot', height: '1.82m' }] },
     { nameId: p5, payload: {} },
   ];
 

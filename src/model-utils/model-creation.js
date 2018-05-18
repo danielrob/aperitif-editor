@@ -32,6 +32,9 @@ export const addDeclParams = getEntitiesAdder({
 
 export const addCallParams = getEntitiesAdder({
   declParamId: requiredOrNull,
+  nameId: null,
+  valueNameIds: [],
+  isCallSpreadMember: true,
 })
 
 
@@ -61,6 +64,7 @@ export const addInvocations = getEntitiesAdder({
   type: COMPONENT_INVOCATION,
   closed: false, // component-invocation
   hasPropsSpread: false,
+  pseudoSpreadPropsNameId: null,
   expressionId: null,
 })
 

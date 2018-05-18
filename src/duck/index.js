@@ -1,7 +1,9 @@
 /* eslint-disable prefer-const */
 import { createAction } from 'redux-actions'
+import { singular } from 'pluralize'
 
 import {
+  addNames,
   addDeclParams,
   addCallParams,
   addInvocations,
@@ -17,6 +19,8 @@ import { DIR, componentExpressionTypes, PARAM_INVOCATION } from 'constantz'
 import getTestDB, {
   REACT_CHILDREN_INVOCATION_ID,
   REACT_CHILDREN_DECLARATION_PARAM_ID,
+  KEY_NAME_ID,
+  ID_NAME_ID,
 } from './getTestDB'
 
 // Editor
@@ -26,6 +30,7 @@ export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
 // create-esk
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
@@ -220,6 +225,100 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
 
+    case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP: {
+      let nextState = state
+      const {
+        targetInvocationId,
+        targetPosition,
+        prop: { paramId, name, nameId, payload },
+      } = action.payload
+
+      // payload here is checkTypes.array.of.object certified 🚀
+      const payloadObjSuperExample = Object.assign({}, ...payload)
+      const payloadObjSuperExampleKeys = Object.keys(payloadObjSuperExample)
+
+      // names
+      const baseName = singular(name)
+      let mapPseudoParamName = baseName
+      let newPayloadParamNames = payloadObjSuperExampleKeys
+
+      nextState = update(nextState, 'names',
+        names => {
+          let nextNames = names;
+          [nextNames, mapPseudoParamName, ...newPayloadParamNames] =
+            addNames(nextNames, mapPseudoParamName, ...newPayloadParamNames)
+          return nextNames
+        }
+      )
+
+      // params
+      let payloadDeclParams = payloadObjSuperExampleKeys.map((key, id) => ({
+        nameId: newPayloadParamNames[id],
+        payload: payloadObjSuperExample[key], // assume some level of uniformity in payload data
+        count: 1,
+      }))
+
+      let droppedCallParam = { declParamId: paramId }
+      let keyCallParam = {
+        declParamId: null,
+        nameId: KEY_NAME_ID,
+        valueNameIds: [mapPseudoParamName, ID_NAME_ID],
+      }
+
+      nextState = update(nextState, 'params', params => {
+        let nextParams = params;
+        [nextParams, droppedCallParam, keyCallParam] =
+          addCallParams(nextParams, droppedCallParam, keyCallParam);
+        [nextParams, ...payloadDeclParams] = addDeclParams(nextParams, ...payloadDeclParams)
+        return nextParams
+      })
+
+
+      // new component bundle
+      let componentName
+      let newComponentExpressionId
+      [nextState, componentName, newComponentExpressionId] =
+        createComponentBundle({
+          baseName,
+          state: nextState,
+          declParamIds: payloadDeclParams,
+          invocationIds: [],
+        })
+
+      // add / update invocations
+      let newComponentInvocation = {
+        nameId: componentName,
+        expressionId: newComponentExpressionId,
+        callParamIds: [keyCallParam],
+        pseudoSpreadPropsNameId: mapPseudoParamName,
+        closed: true,
+      }
+
+      let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [droppedCallParam] }
+
+      nextState = update(nextState, 'invocations',
+        invocations => {
+          let nextInvocations = invocations;
+          [nextInvocations, newComponentInvocation] =
+            addInvocations(nextInvocations, newComponentInvocation)
+
+          paramInvocation.invocationIds = [newComponentInvocation];
+
+          [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
+
+          // add the new component invocation to the target position
+          const updater = invocation => ({
+            ...insertAtKey(invocation, 'invocationIds', targetPosition, paramInvocation),
+            closed: false,
+          })
+          return update(nextInvocations, targetInvocationId, updater)
+        }
+      )
+
+      return nextState
+    }
+
+
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN: {
       let nextState = state
       const {
@@ -227,14 +326,6 @@ export default function appReducer(state = getTestDB(), action) {
         targetPosition,
         prop: { paramId, name: baseName, nameId },
       } = action.payload
-
-      // params
-      let newCallParam = { declParamId: paramId }
-      nextState = update(nextState, 'params', params => {
-        let nextParams = params;
-        [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
-        return nextParams
-      })
 
       // component bundle
       let componentName
@@ -246,6 +337,14 @@ export default function appReducer(state = getTestDB(), action) {
           declParamIds: [REACT_CHILDREN_DECLARATION_PARAM_ID],
           invocationIds: [REACT_CHILDREN_INVOCATION_ID],
         })
+
+      // params
+      let newCallParam = { declParamId: paramId }
+      nextState = update(nextState, 'params', params => {
+        let nextParams = params;
+        [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
+        return nextParams
+      })
 
       // add / update invocations
       let newComponentInvocation = { nameId: componentName, expressionId: newComponentExpressionId }
@@ -336,6 +435,10 @@ export const addNewComponentToInvocationWithChildren = createAction(
 
 export const addNewComponentToInvocationWithAttribute = createAction(
   ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE
+)
+
+export const addNewComponentToInvocationWithMap = createAction(
+  ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP
 )
 
 export const changeFile = createAction(

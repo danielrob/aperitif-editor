@@ -36,7 +36,7 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
         {[PROP].includes(type) && (
           <React.Fragment>
             {oneOf(C.string, C.number, C.null)(payload) && (
-              <SimplePropDropzone {...dropZoneProps}>
+              <SimplePropDropzone {...dropZoneProps} dropActionKey="asParamInvocation">
                 {`{${name}}`}
               </SimplePropDropzone>
             )}
@@ -60,7 +60,7 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
               </NewWithPropAsChildPropDropzone>
             )}
             {oneOf(C.array.of.object)(payload) && (
-              <SimplePropDropzone {...dropZoneProps}>
+              <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithMap">
                 {'{'}{name}.map({singular(name)} => (<br />
                 {indent(1)}{'<'}{capitalize(singular(name))}{` key={${singular(name)}.id} {...${singular(name)}} />`}<br />
                 )){'}'}

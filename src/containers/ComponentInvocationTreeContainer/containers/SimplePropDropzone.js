@@ -7,7 +7,11 @@ import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { PROP, PARAM_INVOCATION } from 'constantz'
-import { addParamAsComponentInvocationChild, moveInvocation } from 'duck'
+import {
+  addParamAsComponentInvocationChild,
+  addNewComponentToInvocationWithMap,
+  moveInvocation,
+} from 'duck'
 import { REACT_CHILDREN_INVOCATION_ID } from 'duck/getTestDB'
 
 import { CIDropzone } from '../components'
@@ -26,18 +30,24 @@ class SimplePropDropzone extends React.Component {
 /* connect */
 const mapDispatchToProps = {
   addParamAsComponentInvocationChild,
+  addNewComponentToInvocationWithMap,
   moveInvocation,
 }
 
 /* dnd */
+const dropActionMap = {
+  asParamInvocation: 'addParamAsComponentInvocationChild',
+  newWithMap: 'addNewComponentToInvocationWithMap',
+}
+
 const dropzoneTarget = {
   drop(props, monitor) {
     switch (monitor.getItemType()) {
       case PROP: {
-        const { addParamAsComponentInvocationChild, targetInvocationId, targetPosition } = props
+        const { dropActionKey, targetInvocationId, targetPosition } = props
         const prop = monitor.getItem()
 
-        return addParamAsComponentInvocationChild({ targetInvocationId, targetPosition, prop })
+        return props[dropActionMap[dropActionKey]]({ targetInvocationId, targetPosition, prop })
       }
 
       case PARAM_INVOCATION: {
@@ -83,12 +93,18 @@ SimplePropDropzone.propTypes = forbidExtraProps({
   targetInvocationId: T.number.isRequired,
   targetPosition: T.number.isRequired,
   children: T.node.isRequired,
+  dropActionKey: T.oneOf(Object.keys(dropActionMap)),
 
   // connect
   addParamAsComponentInvocationChild: T.func.isRequired,
+  addNewComponentToInvocationWithMap: T.func.isRequired,
   moveInvocation: T.func.isRequired,
 
   // React Dnd
   connectDropTarget: T.func.isRequired,
   isOver: T.bool.isRequired,
 })
+
+SimplePropDropzone.defaultProps = {
+  dropActionKey: null,
+}

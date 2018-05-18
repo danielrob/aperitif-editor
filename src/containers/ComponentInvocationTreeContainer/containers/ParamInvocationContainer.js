@@ -12,7 +12,6 @@ import { makeGetParamInvocation } from '../selectors'
 
 const ParamInvocationContainer = ({
   id,
-  parentId,
   invocationId,
   ...props
 }) => <ParamInvocation {...props} />
@@ -61,4 +60,9 @@ ParamInvocationContainer.propTypes = forbidExtraProps({
   declIsSpreadMember: T.bool.isRequired,
   isPIDragging: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
+  chainedInvocations: T.arrayOf(T.shape({})),
 })
+
+ParamInvocationContainer.defaultProps = {
+  chainedInvocations: [],
+}

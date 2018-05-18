@@ -111,6 +111,7 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
   paramChildren: T.arrayOf(T.object),
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
+  pseudoSpreadPropsName: T.string,
 
   // Injected by React DnD:
   connectDragSource: T.func.isRequired,
@@ -128,4 +129,5 @@ ComponentInvocationTreeContainer.defaultProps = {
   dragItem: null,
   isDragging: false,
   type: null,
+  pseudoSpreadPropsName: null,
 }

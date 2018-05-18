@@ -22,6 +22,7 @@ class OpenTagContainer extends React.Component {
       depth,
       dragItem,
       isOverOpenTag,
+      pseudoSpreadPropsName,
     } = this.props
 
     return (
@@ -31,6 +32,7 @@ class OpenTagContainer extends React.Component {
         callParams={callParams}
         closed={closed}
         hasPropsSpread={hasPropsSpread}
+        pseudoSpreadPropsName={pseudoSpreadPropsName}
         depth={depth}
         dragItem={dragItem}
         isOverOpenTag={isOverOpenTag}
@@ -90,12 +92,13 @@ OpenTagContainer.propTypes = {
   name: T.string.isRequired,
   callParams: T.arrayOf(T.shape({
     id: T.number.isRequired,
-    declParamId: T.number.isRequired,
-    declIsSpreadMember: T.bool.isRequired,
     name: T.string.isRequired,
+    declIsSpreadMember: T.bool,
+    valueString: T.string,
   })).isRequired,
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
+  pseudoSpreadPropsName: T.string,
   depth: T.number.isRequired,
   // ...spread - see ComponentInvocationTree
 
@@ -107,4 +110,8 @@ OpenTagContainer.propTypes = {
   connectDropTarget: T.func.isRequired,
   isOverOpenTag: T.bool.isRequired,
   dragItem: T.shape({ type: T.string }).isRequired,
+}
+
+OpenTagContainer.defaultProps = {
+  pseudoSpreadPropsName: null,
 }

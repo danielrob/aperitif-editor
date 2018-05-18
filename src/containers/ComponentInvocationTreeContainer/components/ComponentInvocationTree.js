@@ -54,6 +54,7 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
   paramChildren: T.arrayOf(T.object),
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
+  pseudoSpreadPropsName: T.string,
 
   // Injected by React DnD:
   connectDropTarget: T.func.isRequired,
@@ -72,4 +73,5 @@ ComponentInvocationTree.defaultProps = {
   dragItem: null,
   parentId: null,
   type: null,
+  pseudoSpreadPropsName: null,
 }
