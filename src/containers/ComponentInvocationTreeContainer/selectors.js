@@ -47,10 +47,6 @@ export const makeGetParamInvocation = () => createSelector(
     const { nameId, callParamIds } = invocation
     // callParamIds is a singleton for paramInvocations so e.g. allParams[[1]] is fine 🕊
     const { id, declParamId } = allParams[callParamIds]
-    if (!allParams[declParamId]) {
-      debugger
-      // asldkj
-    }
     const { isSpreadMember } = allParams[declParamId]
 
     return {

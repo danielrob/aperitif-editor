@@ -7,7 +7,7 @@ import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { DraggableTypes } from 'constantz'
-import { addNewComponentFromPropToInvocation } from 'duck'
+import { addNewComponentToInvocationWithAttribute } from 'duck'
 
 import { CIDropzone } from '../components'
 
@@ -27,16 +27,16 @@ class NewWithPropDropzone extends React.Component {
 
 /* connect */
 const mapDispatchToProps = {
-  addNewComponentFromPropToInvocation,
+  addNewComponentToInvocationWithAttribute,
 }
 
 /* dnd */
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { addNewComponentFromPropToInvocation, targetInvocationId, targetPosition } = props
+    const { addNewComponentToInvocationWithAttribute, targetInvocationId, targetPosition } = props
     const prop = monitor.getItem()
 
-    addNewComponentFromPropToInvocation({ targetInvocationId, targetPosition, prop })
+    addNewComponentToInvocationWithAttribute({ targetInvocationId, targetPosition, prop })
   },
 }
 
@@ -60,7 +60,7 @@ NewWithPropDropzone.propTypes = forbidExtraProps({
   children: T.node.isRequired,
 
   // mapDispatchToProps
-  addNewComponentFromPropToInvocation: T.func.isRequired,
+  addNewComponentToInvocationWithAttribute: T.func.isRequired,
 
   // Injected by React DnD:
   connectDropTarget: T.func.isRequired,

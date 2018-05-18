@@ -13,8 +13,8 @@ const createComponentBundle = ({
   baseName,
   state,
   state: { names, files, rootFiles, expressions, invocations },
-  declParamIds,
-  invocationIds,
+  declParamIds = [],
+  invocationIds = [],
 }) => {
   let nextNames = names
   let nextFiles = files

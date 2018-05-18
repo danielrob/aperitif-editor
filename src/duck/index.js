@@ -24,7 +24,8 @@ export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
 
 // ORM
 // create-esk
-export const ADD_NEW_COMPONENT_TO_COMPONENT_INVOCATION_FROM_PROP = 'ADD_NEW_COMPONENT_TO_COMPONENT_INVOCATION_FROM_PROP'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
@@ -168,7 +169,6 @@ export default function appReducer(state = getTestDB(), action) {
       let [nextInvocations, newInvocationId] = // eslint-disable-line prefer-const
         addInvocations(invocations, {
           nameId: expressions[expressionId].nameId,
-          source: null,
           closed: true,
           expressionId,
         })
@@ -220,30 +220,21 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
 
-    case ADD_NEW_COMPONENT_TO_COMPONENT_INVOCATION_FROM_PROP: {
+    case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN: {
       let nextState = state
       const {
         targetInvocationId,
         targetPosition,
-        prop: { paramId, name: baseName, nameId, payload, asChild },
+        prop: { paramId, name: baseName, nameId },
       } = action.payload
 
-
-      /* CREATE */
       // params
-      let newDeclParam = { nameId, payload } // add this to the component when creating it
-      let newCallParam = { declParamId: paramId } // callParam of the dropped declParamId
-
-      nextState = update(nextState, 'params',
-        params => {
-          let nextParams = params;
-          [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
-          if (!asChild) {
-            [nextParams, newDeclParam] = addDeclParams(nextParams, newDeclParam)
-          }
-          return nextParams
-        }
-      )
+      let newCallParam = { declParamId: paramId }
+      nextState = update(nextState, 'params', params => {
+        let nextParams = params;
+        [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
+        return nextParams
+      })
 
       // component bundle
       let componentName
@@ -252,33 +243,75 @@ export default function appReducer(state = getTestDB(), action) {
         createComponentBundle({
           baseName,
           state: nextState,
-          declParamIds: asChild ? [REACT_CHILDREN_DECLARATION_PARAM_ID] : [newDeclParam],
-          invocationIds: asChild ? [REACT_CHILDREN_INVOCATION_ID] : [],
+          declParamIds: [REACT_CHILDREN_DECLARATION_PARAM_ID],
+          invocationIds: [REACT_CHILDREN_INVOCATION_ID],
         })
 
-      // invocation of newly created component to be placed at the drop target position
-      let newComponentInvocation = {
-        nameId: componentName,
-        source: null,
-        callParamIds: asChild ? [] : [newCallParam],
-        closed: !asChild,
-        expressionId: newComponentExpressionId,
-      }
-
-      // children of newly created component invocation - if relevant
+      // add / update invocations
+      let newComponentInvocation = { nameId: componentName, expressionId: newComponentExpressionId }
       let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [newCallParam] }
 
       nextState = update(nextState, 'invocations',
         invocations => {
-          let nextInvocations = invocations
-          if (asChild) {
-            [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
-            newComponentInvocation.invocationIds = [paramInvocation]
-          }
+          let nextInvocations = invocations;
+          [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
+
+          newComponentInvocation.invocationIds = [paramInvocation];
           [nextInvocations, newComponentInvocation] =
             addInvocations(nextInvocations, newComponentInvocation)
 
-          /* UPDATE */
+          // add the new component invocation to the target position
+          const updater = invocation => ({
+            ...insertAtKey(invocation, 'invocationIds', targetPosition, newComponentInvocation),
+            closed: false,
+          })
+          return update(nextInvocations, targetInvocationId, updater)
+        }
+      )
+
+      return nextState
+    }
+
+    case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE: {
+      let nextState = state
+      const {
+        targetInvocationId,
+        targetPosition,
+        prop: { paramId, name: baseName, nameId, payload },
+      } = action.payload
+
+      // params
+      let newDeclParam = { nameId, payload }
+      let newCallParam = { declParamId: paramId }
+
+      nextState = update(nextState, 'params', params => {
+        let nextParams = params;
+        [nextParams, newDeclParam] = addDeclParams(nextParams, newDeclParam);
+        [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
+        return nextParams
+      })
+
+      // component bundle
+      let componentName
+      let newComponentExpressionId
+
+      [nextState, componentName, newComponentExpressionId] =
+        createComponentBundle({ baseName, state: nextState, declParamIds: [newDeclParam] })
+
+      // add & update invocations
+      let newComponentInvocation = {
+        nameId: componentName,
+        callParamIds: [newCallParam],
+        expressionId: newComponentExpressionId,
+        closed: true,
+      }
+
+      nextState = update(nextState, 'invocations',
+        invocations => {
+          let nextInvocations = invocations;
+          [nextInvocations, newComponentInvocation] =
+            addInvocations(nextInvocations, newComponentInvocation)
+
           // add the new component invocation to the target position
           const updater = invocation => ({
             ...insertAtKey(invocation, 'invocationIds', targetPosition, newComponentInvocation),
@@ -297,8 +330,12 @@ export default function appReducer(state = getTestDB(), action) {
   }
 }
 
-export const addNewComponentFromPropToInvocation = createAction(
-  ADD_NEW_COMPONENT_TO_COMPONENT_INVOCATION_FROM_PROP
+export const addNewComponentToInvocationWithChildren = createAction(
+  ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN
+)
+
+export const addNewComponentToInvocationWithAttribute = createAction(
+  ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE
 )
 
 export const changeFile = createAction(
