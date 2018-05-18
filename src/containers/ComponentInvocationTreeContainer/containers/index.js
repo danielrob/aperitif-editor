@@ -2,4 +2,4 @@ export { default as AddInvocationFromFileDropzone } from './AddInvocationFromFil
 export { default as IntermediaryDropzonesContainer } from './IntermediaryDropzonesContainer'
 export { default as ParamInvocationContainer } from './ParamInvocationContainer'
 export { default as ReorderDropzoneContainer } from './ReorderDropzoneContainer'
-export { default as SimplePropDropzone } from './SimplePropDropzone'
+export { default as PropDropzoneContainer } from './PropDropzoneContainer'

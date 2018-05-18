@@ -9,18 +9,18 @@ import { compose } from 'utils'
 import { FILE, DIR } from 'constantz'
 import { addInvocationFromFileToCI } from 'duck'
 
-import { CIDropzone } from '../components'
+import { PropDropzone } from '../components'
 
 class AddInvocationFromFileDropzone extends React.Component {
   render() {
     const { connectDropTarget, isOver, children } = this.props
     return (
-      <CIDropzone
+      <PropDropzone
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
         isOver={isOver}
       >
         {children}
-      </CIDropzone>
+      </PropDropzone>
     )
   }
 }

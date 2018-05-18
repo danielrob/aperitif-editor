@@ -8,7 +8,7 @@ import theme from 'theme-proxy'
 import { capitalize, indent, oneOf } from 'utils'
 import { PROP, PARAM_INVOCATION, DIR, FILE, COMPONENT_INVOCATION } from 'constantz'
 import {
-  SimplePropDropzone,
+  PropDropzoneContainer,
   AddInvocationFromFileDropzone,
   ReorderDropzoneContainer,
 } from '../containers'
@@ -26,43 +26,43 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
           <ReorderDropzoneContainer {...dropZoneProps} {...dragItem} />
         )}
         {[PARAM_INVOCATION].includes(type) && (
-          <SimplePropDropzone {...dropZoneProps}>
+          <PropDropzoneContainer {...dropZoneProps}>
             {`{${name}}`}
-          </SimplePropDropzone>
+          </PropDropzoneContainer>
         )}
         {/* prop options */}
         {[PROP].includes(type) && (
           <React.Fragment>
             {oneOf(C.string, C.number, C.null)(payload) && (
-              <SimplePropDropzone {...dropZoneProps} dropActionKey="asParamInvocation">
+              <PropDropzoneContainer {...dropZoneProps} dropActionKey="asParamInvocation">
                 {`{${name}}`}
-              </SimplePropDropzone>
+              </PropDropzoneContainer>
             )}
             {oneOf(C.string, C.number, C.null)(payload) && (
-              <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithAttribute">
+              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithAttribute">
                 {'<'}{capitalize(name)}
                 {` ${name}={${name}}`}
                 {'/>'}
-              </SimplePropDropzone>
+              </PropDropzoneContainer>
             )}
             {C.object(payload) && (
-              <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithSpread">
+              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithSpread">
                 {`<${capitalize(name)} ...{${name}} />`}
-              </SimplePropDropzone>
+              </PropDropzoneContainer>
             )}
             {oneOf(C.string, C.number, C.null)(payload) && (
-              <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithChild">
+              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithChild">
                 {'<'}{capitalize(name)}{'>'}<br />
                 {indent(1)}{'{'}{name}{'}'}<br />
                 {'</'}{capitalize(name)}{'>'}
-              </SimplePropDropzone>
+              </PropDropzoneContainer>
             )}
             {oneOf(C.array.of.object)(payload) && (
-              <SimplePropDropzone {...dropZoneProps} dropActionKey="newWithMap">
+              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithMap">
                 {'{'}{name}.map({singular(name)} => (<br />
                 {indent(1)}{'<'}{capitalize(singular(name))}{` key={${singular(name)}.id} {...${singular(name)}} />`}<br />
                 )){'}'}
-              </SimplePropDropzone>
+              </PropDropzoneContainer>
             )}
           </React.Fragment>
         )}

@@ -17,15 +17,15 @@ import {
 } from 'duck'
 import { REACT_CHILDREN_INVOCATION_ID } from 'duck/getTestDB'
 
-import { CIDropzone } from '../components'
+import { PropDropzone } from '../components'
 
-class SimplePropDropzone extends React.Component {
+class PropDropzoneContainer extends React.Component {
   render() {
     const { connectDropTarget, isOver, children } = this.props
     return (
-      <CIDropzone innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))} isOver={isOver}>
+      <PropDropzone innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))} isOver={isOver}>
         {children}
-      </CIDropzone>
+      </PropDropzone>
     )
   }
 }
@@ -94,10 +94,10 @@ const collect = (connect, monitor) => ({
 export default compose(
   connect(null, mapDispatchToProps),
   DropTarget([PROP, PARAM_INVOCATION], dropzoneTarget, collect)
-)(SimplePropDropzone)
+)(PropDropzoneContainer)
 
 /* propTypes */
-SimplePropDropzone.propTypes = forbidExtraProps({
+PropDropzoneContainer.propTypes = forbidExtraProps({
   // passed by parent
   targetInvocationId: T.number.isRequired,
   targetPosition: T.number.isRequired,
@@ -117,6 +117,6 @@ SimplePropDropzone.propTypes = forbidExtraProps({
   isOver: T.bool.isRequired,
 })
 
-SimplePropDropzone.defaultProps = {
+PropDropzoneContainer.defaultProps = {
   dropActionKey: null,
 }

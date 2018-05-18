@@ -4,9 +4,9 @@ import { forbidExtraProps } from 'airbnb-prop-types'
 import styled, { css } from 'styled-as-components'
 import theme from 'theme-proxy'
 
-const CIDropzone = ({ children }) => <div>{children}</div>
+const PropDropzone = ({ children }) => <div>{children}</div>
 
-export default styled(CIDropzone).as.div`
+export default styled(PropDropzone).as.div`
   position: relative;
   padding: 0 300px 0 200px;
   margin-left: -200px;
@@ -27,7 +27,7 @@ export default styled(CIDropzone).as.div`
     `}
 `
 
-CIDropzone.propTypes = forbidExtraProps({
+PropDropzone.propTypes = forbidExtraProps({
   isOver: T.bool.isRequired,
   children: T.node.isRequired,
   innerRef: T.func.isRequired,

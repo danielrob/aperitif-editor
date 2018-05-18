@@ -1,7 +1,7 @@
 export { default as ComponentInvocationTree } from './ComponentInvocationTree'
 export { default as CloseTag } from './CloseTag'
 export { default as InvocationChildren } from './InvocationChildren'
-export { default as CIDropzone } from './CIDropzone'
+export { default as PropDropzone } from './PropDropzone'
 export { default as CIDropzones } from './CIDropzones'
 export { default as ParamInvocation } from './ParamInvocation'
 export { default as ReorderDropzone } from './ReorderDropzone'
