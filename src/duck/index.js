@@ -100,7 +100,7 @@ export default function appReducer(state = getTestDB(), action) {
       nextState = update(nextState, 'params', nextParams)
 
       // update the target invocation
-      const updater = invocation => insertAtKey(invocation, 'callParamIds', 0, callParam)
+      const updater = invocation => insertAtKey(invocation, 'callParamIds', callParam, 0)
       nextInvocations = update(nextInvocations, targetInvocationId, updater)
 
       // update the target invocations expression with new param info if relevant
@@ -150,7 +150,7 @@ export default function appReducer(state = getTestDB(), action) {
       /* Update */
       const updater = ivn => ({
         ...ivn,
-        invocationIds: insertAt(ivn.invocationIds, targetPosition, paramInvocation),
+        invocationIds: insertAt(ivn.invocationIds, paramInvocation, targetPosition),
         closed: false,
       })
 
@@ -180,7 +180,7 @@ export default function appReducer(state = getTestDB(), action) {
         })
 
       /* UPDATES */
-      const updater = ivn => insertAtKey(ivn, 'invocationIds', targetPosition, newInvocationId)
+      const updater = ivn => insertAtKey(ivn, 'invocationIds', newInvocationId, targetPosition)
 
       return update(state, 'invocations', update(nextInvocations, targetInvocationId, updater))
     }
@@ -244,7 +244,7 @@ export default function appReducer(state = getTestDB(), action) {
 
       // insert
       updater = ivn => ({
-        ...insertAtKey(ivn, 'invocationIds', targetPosition, sourceInvocationId),
+        ...insertAtKey(ivn, 'invocationIds', sourceInvocationId, targetPosition),
         closed: false,
       })
       nextInvocations = update(nextInvocations, targetInvocationId, updater)
@@ -321,7 +321,7 @@ export default function appReducer(state = getTestDB(), action) {
 
           // add the new component invocation to the target position
           const updater = invocation => ({
-            ...insertAtKey(invocation, 'invocationIds', targetPosition, newComponentInvocation),
+            ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
             closed: false,
           })
           return update(nextInvocations, targetInvocationId, updater)
@@ -415,7 +415,7 @@ export default function appReducer(state = getTestDB(), action) {
 
           // add the new component invocation to the target position
           const updater = invocation => ({
-            ...insertAtKey(invocation, 'invocationIds', targetPosition, paramInvocation),
+            ...insertAtKey(invocation, 'invocationIds', paramInvocation, targetPosition),
             closed: false,
           })
           return update(nextInvocations, targetInvocationId, updater)
@@ -468,7 +468,7 @@ export default function appReducer(state = getTestDB(), action) {
 
           // add the new component invocation to the target position
           const updater = invocation => ({
-            ...insertAtKey(invocation, 'invocationIds', targetPosition, newComponentInvocation),
+            ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
             closed: false,
           })
           return update(nextInvocations, targetInvocationId, updater)
@@ -521,7 +521,7 @@ export default function appReducer(state = getTestDB(), action) {
 
           // add the new component invocation to the target position
           const updater = invocation => ({
-            ...insertAtKey(invocation, 'invocationIds', targetPosition, newComponentInvocation),
+            ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
             closed: false,
           })
           return update(nextInvocations, targetInvocationId, updater)

@@ -46,7 +46,7 @@ it('insertAt inserts element to array', () => {
   const cats = [1, 2, 3, 4, 5]
   const newCat = 'newCat'
 
-  const moreCats = insertAt(cats, 2, newCat)
+  const moreCats = insertAt(cats, newCat, 2)
 
   // not mutated
   expect(cats).not.toEqual(moreCats)
@@ -63,7 +63,7 @@ it('can combine update with insertAtKey', () => {
   const insertKittenPosition = 3
   const newKitten = 4
 
-  const givesBirth = cat => insertAtKey(cat, 'children', insertKittenPosition, newKitten)
+  const givesBirth = cat => insertAtKey(cat, 'children', newKitten, insertKittenPosition)
   const catsAfterCatGivesBirth = update(cats, catGivingBirth, givesBirth)
 
   // not mutated

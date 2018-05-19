@@ -46,10 +46,10 @@ export const deleteKey = (objectToUpdate, key) => {
 /**
  * @function insertAt: [..., newValue, ...]
  * @param {Array} arrayToUpdate: array to be updated
- * @param {number} position: array position to update
  * @param {*} insertValue: value to be inserted
+ * @param {number} position: array position to update
  */
-export const insertAt = (arrayToUpdate, position, insertValue) => ([
+export const insertAt = (arrayToUpdate, insertValue, position = arrayToUpdate.length) => ([
   ...arrayToUpdate.slice(0, position),
   insertValue,
   ...arrayToUpdate.slice(position),
@@ -59,12 +59,12 @@ export const insertAt = (arrayToUpdate, position, insertValue) => ([
  * @function insertAtKey: { ..., [key]: [..., newValue, ...] }
  * @param {Object} objectToUpdate: object to be updated
  * @param {*} key: object key at which to apply insertAt
- * @param {number} position: array position to update
  * @param {*} insertValue: value to be inserted
+ * @param {number} position: array position to update
  */
-export const insertAtKey = (objectToUpdate, key, position, insertValue) => ({
+export const insertAtKey = (objectToUpdate, key, insertValue, position) => ({
   ...objectToUpdate,
-  [key]: insertAt(objectToUpdate[key], position, insertValue),
+  [key]: insertAt(objectToUpdate[key], insertValue, position),
 })
 
 /**
