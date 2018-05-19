@@ -39,6 +39,7 @@ class FileContainer extends React.Component {
   }
 }
 
+
 /* connect */
 const makeMapStateToProps = () => {
   const getFile = makeGetFile()
@@ -46,6 +47,7 @@ const makeMapStateToProps = () => {
 }
 
 const mapDispatchToProps = { changeFile }
+
 
 /* dnd */
 // source
@@ -71,33 +73,18 @@ const sourceCollect = (connect, monitor) => ({
   isDragging: monitor.isDragging(),
 })
 
-// target
-// const dropzoneTarget = {
-//   drop(props, monitor) {
-//     const { expressionId } = props
-//     const { id: paramId } = monitor.getItem()
-//   },
-// }
-
-// const targetCollect = (connect, monitor) => ({
-//   connectDropTarget: connect.dropTarget(),
-//   isOver: monitor.isOver(),
-//   dragItem: monitor.getItem(),
-// })
-
 /* compose export */
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
   DragSource(getType, sourceSpec, sourceCollect)
-  // DropTarget([], dropzoneTarget, targetCollect),
 )(FileContainer)
+
 
 /* propTypes */
 FileContainer.propTypes = forbidExtraProps({
   // passed by parent / file explorer
   fileId: T.number.isRequired,
-  // eslint-disable-next-line react/require-default-props
-  parentName: or([T.string.isRequired, explicitNull()]),
+  parentName: or([T.string.isRequired, explicitNull()]), // eslint-disable-line
   initial: T.bool,
 
   // from makeGetFile

@@ -19,10 +19,20 @@ const Editor = ({ imports, expressions, defaultExport, connectActiveEditorAreaTa
       <br />
       {expressions.map(expression => {
         const Renderer = renderers[expression.type] || Standard
-        return <Renderer key={expression.id} {...expression} />
+        return (
+          <div>
+            <Renderer key={expression.id} {...expression} />
+            {[STATELESS_FUNCTION_COMPONENT].includes(expression.type) && (
+              <React.Fragment>
+                <br />
+                <DefaultExport key="defaultExport" name={defaultExport} />
+                <br />
+              </React.Fragment>
+            )}
+            <br />
+          </div>
+        )
       })}
-      <br />
-      <DefaultExport key="defaultExport" name={defaultExport} />
     </div>
   )
 
@@ -36,5 +46,5 @@ export default styled(Editor).as.div`
     display: inline-block;
     padding: 50px 100px;
     margin: -50px -100px;
-  }   
+  }
 `

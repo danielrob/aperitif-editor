@@ -39,7 +39,7 @@ export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_I
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const CHANGE_NAME = 'CHANGE_NAME'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
-export const MOVE_EXPRESSION = 'MOVE_EXPRESSION'
+export const MERGE_FILE = 'MERGE_FILE'
 export const SET_PARAM_IS_SPREAD_MEMBER_TRUE = 'SET_PARAM_IS_SPREAD_MEMBER_TRUE'
 
 export default function appReducer(state = getTestDB(), action) {
@@ -185,28 +185,30 @@ export default function appReducer(state = getTestDB(), action) {
       return update(state, 'invocations', update(nextInvocations, targetInvocationId, updater))
     }
 
-    case MOVE_EXPRESSION: {
-      const { expressions } = state
-      const { sourceFileId, targetFileId, expressionId, targetPosition } = action.payload
+    case MERGE_FILE: {
+      const { sourceFileId, targetFileId } = action.payload
 
       return update(state, 'files', files => {
         let nextFiles = files
 
-        // remove expression from file if relevant expressions remain. Otherwise remove file.
-        if (nextFiles[sourceFileId].expressionIds.find(
-          id => expressions[id].type !== LOOKTHROUGH && id !== expressionId
-        )) {
-          nextFiles = update(nextFiles, sourceFileId,
-            file => filterOutAtKey(file, 'expressionIds', expressionId)
-          )
-        } else {
-          nextFiles = deleteKey(nextFiles, sourceFileId)
-        }
-
-        // add expression to other file
+        // add expressions to other file
         nextFiles = update(nextFiles, targetFileId,
-          file => insertAtKey(file, 'expressionIds', expressionId, targetPosition)
+          file => update(file, 'expressionIds', ids => [
+            ...ids,
+            ...files[sourceFileId].expressionIds,
+          ])
         )
+
+        // Delete file
+        const dirId = Object.keys(nextFiles).find(
+          fileId => nextFiles[fileId].children.includes(sourceFileId)
+        )
+
+        nextFiles = update(nextFiles, dirId,
+          file => filterOutAtKey(file, 'children', sourceFileId)
+        )
+
+        nextFiles = deleteKey(nextFiles, sourceFileId)
 
         return nextFiles
       })
@@ -581,8 +583,8 @@ export const moveInvocation = createAction(
   MOVE_INVOCATION
 )
 
-export const moveExpression = createAction(
-  MOVE_EXPRESSION
+export const mergeFile = createAction(
+  MERGE_FILE
 )
 
 export const changeName = createAction(
