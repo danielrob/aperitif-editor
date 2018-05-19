@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { addNames, addDeclParams, addFiles, addExpressions, addInvocations } from 'model-utils'
 import { DIR, LOOKTHROUGH, STYLED_COMPONENT, PARAM_INVOCATION } from 'constantz'
 
@@ -10,7 +11,6 @@ export const ID_NAME_ID = 3
 export default function getTestDB() {
   // initial state setup for testing
 
-  /* eslint-disable prefer-const */
   // names
   const [
     initialNames,
@@ -103,7 +103,6 @@ export default function getTestDB() {
 
   const appDir = { nameId: appDirName, type: DIR, children: [appFileId, appWrapperFileId] }
   const [initialFilesAndDirs, appDirFileId] = addFiles(initialFiles, appDir)
-  /* eslint-enable prefer-const */
 
   return {
     names: initialNames,

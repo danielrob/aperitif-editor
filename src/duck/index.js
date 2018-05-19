@@ -10,11 +10,13 @@ import {
   insertAt,
   insertAtKey,
   removeAtKey,
+  filterOutAtKey,
+  deleteKey,
   update,
   updateAtKey,
   createComponentBundle,
 } from 'model-utils'
-import { DIR, componentExpressionTypes, PARAM_INVOCATION } from 'constantz'
+import { DIR, componentExpressionTypes, PARAM_INVOCATION, LOOKTHROUGH } from 'constantz'
 
 import getTestDB, {
   REACT_CHILDREN_INVOCATION_ID,
@@ -27,7 +29,6 @@ import getTestDB, {
 export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
 
 // ORM
-// create-esk
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
@@ -36,10 +37,9 @@ export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
-
-// update-esk
 export const CHANGE_NAME = 'CHANGE_NAME'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
+export const MOVE_EXPRESSION = 'MOVE_EXPRESSION'
 export const SET_PARAM_IS_SPREAD_MEMBER_TRUE = 'SET_PARAM_IS_SPREAD_MEMBER_TRUE'
 
 export default function appReducer(state = getTestDB(), action) {
@@ -185,6 +185,33 @@ export default function appReducer(state = getTestDB(), action) {
       return update(state, 'invocations', update(nextInvocations, targetInvocationId, updater))
     }
 
+    case MOVE_EXPRESSION: {
+      const { expressions } = state
+      const { sourceFileId, targetFileId, expressionId, targetPosition } = action.payload
+
+      return update(state, 'files', files => {
+        let nextFiles = files
+
+        // remove expression from file if relevant expressions remain. Otherwise remove file.
+        if (nextFiles[sourceFileId].expressionIds.find(
+          id => expressions[id].type !== LOOKTHROUGH && id !== expressionId
+        )) {
+          nextFiles = update(nextFiles, sourceFileId,
+            file => filterOutAtKey(file, 'expressionIds', expressionId)
+          )
+        } else {
+          nextFiles = deleteKey(nextFiles, sourceFileId)
+        }
+
+        // add expression to other file
+        nextFiles = update(nextFiles, targetFileId,
+          file => insertAtKey(file, 'expressionIds', expressionId, targetPosition)
+        )
+
+        return nextFiles
+      })
+    }
+
 
     case MOVE_INVOCATION: {
       const { invocations } = state
@@ -233,12 +260,12 @@ export default function appReducer(state = getTestDB(), action) {
         prop: { paramId, name, payload },
       } = action.payload
 
-      const payloadKeys = Object.keys(payload)
+      const baseName = singular(name)
+      const propPayloadKeys = Object.keys(payload)
 
       // names
-      const baseName = singular(name)
       let pseudoSpreadPropsName = baseName
-      let newPayloadParamNames = payloadKeys
+      let newPayloadParamNames = propPayloadKeys
 
       nextState = update(nextState, 'names',
         names => {
@@ -250,7 +277,7 @@ export default function appReducer(state = getTestDB(), action) {
       )
 
       // params
-      let payloadDeclParams = payloadKeys.map((key, id) => ({
+      let payloadDeclParams = propPayloadKeys.map((key, id) => ({
         nameId: newPayloadParamNames[id],
         payload: payload[key],
         count: 1,
@@ -303,6 +330,7 @@ export default function appReducer(state = getTestDB(), action) {
 
       return nextState
     }
+
 
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP: {
       let nextState = state
@@ -450,6 +478,7 @@ export default function appReducer(state = getTestDB(), action) {
       return nextState
     }
 
+
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE: {
       let nextState = state
       const {
@@ -550,6 +579,10 @@ export const moveParamToSpread = createAction(
 
 export const moveInvocation = createAction(
   MOVE_INVOCATION
+)
+
+export const moveExpression = createAction(
+  MOVE_EXPRESSION
 )
 
 export const changeName = createAction(

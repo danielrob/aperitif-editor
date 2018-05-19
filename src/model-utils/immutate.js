@@ -33,6 +33,17 @@ export const updateAtKey = (entities, entityId, key, newValue) => ({
 })
 
 /**
+ * @function deleteKey: delete { ...oldEntity }[key]
+ * @param {Object} objectToUpdate: object to be updated
+ * @param {string|number} key: key to delete
+ */
+export const deleteKey = (objectToUpdate, key) => {
+  const next = { ...objectToUpdate }
+  delete next[key]
+  return next
+}
+
+/**
  * @function insertAt: [..., newValue, ...]
  * @param {Array} arrayToUpdate: array to be updated
  * @param {number} position: array position to update
@@ -57,11 +68,11 @@ export const insertAtKey = (objectToUpdate, key, position, insertValue) => ({
 })
 
 /**
- * @function removeAt: [...n, ,n+1...]
+ * @function remove: [...n, ,n+1...]
  * @param {Array} arrayToUpdate: array to be updated
  * @param {number} position: array position to remove
  */
-export const removeAt = (arrayToUpdate, position) => ([
+export const remove = (arrayToUpdate, position) => ([
   ...arrayToUpdate.slice(0, position),
   ...arrayToUpdate.slice(position + 1),
 ])
@@ -74,6 +85,25 @@ export const removeAt = (arrayToUpdate, position) => ([
  */
 export const removeAtKey = (objectToUpdate, key, position) => ({
   ...objectToUpdate,
-  [key]: removeAt(objectToUpdate[key], position),
+  [key]: remove(objectToUpdate[key], position),
+})
+
+/**
+ * @function filterOut: oldValue.filter(v => v !== valueToRemove)
+ * @param {Array} arrayToUpdate: array to be updated
+ * @param {number} valueToRemove: value to filter from array
+ */
+export const filterOut = (arrayToUpdate, valueToRemove) =>
+  arrayToUpdate.filter(value => value !== valueToRemove)
+
+/**
+ * @function filterOutAtKey: { ..., [key]: oldValue.filter(v => v !== valueToRemove) }
+ * @param {Object} objectToUpdate: object to be updated
+ * @param {*} key: object key at which to apply removeAt
+ * @param {number} position: array position to remove
+ */
+export const filterOutAtKey = (objectToUpdate, key, valueToRemove) => ({
+  ...objectToUpdate,
+  [key]: filterOut(objectToUpdate[key], valueToRemove),
 })
 
