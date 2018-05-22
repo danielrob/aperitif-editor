@@ -20,10 +20,7 @@ export default function getTestDB() {
     indexName,
     appDirName,
     appIndexIdName,
-    reactName,
     propTypesName,
-    styledName,
-    noName,
     appWrapperName,
     p1, p2, p3, p4, p5,
   ] = addNames(
@@ -34,10 +31,7 @@ export default function getTestDB() {
     'index',
     'App',
     'index',
-    'React',
     'PropTypes',
-    'styled',
-    '',
     'AppWrapper',
     'bool',
     'string',
@@ -70,34 +64,26 @@ export default function getTestDB() {
     source: null,
   }
   let propTypes = { nameId: propTypesName, source: 'prop-types' }
-  let importReact = { nameId: reactName, source: 'react' }
-  let importStyled = { nameId: styledName, source: 'styled-components' }
   let appWrapperInvocation = {
-    nameId: appWrapperName, source: null, callParamIds: [], closed: true,
+    nameId: appWrapperName, source: null, callParamIds: [], closed: true, expressionId: 2,
   }
   let initialInvocations
-  [initialInvocations, reactChildren, importReact, propTypes, appWrapperInvocation, importStyled] =
-    addInvocations({}, reactChildren, importReact, propTypes, appWrapperInvocation, importStyled)
+  [initialInvocations, reactChildren, propTypes, appWrapperInvocation] =
+    addInvocations({}, reactChildren, propTypes, appWrapperInvocation)
 
   // expressions
-  let reactImport = {
-    nameId: noName, type: LOOKTHROUGH, exportType: false, invocationIds: [importReact],
-  }
-  let styledImport = {
-    nameId: noName, type: LOOKTHROUGH, exportType: false, invocationIds: [importStyled],
-  }
   let appComponent = {
     nameId: appDirName, invocationIds: [appWrapperInvocation], declParamIds,
   }
   let appWrapper = { nameId: appWrapperName, type: STYLED_COMPONENT, tag: 'div' }
   let initialExpressions
-  [initialExpressions, reactImport, appComponent, appWrapper, styledImport] =
-    addExpressions({}, reactImport, appComponent, appWrapper, styledImport)
+  [initialExpressions, appComponent, appWrapper] =
+    addExpressions({}, appComponent, appWrapper)
 
   // files
   const indexFile = { nameId: indexName }
-  const appFile = { nameId: appIndexIdName, expressionIds: [reactImport, appComponent] }
-  const appWrapperFile = { nameId: appWrapperName, expressionIds: [appWrapper, styledImport] }
+  const appFile = { nameId: appIndexIdName, expressionIds: [appComponent] }
+  const appWrapperFile = { nameId: appWrapperName, expressionIds: [appWrapper] }
   const [initialFiles, appFileId, indexFileId, appWrapperFileId] =
     addFiles({}, appFile, indexFile, appWrapperFile)
 
