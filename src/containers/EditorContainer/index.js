@@ -29,7 +29,7 @@ class EditorContainer extends React.Component {
       ...props
     } = this.props
     return connectEditorTarget(
-      <div>
+      <div style={{ overflow: 'scroll', paddingBottom: '200px' }}>
         <Editor {...props} />
       </div>
     )
