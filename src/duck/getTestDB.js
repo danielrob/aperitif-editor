@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { addNames, addDeclParams, addFiles, addExpressions, addInvocations } from 'model-utils'
-import { DIR, LOOKTHROUGH, STYLED_COMPONENT, PARAM_INVOCATION } from 'constantz'
+import { DIR, STYLED_COMPONENT, PARAM_INVOCATION } from 'constantz'
 
 export const REACT_CHILDREN_DECLARATION_PARAM_ID = 2
 export const REACT_CHILDREN_CALL_PARAM_ID = 1

@@ -9,10 +9,10 @@ import { CIDropzones } from '../components'
 
 class IntermediaryDropzonesContainer extends React.Component {
   render() {
-    const { connectDropTarget, isOverThisDropzone, ...props } = this.props
+    const { connectDropTarget, isOverThisDropzone, inline, ...props } = this.props
 
     return connectDropTarget(
-      <div style={{ margin: '-15px', padding: '15px', display: 'relative' }}>
+      <div style={{ margin: '-15px', padding: '15px', display: inline ? 'inline-block' : 'block' }}>
         <CIDropzones {...props} shouldDisplay={isOverThisDropzone} />
       </div>
     )

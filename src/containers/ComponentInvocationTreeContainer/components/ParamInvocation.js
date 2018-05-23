@@ -15,6 +15,7 @@ const ParamInvocation = ({
   chainedInvocations,
   isPIDragging,
   parentId,
+  inline,
   name,
   depth,
 }) => {
@@ -22,7 +23,7 @@ const ParamInvocation = ({
 
   return isPIDragging ? null : (
     <React.Fragment>
-      {indent(depth)}
+      {!inline && indent(depth)}
       {connectDragSource(
         <div className="dragsource">
           {'{'}
@@ -47,6 +48,7 @@ const ParamInvocation = ({
   )
 }
 export default styled(ParamInvocation).as.div`
+  ${props => props.inline && 'display: inline-block;'}
   color: ${theme.colors.darkblue}
   .dragsource {
     display: inline-block;
@@ -63,6 +65,7 @@ ParamInvocation.propTypes = forbidExtraProps({
   declIsSpreadMember: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
   chainedInvocations: T.arrayOf(T.shape({})),
+  inline: T.bool.isRequired,
 })
 
 ParamInvocation.defaultProps = {

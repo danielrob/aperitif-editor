@@ -16,6 +16,7 @@ export const makeGetInvocation = () => createSelector(
       type,
       invocationIds,
       callParamIds,
+      inline,
       closed,
       pseudoSpreadPropsNameId,
       hasPropsSpread,
@@ -48,6 +49,7 @@ export const makeGetInvocation = () => createSelector(
           declIsSpreadMember: isSpreadMember,
         }
       }),
+      inline,
       closed: !!closed,
       pseudoSpreadPropsName: names[pseudoSpreadPropsNameId],
       hasPropsSpread,

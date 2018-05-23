@@ -289,6 +289,7 @@ export default function appReducer(state = getTestDB(), action) {
         nameId: newName,
         invocationIds: [paramInvocation],
         expressionId: styledExpression,
+        inline: true,
       };
       [nextInvocations, styledInvocation] = addInvocations(nextInvocations, styledInvocation)
 
@@ -296,6 +297,7 @@ export default function appReducer(state = getTestDB(), action) {
         invocation => ({
           ...insertAtKey(invocation, 'invocationIds', styledInvocation, targetPosition),
           closed: false,
+          inline: false,
         })
       )
 
@@ -391,6 +393,7 @@ export default function appReducer(state = getTestDB(), action) {
           const updater = invocation => ({
             ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
             closed: false,
+            inline: false,
           })
           return update(nextInvocations, targetInvocationId, updater)
         }
@@ -485,6 +488,7 @@ export default function appReducer(state = getTestDB(), action) {
           const updater = invocation => ({
             ...insertAtKey(invocation, 'invocationIds', paramInvocation, targetPosition),
             closed: false,
+            inline: false,
           })
           return update(nextInvocations, targetInvocationId, updater)
         }
@@ -538,6 +542,7 @@ export default function appReducer(state = getTestDB(), action) {
           const updater = invocation => ({
             ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
             closed: false,
+            inline: false,
           })
           return update(nextInvocations, targetInvocationId, updater)
         }
@@ -591,6 +596,7 @@ export default function appReducer(state = getTestDB(), action) {
           const updater = invocation => ({
             ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
             closed: false,
+            inline: false,
           })
           return update(nextInvocations, targetInvocationId, updater)
         }

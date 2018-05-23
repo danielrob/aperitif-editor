@@ -11,7 +11,7 @@ const types = {
   [PARAM_INVOCATION]: ParamInvocationContainer,
 }
 
-const InvocationChildren = ({ invocationId: parentId, childInvocations, depth }) =>
+const InvocationChildren = ({ invocationId: parentId, childInvocations, inline, depth }) =>
   childInvocations.reduce(
     (out, { id: invocationId, type }, position) => {
       const Component = types[type] || ComponentInvocationTreeContainer
@@ -21,17 +21,20 @@ const InvocationChildren = ({ invocationId: parentId, childInvocations, depth })
           key={invocationId}
           parentId={parentId}
           invocationId={invocationId}
+          inline={inline}
           depth={depth + 1}
         />
       )
-      out.push(
-        <IntermediaryDropzonesContainer
-          key={`after-${invocationId}-dropzone`}
-          invocationId={parentId}
-          depth={depth}
-          position={position}
-        />
-      )
+      if (!inline) {
+        out.push(
+          <IntermediaryDropzonesContainer
+            key={`after-${invocationId}-dropzone`}
+            invocationId={parentId}
+            depth={depth}
+            position={position}
+          />
+        )
+      }
       return out
     },
     []

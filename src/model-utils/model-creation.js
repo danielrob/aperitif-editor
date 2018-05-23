@@ -66,5 +66,6 @@ export const addInvocations = getEntitiesAdder({
   hasPropsSpread: false,
   pseudoSpreadPropsNameId: null,
   expressionId: null,
+  inline: false,
 })
 

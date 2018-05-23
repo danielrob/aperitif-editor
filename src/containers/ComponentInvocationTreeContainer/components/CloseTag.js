@@ -1,9 +1,9 @@
 import React from 'react'
 import { indent } from 'utils'
 
-const CloseTag = ({ depth, name, shouldDisplay }) => shouldDisplay ? (
+const CloseTag = ({ depth, inline, name, shouldDisplay }) => shouldDisplay ? (
   <span>
-    {indent(depth)}
+    {!inline && indent(depth)}
     {'<'}/{name}{'>'}
   </span>
 ) : null

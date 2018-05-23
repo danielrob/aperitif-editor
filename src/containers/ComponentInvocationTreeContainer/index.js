@@ -18,17 +18,19 @@ class ComponentInvocationTreeContainer extends React.Component {
       connectDragSource,
       componentInvocationRef,
       isDragging,
+      inline,
       ...props
     } = this.props
     const { isOverCIT1, isOverCIT2, closed } = props
     const isOverCI = isOverCIT1 || isOverCIT2
     const isClosed = closed && (!isOverCI || C.boolean(props.dragItem.payload))
+    const doInline = inline && !isOverCI
 
     // https://github.com/react-dnd/react-dnd/issues/998
     return !isDragging ? connectDragSource(
       <div>
         <div ref={componentInvocationRef} style={{ display: 'table', width: 'auto' }}>
-          <ComponentInvocationTree {...props} isOverCI={isOverCI} closed={isClosed} />
+          <ComponentInvocationTree {...props} inline={doInline} isOverCI={isOverCI} closed={isClosed} />
         </div>
       </div>
     ) : null
@@ -105,12 +107,14 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
 
   // injected by makeGetInvocation
   nameId: T.number.isRequired,
+  name: T.string.isRequired,
   childInvocations: T.arrayOf(T.object).isRequired,
   callParamIds: T.arrayOf(T.number).isRequired,
   callParams: T.arrayOf(T.object).isRequired,
   paramChildren: T.arrayOf(T.object),
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
+  inline: T.bool.isRequired,
   pseudoSpreadPropsName: T.string,
 
   // Injected by React DnD:

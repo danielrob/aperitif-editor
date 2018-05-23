@@ -20,10 +20,10 @@ const Editor = ({ imports, expressions, defaultExport, connectActiveEditorAreaTa
       {expressions.map(expression => {
         const Renderer = renderers[expression.type] || Standard
         return (
-          <React.Fragment>
-            <Renderer key={expression.id} {...expression} />
+          <div key={expression.id}>
+            <Renderer {...expression} />
             <br />
-          </React.Fragment>
+          </div>
         )
       })}
       <DefaultExport key="defaultExport" name={defaultExport} />

@@ -61,6 +61,7 @@ ParamInvocationContainer.propTypes = forbidExtraProps({
   isPIDragging: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
   chainedInvocations: T.arrayOf(T.shape({})),
+  inline: T.bool.isRequired,
 })
 
 ParamInvocationContainer.defaultProps = {

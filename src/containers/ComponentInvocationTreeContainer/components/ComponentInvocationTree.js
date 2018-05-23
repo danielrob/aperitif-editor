@@ -12,20 +12,20 @@ import { InvocationChildren, CloseTag, CIDropzones } from './'
 const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, ...props }) => (
   <React.Fragment>
     {connectDropTarget(
-      <div>
+      <div style={{ display: 'inline-block' }}>
         <OpenTagContainer {...props} />
         <CIDropzones {...props} position={0} shouldDisplay={props.isOverCIT1 && !props.closed} />
       </div>
     )}
     <InvocationChildren {...props} />
     {connectClosingDropTarget(
-      <div>
+      <div style={{ display: props.inline ? 'inline-block' : 'block' }}>
         <CIDropzones
           {...props}
           position={props.childInvocations.length}
           shouldDisplay={props.isOverCIT2 && !props.closed}
         />
-        <CloseTag name={props.name} depth={props.depth} shouldDisplay={!props.closed} />
+        <CloseTag name={props.name} depth={props.depth} inline={props.inline} shouldDisplay={!props.closed} />
       </div>
     )}
   </React.Fragment>
@@ -56,6 +56,7 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
   pseudoSpreadPropsName: T.string,
+  inline: T.bool.isRequired,
 
   // Injected by React DnD:
   connectDropTarget: T.func.isRequired,

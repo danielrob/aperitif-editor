@@ -83,7 +83,7 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
 }
 
 export default styled(CIDropzones).as.div`
-  display: flex;
+  display: ${props => props.shouldDisplay ? 'flex' : 'none'};
   line-height: 1.4;
 `
 

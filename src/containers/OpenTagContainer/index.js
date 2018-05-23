@@ -19,6 +19,7 @@ class OpenTagContainer extends React.Component {
       callParams,
       closed,
       hasPropsSpread,
+      inline,
       depth,
       dragItem,
       isOverOpenTag,
@@ -33,6 +34,7 @@ class OpenTagContainer extends React.Component {
         closed={closed}
         hasPropsSpread={hasPropsSpread}
         pseudoSpreadPropsName={pseudoSpreadPropsName}
+        inline={inline}
         depth={depth}
         dragItem={dragItem}
         isOverOpenTag={isOverOpenTag}
@@ -100,6 +102,7 @@ OpenTagContainer.propTypes = {
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
   pseudoSpreadPropsName: T.string,
+  inline: T.bool.isRequired,
   depth: T.number.isRequired,
   // ...spread - see ComponentInvocationTree
 

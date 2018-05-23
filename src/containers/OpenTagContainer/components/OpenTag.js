@@ -73,7 +73,8 @@ const OpenTag = ({
   )
 }
 
-export default styled(OpenTag).as.div.attrs({ style: { userSelect: 'text' } })`
+export default styled(OpenTag).as.div`
+  ${props => props.inline && 'display: inline-block;'}
   .new-attribute-preview {
     color: ${theme.color.darkgreen};
     transition: 250ms;
@@ -82,7 +83,6 @@ export default styled(OpenTag).as.div.attrs({ style: { userSelect: 'text' } })`
 
 /* propTypes */
 OpenTag.propTypes = forbidExtraProps({
-  name: T.string.isRequired,
   nameId: T.number.isRequired,
   callParams: T.arrayOf(T.shape({
     id: T.number.isRequired,
@@ -93,6 +93,7 @@ OpenTag.propTypes = forbidExtraProps({
   closed: T.bool.isRequired,
   hasPropsSpread: T.bool.isRequired,
   pseudoSpreadPropsName: T.string,
+  inline: T.bool.isRequired,
   depth: T.number.isRequired,
 
   // for wrapper
