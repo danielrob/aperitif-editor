@@ -15,7 +15,7 @@ class OpenTagContainer extends React.Component {
   render() {
     const {
       connectDropTarget,
-      name,
+      nameId,
       callParams,
       closed,
       hasPropsSpread,
@@ -28,7 +28,7 @@ class OpenTagContainer extends React.Component {
     return (
       <OpenTag
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        name={name}
+        nameId={nameId}
         callParams={callParams}
         closed={closed}
         hasPropsSpread={hasPropsSpread}
@@ -90,6 +90,7 @@ export default compose(
 /* propTypes */
 OpenTagContainer.propTypes = {
   name: T.string.isRequired,
+  nameId: T.number.isRequired,
   callParams: T.arrayOf(T.shape({
     id: T.number.isRequired,
     name: T.string.isRequired,

@@ -22,6 +22,7 @@ export const makeGetInvocation = () => createSelector(
     } = invocation
 
     return {
+      nameId,
       name: names[nameId],
       type,
       childInvocations: invocationIds.map(id => invocations[id]),

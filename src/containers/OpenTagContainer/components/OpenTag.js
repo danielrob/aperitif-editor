@@ -7,11 +7,12 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 import { PROP, PROPS_SPREAD } from 'constantz'
 import { indent } from 'utils'
+import { Input } from 'components'
 
 import { canDropPropToOpenTag } from '../helpers'
 
 const OpenTag = ({
-  name,
+  nameId,
   isOverOpenTag,
   dragItem,
   callParams,
@@ -29,7 +30,7 @@ const OpenTag = ({
 
   return (
     <React.Fragment>
-      {indent(depth)}{`<${name}`}
+      {indent(depth)}{'<'}<Input pointer nameId={nameId} />
       {keyParam && (
         <span>
           {' '}{keyParam.name}={'{'}{keyParam.valueString}{'}'}
@@ -82,6 +83,7 @@ export default styled(OpenTag).as.div.attrs({ style: { userSelect: 'text' } })`
 /* propTypes */
 OpenTag.propTypes = forbidExtraProps({
   name: T.string.isRequired,
+  nameId: T.number.isRequired,
   callParams: T.arrayOf(T.shape({
     id: T.number.isRequired,
     name: T.string.isRequired,

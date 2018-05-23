@@ -104,7 +104,7 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
   ciDimensions: T.shape({ clientWidth: T.number, clientHeight: T.number }).isRequired,
 
   // injected by makeGetInvocation
-  name: T.string.isRequired,
+  nameId: T.number.isRequired,
   childInvocations: T.arrayOf(T.object).isRequired,
   callParamIds: T.arrayOf(T.number).isRequired,
   callParams: T.arrayOf(T.object).isRequired,

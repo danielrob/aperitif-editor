@@ -48,6 +48,7 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
 
   // injected by makeGetInvocation
   name: T.string.isRequired,
+  nameId: T.number.isRequired,
   childInvocations: T.arrayOf(T.object).isRequired,
   callParamIds: T.arrayOf(T.number).isRequired,
   callParams: T.arrayOf(T.object).isRequired,

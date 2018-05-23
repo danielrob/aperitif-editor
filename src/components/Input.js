@@ -20,6 +20,12 @@ class Input extends React.Component {
     changeName({ nameId, value: nextName })
   }
 
+  componentDidMount() {
+    if (this.props.pointer) {
+      this.inputRef.style.cursor = 'pointer'
+    }
+  }
+
   render() {
     const { name } = this.props
     const input = {
