@@ -13,6 +13,7 @@ import {
   addNewComponentToInvocationWithSpread,
   addNewComponentToInvocationWithAttribute,
   addNewComponentToInvocationWithChildren,
+  addNewStyledComponentToInvocation,
   moveInvocation,
 } from 'duck'
 import { REACT_CHILDREN_INVOCATION_ID } from 'duck/getTestDB'
@@ -37,6 +38,7 @@ const mapDispatchToProps = {
   addNewComponentToInvocationWithSpread,
   addNewComponentToInvocationWithAttribute,
   addNewComponentToInvocationWithChildren,
+  addNewStyledComponentToInvocation,
   moveInvocation,
 }
 
@@ -47,6 +49,7 @@ const dropActionMap = {
   newWithMap: 'addNewComponentToInvocationWithMap',
   newWithAttribute: 'addNewComponentToInvocationWithAttribute',
   newWithChild: 'addNewComponentToInvocationWithChildren',
+  newStyled: 'addNewStyledComponentToInvocation',
 }
 
 const dropzoneTarget = {
@@ -110,6 +113,7 @@ PropDropzoneContainer.propTypes = forbidExtraProps({
   addNewComponentToInvocationWithSpread: T.func.isRequired,
   addNewComponentToInvocationWithAttribute: T.func.isRequired,
   addNewComponentToInvocationWithChildren: T.func.isRequired,
+  addNewStyledComponentToInvocation: T.func.isRequired,
   moveInvocation: T.func.isRequired,
 
   // React Dnd

@@ -4,6 +4,8 @@ import { singular } from 'pluralize'
 
 import {
   addNames,
+  addFiles,
+  addExpressions,
   addDeclParams,
   addCallParams,
   addInvocations,
@@ -16,7 +18,8 @@ import {
   updateAtKey,
   createComponentBundle,
 } from 'model-utils'
-import { DIR, componentExpressionTypes, PARAM_INVOCATION, LOOKTHROUGH } from 'constantz'
+import { DIR, componentExpressionTypes, PARAM_INVOCATION, STYLED_COMPONENT } from 'constantz'
+import { capitalize } from 'utils'
 
 import getTestDB, {
   REACT_CHILDREN_INVOCATION_ID,
@@ -33,6 +36,7 @@ export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP'
+export const ADD_NEW_STYLED_COMPONENT_TO_INVOCATION = 'ADD_NEW_STYLED_COMPONENT_TO_INVOCATION'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
@@ -252,6 +256,68 @@ export default function appReducer(state = getTestDB(), action) {
       nextInvocations = update(nextInvocations, targetInvocationId, updater)
 
       return update(state, 'invocations', nextInvocations)
+    }
+
+    case ADD_NEW_STYLED_COMPONENT_TO_INVOCATION: {
+      let {
+        names: nextNames,
+        files: nextFiles,
+        expressions: nextExpressions,
+        invocations: nextInvocations,
+        params: nextParams,
+      } = state
+
+      const {
+        targetInvocationId,
+        targetPosition,
+        prop: { paramId, name, nameId },
+      } = action.payload
+
+      let newName = capitalize(name);
+      [nextNames, newName] = addNames(nextNames, newName)
+
+      let styledExpression = { nameId: newName, type: STYLED_COMPONENT, tag: 'div' };
+      [nextExpressions, styledExpression] = addExpressions(nextExpressions, styledExpression)
+
+      let droppedCallParam = { declParamId: paramId };
+      [nextParams, droppedCallParam] = addCallParams(nextParams, droppedCallParam)
+
+      let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [droppedCallParam] };
+      [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
+
+      let styledInvocation = {
+        nameId: newName,
+        invocationIds: [paramInvocation],
+        expressionId: styledExpression,
+      };
+      [nextInvocations, styledInvocation] = addInvocations(nextInvocations, styledInvocation)
+
+      nextInvocations = update(nextInvocations, targetInvocationId,
+        invocation => ({
+          ...insertAtKey(invocation, 'invocationIds', styledInvocation, targetPosition),
+          closed: false,
+        })
+      )
+
+      let styleFile = { nameId: newName, expressionIds: [styledExpression] };
+      [nextFiles, styleFile] = addFiles(nextFiles, styleFile)
+
+      const dirId = Object.keys(nextFiles).find(
+        id => nextFiles[id].children.includes(state.currentFileId)
+      )
+
+      nextFiles = update(nextFiles, dirId,
+        dir => insertAtKey(dir, 'children', styleFile)
+      )
+
+      return {
+        ...state,
+        names: nextNames,
+        expressions: nextExpressions,
+        invocations: nextInvocations,
+        files: nextFiles,
+        params: nextParams,
+      }
     }
 
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD: {
@@ -553,6 +619,10 @@ export const addNewComponentToInvocationWithSpread = createAction(
 
 export const addNewComponentToInvocationWithMap = createAction(
   ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP
+)
+
+export const addNewStyledComponentToInvocation = createAction(
+  ADD_NEW_STYLED_COMPONENT_TO_INVOCATION
 )
 
 export const changeFile = createAction(

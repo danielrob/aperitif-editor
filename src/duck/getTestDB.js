@@ -22,7 +22,7 @@ export default function getTestDB() {
     appIndexIdName,
     propTypesName,
     appWrapperName,
-    p1, p2, p3, p4, p5,
+    p1, p2, p3, p4, p5, p6,
   ] = addNames(
     {},
     'children',
@@ -37,7 +37,8 @@ export default function getTestDB() {
     'string',
     'null',
     'arrays',
-    'object'
+    'object',
+    'number',
   )
 
   // params
@@ -50,6 +51,7 @@ export default function getTestDB() {
     { nameId: p3, payload: null },
     { nameId: p4, payload: [{ id: 2, name: 'woot', height: '1.82m' }] },
     { nameId: p5, payload: { yes: 'yes', we: 'we', spread: 'spread', array: [] } },
+    { nameId: p6, payload: 6 },
   ];
 
   [params, childrenParamId, ...declParamIds] = addDeclParams({
