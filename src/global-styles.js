@@ -11,6 +11,9 @@ injectGlobal`
   pre {
     font-family: 'Oxygen Mono', monospace;
   }
+  textarea {
+    resize: none;
+  }
 
   /* ----------------------------------------------------------------------------------------------------
   Super Form Reset

@@ -1,11 +1,10 @@
 import { partition } from 'lodash'
 import React from 'react'
-import { Line, Keyword } from 'components'
+import { Line, Keyword, Input } from 'components'
 import { ComponentInvocationTreeContainer } from 'containers'
 import { INLINE } from 'constantz'
 
 import { Props } from './components'
-import { Input } from './containers'
 
 export default class StatelessFunctionComponent extends React.Component {
   render() {

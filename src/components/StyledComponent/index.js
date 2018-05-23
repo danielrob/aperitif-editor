@@ -1,17 +1,17 @@
 import React from 'react'
-import { InvisibleTextArea } from 'components'
+import { Keyword, Backtick, Input } from 'components'
+
+import TemplateStringTextArea from './TemplateStringTextArea'
 
 export default class StyledComponent extends React.Component {
   render() {
-    const { name, tag } = this.props
+    const { nameId, tag } = this.props
 
     return (
       <div>
-        const {name} = styled.{tag}`
-        <br />
-        <InvisibleTextArea />
-        <br />
-        `
+        <Keyword>const</Keyword> <Input nameId={nameId} /> = styled.{tag}<Backtick />
+        <TemplateStringTextArea />
+        <Backtick />
       </div>
     )
   }
