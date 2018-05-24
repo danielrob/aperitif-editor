@@ -1,7 +1,7 @@
 import { uniqBy, sortBy } from 'lodash'
 import { createSelector } from 'reselect'
 
-import { PARAM_INVOCATION, STYLED_COMPONENT, STATELESS_FUNCTION_COMPONENT } from 'constantz'
+import { PARAM_INVOCATION, STYLED_COMPONENT, STATELESS_FUNCTION_COMPONENT, CLASS_COMPONENT } from 'constantz'
 import { composed } from 'utils'
 import { selectInvocations, getCurrentFileDeclarations, selectNames } from './baseSelectors'
 
@@ -18,7 +18,10 @@ const getCurrentFileImports = createSelector( // which also represent all import
         imports.push({ id: 'styled', importName: 'styled', source: 'styled-components', order: 1 })
       }
 
-      if (declarations.find(({ type }) => [STATELESS_FUNCTION_COMPONENT].includes(type))) {
+      if (
+        declarations.find(({ type }) =>
+          [STATELESS_FUNCTION_COMPONENT, CLASS_COMPONENT].includes(type))
+      ) {
         imports.push({ id: 'react', importName: 'React', source: 'react', order: 0 })
       }
 

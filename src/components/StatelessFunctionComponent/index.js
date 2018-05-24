@@ -1,8 +1,8 @@
 import { partition } from 'lodash'
 import React from 'react'
-import { Props, Line, Keyword, Input } from 'components'
+import { Props, Line, Keyword, Input, ComponentTypeToggle } from 'components'
 import { ComponentInvocationTreeContainer } from 'containers'
-import { INLINE } from 'constantz'
+import { INLINE, CLASS_COMPONENT } from 'constantz'
 
 export default class StatelessFunctionComponent extends React.Component {
   render() {
@@ -13,7 +13,11 @@ export default class StatelessFunctionComponent extends React.Component {
       <div>
         <Line>
           {exportType === INLINE && <Keyword>export</Keyword>}{' '}
-          <Keyword>const</Keyword>{' '}
+          <ComponentTypeToggle
+            declarationId={declarationId}
+            targetType={CLASS_COMPONENT}
+            text="const "
+          />
           <Input nameId={nameId} /> =
           <Props params={params} spreadParams={spreadParams} declarationId={declarationId} />
            => (

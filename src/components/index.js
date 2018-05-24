@@ -1,6 +1,7 @@
 export { default as Props } from './Props'
 export { default as Backtick } from './Backtick'
 export { default as ClassComponent } from './ClassComponent'
+export { default as ComponentTypeToggle } from './ComponentTypeToggle'
 export { default as Flex } from './Flex'
 export { default as Footer } from './Footer'
 export { default as Header } from './Header'

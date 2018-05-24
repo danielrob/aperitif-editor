@@ -46,6 +46,7 @@ export const CHANGE_DECLARATION_TEXT = 'CHANGE_DECLARATION_TEXT'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
 export const MERGE_FILE = 'MERGE_FILE'
 export const SET_PARAM_IS_SPREAD_MEMBER_TRUE = 'SET_PARAM_IS_SPREAD_MEMBER_TRUE'
+export const TOGGLE_COMPONENT_TYPE = 'TOGGLE_COMPONENT_TYPE'
 
 export default function appReducer(state = getTestDB(), action) {
   switch (action.type) {
@@ -62,6 +63,14 @@ export default function appReducer(state = getTestDB(), action) {
 
       return update(state, 'declarations',
         declarations => updateAtKey(declarations, declarationId, 'text', value)
+      )
+    }
+
+    case TOGGLE_COMPONENT_TYPE: {
+      const { declarationId, targetType } = action.payload
+
+      return update(state, 'declarations',
+        declarations => updateAtKey(declarations, declarationId, 'type', targetType)
       )
     }
 
@@ -681,4 +690,8 @@ export const changeName = createAction(
 
 export const changeDeclarationText = createAction(
   CHANGE_DECLARATION_TEXT
+)
+
+export const toggleComponentType = createAction(
+  TOGGLE_COMPONENT_TYPE
 )

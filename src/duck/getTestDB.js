@@ -165,7 +165,7 @@ export default function getTestDB() {
     rootFiles: [appDir, appContainerDir, indexFile],
     declarations: initialDeclarations,
     invocations: initialInvocations,
-    currentFileId: indexFile,
+    currentFileId: appFile,
     params,
   }
 }

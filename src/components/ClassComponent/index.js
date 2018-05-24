@@ -1,19 +1,23 @@
 import React from 'react'
-import { Keyword, Input } from 'components'
+import { Keyword, Input, ComponentTypeToggle } from 'components'
 import { ComponentInvocationTreeContainer } from 'containers'
-import { INLINE } from 'constantz'
+import { INLINE, STATELESS_FUNCTION_COMPONENT } from 'constantz'
 import { indent } from 'utils'
 import styled from 'styled-as-components'
 
 class ClassComponent extends React.Component {
   render() {
-    const { exportType, nameId, invocations } = this.props
+    const { declarationId, exportType, nameId, invocations } = this.props
 
     return (
       <React.Fragment>
         {/* open */}
         {exportType === INLINE && <Keyword>export</Keyword>}{' '}
-        <Keyword>class </Keyword>
+        <ComponentTypeToggle
+          declarationId={declarationId}
+          targetType={STATELESS_FUNCTION_COMPONENT}
+          text="class "
+        />
         <Input nameId={nameId} /> <Keyword> extends </Keyword> React.Component {'{'}
         <br />
         {/* constructor */}
