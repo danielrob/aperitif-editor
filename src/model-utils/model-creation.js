@@ -26,7 +26,7 @@ export const addDeclParams = getEntitiesAdder({
   nameId: required,
   payload: null,
   // type specific items
-  isSpreadMember: false, // react component expressions
+  isSpreadMember: false, // react component declarations
   count: null,
 })
 
@@ -42,10 +42,10 @@ export const addFiles = getEntitiesAdder({
   nameId: required,
   type: JS,
   children: [],
-  expressionIds: [],
+  declarationIds: [],
 })
 
-export const addExpressions = getEntitiesAdder({
+export const addDeclarations = getEntitiesAdder({
   nameId: required,
   type: STATELESS_FUNCTION_COMPONENT,
   declParamIds: [],
@@ -65,7 +65,7 @@ export const addInvocations = getEntitiesAdder({
   closed: false, // component-invocation
   hasPropsSpread: false,
   pseudoSpreadPropsNameId: null,
-  expressionId: null,
+  declarationId: null,
   inline: false,
 })
 

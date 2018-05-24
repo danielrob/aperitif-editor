@@ -5,7 +5,7 @@ import { singular } from 'pluralize'
 import {
   addNames,
   addFiles,
-  addExpressions,
+  addDeclarations,
   addDeclParams,
   addCallParams,
   addInvocations,
@@ -18,7 +18,7 @@ import {
   updateAtKey,
   createComponentBundle,
 } from 'model-utils'
-import { DIR, componentExpressionTypes, PARAM_INVOCATION, STYLED_COMPONENT } from 'constantz'
+import { DIR, componentDeclarationTypes, PARAM_INVOCATION, STYLED_COMPONENT } from 'constantz'
 import { capitalize } from 'utils'
 
 import getTestDB, {
@@ -89,10 +89,10 @@ export default function appReducer(state = getTestDB(), action) {
 
 
     case ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
-      const { invocations, expressions, params } = state
+      const { invocations, declarations, params } = state
       const { targetInvocationId, prop: { paramId } } = action.payload
       const { nameId, payload } = params[paramId]
-      const invocationExpressionId = invocations[targetInvocationId].expressionId
+      const invocationDeclarationId = invocations[targetInvocationId].declarationId
 
       let nextState = state
       let nextParams = params
@@ -107,9 +107,9 @@ export default function appReducer(state = getTestDB(), action) {
       const updater = invocation => insertAtKey(invocation, 'callParamIds', callParam, 0)
       nextInvocations = update(nextInvocations, targetInvocationId, updater)
 
-      // update the target invocations expression with new param info if relevant
-      if (invocationExpressionId) {
-        const { declParamIds, ...expression } = expressions[invocationExpressionId]
+      // update the target invocations declaration with new param info if relevant
+      if (invocationDeclarationId) {
+        const { declParamIds, ...declaration } = declarations[invocationDeclarationId]
         const nameMatchParamId = declParamIds.find(id => params[id].nameId === nameId)
 
         if (nameMatchParamId) {
@@ -123,8 +123,8 @@ export default function appReducer(state = getTestDB(), action) {
           [nextParams, newDeclParam] = addDeclParams(nextParams, newDeclParam)
           nextState = update(nextState, 'params', nextParams)
 
-          nextState = updateAtKey(nextState, 'expressions', invocationExpressionId, ({
-            ...expression,
+          nextState = updateAtKey(nextState, 'declarations', invocationDeclarationId, ({
+            ...declaration,
             declParamIds: [...declParamIds, newDeclParam],
           }))
         }
@@ -163,7 +163,7 @@ export default function appReducer(state = getTestDB(), action) {
 
 
     case ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION: {
-      const { names, invocations, files, expressions } = state
+      const { names, invocations, files, declarations } = state
       const { targetInvocationId, targetPosition, fileId, isDirectory } = action.payload
 
       let file = files[fileId]
@@ -171,16 +171,16 @@ export default function appReducer(state = getTestDB(), action) {
         file = files[file.children.find(id => names[files[id].nameId] === 'index')]
       }
 
-      const expressionId = file.expressionIds.find(
-        id => componentExpressionTypes.includes(expressions[id].type)
+      const declarationId = file.declarationIds.find(
+        id => componentDeclarationTypes.includes(declarations[id].type)
       )
 
       /* CREATES */
       let [nextInvocations, newInvocationId] = // eslint-disable-line prefer-const
         addInvocations(invocations, {
-          nameId: expressions[expressionId].nameId,
+          nameId: declarations[declarationId].nameId,
           closed: true,
-          expressionId,
+          declarationId,
         })
 
       /* UPDATES */
@@ -195,11 +195,11 @@ export default function appReducer(state = getTestDB(), action) {
       return update(state, 'files', files => {
         let nextFiles = files
 
-        // add expressions to other file
+        // add declarations to other file
         nextFiles = update(nextFiles, targetFileId,
-          file => update(file, 'expressionIds', ids => [
+          file => update(file, 'declarationIds', ids => [
             ...ids,
-            ...files[sourceFileId].expressionIds,
+            ...files[sourceFileId].declarationIds,
           ])
         )
 
@@ -262,7 +262,7 @@ export default function appReducer(state = getTestDB(), action) {
       let {
         names: nextNames,
         files: nextFiles,
-        expressions: nextExpressions,
+        declarations: nextDeclarations,
         invocations: nextInvocations,
         params: nextParams,
       } = state
@@ -276,8 +276,8 @@ export default function appReducer(state = getTestDB(), action) {
       let newName = capitalize(name);
       [nextNames, newName] = addNames(nextNames, newName)
 
-      let styledExpression = { nameId: newName, type: STYLED_COMPONENT, tag: 'div' };
-      [nextExpressions, styledExpression] = addExpressions(nextExpressions, styledExpression)
+      let styledDeclaration = { nameId: newName, type: STYLED_COMPONENT, tag: 'div' };
+      [nextDeclarations, styledDeclaration] = addDeclarations(nextDeclarations, styledDeclaration)
 
       let droppedCallParam = { declParamId: paramId };
       [nextParams, droppedCallParam] = addCallParams(nextParams, droppedCallParam)
@@ -288,7 +288,7 @@ export default function appReducer(state = getTestDB(), action) {
       let styledInvocation = {
         nameId: newName,
         invocationIds: [paramInvocation],
-        expressionId: styledExpression,
+        declarationId: styledDeclaration,
         inline: true,
       };
       [nextInvocations, styledInvocation] = addInvocations(nextInvocations, styledInvocation)
@@ -301,7 +301,7 @@ export default function appReducer(state = getTestDB(), action) {
         })
       )
 
-      let styleFile = { nameId: newName, expressionIds: [styledExpression] };
+      let styleFile = { nameId: newName, declarationIds: [styledDeclaration] };
       [nextFiles, styleFile] = addFiles(nextFiles, styleFile)
 
       const dirId = Object.keys(nextFiles).find(
@@ -315,7 +315,7 @@ export default function appReducer(state = getTestDB(), action) {
       return {
         ...state,
         names: nextNames,
-        expressions: nextExpressions,
+        declarations: nextDeclarations,
         invocations: nextInvocations,
         files: nextFiles,
         params: nextParams,
@@ -365,8 +365,8 @@ export default function appReducer(state = getTestDB(), action) {
 
       // new component bundle
       let componentName
-      let newComponentExpressionId
-      [nextState, componentName, newComponentExpressionId] =
+      let newComponentDeclarationId
+      [nextState, componentName, newComponentDeclarationId] =
         createComponentBundle({
           baseName,
           state: nextState,
@@ -377,7 +377,7 @@ export default function appReducer(state = getTestDB(), action) {
       // add / update invocations
       let newComponentInvocation = {
         nameId: componentName,
-        expressionId: newComponentExpressionId,
+        declarationId: newComponentDeclarationId,
         callParamIds: [],
         pseudoSpreadPropsNameId: pseudoSpreadPropsName,
         closed: true,
@@ -454,8 +454,8 @@ export default function appReducer(state = getTestDB(), action) {
 
       // new component bundle
       let componentName
-      let newComponentExpressionId
-      [nextState, componentName, newComponentExpressionId] =
+      let newComponentDeclarationId
+      [nextState, componentName, newComponentDeclarationId] =
         createComponentBundle({
           baseName,
           state: nextState,
@@ -466,7 +466,7 @@ export default function appReducer(state = getTestDB(), action) {
       // add / update invocations
       let newComponentInvocation = {
         nameId: componentName,
-        expressionId: newComponentExpressionId,
+        declarationId: newComponentDeclarationId,
         callParamIds: [keyCallParam],
         pseudoSpreadPropsNameId: mapPseudoParamName,
         closed: true,
@@ -508,8 +508,8 @@ export default function appReducer(state = getTestDB(), action) {
 
       // component bundle
       let componentName
-      let newComponentExpressionId
-      [nextState, componentName, newComponentExpressionId] =
+      let newComponentDeclarationId
+      [nextState, componentName, newComponentDeclarationId] =
         createComponentBundle({
           baseName,
           state: nextState,
@@ -526,7 +526,7 @@ export default function appReducer(state = getTestDB(), action) {
       })
 
       // add / update invocations
-      let newComponentInvocation = { nameId: componentName, expressionId: newComponentExpressionId }
+      let newComponentInvocation = { nameId: componentName, declarationId: newComponentDeclarationId }
       let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [newCallParam] }
 
       nextState = update(nextState, 'invocations',
@@ -573,16 +573,16 @@ export default function appReducer(state = getTestDB(), action) {
 
       // component bundle
       let componentName
-      let newComponentExpressionId
+      let newComponentDeclarationId
 
-      [nextState, componentName, newComponentExpressionId] =
+      [nextState, componentName, newComponentDeclarationId] =
         createComponentBundle({ baseName, state: nextState, declParamIds: [newDeclParam] })
 
       // add & update invocations
       let newComponentInvocation = {
         nameId: componentName,
         callParamIds: [newCallParam],
-        expressionId: newComponentExpressionId,
+        declarationId: newComponentDeclarationId,
         closed: true,
       }
 

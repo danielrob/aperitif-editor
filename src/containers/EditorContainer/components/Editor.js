@@ -12,16 +12,16 @@ const renderers = {
   [STYLED_COMPONENT]: StyledComponent,
 }
 
-const Editor = ({ imports, expressions, defaultExport, connectActiveEditorAreaTarget }) =>
+const Editor = ({ imports, declarations, defaultExport, connectActiveEditorAreaTarget }) =>
   connectActiveEditorAreaTarget(
     <div className="active-zone">
       <Imports key="imports" imports={imports} />
       <br />
-      {expressions.map(expression => {
-        const Renderer = renderers[expression.type] || Standard
+      {declarations.map(declaration => {
+        const Renderer = renderers[declaration.type] || Standard
         return (
-          <div key={expression.id}>
-            <Renderer {...expression} />
+          <div key={declaration.id}>
+            <Renderer {...declaration} />
             <br />
           </div>
         )

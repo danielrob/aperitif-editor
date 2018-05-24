@@ -5,21 +5,21 @@ import { DIR, STYLED_COMPONENT } from 'constantz'
 import {
   addNames,
   addFiles,
-  addExpressions,
+  addDeclarations,
   addInvocations,
 } from './model-creation'
 
 const createComponentBundle = ({
   baseName,
   state,
-  state: { names, files, rootFiles, expressions, invocations },
+  state: { names, files, rootFiles, declarations, invocations },
   declParamIds = [],
   invocationIds = [],
 }) => {
   let nextNames = names
   let nextFiles = files
   let nextRootFiles = rootFiles
-  let nextExpressions = expressions
+  let nextDeclarations = declarations
   let nextInvocations = invocations
 
   /* names - for the new component bundle */
@@ -30,8 +30,8 @@ const createComponentBundle = ({
   [nextNames, dirName, indexName, wrapperName] = addNames(names, dirName, indexName, wrapperName)
 
   // NEW COMPONENT WRAPPER
-  let wrapperExpression = { nameId: wrapperName, type: STYLED_COMPONENT, tag: 'div' };
-  [nextExpressions, wrapperExpression] = addExpressions(nextExpressions, wrapperExpression)
+  let wrapperDeclaration = { nameId: wrapperName, type: STYLED_COMPONENT, tag: 'div' };
+  [nextDeclarations, wrapperDeclaration] = addDeclarations(nextDeclarations, wrapperDeclaration)
 
   // the invocation of the wrapper component in the new component definition
   let wrapperInvoke = {
@@ -39,24 +39,24 @@ const createComponentBundle = ({
     source: null,
     invocationIds,
     closed: !invocationIds.length,
-    expressionId: wrapperExpression,
+    declarationId: wrapperDeclaration,
   };
 
   [nextInvocations, wrapperInvoke] = addInvocations(nextInvocations, wrapperInvoke)
 
   // NEW COMPONENT
-  let newComponentExpression = {
+  let newComponentDeclaration = {
     nameId: dirName,
     invocationIds: [wrapperInvoke],
     declParamIds,
   };
 
-  [nextExpressions, newComponentExpression] =
-    addExpressions(nextExpressions, newComponentExpression)
+  [nextDeclarations, newComponentDeclaration] =
+    addDeclarations(nextDeclarations, newComponentDeclaration)
 
-  /* files - for each expression + index */
-  let indexFile = { nameId: indexName, expressionIds: [newComponentExpression] }
-  let wrapperFile = { nameId: wrapperName, expressionIds: [wrapperExpression] };
+  /* files - for each declaration + index */
+  let indexFile = { nameId: indexName, declarationIds: [newComponentDeclaration] }
+  let wrapperFile = { nameId: wrapperName, declarationIds: [wrapperDeclaration] };
   [nextFiles, indexFile, wrapperFile] = addFiles(files, indexFile, wrapperFile)
 
   /* dirs */
@@ -69,13 +69,13 @@ const createComponentBundle = ({
     {
       ...state,
       names: nextNames,
-      expressions: nextExpressions,
+      declarations: nextDeclarations,
       invocations: nextInvocations,
       rootFiles: nextRootFiles,
       files: nextFiles,
     },
     dirName,
-    newComponentExpression,
+    newComponentDeclaration,
   ]
 }
 

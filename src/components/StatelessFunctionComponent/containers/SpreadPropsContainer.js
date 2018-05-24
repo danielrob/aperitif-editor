@@ -43,10 +43,10 @@ const sourceCollect = (connect, monitor) => ({
 // target
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { expressionId, moveParamToSpread } = props
+    const { declarationId, moveParamToSpread } = props
     const { paramId } = monitor.getItem()
     moveParamToSpread({
-      expressionId,
+      declarationId,
       paramId,
     })
   },

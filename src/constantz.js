@@ -10,27 +10,27 @@ export const DIR = 'dir'
 export const fileTypes = { JS, DIR }
 export const fileTypesArray = [JS, DIR]
 
-/* expressionTypes */
+/* declarationTypes */
 export const LOOKTHROUGH = "I'm all about my invocation, that's it"
 export const STATELESS_FUNCTION_COMPONENT = 'stateless_function_component'
 export const STYLED_COMPONENT = 'styled_component'
 export const STANDARD = 'standard'
 
-export const expressionTypes = {
+export const declarationTypes = {
   LOOKTHROUGH,
   STATELESS_FUNCTION_COMPONENT,
   STYLED_COMPONENT,
   STANDARD,
 }
 
-export const componentExpressionTypes = [
+export const componentDeclarationTypes = [
   STATELESS_FUNCTION_COMPONENT,
   STYLED_COMPONENT,
 ]
 
 /* export types */
 export const DEFAULT = 'export default'
-export const DEFAULT_INLINE = 'export default <expression>'
+export const DEFAULT_INLINE = 'export default <declaration>'
 export const INLINE = 'export when declared'
 
 export const exportTypes = {

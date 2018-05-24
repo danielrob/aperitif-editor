@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { addNames, addDeclParams, addFiles, addExpressions, addInvocations } from 'model-utils'
+import { addNames, addDeclParams, addFiles, addDeclarations, addInvocations } from 'model-utils'
 import { DIR, STYLED_COMPONENT, PARAM_INVOCATION } from 'constantz'
 
 export const REACT_CHILDREN_DECLARATION_PARAM_ID = 2
@@ -67,25 +67,25 @@ export default function getTestDB() {
   }
   let propTypes = { nameId: propTypesName, source: 'prop-types' }
   let appWrapperInvocation = {
-    nameId: appWrapperName, source: null, callParamIds: [], closed: true, expressionId: 2,
+    nameId: appWrapperName, source: null, callParamIds: [], closed: true, declarationId: 2,
   }
   let initialInvocations
   [initialInvocations, reactChildren, propTypes, appWrapperInvocation] =
     addInvocations({}, reactChildren, propTypes, appWrapperInvocation)
 
-  // expressions
+  // declarations
   let appComponent = {
     nameId: appDirName, invocationIds: [appWrapperInvocation], declParamIds,
   }
   let appWrapper = { nameId: appWrapperName, type: STYLED_COMPONENT, tag: 'div' }
-  let initialExpressions
-  [initialExpressions, appComponent, appWrapper] =
-    addExpressions({}, appComponent, appWrapper)
+  let initialDeclarations
+  [initialDeclarations, appComponent, appWrapper] =
+    addDeclarations({}, appComponent, appWrapper)
 
   // files
   const indexFile = { nameId: indexName }
-  const appFile = { nameId: appIndexIdName, expressionIds: [appComponent] }
-  const appWrapperFile = { nameId: appWrapperName, expressionIds: [appWrapper] }
+  const appFile = { nameId: appIndexIdName, declarationIds: [appComponent] }
+  const appWrapperFile = { nameId: appWrapperName, declarationIds: [appWrapper] }
   const [initialFiles, appFileId, indexFileId, appWrapperFileId] =
     addFiles({}, appFile, indexFile, appWrapperFile)
 
@@ -96,7 +96,7 @@ export default function getTestDB() {
     names: initialNames,
     files: initialFilesAndDirs,
     rootFiles: [appDirFileId, indexFileId],
-    expressions: initialExpressions,
+    declarations: initialDeclarations,
     invocations: initialInvocations,
     currentFileId: appFileId,
     params,

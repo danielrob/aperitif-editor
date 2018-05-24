@@ -8,13 +8,13 @@ import {
   getCurrentFileImports,
   getCurrentFileDefaultExport,
   selectCurrentFileId,
-  selectExpressions,
+  selectDeclarations,
 } from 'selectors'
 import { FILE, STYLED_COMPONENT } from 'constantz'
 import { mergeFile } from 'duck'
 
 import { Editor } from './components'
-import { selectCurrentFileExpressions } from './selectors'
+import { selectCurrentFileDeclarations } from './selectors'
 
 const EditorContainer =
 
@@ -25,7 +25,7 @@ class EditorContainer extends React.Component {
       connectEditorTarget,
       isOverPassiveEditorArea, // ignore-line no-unused
       currentFileId, // ignore-line no-unused
-      projectExpressions, // ignore-line no-unused
+      projectDeclarations, // ignore-line no-unused
       ...props
     } = this.props
     return connectEditorTarget(
@@ -39,11 +39,11 @@ class EditorContainer extends React.Component {
 const mapStateToProps = createStructuredSelector({
   // to inject
   imports: getCurrentFileImports,
-  expressions: selectCurrentFileExpressions,
+  declarations: selectCurrentFileDeclarations,
   defaultExport: getCurrentFileDefaultExport,
   // to use in drop logic
   currentFileId: selectCurrentFileId,
-  projectExpressions: selectExpressions,
+  projectDeclarations: selectDeclarations,
 })
 
 const mapDispatchToProps = { mergeFile }
@@ -51,14 +51,14 @@ const mapDispatchToProps = { mergeFile }
 // whole editor area target
 const editorTarget = {
   canDrop(props, monitor) {
-    const { projectExpressions, imports } = props
-    const { expressionIds } = monitor.getItem()
+    const { projectDeclarations, imports } = props
+    const { declarationIds } = monitor.getItem()
 
-    const styledComponentId = expressionIds
-      .find(id => projectExpressions[id].type === STYLED_COMPONENT)
+    const styledComponentId = declarationIds
+      .find(id => projectDeclarations[id].type === STYLED_COMPONENT)
 
     const isInSameComponentBundle = imports
-      .find(({ expressionId }) => expressionId === styledComponentId)
+      .find(({ declarationId }) => declarationId === styledComponentId)
 
     return monitor.isOver({ shallow: true }) &&
       styledComponentId &&

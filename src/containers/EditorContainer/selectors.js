@@ -1,23 +1,23 @@
 import { createSelector } from 'reselect'
 
-import { expressionTypes } from 'constantz'
+import { declarationTypes } from 'constantz'
 
 import {
   selectNames,
   selectInvocations,
   selectParams,
-  getCurrentFileExpressions,
+  getCurrentFileDeclarations,
 } from 'selectors'
 
-const { LOOKTHROUGH } = expressionTypes
+const { LOOKTHROUGH } = declarationTypes
 
-export const selectCurrentFileExpressions = createSelector(
+export const selectCurrentFileDeclarations = createSelector(
   selectNames,
-  getCurrentFileExpressions,
+  getCurrentFileDeclarations,
   selectParams,
   selectInvocations,
-  (names, expressions, params, invocations) =>
-    expressions
+  (names, declarations, params, invocations) =>
+    declarations
       .filter(({ type }) => type !== LOOKTHROUGH)
       .map(({ id, nameId, type, invocationIds, declParamIds, exportType, ...rest }) => ({
         ...rest,

@@ -10,7 +10,7 @@ export const makeGetFile = () => createSelector(
   selectCurrentFileId,
   selectFile,
   (names, files, currentFileId, file) => {
-    const { id, nameId, type, children, expressionIds } = file
+    const { id, nameId, type, children, declarationIds } = file
 
     return {
       name: names[nameId],
@@ -18,7 +18,7 @@ export const makeGetFile = () => createSelector(
       fileChildren: children,
       isDirectory: !!children.length,
       isCurrent: id === currentFileId,
-      expressionIds,
+      declarationIds,
     }
   }
 )

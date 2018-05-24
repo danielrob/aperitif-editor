@@ -24,7 +24,7 @@ class FileContainer extends React.Component {
       connectDragSource,
       fileId, // eslint-disable-line no-unused-vars
       isCurrent, // eslint-disable-line no-unused-vars
-      expressionIds, // eslint-disable-line no-unused-vars
+      declarationIds, // eslint-disable-line no-unused-vars
       changeFile, // eslint-disable-line no-unused-vars
       ...props
     } = this.props
@@ -55,13 +55,13 @@ const getType = ({ isDirectory }) => (isDirectory ? DIR : FILE)
 
 const sourceSpec = {
   beginDrag(props) {
-    const { fileId, isDirectory, expressionIds, name, initial, parentName } = props
+    const { fileId, isDirectory, declarationIds, name, initial, parentName } = props
     const dropName = (name.includes('index') && !initial) ? parentName : name
     return {
       type: getType(props),
       fileId,
       isDirectory,
-      expressionIds,
+      declarationIds,
       dropName,
     }
   },
@@ -93,7 +93,7 @@ FileContainer.propTypes = forbidExtraProps({
   fileChildren: T.arrayOf(T.number).isRequired,
   isDirectory: T.bool.isRequired,
   isCurrent: T.bool.isRequired,
-  expressionIds: T.arrayOf(T.number).isRequired,
+  declarationIds: T.arrayOf(T.number).isRequired,
 
   // mapDispatchToProps
   changeFile: T.func.isRequired,

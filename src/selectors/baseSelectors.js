@@ -6,7 +6,7 @@ export const selectCurrentFileId = s => s.app.currentFileId
 export const selectRootFiles = s => s.app.rootFiles
 export const selectNames = s => s.app.names
 export const selectFiles = s => s.app.files
-export const selectExpressions = s => s.app.expressions
+export const selectDeclarations = s => s.app.declarations
 export const selectInvocations = s => s.app.invocations
 export const selectParams = s => s.app.params
 
@@ -18,28 +18,28 @@ export const selectCurrentFile = createSelector(
   (files, currentFileId) => files[currentFileId]
 )
 
-export const getCurrentFileExpressions = createSelector(
-  selectExpressions,
+export const getCurrentFileDeclarations = createSelector(
+  selectDeclarations,
   selectCurrentFile,
-  (expressions, currentFile) => currentFile.expressionIds.map(id => expressions[id])
+  (declarations, currentFile) => currentFile.declarationIds.map(id => declarations[id])
 )
 
 export const getCurrentFileDefaultExport = createSelector(
-  getCurrentFileExpressions,
+  getCurrentFileDeclarations,
   selectNames,
-  (expressions, names) => {
-    const exprWithDefExport = expressions.find(({ exportType }) => exportType === DEFAULT)
+  (declarations, names) => {
+    const exprWithDefExport = declarations.find(({ exportType }) => exportType === DEFAULT)
     return exprWithDefExport && names[exprWithDefExport.nameId]
   }
 )
 
-export const selectCurrentFileExpressions = createSelector(
+export const selectCurrentFileDeclarations = createSelector(
   selectNames,
-  getCurrentFileExpressions,
+  getCurrentFileDeclarations,
   selectParams,
   selectInvocations,
-  (names, expressions, params, invocations) =>
-    expressions
+  (names, declarations, params, invocations) =>
+    declarations
       .map(({ id, nameId, type, invocationIds, declParamIds, exportType }) => ({
         id,
         name: names[nameId],

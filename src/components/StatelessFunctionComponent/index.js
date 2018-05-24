@@ -11,7 +11,7 @@ export default class StatelessFunctionComponent extends React.Component {
     const { id, exportType, nameId, declParams: allParams, invocations } = this.props
     const [spreadParams, params] = partition(allParams, p => p.isSpreadMember)
 
-    const componentInvocations = invocations // TODO => create invocationExpressions index && filter by expression type
+    const componentInvocations = invocations // TODO => create invocationDeclarations index && filter by declaration type
     return (
       // stateless function component template:
       <div>
@@ -19,7 +19,7 @@ export default class StatelessFunctionComponent extends React.Component {
           {exportType === INLINE && <Keyword>export</Keyword>}{' '}
           <Keyword>const</Keyword>{' '}
           <Input nameId={nameId} /> =
-          <Props params={params} spreadParams={spreadParams} expressionId={id} />
+          <Props params={params} spreadParams={spreadParams} declarationId={id} />
            => (
           {componentInvocations.length > 1 && '['}
         </Line>{' '}
