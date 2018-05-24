@@ -53,6 +53,7 @@ export const addDeclarations = getEntitiesAdder({
   invocationIds: [],
   // type specific items
   tag: null, // styled-component
+  text: undefined,
 })
 
 export const addInvocations = getEntitiesAdder({

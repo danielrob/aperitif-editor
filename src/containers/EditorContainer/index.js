@@ -16,10 +16,7 @@ import { mergeFile } from 'duck'
 import { Editor } from './components'
 import { selectCurrentFileDeclarations } from './selectors'
 
-const EditorContainer =
-
 class EditorContainer extends React.Component {
-
   render() {
     const {
       connectEditorTarget,

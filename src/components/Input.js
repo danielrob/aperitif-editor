@@ -22,6 +22,7 @@ class Input extends React.Component {
 
   componentDidMount() {
     if (this.props.pointer) {
+      // style prop & styled-components not playing nice with AutosizeInput
       this.inputRef.style.cursor = 'pointer'
     }
   }

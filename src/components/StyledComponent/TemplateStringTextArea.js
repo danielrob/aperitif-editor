@@ -4,7 +4,6 @@ import TextareaAutosize from 'react-autosize-textarea'
 
 const TemplateStringTextArea = styled(TextareaAutosize).attrs({
   cols: 100,
-  defaultValue: '  ',
 })`
   color: ${theme.colors.orange};
   border: none;

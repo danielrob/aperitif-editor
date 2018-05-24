@@ -42,6 +42,7 @@ export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
 export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const CHANGE_NAME = 'CHANGE_NAME'
+export const CHANGE_DECLARATION_TEXT = 'CHANGE_DECLARATION_TEXT'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
 export const MERGE_FILE = 'MERGE_FILE'
 export const SET_PARAM_IS_SPREAD_MEMBER_TRUE = 'SET_PARAM_IS_SPREAD_MEMBER_TRUE'
@@ -53,6 +54,14 @@ export default function appReducer(state = getTestDB(), action) {
 
       return update(state, 'names',
         names => update(names, nameId, value)
+      )
+    }
+
+    case CHANGE_DECLARATION_TEXT: {
+      const { declarationId, value } = action.payload
+
+      return update(state, 'declarations',
+        declarations => updateAtKey(declarations, declarationId, 'text', value)
       )
     }
 
@@ -665,4 +674,8 @@ export const mergeFile = createAction(
 
 export const changeName = createAction(
   CHANGE_NAME
+)
+
+export const changeDeclarationText = createAction(
+  CHANGE_DECLARATION_TEXT
 )

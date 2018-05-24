@@ -18,9 +18,10 @@ const Editor = ({ imports, declarations, defaultExport, connectActiveEditorAreaT
       <Imports key="imports" imports={imports} />
       <br />
       {declarations.map(declaration => {
-        const Renderer = renderers[declaration.type] || Standard
+        const { type, declarationId } = declaration
+        const Renderer = renderers[type] || Standard
         return (
-          <div key={declaration.id}>
+          <div key={declarationId}>
             <Renderer {...declaration} />
             <br />
           </div>

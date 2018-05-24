@@ -21,7 +21,7 @@ export const selectCurrentFileDeclarations = createSelector(
       .filter(({ type }) => type !== LOOKTHROUGH)
       .map(({ id, nameId, type, invocationIds, declParamIds, exportType, ...rest }) => ({
         ...rest,
-        id,
+        declarationId: id,
         nameId,
         name: names[nameId],
         type,
