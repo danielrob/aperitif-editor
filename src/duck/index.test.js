@@ -6,10 +6,10 @@ const initialState = getTestDB()
 
 it('initial state for tests', () => {
   const { names, files, declarations, invocations } = appReducer(initialState, {})
-  expect(Object.keys(files).length).toBe(4)
-  expect(Object.keys(names).length).toBe(14)
-  expect(Object.keys(invocations).length).toBe(3)
-  expect(Object.keys(declarations).length).toBe(2)
+  expect(Object.keys(files).length).toBe(6)
+  expect(Object.keys(names).length).toBe(17)
+  expect(Object.keys(invocations).length).toBe(4)
+  expect(Object.keys(declarations).length).toBe(4)
 })
 
 it('moveParamToSpread sets isSpreadMember flag to true', () => {

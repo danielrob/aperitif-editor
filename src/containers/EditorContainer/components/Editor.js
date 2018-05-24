@@ -2,8 +2,19 @@ import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
-import { StatelessFunctionComponent, ClassComponent, StyledComponent, Standard } from 'components'
-import { STATELESS_FUNCTION_COMPONENT, STYLED_COMPONENT, CLASS_COMPONENT } from 'constantz'
+import {
+  StatelessFunctionComponent,
+  ClassComponent,
+  StyledComponent,
+  ProjectIndex,
+  Standard,
+} from 'components'
+import {
+  STATELESS_FUNCTION_COMPONENT,
+  STYLED_COMPONENT,
+  CLASS_COMPONENT,
+  PROJECT_INDEX,
+} from 'constantz'
 
 import { Imports, DefaultExport } from './'
 
@@ -11,6 +22,7 @@ const renderers = {
   [STATELESS_FUNCTION_COMPONENT]: StatelessFunctionComponent,
   [STYLED_COMPONENT]: StyledComponent,
   [CLASS_COMPONENT]: ClassComponent,
+  [PROJECT_INDEX]: ProjectIndex,
 }
 
 const Editor = ({ imports, declarations, defaultExport, connectActiveEditorAreaTarget }) =>

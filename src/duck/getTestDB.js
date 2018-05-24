@@ -1,6 +1,13 @@
 /* eslint-disable prefer-const */
 import { addNames, addDeclParams, addFiles, addDeclarations, addInvocations } from 'model-utils'
-import { DIR, STYLED_COMPONENT, PARAM_INVOCATION, CLASS_COMPONENT } from 'constantz'
+import {
+  DIR,
+  STYLED_COMPONENT,
+  PARAM_INVOCATION,
+  CLASS_COMPONENT,
+  PROJECT_INDEX,
+  exportTypes,
+} from 'constantz'
 
 export const REACT_CHILDREN_DECLARATION_PARAM_ID = 2
 export const REACT_CHILDREN_CALL_PARAM_ID = 1
@@ -25,7 +32,12 @@ export default function getTestDB() {
     appIndexIdName,
     propTypesName,
     appWrapperName,
-    p1, p2, p3, p4, p5, p6,
+    p1,
+    p2,
+    p3,
+    p4,
+    p5,
+    p6,
   ] = addNames(
     {},
     'children',
@@ -44,7 +56,7 @@ export default function getTestDB() {
     'null',
     'arrays',
     'object',
-    'number',
+    'number'
   )
 
   // params
@@ -59,10 +71,12 @@ export default function getTestDB() {
     { nameId: p5, payload: { yes: 'yes', we: 'we', spread: 'spread', array: [] } },
     { nameId: p6, payload: 6 },
   ];
-
-  [params, childrenParamId, ...declParamIds] = addDeclParams({
-    1: { id: 1, declParamId: REACT_CHILDREN_DECLARATION_PARAM_ID }, // children id hack
-  }, ...params)
+  [params, childrenParamId, ...declParamIds] = addDeclParams(
+    {
+      1: { id: 1, declParamId: REACT_CHILDREN_DECLARATION_PARAM_ID }, // children id hack
+    },
+    ...params
+  )
 
   // invocations
   let reactChildren = {
@@ -72,7 +86,10 @@ export default function getTestDB() {
   }
   let propTypes = { nameId: propTypesName, source: 'prop-types' }
   let appWrapperInvocation = {
-    nameId: appWrapperName, callParamIds: [], closed: true, declarationId: 2,
+    nameId: appWrapperName,
+    callParamIds: [],
+    closed: true,
+    declarationId: 2,
   }
   let appInvocation = {
     nameId: appDirName,
@@ -82,14 +99,20 @@ export default function getTestDB() {
     pseudoSpreadPropsNameId: data,
   }
 
-  let initialInvocations
-
-  [initialInvocations, reactChildren, propTypes, appWrapperInvocation, appInvocation] =
-    addInvocations({}, reactChildren, propTypes, appWrapperInvocation, appInvocation)
+  let initialInvocations;
+  [
+    initialInvocations,
+    reactChildren,
+    propTypes,
+    appWrapperInvocation,
+    appInvocation,
+  ] = addInvocations({}, reactChildren, propTypes, appWrapperInvocation, appInvocation)
 
   // declarations
   let appComponent = {
-    nameId: appDirName, invocationIds: [appWrapperInvocation], declParamIds,
+    nameId: appDirName,
+    invocationIds: [appWrapperInvocation],
+    declParamIds,
   }
   let appWrapper = { nameId: appWrapperName, type: STYLED_COMPONENT, tag: 'div' }
 
@@ -99,20 +122,38 @@ export default function getTestDB() {
     invocationIds: [appInvocation],
   }
 
-  let initialDeclarations
-  [initialDeclarations, appComponent, appWrapper, appContainerComponent] =
-    addDeclarations({}, appComponent, appWrapper, appContainerComponent)
+  let projectIndex = {
+    type: PROJECT_INDEX,
+    nameId: 1,
+    exportType: exportTypes.false,
+  }
+
+  let initialDeclarations;
+  [
+    initialDeclarations,
+    appComponent,
+    appWrapper,
+    appContainerComponent,
+    projectIndex,
+  ] = addDeclarations({}, appComponent, appWrapper, appContainerComponent, projectIndex)
 
   // files
-  let indexFile = { nameId: indexName }
+  let indexFile = { nameId: indexName, declarationIds: [projectIndex] }
   let appFile = { nameId: appIndexIdName, declarationIds: [appComponent] }
   let appWrapperFile = { nameId: appWrapperName, declarationIds: [appWrapper] }
 
-  let appContainerIndexFile = { nameId: appContainerIndexName, declarationIds: [appContainerComponent] }
+  let appContainerIndexFile = {
+    nameId: appContainerIndexName,
+    declarationIds: [appContainerComponent],
+  }
   let initialFiles;
-
-  [initialFiles, appFile, indexFile, appWrapperFile, appContainerIndexFile] =
-    addFiles({}, appFile, indexFile, appWrapperFile, appContainerIndexFile)
+  [initialFiles, appFile, indexFile, appWrapperFile, appContainerIndexFile] = addFiles(
+    {},
+    appFile,
+    indexFile,
+    appWrapperFile,
+    appContainerIndexFile
+  )
 
   let appDir = { nameId: appDirName, type: DIR, children: [appFile, appWrapperFile] }
   let appContainerDir = { nameId: appContainerName, type: DIR, children: [appContainerIndexFile] };
@@ -124,7 +165,7 @@ export default function getTestDB() {
     rootFiles: [appDir, appContainerDir, indexFile],
     declarations: initialDeclarations,
     invocations: initialInvocations,
-    currentFileId: appContainerIndexFile,
+    currentFileId: indexFile,
     params,
   }
 }
