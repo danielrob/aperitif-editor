@@ -193,7 +193,10 @@ export default function appReducer(state = getTestDB(), action) {
         })
 
       /* UPDATES */
-      const updater = ivn => insertAtKey(ivn, 'invocationIds', newInvocationId, targetPosition)
+      const updater = ivn => ({
+        ...insertAtKey(ivn, 'invocationIds', newInvocationId, targetPosition),
+        closed: false,
+      })
 
       return update(state, 'invocations', update(nextInvocations, targetInvocationId, updater))
     }

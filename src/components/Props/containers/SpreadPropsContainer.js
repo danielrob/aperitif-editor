@@ -12,14 +12,12 @@ import { SpreadProps } from '../components'
 
 class SpreadPropsContainer extends React.Component {
   render() {
-    const { connectDropTarget, children } = this.props
+    const { connectDropTarget } = this.props
     return (
       <SpreadProps
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
         {...this.props}
-      >
-        {children}
-      </SpreadProps>
+      />
     )
   }
 }

@@ -2,9 +2,9 @@ import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
-import { sortProps } from '../helpers'
+import { sortProps } from './helpers'
 
-import { SpreadPropsContainer, PropContainer } from '../containers'
+import { SpreadPropsContainer, PropContainer } from './containers'
 
 const Props = ({ params, spreadParams, declarationId }) => (
   <React.Fragment>
