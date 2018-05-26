@@ -4,8 +4,8 @@ import { required, requiredOrNull } from 'constantz'
 export const getNextId = integerKeyedObject => Math.max(0, ...Object.keys(integerKeyedObject)) + 1
 
 export const getEntitiesAdder = (defaults = {}) => (entities, ...args) => {
-  args.forEach(props => {
-    if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production') {
+    args.forEach(props => {
       Object.keys(defaults).forEach(key => {
         if (
           defaults[key] === required ||
@@ -17,8 +17,8 @@ export const getEntitiesAdder = (defaults = {}) => (entities, ...args) => {
       Object.keys(props).forEach(key => {
         invariant(defaults[key] !== undefined, `${key} is an unknown property, ${JSON.stringify(defaults[key])}`)
       })
-    }
-  })
+    })
+  }
 
   return args.reduce((out, props) => {
     const [nextEntities, ...nextIds] = out

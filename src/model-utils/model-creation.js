@@ -42,7 +42,7 @@ export const addFiles = getEntitiesAdder({
   nameId: required,
   type: JS,
   children: [],
-  declarationIds: [],
+  declarationIds: [], // true one to many
 })
 
 export const addDeclarations = getEntitiesAdder({

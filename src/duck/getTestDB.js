@@ -1,5 +1,4 @@
 /* eslint-disable prefer-const */
-import { addNames, addDeclParams, addFiles, addDeclarations, addInvocations } from 'model-utils'
 import {
   DIR,
   STYLED_COMPONENT,
@@ -9,6 +8,8 @@ import {
   exportTypes,
 } from 'constantz'
 
+import orm from 'orm'
+
 export const REACT_CHILDREN_DECLARATION_PARAM_ID = 2
 export const REACT_CHILDREN_CALL_PARAM_ID = 1
 export const REACT_CHILDREN_INVOCATION_ID = 1
@@ -16,11 +17,19 @@ export const KEY_NAME_ID = 2
 export const ID_NAME_ID = 3
 
 export default function getTestDB() {
-  // initial state setup for testing
+  const session = orm.session({})
 
-  // names
+  const {
+    Name,
+    DeclParam,
+    CallParam,
+    Declaration,
+    Invocation,
+    File,
+  } = session
+
+  // Names
   const [
-    initialNames,
     childrenNameId,
     keyNameId, // eslint-disable-line no-unused-vars
     idNameId, // eslint-disable-line no-unused-vars
@@ -38,8 +47,8 @@ export default function getTestDB() {
     p4,
     p5,
     p6,
-  ] = addNames(
-    {},
+  ] =
+  [
     'children',
     'key',
     'id',
@@ -56,13 +65,14 @@ export default function getTestDB() {
     'null',
     'arrays',
     'object',
-    'number'
-  )
+    'number',
+  ].map(name => Name.create(name))
 
-  // params
-  let declParamIds
-  let childrenParamId // eslint-disable-line no-unused-vars
-  let params = [
+  // CallParams
+  const REACT_CHILDREN_CALL_PARAM_ID = CallParam.create({ declParamId: 2 });
+
+  // DeclParams
+  const [childrenDeclParam, ...declParamIds] = [
     { nameId: childrenNameId },
     { nameId: p1, payload: true },
     { nameId: p2, payload: 'strrrrrriiing' },
@@ -70,102 +80,88 @@ export default function getTestDB() {
     { nameId: p4, payload: [{ id: 2, name: 'woot', height: '1.82m' }] },
     { nameId: p5, payload: { yes: 'yes', we: 'we', spread: 'spread', array: [] } },
     { nameId: p6, payload: 6 },
-  ];
-  [params, childrenParamId, ...declParamIds] = addDeclParams(
+  ].map(param => DeclParam.create(param))
+
+  // Invocations
+  const [reactChildren, propTypes, appWrapperInvocation, appInvocation] = [
     {
-      1: { id: 1, declParamId: REACT_CHILDREN_DECLARATION_PARAM_ID }, // children id hack
+      nameId: childrenNameId,
+      type: PARAM_INVOCATION,
+      callParamIds: [REACT_CHILDREN_CALL_PARAM_ID],
     },
-    ...params
-  )
-
-  // invocations
-  let reactChildren = {
-    nameId: childrenNameId,
-    type: PARAM_INVOCATION,
-    callParamIds: [REACT_CHILDREN_CALL_PARAM_ID],
-  }
-  let propTypes = { nameId: propTypesName, source: 'prop-types' }
-  let appWrapperInvocation = {
-    nameId: appWrapperName,
-    callParamIds: [],
-    closed: true,
-    declarationId: 2,
-  }
-  let appInvocation = {
-    nameId: appDirName,
-    callParamIds: [],
-    closed: true,
-    declarationId: 3,
-    pseudoSpreadPropsNameId: data,
-  }
-
-  let initialInvocations;
-  [
-    initialInvocations,
-    reactChildren,
-    propTypes,
-    appWrapperInvocation,
-    appInvocation,
-  ] = addInvocations({}, reactChildren, propTypes, appWrapperInvocation, appInvocation)
+    {
+      nameId: propTypesName,
+      source: 'prop-types',
+    },
+    {
+      nameId: appWrapperName,
+      callParamIds: [],
+      closed: true,
+      declarationId: 2,
+    },
+    {
+      nameId: appDirName,
+      callParamIds: [],
+      closed: true,
+      declarationId: 3,
+      pseudoSpreadPropsNameId: data,
+    },
+  ].map(inv => Invocation.create(inv))
 
   // declarations
-  let appComponent = {
-    nameId: appDirName,
-    invocationIds: [appWrapperInvocation],
-    declParamIds,
-  }
-  let appWrapper = { nameId: appWrapperName, type: STYLED_COMPONENT, tag: 'div' }
-
-  let appContainerComponent = {
-    type: CLASS_COMPONENT,
-    nameId: appContainerName,
-    invocationIds: [appInvocation],
-  }
-
-  let projectIndex = {
-    type: PROJECT_INDEX,
-    nameId: 1,
-    exportType: exportTypes.false,
-  }
-
-  let initialDeclarations;
-  [
-    initialDeclarations,
+  const [
     appComponent,
     appWrapper,
     appContainerComponent,
     projectIndex,
-  ] = addDeclarations({}, appComponent, appWrapper, appContainerComponent, projectIndex)
+  ] = [
+    {
+      nameId: appDirName,
+      invocationIds: [appWrapperInvocation],
+      declParamIds,
+    },
+    {
+      nameId: appWrapperName,
+      type: STYLED_COMPONENT,
+      tag: 'div',
+    },
+    {
+      type: CLASS_COMPONENT,
+      nameId: appContainerName,
+      invocationIds: [appInvocation],
+    },
+    {
+      type: PROJECT_INDEX,
+      nameId: null,
+      exportType: exportTypes.false,
+    },
+  ].map(decl => Declaration.create(decl))
 
   // files
-  let indexFile = { nameId: indexName, declarationIds: [projectIndex] }
-  let appFile = { nameId: appIndexIdName, declarationIds: [appComponent] }
-  let appWrapperFile = { nameId: appWrapperName, declarationIds: [appWrapper] }
-
-  let appContainerIndexFile = {
-    nameId: appContainerIndexName,
-    declarationIds: [appContainerComponent],
-  }
-  let initialFiles;
-  [initialFiles, appFile, indexFile, appWrapperFile, appContainerIndexFile] = addFiles(
-    {},
+  const [
     appFile,
     indexFile,
     appWrapperFile,
-    appContainerIndexFile
-  )
+    appContainerIndexFile,
+  ] = [
+    { nameId: appIndexIdName, declarationIds: [appComponent] },
+    { nameId: indexName, declarationIds: [projectIndex] },
+    { nameId: appWrapperName, declarationIds: [appWrapper] },
+    { nameId: appContainerIndexName, declarationIds: [appContainerComponent] },
+  ].map(file => File.create(file))
 
-  let appDir = { nameId: appDirName, type: DIR, children: [appFile, appWrapperFile] }
-  let appContainerDir = { nameId: appContainerName, type: DIR, children: [appContainerIndexFile] };
-  [initialFiles, appDir, appContainerDir] = addFiles(initialFiles, appDir, appContainerDir)
+  // dirs
+  const [
+    appDir,
+    appContainerDir,
+  ] = [
+    { nameId: appDirName, type: DIR, children: [appFile, appWrapperFile] },
+    { nameId: appContainerName, type: DIR, children: [appContainerIndexFile] },
+  ].map(dir => File.create(dir))
 
   return {
-    names: initialNames,
-    files: initialFiles,
+    ...session.state,
     rootFiles: [appDir, appContainerDir, indexFile],
-    declarations: initialDeclarations,
-    invocations: initialInvocations,
     currentFileId: appFile,
-    params,
   }
 }

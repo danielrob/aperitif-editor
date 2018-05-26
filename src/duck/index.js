@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
-
+import orm from 'orm'
 import {
   addNames,
   addFiles,
@@ -32,15 +32,20 @@ import getTestDB, {
 export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
 
 // ORM
-export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
-export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
-export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN =
+  'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE =
+  'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD =
+  'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP'
 export const ADD_NEW_STYLED_COMPONENT_TO_INVOCATION = 'ADD_NEW_STYLED_COMPONENT_TO_INVOCATION'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
-export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
+export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION =
+  'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
-export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
+export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION =
+  'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const CHANGE_NAME = 'CHANGE_NAME'
 export const CHANGE_DECLARATION_TEXT = 'CHANGE_DECLARATION_TEXT'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
@@ -49,31 +54,27 @@ export const SET_PARAM_IS_SPREAD_MEMBER_TRUE = 'SET_PARAM_IS_SPREAD_MEMBER_TRUE'
 export const TOGGLE_COMPONENT_TYPE = 'TOGGLE_COMPONENT_TYPE'
 
 export default function appReducer(state = getTestDB(), action) {
+  const session = orm.session(state)
+  const { Name, DeclParam, CallParam, Declaration, Invocation, File } = session
+
   switch (action.type) {
     case CHANGE_NAME: {
       const { nameId, value } = action.payload
 
-      return update(state, 'names',
-        names => update(names, nameId, value)
-      )
+      return update(state, 'names', names => update(names, nameId, value))
     }
 
     case CHANGE_DECLARATION_TEXT: {
       const { declarationId, value } = action.payload
-
-      return update(state, 'declarations',
-        declarations => updateAtKey(declarations, declarationId, 'text', value)
-      )
+      Declaration.withId(declarationId).update({ text: value })
+      return session.state
     }
 
     case TOGGLE_COMPONENT_TYPE: {
       const { declarationId, targetType } = action.payload
-
-      return update(state, 'declarations',
-        declarations => updateAtKey(declarations, declarationId, 'type', targetType)
-      )
+      Declaration.withId(declarationId).update({ type: targetType })
+      return session.state
     }
-
 
     case CHANGE_EDITOR_CURRENT_FILE: {
       const { currentFileId, files, names } = state
@@ -87,28 +88,26 @@ export default function appReducer(state = getTestDB(), action) {
       return update(state, 'currentFileId', nextId || currentFileId)
     }
 
-
     case SET_PARAM_IS_SPREAD_MEMBER_TRUE: {
       const { paramId } = action.payload
 
-      return update(state, 'params',
-        params => updateAtKey(params, paramId, 'isSpreadMember', true)
-      )
+      return update(state, 'params', params => updateAtKey(params, paramId, 'isSpreadMember', true))
     }
-
 
     case ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
       const { invocationId } = action.payload
 
-      return update(state, 'invocations',
-        invocations => updateAtKey(invocations, invocationId, 'hasPropsSpread', true)
+      return update(state, 'invocations', invocations =>
+        updateAtKey(invocations, invocationId, 'hasPropsSpread', true)
       )
     }
 
-
     case ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
       const { invocations, declarations, params } = state
-      const { targetInvocationId, prop: { paramId } } = action.payload
+      const {
+        targetInvocationId,
+        prop: { paramId },
+      } = action.payload
       const { nameId, payload } = params[paramId]
       const invocationDeclarationId = invocations[targetInvocationId].declarationId
 
@@ -141,20 +140,23 @@ export default function appReducer(state = getTestDB(), action) {
           [nextParams, newDeclParam] = addDeclParams(nextParams, newDeclParam)
           nextState = update(nextState, 'params', nextParams)
 
-          nextState = updateAtKey(nextState, 'declarations', invocationDeclarationId, ({
+          nextState = updateAtKey(nextState, 'declarations', invocationDeclarationId, {
             ...declaration,
             declParamIds: [...declParamIds, newDeclParam],
-          }))
+          })
         }
       }
 
       return update(nextState, 'invocations', nextInvocations)
     }
 
-
     case ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD: {
       const { invocations, params } = state
-      const { targetInvocationId, targetPosition, prop: { paramId, nameId } } = action.payload
+      const {
+        targetInvocationId,
+        targetPosition,
+        prop: { paramId, nameId },
+      } = action.payload
       let nextState = state
 
       /* Creates */
@@ -166,7 +168,7 @@ export default function appReducer(state = getTestDB(), action) {
 
       // create param invocation
       let paramInvocation = { nameId, callParamIds: [callParam], type: PARAM_INVOCATION }
-      let nextInvocations
+      let nextInvocations;
       [nextInvocations, paramInvocation] = addInvocations(invocations, paramInvocation)
 
       /* Update */
@@ -179,7 +181,6 @@ export default function appReducer(state = getTestDB(), action) {
       return update(nextState, 'invocations', update(nextInvocations, targetInvocationId, updater))
     }
 
-
     case ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION: {
       const { names, invocations, files, declarations } = state
       const { targetInvocationId, targetPosition, fileId, isDirectory } = action.payload
@@ -189,17 +190,16 @@ export default function appReducer(state = getTestDB(), action) {
         file = files[file.children.find(id => names[files[id].nameId] === 'index')]
       }
 
-      const declarationId = file.declarationIds.find(
-        id => componentDeclarationTypes.includes(declarations[id].type)
+      const declarationId = file.declarationIds.find(id =>
+        componentDeclarationTypes.includes(declarations[id].type)
       )
 
       /* CREATES */
-      let [nextInvocations, newInvocationId] = // eslint-disable-line prefer-const
-        addInvocations(invocations, {
-          nameId: declarations[declarationId].nameId,
-          closed: true,
-          declarationId,
-        })
+      let [nextInvocations, newInvocationId] = addInvocations(invocations, { // eslint-disable-line prefer-const
+        nameId: declarations[declarationId].nameId,
+        closed: true,
+        declarationId,
+      })
 
       /* UPDATES */
       const updater = ivn => ({
@@ -217,28 +217,22 @@ export default function appReducer(state = getTestDB(), action) {
         let nextFiles = files
 
         // add declarations to other file
-        nextFiles = update(nextFiles, targetFileId,
-          file => update(file, 'declarationIds', ids => [
-            ...ids,
-            ...files[sourceFileId].declarationIds,
-          ])
+        nextFiles = update(nextFiles, targetFileId, file =>
+          update(file, 'declarationIds', ids => [...ids, ...files[sourceFileId].declarationIds])
         )
 
         // Delete file
-        const dirId = Object.keys(nextFiles).find(
-          fileId => nextFiles[fileId].children.includes(sourceFileId)
+        const dirId = Object.keys(nextFiles).find(fileId =>
+          nextFiles[fileId].children.includes(sourceFileId)
         )
 
-        nextFiles = update(nextFiles, dirId,
-          file => filterOutAtKey(file, 'children', sourceFileId)
-        )
+        nextFiles = update(nextFiles, dirId, file => filterOutAtKey(file, 'children', sourceFileId))
 
         nextFiles = deleteKey(nextFiles, sourceFileId)
 
         return nextFiles
       })
     }
-
 
     case MOVE_INVOCATION: {
       const { invocations } = state
@@ -252,7 +246,7 @@ export default function appReducer(state = getTestDB(), action) {
       let nextInvocations
 
       const sourcePosition = invocations[sourceParentId].invocationIds.findIndex(
-        id => id === sourceInvocationId,
+        id => id === sourceInvocationId
       )
 
       /* UPDATES */
@@ -314,24 +308,20 @@ export default function appReducer(state = getTestDB(), action) {
       };
       [nextInvocations, styledInvocation] = addInvocations(nextInvocations, styledInvocation)
 
-      nextInvocations = update(nextInvocations, targetInvocationId,
-        invocation => ({
-          ...insertAtKey(invocation, 'invocationIds', styledInvocation, targetPosition),
-          closed: false,
-          inline: false,
-        })
-      )
+      nextInvocations = update(nextInvocations, targetInvocationId, invocation => ({
+        ...insertAtKey(invocation, 'invocationIds', styledInvocation, targetPosition),
+        closed: false,
+        inline: false,
+      }))
 
       let styleFile = { nameId: newName, declarationIds: [styledDeclaration] };
       [nextFiles, styleFile] = addFiles(nextFiles, styleFile)
 
-      const dirId = Object.keys(nextFiles).find(
-        id => nextFiles[id].children.includes(state.currentFileId)
+      const dirId = Object.keys(nextFiles).find(id =>
+        nextFiles[id].children.includes(state.currentFileId)
       )
 
-      nextFiles = update(nextFiles, dirId,
-        dir => insertAtKey(dir, 'children', styleFile)
-      )
+      nextFiles = update(nextFiles, dirId, dir => insertAtKey(dir, 'children', styleFile))
 
       return {
         ...state,
@@ -358,14 +348,15 @@ export default function appReducer(state = getTestDB(), action) {
       let pseudoSpreadPropsName = baseName
       let newPayloadParamNames = propPayloadKeys
 
-      nextState = update(nextState, 'names',
-        names => {
-          let nextNames = names;
-          [nextNames, pseudoSpreadPropsName, ...newPayloadParamNames] =
-            addNames(nextNames, pseudoSpreadPropsName, ...newPayloadParamNames)
-          return nextNames
-        }
-      )
+      nextState = update(nextState, 'names', names => {
+        let nextNames = names;
+        [nextNames, pseudoSpreadPropsName, ...newPayloadParamNames] = addNames(
+          nextNames,
+          pseudoSpreadPropsName,
+          ...newPayloadParamNames
+        )
+        return nextNames
+      })
 
       // params
       let payloadDeclParams = propPayloadKeys.map((key, id) => ({
@@ -383,17 +374,15 @@ export default function appReducer(state = getTestDB(), action) {
         return nextParams
       })
 
-
       // new component bundle
       let componentName
-      let newComponentDeclarationId
-      [nextState, componentName, newComponentDeclarationId] =
-        createComponentBundle({
-          baseName,
-          state: nextState,
-          declParamIds: payloadDeclParams,
-          invocationIds: [],
-        })
+      let newComponentDeclarationId;
+      [nextState, componentName, newComponentDeclarationId] = createComponentBundle({
+        baseName,
+        state: nextState,
+        declParamIds: payloadDeclParams,
+        invocationIds: [],
+      })
 
       // add / update invocations
       let newComponentInvocation = {
@@ -404,25 +393,24 @@ export default function appReducer(state = getTestDB(), action) {
         closed: true,
       }
 
-      nextState = update(nextState, 'invocations',
-        invocations => {
-          let nextInvocations = invocations;
-          [nextInvocations, newComponentInvocation] =
-            addInvocations(nextInvocations, newComponentInvocation)
+      nextState = update(nextState, 'invocations', invocations => {
+        let nextInvocations = invocations;
+        [nextInvocations, newComponentInvocation] = addInvocations(
+          nextInvocations,
+          newComponentInvocation
+        )
 
-          // add the new component invocation to the target position
-          const updater = invocation => ({
-            ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
-            closed: false,
-            inline: false,
-          })
-          return update(nextInvocations, targetInvocationId, updater)
-        }
-      )
+        // add the new component invocation to the target position
+        const updater = invocation => ({
+          ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
+          closed: false,
+          inline: false,
+        })
+        return update(nextInvocations, targetInvocationId, updater)
+      })
 
       return nextState
     }
-
 
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP: {
       let nextState = state
@@ -441,14 +429,15 @@ export default function appReducer(state = getTestDB(), action) {
       let mapPseudoParamName = baseName
       let newPayloadParamNames = payloadObjSuperExampleKeys
 
-      nextState = update(nextState, 'names',
-        names => {
-          let nextNames = names;
-          [nextNames, mapPseudoParamName, ...newPayloadParamNames] =
-            addNames(nextNames, mapPseudoParamName, ...newPayloadParamNames)
-          return nextNames
-        }
-      )
+      nextState = update(nextState, 'names', names => {
+        let nextNames = names;
+        [nextNames, mapPseudoParamName, ...newPayloadParamNames] = addNames(
+          nextNames,
+          mapPseudoParamName,
+          ...newPayloadParamNames
+        )
+        return nextNames
+      })
 
       // params
       let payloadDeclParams = payloadObjSuperExampleKeys.map((key, id) => ({
@@ -466,23 +455,24 @@ export default function appReducer(state = getTestDB(), action) {
 
       nextState = update(nextState, 'params', params => {
         let nextParams = params;
-        [nextParams, droppedCallParam, keyCallParam] =
-          addCallParams(nextParams, droppedCallParam, keyCallParam);
+        [nextParams, droppedCallParam, keyCallParam] = addCallParams(
+          nextParams,
+          droppedCallParam,
+          keyCallParam
+        );
         [nextParams, ...payloadDeclParams] = addDeclParams(nextParams, ...payloadDeclParams)
         return nextParams
       })
 
-
       // new component bundle
       let componentName
-      let newComponentDeclarationId
-      [nextState, componentName, newComponentDeclarationId] =
-        createComponentBundle({
-          baseName,
-          state: nextState,
-          declParamIds: payloadDeclParams,
-          invocationIds: [],
-        })
+      let newComponentDeclarationId;
+      [nextState, componentName, newComponentDeclarationId] = createComponentBundle({
+        baseName,
+        state: nextState,
+        declParamIds: payloadDeclParams,
+        invocationIds: [],
+      })
 
       // add / update invocations
       let newComponentInvocation = {
@@ -495,29 +485,27 @@ export default function appReducer(state = getTestDB(), action) {
 
       let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [droppedCallParam] }
 
-      nextState = update(nextState, 'invocations',
-        invocations => {
-          let nextInvocations = invocations;
-          [nextInvocations, newComponentInvocation] =
-            addInvocations(nextInvocations, newComponentInvocation)
+      nextState = update(nextState, 'invocations', invocations => {
+        let nextInvocations = invocations;
+        [nextInvocations, newComponentInvocation] = addInvocations(
+          nextInvocations,
+          newComponentInvocation
+        )
 
-          paramInvocation.invocationIds = [newComponentInvocation];
+        paramInvocation.invocationIds = [newComponentInvocation];
+        [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
 
-          [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
-
-          // add the new component invocation to the target position
-          const updater = invocation => ({
-            ...insertAtKey(invocation, 'invocationIds', paramInvocation, targetPosition),
-            closed: false,
-            inline: false,
-          })
-          return update(nextInvocations, targetInvocationId, updater)
-        }
-      )
+        // add the new component invocation to the target position
+        const updater = invocation => ({
+          ...insertAtKey(invocation, 'invocationIds', paramInvocation, targetPosition),
+          closed: false,
+          inline: false,
+        })
+        return update(nextInvocations, targetInvocationId, updater)
+      })
 
       return nextState
     }
-
 
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN: {
       let nextState = state
@@ -529,14 +517,13 @@ export default function appReducer(state = getTestDB(), action) {
 
       // component bundle
       let componentName
-      let newComponentDeclarationId
-      [nextState, componentName, newComponentDeclarationId] =
-        createComponentBundle({
-          baseName,
-          state: nextState,
-          declParamIds: [REACT_CHILDREN_DECLARATION_PARAM_ID],
-          invocationIds: [REACT_CHILDREN_INVOCATION_ID],
-        })
+      let newComponentDeclarationId;
+      [nextState, componentName, newComponentDeclarationId] = createComponentBundle({
+        baseName,
+        state: nextState,
+        declParamIds: [REACT_CHILDREN_DECLARATION_PARAM_ID],
+        invocationIds: [REACT_CHILDREN_INVOCATION_ID],
+      })
 
       // params
       let newCallParam = { declParamId: paramId }
@@ -547,31 +534,33 @@ export default function appReducer(state = getTestDB(), action) {
       })
 
       // add / update invocations
-      let newComponentInvocation = { nameId: componentName, declarationId: newComponentDeclarationId }
+      let newComponentInvocation = {
+        nameId: componentName,
+        declarationId: newComponentDeclarationId,
+      }
       let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [newCallParam] }
 
-      nextState = update(nextState, 'invocations',
-        invocations => {
-          let nextInvocations = invocations;
-          [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
+      nextState = update(nextState, 'invocations', invocations => {
+        let nextInvocations = invocations;
+        [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
 
-          newComponentInvocation.invocationIds = [paramInvocation];
-          [nextInvocations, newComponentInvocation] =
-            addInvocations(nextInvocations, newComponentInvocation)
+        newComponentInvocation.invocationIds = [paramInvocation];
+        [nextInvocations, newComponentInvocation] = addInvocations(
+          nextInvocations,
+          newComponentInvocation
+        )
 
-          // add the new component invocation to the target position
-          const updater = invocation => ({
-            ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
-            closed: false,
-            inline: false,
-          })
-          return update(nextInvocations, targetInvocationId, updater)
-        }
-      )
+        // add the new component invocation to the target position
+        const updater = invocation => ({
+          ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
+          closed: false,
+          inline: false,
+        })
+        return update(nextInvocations, targetInvocationId, updater)
+      })
 
       return nextState
     }
-
 
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE: {
       let nextState = state
@@ -594,10 +583,12 @@ export default function appReducer(state = getTestDB(), action) {
 
       // component bundle
       let componentName
-      let newComponentDeclarationId
-
-      [nextState, componentName, newComponentDeclarationId] =
-        createComponentBundle({ baseName, state: nextState, declParamIds: [newDeclParam] })
+      let newComponentDeclarationId;
+      [nextState, componentName, newComponentDeclarationId] = createComponentBundle({
+        baseName,
+        state: nextState,
+        declParamIds: [newDeclParam],
+      })
 
       // add & update invocations
       let newComponentInvocation = {
@@ -607,25 +598,24 @@ export default function appReducer(state = getTestDB(), action) {
         closed: true,
       }
 
-      nextState = update(nextState, 'invocations',
-        invocations => {
-          let nextInvocations = invocations;
-          [nextInvocations, newComponentInvocation] =
-            addInvocations(nextInvocations, newComponentInvocation)
+      nextState = update(nextState, 'invocations', invocations => {
+        let nextInvocations = invocations;
+        [nextInvocations, newComponentInvocation] = addInvocations(
+          nextInvocations,
+          newComponentInvocation
+        )
 
-          // add the new component invocation to the target position
-          const updater = invocation => ({
-            ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
-            closed: false,
-            inline: false,
-          })
-          return update(nextInvocations, targetInvocationId, updater)
-        }
-      )
+        // add the new component invocation to the target position
+        const updater = invocation => ({
+          ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
+          closed: false,
+          inline: false,
+        })
+        return update(nextInvocations, targetInvocationId, updater)
+      })
 
       return nextState
     }
-
 
     default:
       return state
@@ -652,13 +642,9 @@ export const addNewStyledComponentToInvocation = createAction(
   ADD_NEW_STYLED_COMPONENT_TO_INVOCATION
 )
 
-export const changeFile = createAction(
-  CHANGE_EDITOR_CURRENT_FILE
-)
+export const changeFile = createAction(CHANGE_EDITOR_CURRENT_FILE)
 
-export const addAttributeToComponentInvocation = createAction(
-  ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION
-)
+export const addAttributeToComponentInvocation = createAction(ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION)
 
 export const addParamAsComponentInvocationChild = createAction(
   ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD
@@ -672,26 +658,14 @@ export const addInvocationFromFileToCI = createAction(
   ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION
 )
 
-export const moveParamToSpread = createAction(
-  SET_PARAM_IS_SPREAD_MEMBER_TRUE
-)
+export const moveParamToSpread = createAction(SET_PARAM_IS_SPREAD_MEMBER_TRUE)
 
-export const moveInvocation = createAction(
-  MOVE_INVOCATION
-)
+export const moveInvocation = createAction(MOVE_INVOCATION)
 
-export const mergeFile = createAction(
-  MERGE_FILE
-)
+export const mergeFile = createAction(MERGE_FILE)
 
-export const changeName = createAction(
-  CHANGE_NAME
-)
+export const changeName = createAction(CHANGE_NAME)
 
-export const changeDeclarationText = createAction(
-  CHANGE_DECLARATION_TEXT
-)
+export const changeDeclarationText = createAction(CHANGE_DECLARATION_TEXT)
 
-export const toggleComponentType = createAction(
-  TOGGLE_COMPONENT_TYPE
-)
+export const toggleComponentType = createAction(TOGGLE_COMPONENT_TYPE)
