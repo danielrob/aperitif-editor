@@ -83,85 +83,92 @@ export default function getTestDB() {
   ].map(param => DeclParam.create(param))
 
   // Invocations
-  const [reactChildren, propTypes, appWrapperInvocation, appInvocation] = [
-    {
-      nameId: childrenNameId,
-      type: PARAM_INVOCATION,
-      callParamIds: [REACT_CHILDREN_CALL_PARAM_ID],
-    },
-    {
-      nameId: propTypesName,
-      source: 'prop-types',
-    },
-    {
-      nameId: appWrapperName,
-      callParamIds: [],
-      closed: true,
-      declarationId: 2,
-    },
-    {
-      nameId: appDirName,
-      callParamIds: [],
-      closed: true,
-      declarationId: 3,
-      pseudoSpreadPropsNameId: data,
-    },
-  ].map(inv => Invocation.create(inv))
+  Invocation.create({
+    nameId: childrenNameId,
+    type: PARAM_INVOCATION,
+    callParamIds: [REACT_CHILDREN_CALL_PARAM_ID],
+  })
 
-  // declarations
-  const [
-    appComponent,
-    appWrapper,
-    appContainerComponent,
-    projectIndex,
-  ] = [
-    {
-      nameId: appDirName,
-      invocationIds: [appWrapperInvocation],
-      declParamIds,
-    },
-    {
-      nameId: appWrapperName,
-      type: STYLED_COMPONENT,
-      tag: 'div',
-    },
-    {
-      type: CLASS_COMPONENT,
-      nameId: appContainerName,
-      invocationIds: [appInvocation],
-    },
-    {
-      type: PROJECT_INDEX,
-      nameId: null,
-      exportType: exportTypes.false,
-    },
-  ].map(decl => Declaration.create(decl))
-
-  // files
-  const [
-    appFile,
-    indexFile,
-    appWrapperFile,
-    appContainerIndexFile,
-  ] = [
-    { nameId: appIndexIdName, declarationIds: [appComponent] },
-    { nameId: indexName, declarationIds: [projectIndex] },
-    { nameId: appWrapperName, declarationIds: [appWrapper] },
-    { nameId: appContainerIndexName, declarationIds: [appContainerComponent] },
-  ].map(file => File.create(file))
+  Invocation.create({
+    nameId: propTypesName,
+    source: 'prop-types',
+  })
 
   // dirs
-  const [
-    appDir,
-    appContainerDir,
-  ] = [
-    { nameId: appDirName, type: DIR, children: [appFile, appWrapperFile] },
-    { nameId: appContainerName, type: DIR, children: [appContainerIndexFile] },
-  ].map(dir => File.create(dir))
+  const appDir = File.create({
+    nameId: appDirName,
+    type: DIR,
+    children: [
+      File.create({
+        nameId: appIndexIdName,
+        declarationIds: [
+          Declaration.create({
+            nameId: appDirName,
+            invocationIds: [
+              Invocation.create({
+                nameId: appWrapperName,
+                callParamIds: [],
+                closed: true,
+                declarationId: 2,
+              }),
+            ],
+            declParamIds,
+          }),
+        ],
+      }),
+      File.create({
+        nameId: appWrapperName,
+        declarationIds: [
+          Declaration.create({
+            nameId: appWrapperName,
+            type: STYLED_COMPONENT,
+            tag: 'div',
+          }),
+        ],
+      }),
+    ],
+  })
+
+  const appContainerDir = File.create({
+    nameId: appContainerName,
+    type: DIR,
+    children: [
+      File.create({
+        nameId: appContainerIndexName,
+        declarationIds: [
+          Declaration.create({
+            type: CLASS_COMPONENT,
+            nameId: appContainerName,
+            invocationIds: [
+              Invocation.create({
+                nameId: appDirName,
+                callParamIds: [],
+                closed: true,
+                declarationId: 3,
+                pseudoSpreadPropsNameId: data,
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  })
+
+  // files
+  const indexFile = File.create({
+    nameId: indexName,
+    declarationIds: [
+      Declaration.create({
+        type: PROJECT_INDEX,
+        nameId: null,
+        exportType: exportTypes.false,
+      }),
+    ],
+  })
 
   return {
     ...session.state,
     rootFiles: [appDir, appContainerDir, indexFile],
-    currentFileId: appFile,
+    currentFileId: 1,
   }
 }
