@@ -2,22 +2,7 @@
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
 import orm from 'orm'
-import {
-  addNames,
-  addFiles,
-  addDeclarations,
-  addDeclParams,
-  addCallParams,
-  addInvocations,
-  insertAt,
-  insertAtKey,
-  removeAtKey,
-  filterOutAtKey,
-  deleteKey,
-  update,
-  updateAtKey,
-  createComponentBundle,
-} from 'model-utils'
+import { createComponentBundle } from 'model-utils'
 import { DIR, componentDeclarationTypes, PARAM_INVOCATION, STYLED_COMPONENT } from 'constantz'
 import { capitalize } from 'utils'
 
@@ -32,20 +17,15 @@ import getTestDB, {
 export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
 
 // ORM
-export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN =
-  'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
-export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE =
-  'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
-export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD =
-  'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
+export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP'
 export const ADD_NEW_STYLED_COMPONENT_TO_INVOCATION = 'ADD_NEW_STYLED_COMPONENT_TO_INVOCATION'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
-export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION =
-  'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
+export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
-export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION =
-  'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
+export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const CHANGE_NAME = 'CHANGE_NAME'
 export const CHANGE_DECLARATION_TEXT = 'CHANGE_DECLARATION_TEXT'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
@@ -60,9 +40,10 @@ export default function appReducer(state = getTestDB(), action) {
   switch (action.type) {
     case CHANGE_NAME: {
       const { nameId, value } = action.payload
-
-      return update(state, 'names', names => update(names, nameId, value))
+      Name.withId(nameId).update(value)
+      return session.state
     }
+
 
     case CHANGE_DECLARATION_TEXT: {
       const { declarationId, value } = action.payload
@@ -70,11 +51,13 @@ export default function appReducer(state = getTestDB(), action) {
       return session.state
     }
 
+
     case TOGGLE_COMPONENT_TYPE: {
       const { declarationId, targetType } = action.payload
       Declaration.withId(declarationId).update({ type: targetType })
       return session.state
     }
+
 
     case CHANGE_EDITOR_CURRENT_FILE: {
       const { currentFileId, files, names } = state
@@ -85,536 +68,352 @@ export default function appReducer(state = getTestDB(), action) {
         nextId = children.find(fileId => names[files[fileId].nameId].includes('index'))
       }
 
-      return update(state, 'currentFileId', nextId || currentFileId)
+      return {
+        ...state,
+        currentFileId: nextId || currentFileId,
+      }
     }
+
 
     case SET_PARAM_IS_SPREAD_MEMBER_TRUE: {
       const { paramId } = action.payload
-
-      return update(state, 'params', params => updateAtKey(params, paramId, 'isSpreadMember', true))
+      DeclParam.withId(paramId).update({ isSpreadMember: true })
+      return session.state
     }
+
 
     case ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
       const { invocationId } = action.payload
-
-      return update(state, 'invocations', invocations =>
-        updateAtKey(invocations, invocationId, 'hasPropsSpread', true)
-      )
+      Invocation.withId(invocationId).update({ hasPropsSpread: true })
+      return session.state
     }
 
+
     case ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
-      const { invocations, declarations, params } = state
       const {
         targetInvocationId,
         prop: { paramId },
       } = action.payload
-      const { nameId, payload } = params[paramId]
-      const invocationDeclarationId = invocations[targetInvocationId].declarationId
+      const { nameId, payload } = DeclParam.withId(paramId).ref()
 
-      let nextState = state
-      let nextParams = params
-      let nextInvocations = invocations
+      Invocation.withId(targetInvocationId).callParams.insert(
+        CallParam.create({ declParamId: paramId }),
+        0
+      )
 
-      // create new call param referencing the dropped prop
-      let callParam = { declParamId: paramId };
-      [nextParams, callParam] = addCallParams(nextParams, callParam)
-      nextState = update(nextState, 'params', nextParams)
-
-      // update the target invocation
-      const updater = invocation => insertAtKey(invocation, 'callParamIds', callParam, 0)
-      nextInvocations = update(nextInvocations, targetInvocationId, updater)
-
-      // update the target invocations declaration with new param info if relevant
-      if (invocationDeclarationId) {
-        const { declParamIds, ...declaration } = declarations[invocationDeclarationId]
-        const nameMatchParamId = declParamIds.find(id => params[id].nameId === nameId)
+      if (Invocation.declaration) {
+        const nameMatchParamId = Invocation.declaration.declParams.find(
+          id => state.params[id].nameId === nameId
+        )
 
         if (nameMatchParamId) {
-          const paramUpdater = ({ count, ...param }) => ({
-            ...param,
-            count: count ? count + 1 : 1,
-          })
-          nextState = updateAtKey(nextState, 'params', nameMatchParamId, paramUpdater)
+          DeclParam.withId(nameMatchParamId).migrate({ count: count => (count ? count + 1 : 1) })
         } else {
-          let newDeclParam = { nameId, count: 1, payload };
-          [nextParams, newDeclParam] = addDeclParams(nextParams, newDeclParam)
-          nextState = update(nextState, 'params', nextParams)
-
-          nextState = updateAtKey(nextState, 'declarations', invocationDeclarationId, {
-            ...declaration,
-            declParamIds: [...declParamIds, newDeclParam],
-          })
+          Invocation.declaration.declParams.insert(DeclParam.create({ nameId, count: 1, payload }))
         }
       }
 
-      return update(nextState, 'invocations', nextInvocations)
+      return session.state
     }
 
+
     case ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD: {
-      const { invocations, params } = state
       const {
         targetInvocationId,
         targetPosition,
         prop: { paramId, nameId },
       } = action.payload
-      let nextState = state
 
-      /* Creates */
-      // create new call param referencing the dropped prop
-      let nextParams = params
-      let callParam = { declParamId: paramId };
-      [nextParams, callParam] = addCallParams(nextParams, callParam)
-      nextState = update(nextState, 'params', nextParams)
-
-      // create param invocation
-      let paramInvocation = { nameId, callParamIds: [callParam], type: PARAM_INVOCATION }
-      let nextInvocations;
-      [nextInvocations, paramInvocation] = addInvocations(invocations, paramInvocation)
-
-      /* Update */
-      const updater = ivn => ({
-        ...ivn,
-        invocationIds: insertAt(ivn.invocationIds, paramInvocation, targetPosition),
-        closed: false,
-      })
-
-      return update(nextState, 'invocations', update(nextInvocations, targetInvocationId, updater))
-    }
-
-    case ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION: {
-      const { names, invocations, files, declarations } = state
-      const { targetInvocationId, targetPosition, fileId, isDirectory } = action.payload
-
-      let file = files[fileId]
-      if (isDirectory) {
-        file = files[file.children.find(id => names[files[id].nameId] === 'index')]
-      }
-
-      const declarationId = file.declarationIds.find(id =>
-        componentDeclarationTypes.includes(declarations[id].type)
+      Invocation.withId(targetInvocationId).invocations.insert(
+        Invocation.create({
+          nameId,
+          callParamIds: [CallParam.create({ declParamId: paramId })],
+          type: PARAM_INVOCATION,
+        }),
+        targetPosition
       )
 
-      /* CREATES */
-      let [nextInvocations, newInvocationId] = addInvocations(invocations, { // eslint-disable-line prefer-const
-        nameId: declarations[declarationId].nameId,
-        closed: true,
-        declarationId,
-      })
+      Invocation.update({ closed: false })
 
-      /* UPDATES */
-      const updater = ivn => ({
-        ...insertAtKey(ivn, 'invocationIds', newInvocationId, targetPosition),
-        closed: false,
-      })
-
-      return update(state, 'invocations', update(nextInvocations, targetInvocationId, updater))
+      return session.state
     }
+
+
+    case ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION: {
+      const { targetInvocationId, targetPosition, fileId, isDirectory } = action.payload
+
+      let sourceFileId = fileId
+      if (isDirectory) {
+        sourceFileId = File.withId(fileId).children.find(id => File.withId(id).name.ref() === 'index')
+      }
+
+      const declarationId = File.withId(sourceFileId).declarations.find(id =>
+        componentDeclarationTypes.includes(Declaration.withId(id).ref().type)
+      )
+
+      Invocation.withId(targetInvocationId).invocations.insert(
+        Invocation.create({
+          nameId: Declaration.withId(declarationId).ref().nameId,
+          closed: true,
+          declarationId,
+        }),
+        targetPosition
+      )
+
+      return session.state
+    }
+
 
     case MERGE_FILE: {
       const { sourceFileId, targetFileId } = action.payload
 
-      return update(state, 'files', files => {
-        let nextFiles = files
+      const dirId = Object.keys(File.all().ref()).find(fileId =>
+        File.withId(fileId).children.includes(sourceFileId)
+      )
 
-        // add declarations to other file
-        nextFiles = update(nextFiles, targetFileId, file =>
-          update(file, 'declarationIds', ids => [...ids, ...files[sourceFileId].declarationIds])
-        )
+      // remove source file from directory containing it
+      File.withId(dirId).children.remove(sourceFileId)
 
-        // Delete file
-        const dirId = Object.keys(nextFiles).find(fileId =>
-          nextFiles[fileId].children.includes(sourceFileId)
-        )
+      // delete the dragged file
+      const { declarationIds } = File.withId(sourceFileId).ref()
+      File.delete()
 
-        nextFiles = update(nextFiles, dirId, file => filterOutAtKey(file, 'children', sourceFileId))
+      // migrate the dragged files declarations to the targetFile
+      File.withId(targetFileId).migrate({ declarationIds: ids => [...ids, ...declarationIds] })
 
-        nextFiles = deleteKey(nextFiles, sourceFileId)
-
-        return nextFiles
-      })
+      return session.state
     }
 
     case MOVE_INVOCATION: {
-      const { invocations } = state
       const {
         sourceParentId,
         sourceInvocationId,
         targetInvocationId,
         targetPosition,
       } = action.payload
-      let updater
-      let nextInvocations
 
-      const sourcePosition = invocations[sourceParentId].invocationIds.findIndex(
-        id => id === sourceInvocationId
-      )
+      // remove from source
+      Invocation
+        .withId(sourceParentId)
+        .invocations
+        .remove(sourceInvocationId)
 
-      /* UPDATES */
-      // remove
-      updater = ivn => {
-        let nextIvn = removeAtKey(ivn, 'invocationIds', sourcePosition)
-        if (!nextIvn.invocationIds.length) {
-          nextIvn = {
-            ...nextIvn,
-            closed: true,
-          }
-        }
-        return nextIvn
-      }
-      nextInvocations = update(invocations, sourceParentId, updater)
+      // possibly close source
+      Invocation.migrate({ closed: (_, ref) => !ref.invocationIds.length })
 
-      // insert
-      updater = ivn => ({
-        ...insertAtKey(ivn, 'invocationIds', sourceInvocationId, targetPosition),
-        closed: false,
-      })
-      nextInvocations = update(nextInvocations, targetInvocationId, updater)
+      // add to target
+      Invocation
+        .withId(targetInvocationId)
+        .invocations
+        .insert(sourceInvocationId, targetPosition)
 
-      return update(state, 'invocations', nextInvocations)
+      // open target
+      Invocation.update({ closed: false })
+
+      return session.state
     }
 
-    case ADD_NEW_STYLED_COMPONENT_TO_INVOCATION: {
-      let {
-        names: nextNames,
-        files: nextFiles,
-        declarations: nextDeclarations,
-        invocations: nextInvocations,
-        params: nextParams,
-      } = state
 
+    case ADD_NEW_STYLED_COMPONENT_TO_INVOCATION: {
       const {
         targetInvocationId,
         targetPosition,
         prop: { paramId, name, nameId },
       } = action.payload
 
-      let newName = capitalize(name);
-      [nextNames, newName] = addNames(nextNames, newName)
+      const newNameId = Name.create(capitalize(name))
 
-      let styledDeclaration = { nameId: newName, type: STYLED_COMPONENT, tag: 'div' };
-      [nextDeclarations, styledDeclaration] = addDeclarations(nextDeclarations, styledDeclaration)
+      const newDeclarationId = Declaration.create({
+        nameId: newNameId,
+        type: STYLED_COMPONENT,
+        tag: 'div',
+      })
 
-      let droppedCallParam = { declParamId: paramId };
-      [nextParams, droppedCallParam] = addCallParams(nextParams, droppedCallParam)
+      // Add new invocation to targetInvocation with param invocation child
+      Invocation.withId(targetInvocationId).invocations.insert(
+        Invocation.create({
+          nameId: newNameId,
+          invocationIds: [
+            Invocation.create({
+              nameId,
+              type: PARAM_INVOCATION,
+              callParamIds: [CallParam.create({ declParamId: paramId })]
+            }),
+          ],
+          declarationId: newDeclarationId,
+          inline: true,
+        }),
+        targetPosition
+      )
+      Invocation.update({ closed: false, inline: false })
 
-      let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [droppedCallParam] };
-      [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
-
-      let styledInvocation = {
-        nameId: newName,
-        invocationIds: [paramInvocation],
-        declarationId: styledDeclaration,
-        inline: true,
-      };
-      [nextInvocations, styledInvocation] = addInvocations(nextInvocations, styledInvocation)
-
-      nextInvocations = update(nextInvocations, targetInvocationId, invocation => ({
-        ...insertAtKey(invocation, 'invocationIds', styledInvocation, targetPosition),
-        closed: false,
-        inline: false,
-      }))
-
-      let styleFile = { nameId: newName, declarationIds: [styledDeclaration] };
-      [nextFiles, styleFile] = addFiles(nextFiles, styleFile)
-
-      const dirId = Object.keys(nextFiles).find(id =>
-        nextFiles[id].children.includes(state.currentFileId)
+      // find the current directory
+      const dirId = Object.keys(File.all().ref()).find(id =>
+        File.withId(id).children.includes(state.currentFileId)
       )
 
-      nextFiles = update(nextFiles, dirId, dir => insertAtKey(dir, 'children', styleFile))
+      // insert new file with the declaration into directory
+      File.withId(dirId).children.insert(
+        File.create({ nameId: newNameId, declarationIds: [newDeclarationId] })
+      )
 
-      return {
-        ...state,
-        names: nextNames,
-        declarations: nextDeclarations,
-        invocations: nextInvocations,
-        files: nextFiles,
-        params: nextParams,
-      }
+      return session.state
     }
 
+
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD: {
-      let nextState = state
       const {
         targetInvocationId,
         targetPosition,
-        prop: { paramId, name, payload },
+        prop: { name, payload },
       } = action.payload
 
-      const baseName = singular(name)
-      const propPayloadKeys = Object.keys(payload)
-
-      // names
-      let pseudoSpreadPropsName = baseName
-      let newPayloadParamNames = propPayloadKeys
-
-      nextState = update(nextState, 'names', names => {
-        let nextNames = names;
-        [nextNames, pseudoSpreadPropsName, ...newPayloadParamNames] = addNames(
-          nextNames,
-          pseudoSpreadPropsName,
-          ...newPayloadParamNames
-        )
-        return nextNames
-      })
-
       // params
-      let payloadDeclParams = propPayloadKeys.map((key, id) => ({
-        nameId: newPayloadParamNames[id],
-        payload: payload[key],
-        count: 1,
-      }))
+      const payloadDeclParams = Object.keys(payload).map(key =>
+        DeclParam.create({
+          nameId: Name.create(key),
+          payload: payload[key],
+          count: 1,
+        })
+      )
 
-      let droppedCallParam = { declParamId: paramId }
-
-      nextState = update(nextState, 'params', params => {
-        let nextParams = params;
-        [nextParams, droppedCallParam] = addCallParams(nextParams, droppedCallParam);
-        [nextParams, ...payloadDeclParams] = addDeclParams(nextParams, ...payloadDeclParams)
-        return nextParams
-      })
-
-      // new component bundle
-      let componentName
-      let newComponentDeclarationId;
-      [nextState, componentName, newComponentDeclarationId] = createComponentBundle({
-        baseName,
-        state: nextState,
+      const [componentNameId, newComponentDeclarationId] = createComponentBundle({
+        baseName: name,
+        session,
         declParamIds: payloadDeclParams,
         invocationIds: [],
       })
 
-      // add / update invocations
-      let newComponentInvocation = {
-        nameId: componentName,
-        declarationId: newComponentDeclarationId,
-        callParamIds: [],
-        pseudoSpreadPropsNameId: pseudoSpreadPropsName,
-        closed: true,
-      }
+      Invocation.withId(targetInvocationId).invocations.insert(
+        Invocation.create({
+          nameId: componentNameId,
+          declarationId: newComponentDeclarationId,
+          callParamIds: [],
+          pseudoSpreadPropsNameId: Name.create(name),
+          closed: true,
+        }),
+        targetPosition
+      )
 
-      nextState = update(nextState, 'invocations', invocations => {
-        let nextInvocations = invocations;
-        [nextInvocations, newComponentInvocation] = addInvocations(
-          nextInvocations,
-          newComponentInvocation
-        )
+      Invocation.update({ closed: false, inline: false })
 
-        // add the new component invocation to the target position
-        const updater = invocation => ({
-          ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
-          closed: false,
-          inline: false,
-        })
-        return update(nextInvocations, targetInvocationId, updater)
-      })
-
-      return nextState
+      return session.state
     }
 
+
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP: {
-      let nextState = state
       const {
         targetInvocationId,
         targetPosition,
         prop: { paramId, name, nameId, payload },
       } = action.payload
 
-      // payload here is checkTypes.array.of.object certified 🚀
-      const payloadObjSuperExample = Object.assign({}, ...payload)
-      const payloadObjSuperExampleKeys = Object.keys(payloadObjSuperExample)
-
-      // names
+      // payload is certfied checkTypes.array.of.object 🚀
+      // some level of uniformity in payload data is assumed
+      const mergedObjectsInPayloadArray = Object.assign({}, ...payload)
       const baseName = singular(name)
-      let mapPseudoParamName = baseName
-      let newPayloadParamNames = payloadObjSuperExampleKeys
+      const mapPseudoParamNameId = Name.create(baseName)
 
-      nextState = update(nextState, 'names', names => {
-        let nextNames = names;
-        [nextNames, mapPseudoParamName, ...newPayloadParamNames] = addNames(
-          nextNames,
-          mapPseudoParamName,
-          ...newPayloadParamNames
-        )
-        return nextNames
-      })
-
-      // params
-      let payloadDeclParams = payloadObjSuperExampleKeys.map((key, id) => ({
-        nameId: newPayloadParamNames[id],
-        payload: payloadObjSuperExample[key], // assume some level of uniformity in payload data
-        count: 1,
-      }))
-
-      let droppedCallParam = { declParamId: paramId }
-      let keyCallParam = {
-        declParamId: null,
-        nameId: KEY_NAME_ID,
-        valueNameIds: [mapPseudoParamName, ID_NAME_ID],
-      }
-
-      nextState = update(nextState, 'params', params => {
-        let nextParams = params;
-        [nextParams, droppedCallParam, keyCallParam] = addCallParams(
-          nextParams,
-          droppedCallParam,
-          keyCallParam
-        );
-        [nextParams, ...payloadDeclParams] = addDeclParams(nextParams, ...payloadDeclParams)
-        return nextParams
-      })
-
-      // new component bundle
-      let componentName
-      let newComponentDeclarationId;
-      [nextState, componentName, newComponentDeclarationId] = createComponentBundle({
+      const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,
-        state: nextState,
-        declParamIds: payloadDeclParams,
+        session,
+        declParamIds: Object.keys(mergedObjectsInPayloadArray).map(key =>
+          DeclParam.create({
+            nameId: Name.create(key),
+            payload: mergedObjectsInPayloadArray[key],
+            count: 1,
+          })
+        ),
         invocationIds: [],
       })
 
-      // add / update invocations
-      let newComponentInvocation = {
-        nameId: componentName,
-        declarationId: newComponentDeclarationId,
-        callParamIds: [keyCallParam],
-        pseudoSpreadPropsNameId: mapPseudoParamName,
-        closed: true,
-      }
+      Invocation.withId(targetInvocationId).invocations.insert(
+        Invocation.create({
+          nameId,
+          type: PARAM_INVOCATION,
+          callParamIds: [CallParam.create({ declParamId: paramId })],
+          invocationIds: [
+            Invocation.create({
+              nameId: componentNameId,
+              declarationId: newComponentDeclarationId,
+              callParamIds: [
+                CallParam.create({
+                  nameId: KEY_NAME_ID,
+                  valueNameIds: [mapPseudoParamNameId, ID_NAME_ID],
+                }),
+              ],
+              pseudoSpreadPropsNameId: mapPseudoParamNameId,
+              closed: true,
+            }),
+          ],
+        }),
+        targetPosition
+      )
+      Invocation.update({ closed: false, inline: false })
 
-      let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [droppedCallParam] }
-
-      nextState = update(nextState, 'invocations', invocations => {
-        let nextInvocations = invocations;
-        [nextInvocations, newComponentInvocation] = addInvocations(
-          nextInvocations,
-          newComponentInvocation
-        )
-
-        paramInvocation.invocationIds = [newComponentInvocation];
-        [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
-
-        // add the new component invocation to the target position
-        const updater = invocation => ({
-          ...insertAtKey(invocation, 'invocationIds', paramInvocation, targetPosition),
-          closed: false,
-          inline: false,
-        })
-        return update(nextInvocations, targetInvocationId, updater)
-      })
-
-      return nextState
+      return session.state
     }
 
+
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN: {
-      let nextState = state
       const {
         targetInvocationId,
         targetPosition,
         prop: { paramId, name: baseName, nameId },
       } = action.payload
 
-      // component bundle
-      let componentName
-      let newComponentDeclarationId;
-      [nextState, componentName, newComponentDeclarationId] = createComponentBundle({
+      const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,
-        state: nextState,
+        session,
         declParamIds: [REACT_CHILDREN_DECLARATION_PARAM_ID],
         invocationIds: [REACT_CHILDREN_INVOCATION_ID],
       })
 
-      // params
-      let newCallParam = { declParamId: paramId }
-      nextState = update(nextState, 'params', params => {
-        let nextParams = params;
-        [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
-        return nextParams
-      })
+      Invocation.withId(targetInvocationId).invocations.insert(
+        Invocation.create({
+          nameId: componentNameId,
+          declarationId: newComponentDeclarationId,
+          invocationIds: [
+            Invocation.create({
+              nameId,
+              type: PARAM_INVOCATION,
+              callParamIds: [CallParam.create({ declParamId: paramId })],
+            }),
+          ],
+        }),
+        targetPosition
+      )
+      Invocation.update({ closed: false, inline: false })
 
-      // add / update invocations
-      let newComponentInvocation = {
-        nameId: componentName,
-        declarationId: newComponentDeclarationId,
-      }
-      let paramInvocation = { nameId, type: PARAM_INVOCATION, callParamIds: [newCallParam] }
-
-      nextState = update(nextState, 'invocations', invocations => {
-        let nextInvocations = invocations;
-        [nextInvocations, paramInvocation] = addInvocations(nextInvocations, paramInvocation)
-
-        newComponentInvocation.invocationIds = [paramInvocation];
-        [nextInvocations, newComponentInvocation] = addInvocations(
-          nextInvocations,
-          newComponentInvocation
-        )
-
-        // add the new component invocation to the target position
-        const updater = invocation => ({
-          ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
-          closed: false,
-          inline: false,
-        })
-        return update(nextInvocations, targetInvocationId, updater)
-      })
-
-      return nextState
+      return session.state
     }
 
+
     case ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE: {
-      let nextState = state
       const {
         targetInvocationId,
         targetPosition,
         prop: { paramId, name: baseName, nameId, payload },
       } = action.payload
 
-      // params
-      let newDeclParam = { nameId, payload }
-      let newCallParam = { declParamId: paramId }
-
-      nextState = update(nextState, 'params', params => {
-        let nextParams = params;
-        [nextParams, newDeclParam] = addDeclParams(nextParams, newDeclParam);
-        [nextParams, newCallParam] = addCallParams(nextParams, newCallParam)
-        return nextParams
-      })
-
-      // component bundle
-      let componentName
-      let newComponentDeclarationId;
-      [nextState, componentName, newComponentDeclarationId] = createComponentBundle({
+      const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,
-        state: nextState,
-        declParamIds: [newDeclParam],
+        session,
+        declParamIds: [DeclParam.create({ nameId, payload })],
       })
 
-      // add & update invocations
-      let newComponentInvocation = {
-        nameId: componentName,
-        callParamIds: [newCallParam],
-        declarationId: newComponentDeclarationId,
-        closed: true,
-      }
+      Invocation.withId(targetInvocationId).invocations.insert(
+        Invocation.create({
+          nameId: componentNameId,
+          callParamIds: [CallParam.create({ declParamId: paramId })],
+          declarationId: newComponentDeclarationId,
+          closed: true,
+        }),
+        targetPosition
+      )
+      Invocation.update({ closed: false, inline: false })
 
-      nextState = update(nextState, 'invocations', invocations => {
-        let nextInvocations = invocations;
-        [nextInvocations, newComponentInvocation] = addInvocations(
-          nextInvocations,
-          newComponentInvocation
-        )
-
-        // add the new component invocation to the target position
-        const updater = invocation => ({
-          ...insertAtKey(invocation, 'invocationIds', newComponentInvocation, targetPosition),
-          closed: false,
-          inline: false,
-        })
-        return update(nextInvocations, targetInvocationId, updater)
-      })
-
-      return nextState
+      return session.state
     }
 
     default:
@@ -642,9 +441,13 @@ export const addNewStyledComponentToInvocation = createAction(
   ADD_NEW_STYLED_COMPONENT_TO_INVOCATION
 )
 
-export const changeFile = createAction(CHANGE_EDITOR_CURRENT_FILE)
+export const changeFile = createAction(
+  CHANGE_EDITOR_CURRENT_FILE
+)
 
-export const addAttributeToComponentInvocation = createAction(ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION)
+export const addAttributeToComponentInvocation = createAction(
+  ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION
+)
 
 export const addParamAsComponentInvocationChild = createAction(
   ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD
@@ -658,14 +461,26 @@ export const addInvocationFromFileToCI = createAction(
   ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION
 )
 
-export const moveParamToSpread = createAction(SET_PARAM_IS_SPREAD_MEMBER_TRUE)
+export const moveParamToSpread = createAction(
+  SET_PARAM_IS_SPREAD_MEMBER_TRUE
+)
 
-export const moveInvocation = createAction(MOVE_INVOCATION)
+export const moveInvocation = createAction(
+  MOVE_INVOCATION
+)
 
-export const mergeFile = createAction(MERGE_FILE)
+export const mergeFile = createAction(
+  MERGE_FILE
+)
 
-export const changeName = createAction(CHANGE_NAME)
+export const changeName = createAction(
+  CHANGE_NAME
+)
 
-export const changeDeclarationText = createAction(CHANGE_DECLARATION_TEXT)
+export const changeDeclarationText = createAction(
+  CHANGE_DECLARATION_TEXT
+)
 
-export const toggleComponentType = createAction(TOGGLE_COMPONENT_TYPE)
+export const toggleComponentType = createAction(
+  TOGGLE_COMPONENT_TYPE
+)

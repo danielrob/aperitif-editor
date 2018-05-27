@@ -1,81 +1,62 @@
 /* eslint-disable prefer-const */
+import orm from 'orm'
 import { capitalize } from 'utils'
 import { DIR, STYLED_COMPONENT } from 'constantz'
 
-import {
-  addNames,
-  addFiles,
-  addDeclarations,
-  addInvocations,
-} from './model-creation'
-
 const createComponentBundle = ({
   baseName,
-  state,
-  state: { names, files, rootFiles, declarations, invocations },
+  session,
   declParamIds = [],
   invocationIds = [],
 }) => {
-  let nextNames = names
-  let nextFiles = files
-  let nextRootFiles = rootFiles
-  let nextDeclarations = declarations
-  let nextInvocations = invocations
+  const { Name, Declaration, Invocation, File } = session
 
   /* names - for the new component bundle */
-  let dirName = getNewComponentName(names, capitalize(baseName))
-  let indexName = 'index'
-  let wrapperName = `${dirName}Wrapper`;
-
-  [nextNames, dirName, indexName, wrapperName] = addNames(names, dirName, indexName, wrapperName)
+  const componentName = getNewComponentName(Name.all().ref(), capitalize(baseName))
+  const componentNameId = Name.create(componentName)
+  const indexNameId = Name.create('index')
+  const wrapperNameId = Name.create(`${componentName}Wrapper`)
 
   // NEW COMPONENT WRAPPER
-  let wrapperDeclaration = { nameId: wrapperName, type: STYLED_COMPONENT, tag: 'div' };
-  [nextDeclarations, wrapperDeclaration] = addDeclarations(nextDeclarations, wrapperDeclaration)
-
-  // the invocation of the wrapper component in the new component definition
-  let wrapperInvoke = {
-    nameId: wrapperName,
-    source: null,
-    invocationIds,
-    closed: !invocationIds.length,
-    declarationId: wrapperDeclaration,
-  };
-
-  [nextInvocations, wrapperInvoke] = addInvocations(nextInvocations, wrapperInvoke)
+  const wrapperDeclarationId = Declaration.create({
+    nameId: wrapperNameId,
+    type: STYLED_COMPONENT,
+    tag: 'div',
+  })
 
   // NEW COMPONENT
-  let newComponentDeclaration = {
-    nameId: dirName,
-    invocationIds: [wrapperInvoke],
+  const newComponentDeclarationId = Declaration.create({
+    nameId: componentNameId,
+    invocationIds: [
+      Invocation.create({
+        nameId: wrapperNameId,
+        source: null,
+        invocationIds,
+        closed: !invocationIds.length,
+        declarationId: wrapperDeclarationId,
+      }),
+    ],
     declParamIds,
-  };
+  })
 
-  [nextDeclarations, newComponentDeclaration] =
-    addDeclarations(nextDeclarations, newComponentDeclaration)
+  const directoryId = File.create({
+    nameId: componentNameId,
+    type: DIR,
+    children: [
+      File.create({ nameId: indexNameId, declarationIds: [newComponentDeclarationId] }),
+      File.create({ nameId: wrapperNameId, declarationIds: [wrapperDeclarationId] }),
+    ],
+  })
 
-  /* files - for each declaration + index */
-  let indexFile = { nameId: indexName, declarationIds: [newComponentDeclaration] }
-  let wrapperFile = { nameId: wrapperName, declarationIds: [wrapperDeclaration] };
-  [nextFiles, indexFile, wrapperFile] = addFiles(files, indexFile, wrapperFile)
-
-  /* dirs */
-  let directory = { nameId: dirName, type: DIR, children: [wrapperFile, indexFile] };
-  [nextFiles, directory] = addFiles(nextFiles, directory)
-  nextRootFiles = [directory, ...rootFiles]
-
+  // refresh session data
+  orm.session({
+    ...session.state,
+    rootFiles: [directoryId, ...session.state.rootFiles],
+  })
 
   return [
-    {
-      ...state,
-      names: nextNames,
-      declarations: nextDeclarations,
-      invocations: nextInvocations,
-      rootFiles: nextRootFiles,
-      files: nextFiles,
-    },
-    dirName,
-    newComponentDeclaration,
+    componentNameId,
+    newComponentDeclarationId,
   ]
 }
 

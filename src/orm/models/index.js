@@ -1,9 +1,9 @@
-import { default as Name } from './Name'
-import { default as DeclParam } from './DeclParam'
-import { default as CallParam } from './CallParam'
-import { default as Invocation } from './Invocation'
-import { default as Declaration } from './Declaration'
-import { default as File } from './File'
+import Name from './Name'
+import DeclParam from './DeclParam'
+import CallParam from './CallParam'
+import Invocation from './Invocation'
+import Declaration from './Declaration'
+import File from './File'
 
 export { default as Name } from './Name'
 export { default as DeclParam } from './DeclParam'
@@ -16,7 +16,7 @@ export default [
   Name,
   DeclParam,
   CallParam,
-  Invocation,
   Declaration,
+  Invocation,
   File,
 ]

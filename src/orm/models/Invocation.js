@@ -9,6 +9,7 @@ Invocation.stateKey = 'invocations'
 
 Invocation.fields = {
   nameId: fk('Name'),
+  declarationId: fk('Declaration'),
   source: attr(null),
   callParamIds: array(),
   invocationIds: array(),
@@ -17,7 +18,6 @@ Invocation.fields = {
   closed: attr(false),
   hasPropsSpread: attr(false),
   pseudoSpreadPropsNameId: fk('Name'),
-  declarationId: attr(null),
   inline: attr(false),
 }
 

@@ -2,13 +2,13 @@ import invariant from 'invariant'
 import { required, requiredOrNull } from 'constantz'
 
 class Model {
-  constructor(session, modelClass) {
-    this.session = session // session is the ORM itself. When consumed it will have session.state
+  constructor(orm, modelClass) {
+    this.session = orm // session is the ORM itself. When consumed it will have session.state
     this.modelName = modelClass.modelName
     this.stateKey = modelClass.stateKey
     this.fields = modelClass.fields
 
-    this.initializeFields(modelClass.fields, session)
+    this.initializeFields(modelClass.fields, orm)
   }
 
   initializeFields = (fields = {}, orm) => {
@@ -26,13 +26,32 @@ class Model {
           invariant(orm[modelName], `Did not find model ${modelName} in registry.`)
           this.foreignKeys[key] = orm[modelName].stateKey
           this.defaultProps[key] = null
+          const Model = orm.modelClasses[modelName]
+          if (key.endsWith('Id')) {
+            Object.defineProperty(this, key.replace('Id', ''), {
+              get() {
+                const { result: { id } } = this.currentQueryResult
+                const currentValue = this.getModelData()[id][key]
+                if (currentValue) {
+                  return new Model(orm, Model).withId(currentValue)
+                }
+                return null
+              },
+            })
+          }
           break
         }
         case 'array': {
           this.defaultProps[key] = defaultValue || []
-          this[key] = {
+          const modelKey = key.endsWith('Ids') ? key.replace('Ids', 's') : key
+          this[modelKey] = {
             insert: (value, position) => this.inserter(key, value, position),
             remove: value => this.remover(key, value),
+            // add back array methods
+            filter: cb => this.bindArrayMethod(key, 'filter', cb),
+            find: cb => this.bindArrayMethod(key, 'find', cb),
+            findIndex: cb => this.bindArrayMethod(key, 'findIndex', cb),
+            includes: cb => this.bindArrayMethod(key, 'includes', cb),
           }
           break
         }
@@ -46,18 +65,26 @@ class Model {
   inserter = (key, insertValue, position) => {
     const { result: { id } } = this.currentQueryResult
     const arrayToUpdate = this.getModelData()[id][key]
+    const targetPosition = (position === 0 || position) ? position : arrayToUpdate.length
 
     this.update({
       [key]: [
-        ...arrayToUpdate.slice(0, position || arrayToUpdate.length),
+        ...arrayToUpdate.slice(0, targetPosition),
         insertValue,
-        ...arrayToUpdate.slice(position || arrayToUpdate.length),
+        ...arrayToUpdate.slice(targetPosition),
       ],
     })
   }
 
-  remover = (key, valueToRemove) => {
+  bindArrayMethod = (key, method, ...args) => {
     const { result: { id } } = this.currentQueryResult
+    return this.getModelData()[id][key][method](...args)
+  }
+
+  remover = (key, valueToRemove) => {
+    const {
+      result: { id },
+    } = this.currentQueryResult
     const arrayToUpdate = this.getModelData()[id][key]
 
     this.update({
@@ -89,7 +116,7 @@ class Model {
   // non-chainable
   ref = () => this.currentQueryResult.result
 
-  create = (newModel) => {
+  create = newModel => {
     const getModelData = this.getModelData()
     const id = getNextId(getModelData)
 
@@ -123,6 +150,22 @@ class Model {
     })
   }
 
+  migrate = mergeFunctions => {
+    const { result, isSet } = this.currentQueryResult
+    const currentData = this.getModelData()[result.id]
+    invariant(!isSet, 'migrating multiple entities at once is not supported')
+
+    return this.update(
+      Object.keys(mergeFunctions).reduce(
+        (out, key) => ({
+          ...out,
+          [key]: mergeFunctions[key](currentData[key], currentData),
+        }),
+        {}
+      )
+    )
+  }
+
   delete = () => {
     const { result, isSet } = this.currentQueryResult
     const modelId = result.id
@@ -140,15 +183,17 @@ class Model {
 
 export default Model
 
-
 // field utils
-export const attr = opts => (opts !== null && typeof opts === 'object' && !opts.length === 0) ? ({
-  ...opts,
-  type: 'attr',
-}) : ({
-  defaultValue: opts,
-  type: 'attr',
-})
+export const attr = opts =>
+  opts !== null && typeof opts === 'object' && !opts.length === 0
+    ? {
+      ...opts,
+      type: 'attr',
+    }
+    : {
+      defaultValue: opts,
+      type: 'attr',
+    }
 
 export const fk = (modelName, methodName) => ({
   type: 'fk',
@@ -160,23 +205,21 @@ export const array = () => ({
   type: 'array',
 })
 
-
 // model utils
 export const getNextId = integerKeyedObject => Math.max(0, ...Object.keys(integerKeyedObject)) + 1
 
 const validate = (defaults, props) => {
   if (process.env.NODE_ENV !== 'production') {
     Object.keys(defaults).forEach(key => {
-      if (
-        defaults[key] === required ||
-        (defaults[key] === requiredOrNull && props[key] !== null)
-      ) {
+      if (defaults[key] === required || (defaults[key] === requiredOrNull && props[key] !== null)) {
         invariant(props[key], `${key} is a required field`)
       }
     })
     Object.keys(props).forEach(key => {
-      invariant(defaults[key] !== undefined, `${key} is an unknown property, ${JSON.stringify(defaults[key])}`)
+      invariant(
+        defaults[key] !== undefined,
+        `${key} is an unknown property, ${JSON.stringify(defaults[key])}`
+      )
     })
   }
 }
-

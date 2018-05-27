@@ -1,5 +1,7 @@
+import invariant from 'invariant'
 import Model, { getNextId } from '../Model'
 
+// Name is just a flat dictionary, so we override a few methods here.
 class Name extends Model {
   create = (name) => {
     const getModelData = this.getModelData()
@@ -10,6 +12,15 @@ class Name extends Model {
       [id]: name,
     })
     return id
+  }
+
+  withId = id => this.setCurrentQueryResult(id, false) && this
+
+  update = newName => {
+    const { result: nameId, isSet } = this.currentQueryResult
+    const modelData = this.getModelData()
+    invariant(!isSet, 'updating multiple entities at once is not supported')
+    this.setModelData({ ...modelData, [nameId]: newName })
   }
 }
 

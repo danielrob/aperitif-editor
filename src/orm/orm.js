@@ -10,8 +10,10 @@ class ORM {
   }
 
   register = (...Models) => {
+    this.modelClasses = this.modelClasses || {}
     Models.forEach(Model => {
       this[Model.modelName] = new Model(this, Model)
+      this.modelClasses[Model.modelName] = Model
     })
     return this
   }
