@@ -2,7 +2,7 @@
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
 import orm from 'orm'
-import { createComponentBundle } from 'model-utils'
+import { createComponentBundle } from 'orm/model-utils'
 import { DIR, componentDeclarationTypes, PARAM_INVOCATION, STYLED_COMPONENT } from 'constantz'
 import { capitalize } from 'utils'
 
