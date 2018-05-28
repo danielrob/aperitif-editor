@@ -36,6 +36,7 @@ export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
 export const MERGE_FILE = 'MERGE_FILE'
+export const MOVE_DECLARATION_TO_FILE = 'MOVE_DECLARATION_TO_FILE'
 export const CONVERT_TO_CLASS_COMPONENT = 'CONVERT_TO_CLASS_COMPONENT'
 export const CONVERT_TO_STATELESS_FUNCTION_COMPONENT = 'CONVERT_TO_STATELESS_FUNCTION_COMPONENT'
 export const UPDATE_INVOCATION = 'UPDATE_INVOCATION'
@@ -218,6 +219,30 @@ export default function appReducer(state = getTestDB(), action) {
 
       return session.state
     }
+
+
+    case MOVE_DECLARATION_TO_FILE: {
+      const { targetFileId, declarationId } = action.payload
+      const { currentFileId } = state
+
+      const { nameId } = Declaration.withId(declarationId).ref()
+
+      if (File.withId(currentFileId).declarations.length() === 1) {
+        return session.state
+      }
+
+      File.withId(targetFileId).children.insert(
+        File.create({
+          nameId,
+          declarationIds: [declarationId],
+        })
+      )
+
+      File.withId(currentFileId).declarations.remove(declarationId)
+
+      return session.state
+    }
+
 
     case MOVE_INVOCATION: {
       const {
@@ -523,6 +548,10 @@ export const moveInvocation = createAction(
 
 export const mergeFile = createAction(
   MERGE_FILE
+)
+
+export const moveDeclarationToFile = createAction(
+  MOVE_DECLARATION_TO_FILE,
 )
 
 export const convertToClassCompmonent = createAction(

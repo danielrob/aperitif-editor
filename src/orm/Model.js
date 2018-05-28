@@ -54,6 +54,7 @@ class Model {
             find: cb => this.bindArrayMethod(key, 'find', cb),
             findIndex: cb => this.bindArrayMethod(key, 'findIndex', cb),
             includes: cb => this.bindArrayMethod(key, 'includes', cb),
+            length: () => this.getModelData()[this.currentQueryResult.result.id][key].length,
           }
 
           if (modelName) {
@@ -83,6 +84,13 @@ class Model {
         ...arrayToUpdate.slice(targetPosition),
       ],
     })
+
+    const hasManyModel = this.hasManyRelations[key]
+    if (hasManyModel) {
+      this.session[hasManyModel].withId(insertValue).update({
+        [`${this.modelName.toLowerCase()}Id`]: id,
+      })
+    }
   }
 
   bindArrayMethod = (key, method, ...args) => {
@@ -121,6 +129,11 @@ class Model {
   all = () => this.setCurrentQueryResult(this.getModelData(), true) && this
 
   withId = id => this.setCurrentQueryResult(this.getModelData()[id], false) && this
+
+  // refresh = () => {
+  //   const { isSet, result } = this.currentQueryResult
+  //   return isSet ? this.all() : this.withId(result.id)
+  // }
 
   // non-chainable
   ref = () => this.currentQueryResult.result

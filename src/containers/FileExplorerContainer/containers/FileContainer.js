@@ -2,12 +2,12 @@ import T from 'prop-types'
 import { forbidExtraProps, or, explicitNull } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { DragSource } from 'react-dnd'
+import { DragSource, DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { fileTypesArray, DIR, FILE } from 'constantz'
-import { changeFile } from 'duck'
+import { fileTypesArray, DIR, FILE, STYLED_COMPONENT } from 'constantz'
+import { changeFile, moveDeclarationToFile } from 'duck'
 
 import { makeGetFile } from '../selectors'
 import { File } from '../components'
@@ -46,7 +46,7 @@ const makeMapStateToProps = () => {
   return (state, props) => getFile(state, props)
 }
 
-const mapDispatchToProps = { changeFile }
+const mapDispatchToProps = { changeFile, moveDeclarationToFile }
 
 
 /* dnd */
@@ -73,10 +73,33 @@ const sourceCollect = (connect, monitor) => ({
   isDragging: monitor.isDragging(),
 })
 
+// target
+const dropzoneTarget = {
+  drop(props, monitor) {
+    const { fileId, moveDeclarationToFile } = props
+    const { declarationId } = monitor.getItem()
+    moveDeclarationToFile({ targetFileId: fileId, declarationId })
+  },
+
+  canDrop(props) {
+    return props.isDirectory
+  },
+}
+
+const targetCollect = (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  dragItem: monitor.getItem(),
+})
+
+const getTargetTypes = ({ isDirectory }) => isDirectory ?
+  [STYLED_COMPONENT, FILE] : []
+
 /* compose export */
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
-  DragSource(getType, sourceSpec, sourceCollect)
+  DragSource(getType, sourceSpec, sourceCollect),
+  DropTarget(getTargetTypes, dropzoneTarget, targetCollect)
 )(FileContainer)
 
 

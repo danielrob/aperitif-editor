@@ -1,8 +1,10 @@
 import React from 'react'
-import { Keyword, Backtick, Input } from 'components'
-import { updateDeclaration } from 'duck'
 import { connect } from 'react-redux'
 import AutosizeInput from 'react-input-autosize'
+
+import { updateDeclaration } from 'duck'
+import { Keyword, Backtick, Input } from 'components'
+import { ComponentDragSource } from 'containers'
 
 import TemplateStringTextArea from './TemplateStringTextArea'
 
@@ -18,7 +20,7 @@ class StyledComponent extends React.Component {
   }
 
   render() {
-    const { nameId, tag, text = '  ' } = this.props
+    const { declarationId, nameId, type, tag, text = '  ' } = this.props
 
     const tagInput = {
       type: 'text',
@@ -28,7 +30,17 @@ class StyledComponent extends React.Component {
 
     return (
       <div>
-        <Keyword>const</Keyword> <Input nameId={nameId} /> =
+        <ComponentDragSource
+          type={type}
+          declarationId={declarationId}
+          render={(connectDragSource, connectDragPreview) => connectDragSource(
+            <span>
+              <Keyword>const </Keyword>
+              {connectDragPreview(<div style={{ display: 'inline-block' }}><Input nameId={nameId} /> </div>)}
+            </span>
+          )}
+        />
+        =
         styled.<AutosizeInput {...tagInput} /><Backtick />
         <TemplateStringTextArea value={text} onChange={this.onChange} />
         <Backtick />
