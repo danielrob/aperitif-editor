@@ -59,7 +59,7 @@ const propSource = {
     }
   },
   canDrag(props) {
-    return !props.isRoot
+    return !props.initial
   },
 }
 
@@ -97,7 +97,7 @@ export default compose(
 ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
   // passed by parent
   invocationId: T.number.isRequired,
-  isRoot: T.bool,
+  initial: T.bool,
   depth: T.number.isRequired,
   parentId: T.number,
   type: T.oneOf([COMPONENT_INVOCATION, PARAM_INVOCATION]),
@@ -131,7 +131,7 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
 ComponentInvocationTreeContainer.defaultProps = {
   parentId: null,
   paramChildren: [],
-  isRoot: false,
+  initial: false,
   dragItem: null,
   isDragging: false,
   type: null,

@@ -34,7 +34,7 @@ const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, 
 export default styled(ComponentInvocationTree).as.div`
   color: ${theme.colors.darkgreen};
   padding-left: 0;
-  cursor: ${props => (props.isRoot ? 'inherit' : 'pointer')}
+  cursor: ${props => (props.initial ? 'inherit' : 'pointer')}
   user-select: text;
   line-height: 2;
 `
@@ -43,7 +43,7 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
   // passed by parent
   invocationId: T.number.isRequired,
   depth: T.number.isRequired,
-  isRoot: T.bool.isRequired,
+  initial: T.bool.isRequired,
   parentId: T.number,
   type: T.oneOf([COMPONENT_INVOCATION, PARAM_INVOCATION]),
 

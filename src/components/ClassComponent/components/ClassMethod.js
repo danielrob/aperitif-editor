@@ -40,7 +40,7 @@ export default class ClassMethod extends React.Component {
         {indent(2)}
         <Keyword>return </Keyword> (
         {invocationIds.map(id => (
-          <ComponentInvocationTreeContainer key={id} invocationId={id} isRoot depth={3} />
+          <ComponentInvocationTreeContainer key={id} invocationId={id} initial depth={3} />
         ))}
         {indent(2)})<br />
         {indent(1)}

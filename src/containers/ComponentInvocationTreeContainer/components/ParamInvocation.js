@@ -37,6 +37,7 @@ const ParamInvocation = ({
                 parentId={parentId}
                 invocationId={chainedInvocation.id}
                 depth={1}
+                initial
               />
               ))
             </React.Fragment>
