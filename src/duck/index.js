@@ -34,34 +34,20 @@ export const ADD_NEW_STYLED_COMPONENT_TO_INVOCATION = 'ADD_NEW_STYLED_COMPONENT_
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
-export const ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
-export const CHANGE_NAME = 'CHANGE_NAME'
-export const CHANGE_DECLARATION_TEXT = 'CHANGE_DECLARATION_TEXT'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
 export const MERGE_FILE = 'MERGE_FILE'
-export const SET_PARAM_IS_SPREAD_MEMBER_TRUE = 'SET_PARAM_IS_SPREAD_MEMBER_TRUE'
 export const CONVERT_TO_CLASS_COMPONENT = 'CONVERT_TO_CLASS_COMPONENT'
 export const CONVERT_TO_STATELESS_FUNCTION_COMPONENT = 'CONVERT_TO_STATELESS_FUNCTION_COMPONENT'
+export const UPDATE_INVOCATION = 'UPDATE_INVOCATION'
+export const UPDATE_NAME = 'UPDATE_NAME'
+export const UPDATE_DECLARATION = 'UPDATE_DECLARATION'
+export const UPDATE_DECL_PARAM = 'UPDATE_DECL_PARAM'
 
 export default function appReducer(state = getTestDB(), action) {
   const session = orm.session(state)
   const { Name, DeclParam, CallParam, Declaration, Invocation, File } = session
 
   switch (action.type) {
-    case CHANGE_NAME: {
-      const { nameId, value } = action.payload
-      Name.withId(nameId).update(value)
-      return session.state
-    }
-
-
-    case CHANGE_DECLARATION_TEXT: {
-      const { declarationId, value } = action.payload
-      Declaration.withId(declarationId).update({ text: value })
-      return session.state
-    }
-
-
     case CONVERT_TO_CLASS_COMPONENT: {
       const { declarationId } = action.payload
       const { invocationIds, declParamIds } = Declaration.withId(declarationId).ref()
@@ -79,8 +65,8 @@ export default function appReducer(state = getTestDB(), action) {
           ],
         }),
       )
-
       Declaration.update({ type: CLASS_COMPONENT, invocationIds: [] })
+
       return session.state
     }
 
@@ -112,7 +98,6 @@ export default function appReducer(state = getTestDB(), action) {
         declParamids,
       })
 
-
       return session.state
     }
 
@@ -130,20 +115,6 @@ export default function appReducer(state = getTestDB(), action) {
         ...state,
         currentFileId: nextId || currentFileId,
       }
-    }
-
-
-    case SET_PARAM_IS_SPREAD_MEMBER_TRUE: {
-      const { paramId } = action.payload
-      DeclParam.withId(paramId).update({ isSpreadMember: true })
-      return session.state
-    }
-
-
-    case ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION: {
-      const { invocationId } = action.payload
-      Invocation.withId(invocationId).update({ hasPropsSpread: true })
-      return session.state
     }
 
 
@@ -230,11 +201,12 @@ export default function appReducer(state = getTestDB(), action) {
     case MERGE_FILE: {
       const { sourceFileId, targetFileId } = action.payload
 
+      // find directory containing source file
       const dirId = Object.keys(File.all().ref()).find(fileId =>
         File.withId(fileId).children.includes(sourceFileId)
       )
 
-      // remove source file from directory containing it
+      // remove from that directory children
       File.withId(dirId).children.remove(sourceFileId)
 
       // delete the dragged file
@@ -479,6 +451,35 @@ export default function appReducer(state = getTestDB(), action) {
       return session.state
     }
 
+
+    case UPDATE_NAME: {
+      const { nameId, value } = action.payload
+      Name.withId(nameId).update(value)
+      return session.state
+    }
+
+
+    case UPDATE_DECLARATION: {
+      const { declarationId, ...declaration } = action.payload
+      Declaration.withId(declarationId).update(declaration)
+      return session.state
+    }
+
+
+    case UPDATE_DECL_PARAM: {
+      const { paramId, ...updates } = action.payload
+      DeclParam.withId(paramId).update(updates)
+      return session.state
+    }
+
+
+    case UPDATE_INVOCATION: {
+      const { invocationId, ...updates } = action.payload
+      Invocation.withId(invocationId).update(updates)
+      return session.state
+    }
+
+
     default:
       return state
   }
@@ -504,10 +505,6 @@ export const addNewStyledComponentToInvocation = createAction(
   ADD_NEW_STYLED_COMPONENT_TO_INVOCATION
 )
 
-export const changeFile = createAction(
-  CHANGE_EDITOR_CURRENT_FILE
-)
-
 export const addAttributeToComponentInvocation = createAction(
   ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION
 )
@@ -516,16 +513,8 @@ export const addParamAsComponentInvocationChild = createAction(
   ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD
 )
 
-export const addPropsSpreadToComponentInvocation = createAction(
-  ADD_SPREAD_ATTRIBUTE_TO_COMPONENT_INVOCATION
-)
-
 export const addInvocationFromFileToCI = createAction(
   ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION
-)
-
-export const moveParamToSpread = createAction(
-  SET_PARAM_IS_SPREAD_MEMBER_TRUE
 )
 
 export const moveInvocation = createAction(
@@ -536,18 +525,38 @@ export const mergeFile = createAction(
   MERGE_FILE
 )
 
-export const changeName = createAction(
-  CHANGE_NAME
-)
-
-export const changeDeclarationText = createAction(
-  CHANGE_DECLARATION_TEXT
-)
-
 export const convertToClassCompmonent = createAction(
   CONVERT_TO_CLASS_COMPONENT
 )
 
 export const convertToStatelessFunctionComponent = createAction(
   CONVERT_TO_STATELESS_FUNCTION_COMPONENT
+)
+
+export const changeFile = createAction(
+  CHANGE_EDITOR_CURRENT_FILE
+)
+
+export const changeName = createAction(
+  UPDATE_NAME
+)
+
+export const updateDeclaration = createAction(
+  UPDATE_DECLARATION,
+)
+
+export const moveParamToSpread = createAction(
+  UPDATE_DECL_PARAM,
+  ({ paramId }) => ({
+    paramId,
+    isSpreadMember: true,
+  })
+)
+
+export const addPropsSpreadToComponentInvocation = createAction(
+  UPDATE_INVOCATION,
+  ({ invocationId }) => ({
+    invocationId,
+    hasPropsSpread: true,
+  })
 )

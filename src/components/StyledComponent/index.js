@@ -1,15 +1,15 @@
 import React from 'react'
 import { Keyword, Backtick, Input } from 'components'
-import { changeDeclarationText } from 'duck'
+import { updateDeclaration } from 'duck'
 import { connect } from 'react-redux'
 
 import TemplateStringTextArea from './TemplateStringTextArea'
 
 class StyledComponent extends React.Component {
   onChange = e => {
-    const { changeDeclarationText, declarationId } = this.props
+    const { updateDeclaration, declarationId } = this.props
 
-    changeDeclarationText({ declarationId, value: e.target.value })
+    updateDeclaration({ declarationId, text: e.target.value })
   }
 
   render() {
@@ -25,6 +25,6 @@ class StyledComponent extends React.Component {
   }
 }
 
-const mapDispatchToProps = { changeDeclarationText }
+const mapDispatchToProps = { updateDeclaration }
 
 export default connect(null, mapDispatchToProps)(StyledComponent)
