@@ -16,7 +16,11 @@ class Name extends Model {
 
   withId = id => this.setCurrentQueryResult(id, false) && this
 
-  ref = () => this.getModelData()[this.currentQueryResult.result]
+  ref = () => {
+    const { result, isSet } = this.currentQueryResult
+    const data = this.getModelData()
+    return isSet ? data : data[result]
+  }
 
   update = newName => {
     const { result: nameId, isSet } = this.currentQueryResult
