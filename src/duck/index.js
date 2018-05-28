@@ -218,6 +218,11 @@ export default function appReducer(state = getTestDB(), action) {
         targetPosition
       )
 
+      Invocation.update({
+        closed: false,
+        inline: false,
+      })
+
       return session.state
     }
 
