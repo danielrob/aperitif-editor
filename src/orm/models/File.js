@@ -12,7 +12,7 @@ File.fields = {
   nameId: fk('Name'),
   type: attr(JS),
   children: array([]),
-  declarationIds: array([]),
+  declarationIds: array([], 'Declaration'), // defines a many-to-one relation
 }
 
 export default File

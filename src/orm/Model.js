@@ -3,10 +3,11 @@ import { required, requiredOrNull } from 'constantz'
 
 class Model {
   constructor(orm, modelClass) {
-    this.session = orm // session is the ORM itself. When consumed it will have session.state
+    this.session = orm // session is the ORM itself. As a session it will have session.state
     this.modelName = modelClass.modelName
     this.stateKey = modelClass.stateKey
     this.fields = modelClass.fields
+    this.hasManyRelations = {}
 
     this.initializeFields(modelClass.fields, orm)
   }
@@ -17,6 +18,7 @@ class Model {
 
     Object.keys(fields).forEach(key => {
       const { type, defaultValue, modelName } = fields[key]
+
       switch (type) {
         case 'attr': {
           this.defaultProps[key] = defaultValue
@@ -52,6 +54,13 @@ class Model {
             find: cb => this.bindArrayMethod(key, 'find', cb),
             findIndex: cb => this.bindArrayMethod(key, 'findIndex', cb),
             includes: cb => this.bindArrayMethod(key, 'includes', cb),
+          }
+
+          if (modelName) {
+            this.hasManyRelations = {
+              ...this.hasManyRelations,
+              [key]: modelName,
+            }
           }
           break
         }
@@ -130,6 +139,17 @@ class Model {
         id,
       },
     })
+
+    Object.keys(newModel).forEach(key => {
+      const hasManyModel = this.hasManyRelations[key]
+      if (hasManyModel) {
+        newModel[key].forEach(relationModelId => {
+          this.session[hasManyModel].withId(relationModelId).update({
+            [`${this.modelName.toLowerCase()}Id`]: id,
+          })
+        })
+      }
+    })
     return id
   }
 
@@ -147,6 +167,17 @@ class Model {
         ...modelData[modelId],
         ...mergeProps,
       },
+    })
+
+    Object.keys(mergeProps).forEach(key => {
+      const hasManyModel = this.hasManyRelations[key]
+      if (hasManyModel) {
+        mergeProps[key].forEach(relationModelId => {
+          this.session[hasManyModel].withId(relationModelId).update({
+            [`${this.modelName.toLowerCase()}Id`]: result.id,
+          })
+        })
+      }
     })
   }
 
@@ -201,8 +232,9 @@ export const fk = (modelName, methodName) => ({
   methodName,
 })
 
-export const array = () => ({
+export const array = (opts, modelName) => ({
   type: 'array',
+  modelName,
 })
 
 // model utils
