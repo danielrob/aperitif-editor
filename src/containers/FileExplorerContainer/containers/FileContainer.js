@@ -7,7 +7,7 @@ import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
 import { fileTypesArray, DIR, FILE, STYLED_COMPONENT } from 'constantz'
-import { changeFile, moveDeclarationToFile } from 'duck'
+import { changeFile, moveDeclarationToFile, moveFile } from 'duck'
 
 import { makeGetFile } from '../selectors'
 import { File } from '../components'
@@ -26,6 +26,8 @@ class FileContainer extends React.Component {
       isCurrent, // eslint-disable-line no-unused-vars
       declarationIds, // eslint-disable-line no-unused-vars
       changeFile, // eslint-disable-line no-unused-vars
+      moveDeclarationToFile, // eslint-disable-line no-unused-vars
+      moveFile, // eslint-disable-line no-unused-vars
       ...props
     } = this.props
 
@@ -39,14 +41,13 @@ class FileContainer extends React.Component {
   }
 }
 
-
 /* connect */
 const makeMapStateToProps = () => {
   const getFile = makeGetFile()
   return (state, props) => getFile(state, props)
 }
 
-const mapDispatchToProps = { changeFile, moveDeclarationToFile }
+const mapDispatchToProps = { changeFile, moveDeclarationToFile, moveFile }
 
 
 /* dnd */
@@ -76,24 +77,40 @@ const sourceCollect = (connect, monitor) => ({
 // target
 const dropzoneTarget = {
   drop(props, monitor) {
-    const { fileId, moveDeclarationToFile } = props
-    const { declarationId } = monitor.getItem()
-    moveDeclarationToFile({ targetFileId: fileId, declarationId })
+    const { fileId, moveDeclarationToFile, moveFile } = props
+    switch (monitor.getItemType()) {
+      case DIR:
+      case FILE: {
+        const { fileId: sourceFileId } = monitor.getItem()
+        moveFile({ targetDirectoryId: fileId, sourceFileId })
+        break
+      }
+      case STYLED_COMPONENT: {
+        const { declarationId } = monitor.getItem()
+        moveDeclarationToFile({ targetDirectoryId: fileId, declarationId })
+        break
+      }
+      // no default
+    }
   },
 
-  canDrop(props) {
-    return props.isDirectory
+  canDrop(props, monitor) {
+    const { fileId, isDirectory, path } = props
+    return (
+      isDirectory &&
+      monitor.isOver({ shallow: true }) &&
+      ![fileId, ...path].includes(monitor.getItem().fileId)
+    )
   },
 }
 
-const targetCollect = (connect, monitor) => ({
+const targetCollect = connect => ({
   connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  dragItem: monitor.getItem(),
 })
 
 const getTargetTypes = ({ isDirectory }) => isDirectory ?
-  [STYLED_COMPONENT, FILE] : []
+  [STYLED_COMPONENT, FILE, DIR] : []
+
 
 /* compose export */
 export default compose(
@@ -109,8 +126,9 @@ FileContainer.propTypes = forbidExtraProps({
   fileId: T.number.isRequired,
   parentName: or([T.string.isRequired, explicitNull()]), // eslint-disable-line
   initial: T.bool,
+  path: T.arrayOf(T.number),
 
-  // from makeGetFile
+  // from makeSelectFile
   name: T.string.isRequired,
   type: T.oneOf(fileTypesArray).isRequired,
   fileChildren: T.arrayOf(T.number).isRequired,
@@ -120,13 +138,17 @@ FileContainer.propTypes = forbidExtraProps({
 
   // mapDispatchToProps
   changeFile: T.func.isRequired,
+  moveDeclarationToFile: T.func.isRequired,
+  moveFile: T.func.isRequired,
 
   // injected by React DnD
   connectDragSource: T.func.isRequired,
   connectDragPreview: T.func.isRequired,
+  connectDropTarget: T.func.isRequired,
   isDragging: T.bool.isRequired,
 })
 
 FileContainer.defaultProps = {
   initial: false,
+  path: [],
 }

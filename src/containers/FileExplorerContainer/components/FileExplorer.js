@@ -14,6 +14,7 @@ const FileExplorer = ({ rootFiles }) =>
   ))
 
 export default styled(FileExplorer).as.div`
+  position: relative;
   padding: 50px 40px;
   background-color: ${theme.colors.washedpink};
   color: ${theme.colors.darkblue};

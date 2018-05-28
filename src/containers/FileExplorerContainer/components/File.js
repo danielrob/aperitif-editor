@@ -18,6 +18,7 @@ class File extends React.Component {
       connectDragPreview,
       connectDropTarget,
       initial,
+      path,
     } = this.props
     const displayName = name.includes('index') && !initial && isDragging ? parentName : name
 
@@ -30,6 +31,7 @@ class File extends React.Component {
             key={fileId}
             fileId={fileId}
             parentName={name}
+            path={[...path, fileId]}
           />
         ))}
       </div>
@@ -51,9 +53,11 @@ File.propTypes = forbidExtraProps({
   parentName: or([T.string.isRequired, explicitNull()]),
   fileChildren: T.arrayOf(T.number).isRequired,
   initial: T.bool.isRequired,
+  path: T.arrayOf(T.number).isRequired,
 
   // Injected by React DnD:
   connectDragPreview: T.func.isRequired,
+  connectDropTarget: T.func.isRequired,
   isDragging: T.bool.isRequired,
 
   // for wrapper

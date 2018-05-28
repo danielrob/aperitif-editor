@@ -35,6 +35,7 @@ export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
+export const MOVE_FILE = 'MOVE_FILE'
 export const MERGE_FILE = 'MERGE_FILE'
 export const MOVE_DECLARATION_TO_FILE = 'MOVE_DECLARATION_TO_FILE'
 export const CONVERT_TO_CLASS_COMPONENT = 'CONVERT_TO_CLASS_COMPONENT'
@@ -221,8 +222,31 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
 
+    case MOVE_FILE: {
+      const { targetDirectoryId, sourceFileId, toRoot } = action.payload
+      let { rootFiles } = state
+
+      if (rootFiles.includes(sourceFileId)) {
+        rootFiles = rootFiles.filter(id => id !== sourceFileId)
+      } else {
+        File.find((id, ref) => ref.children.includes(sourceFileId)).children.remove(sourceFileId)
+      }
+
+      if (toRoot) {
+        rootFiles = [...rootFiles, sourceFileId]
+      } else {
+        File.withId(targetDirectoryId).children.insert(sourceFileId)
+      }
+
+      return {
+        ...session.state,
+        rootFiles,
+      }
+    }
+
+
     case MOVE_DECLARATION_TO_FILE: {
-      const { targetFileId, declarationId } = action.payload
+      const { targetDirectoryId, declarationId } = action.payload
       const { currentFileId } = state
 
       const { nameId } = Declaration.withId(declarationId).ref()
@@ -231,7 +255,7 @@ export default function appReducer(state = getTestDB(), action) {
         return session.state
       }
 
-      File.withId(targetFileId).children.insert(
+      File.withId(targetDirectoryId).children.insert(
         File.create({
           nameId,
           declarationIds: [declarationId],
@@ -548,6 +572,10 @@ export const moveInvocation = createAction(
 
 export const mergeFile = createAction(
   MERGE_FILE
+)
+
+export const moveFile = createAction(
+  MOVE_FILE
 )
 
 export const moveDeclarationToFile = createAction(

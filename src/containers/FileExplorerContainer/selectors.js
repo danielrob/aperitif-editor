@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect'
 
 import { selectNames, selectFiles, selectCurrentFileId } from 'selectors'
+import { DIR } from 'constantz'
 
 const selectFile = (state, props) => selectFiles(state)[props.fileId]
 
@@ -16,7 +17,7 @@ export const makeGetFile = () => createSelector(
       name: names[nameId],
       type,
       fileChildren: children,
-      isDirectory: !!children.length,
+      isDirectory: !!children.length || type === DIR,
       isCurrent: id === currentFileId,
       declarationIds,
     }

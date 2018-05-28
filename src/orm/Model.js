@@ -130,6 +130,13 @@ class Model {
 
   withId = id => this.setCurrentQueryResult(this.getModelData()[id], false) && this
 
+  find = iteratee => {
+    const modelData = this.getModelData()
+    return this.withId(Object.keys(modelData).find(
+      key => iteratee(modelData[key].id, modelData[key], modelData)
+    ))
+  }
+
   // refresh = () => {
   //   const { isSet, result } = this.currentQueryResult
   //   return isSet ? this.all() : this.withId(result.id)
