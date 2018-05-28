@@ -12,6 +12,7 @@ Declaration.fields = {
   type: attr(STATELESS_FUNCTION_COMPONENT),
   declParamIds: array([]), // could be a true 1-many
   exportType: attr(DEFAULT),
+  declarationIds: array([]),
   invocationIds: array([]),
   tag: attr(null),
   text: attr(),

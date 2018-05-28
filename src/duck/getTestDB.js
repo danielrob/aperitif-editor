@@ -4,7 +4,10 @@ import {
   STYLED_COMPONENT,
   PARAM_INVOCATION,
   CLASS_COMPONENT,
+  CLASS_METHOD,
+  CLASS_PROP,
   PROJECT_INDEX,
+  CONST,
   exportTypes,
 } from 'constantz'
 
@@ -72,8 +75,8 @@ export default function getTestDB() {
   const REACT_CHILDREN_CALL_PARAM_ID = CallParam.create({ declParamId: 2 });
 
   // DeclParams
-  const [childrenDeclParam, ...declParamIds] = [
-    { nameId: childrenNameId },
+  DeclParam.create({ nameId: childrenNameId })
+  const [...declParamIds] = [
     { nameId: p1, payload: true },
     { nameId: p2, payload: 'strrrrrriiing' },
     { nameId: p3, payload: null },
@@ -94,36 +97,41 @@ export default function getTestDB() {
     source: 'prop-types',
   })
 
+  // declarations
+  const appWrapperDeclId = Declaration.create({
+    nameId: appWrapperName,
+    type: STYLED_COMPONENT,
+    tag: 'div',
+  })
+
+  const appDeclId = Declaration.create({
+    nameId: appDirName,
+    invocationIds: [
+      Invocation.create({
+        nameId: appWrapperName,
+        callParamIds: [],
+        closed: true,
+        declarationId: appWrapperDeclId,
+      }),
+    ],
+    declParamIds,
+  })
+
   // dirs
-  const appDir = File.create({
+  const appDir = File.create({ // App
     nameId: appDirName,
     type: DIR,
     children: [
-      File.create({
+      File.create({ // index.js
         nameId: appIndexIdName,
         declarationIds: [
-          Declaration.create({
-            nameId: appDirName,
-            invocationIds: [
-              Invocation.create({
-                nameId: appWrapperName,
-                callParamIds: [],
-                closed: true,
-                declarationId: 2,
-              }),
-            ],
-            declParamIds,
-          }),
+          appDeclId,
         ],
       }),
-      File.create({
+      File.create({ // AppWrapper.js
         nameId: appWrapperName,
         declarationIds: [
-          Declaration.create({
-            nameId: appWrapperName,
-            type: STYLED_COMPONENT,
-            tag: 'div',
-          }),
+          appWrapperDeclId,
         ],
       }),
     ],
@@ -139,13 +147,35 @@ export default function getTestDB() {
           Declaration.create({
             type: CLASS_COMPONENT,
             nameId: appContainerName,
-            invocationIds: [
-              Invocation.create({
-                nameId: appDirName,
-                callParamIds: [],
-                closed: true,
-                declarationId: 3,
-                pseudoSpreadPropsNameId: data,
+            declarationIds: [
+              Declaration.create({
+                nameId: Name.create('state'),
+                type: CLASS_PROP,
+                declParamIds: [
+                  DeclParam.create({
+                    nameId: data,
+                    assignNameId: Name.create('sampleApiResponse'),
+                  }),
+                ],
+              }),
+              Declaration.create({
+                nameId: Name.create('render'),
+                type: CLASS_METHOD,
+                declarationIds: [
+                  Declaration.create({
+                    type: CONST,
+                    nameId: data,
+                    text: 'this.state.data',
+                  }),
+                ],
+                invocationIds: [
+                  Invocation.create({
+                    nameId: appDirName,
+                    closed: true,
+                    declarationId: appDeclId,
+                    pseudoSpreadPropsNameId: data,
+                  }),
+                ],
               }),
             ],
           }),

@@ -7,6 +7,7 @@ DeclParam.stateKey = 'params'
 
 DeclParam.fields = {
   nameId: fk('Name'),
+  assignNameId: fk('Name'),
   payload: attr(null),
   // type specific items
   isSpreadMember: attr(false), // react component declarations

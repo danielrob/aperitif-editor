@@ -10,6 +10,12 @@ export const selectDeclarations = s => s.app.declarations
 export const selectInvocations = s => s.app.invocations
 export const selectParams = s => s.app.params
 
+export const selectSomeParams = createSelector(
+  selectParams,
+  (state, props) => props.paramIds,
+  (params, filterIds) => filterIds.map(id => params[id])
+)
+
 export const makeSelectName = () => (state, props) => selectNames(state)[props.nameId]
 
 export const selectCurrentFile = createSelector(
@@ -49,4 +55,8 @@ export const selectCurrentFileDeclarations = createSelector(
         exportType,
       }))
       .filter(({ type }) => type !== LOOKTHROUGH)
+)
+
+export const selectDeclaration = createSelector(
+  selectDeclarations
 )

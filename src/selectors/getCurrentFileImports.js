@@ -3,14 +3,15 @@ import { createSelector } from 'reselect'
 
 import { PARAM_INVOCATION, STYLED_COMPONENT, STATELESS_FUNCTION_COMPONENT, CLASS_COMPONENT } from 'constantz'
 import { composed } from 'utils'
-import { selectInvocations, getCurrentFileDeclarations, selectNames } from './baseSelectors'
+import { selectInvocations, selectDeclarations, getCurrentFileDeclarations, selectNames } from './baseSelectors'
 
 const getCurrentFileImports = createSelector( // which also represent all imports
   selectInvocations,
+  selectDeclarations,
   getCurrentFileDeclarations,
   selectNames,
   composed(
-    (invocations, declarations, names) => {
+    (invocations, allDeclarations, declarations, names) => {
       // Much simpler to handle these specific import cases here than in an abstract manner
       const imports = []
 
@@ -41,7 +42,20 @@ const getCurrentFileImports = createSelector( // which also represent all import
             ...invocationIds.reduce(reduceRecursively, []),
           ]
         }
-        return ([...out, ...declaration.invocationIds.reduce(reduceRecursively, [])])
+
+        const reduceDeclarationsRecursively = (priorDeclarations, id) => {
+          const { invocationIds } = allDeclarations[id]
+          return [
+            ...priorDeclarations,
+            ...invocationIds.reduce(reduceRecursively, []),
+          ]
+        }
+
+        return ([
+          ...out,
+          ...declaration.invocationIds.reduce(reduceRecursively, []),
+          ...declaration.declarationIds.reduce(reduceDeclarationsRecursively, []),
+        ])
       }, imports)
     },
     imports => uniqBy(imports, 'importName'),

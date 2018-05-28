@@ -14,16 +14,22 @@ export const fileTypesArray = [JS, DIR]
 export const PROJECT_INDEX = 'top level index.js file'
 export const LOOKTHROUGH = "I'm all about my invocation, that's it"
 export const CLASS_COMPONENT = 'class_component'
+export const CLASS_METHOD = 'class_method'
+export const CLASS_PROP = 'class_prop'
 export const STATELESS_FUNCTION_COMPONENT = 'stateless_function_component'
 export const STYLED_COMPONENT = 'styled_component'
+export const CONST = 'const'
 export const STANDARD = 'standard'
 
 export const declarationTypes = {
   PROJECT_INDEX,
-  CLASS_COMPONENT,
   LOOKTHROUGH,
+  CLASS_COMPONENT,
+  CLASS_METHOD,
+  CLASS_PROP,
   STATELESS_FUNCTION_COMPONENT,
   STYLED_COMPONENT,
+  CONST,
   STANDARD,
 }
 

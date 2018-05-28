@@ -3,7 +3,16 @@ import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
 import orm from 'orm'
 import { createComponentBundle } from 'orm/model-utils'
-import { DIR, componentDeclarationTypes, PARAM_INVOCATION, STYLED_COMPONENT } from 'constantz'
+import {
+  DIR,
+  CONST,
+  componentDeclarationTypes,
+  PARAM_INVOCATION,
+  STYLED_COMPONENT,
+  CLASS_COMPONENT,
+  CLASS_METHOD,
+  STATELESS_FUNCTION_COMPONENT,
+} from 'constantz'
 import { capitalize } from 'utils'
 
 import getTestDB, {
@@ -31,7 +40,8 @@ export const CHANGE_DECLARATION_TEXT = 'CHANGE_DECLARATION_TEXT'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
 export const MERGE_FILE = 'MERGE_FILE'
 export const SET_PARAM_IS_SPREAD_MEMBER_TRUE = 'SET_PARAM_IS_SPREAD_MEMBER_TRUE'
-export const TOGGLE_COMPONENT_TYPE = 'TOGGLE_COMPONENT_TYPE'
+export const CONVERT_TO_CLASS_COMPONENT = 'CONVERT_TO_CLASS_COMPONENT'
+export const CONVERT_TO_STATELESS_FUNCTION_COMPONENT = 'CONVERT_TO_STATELESS_FUNCTION_COMPONENT'
 
 export default function appReducer(state = getTestDB(), action) {
   const session = orm.session(state)
@@ -52,9 +62,57 @@ export default function appReducer(state = getTestDB(), action) {
     }
 
 
-    case TOGGLE_COMPONENT_TYPE: {
-      const { declarationId, targetType } = action.payload
-      Declaration.withId(declarationId).update({ type: targetType })
+    case CONVERT_TO_CLASS_COMPONENT: {
+      const { declarationId } = action.payload
+      const { invocationIds, declParamIds } = Declaration.withId(declarationId).ref()
+
+      Declaration.declarations.insert(
+        Declaration.create({
+          nameId: Name.create('render'),
+          type: CLASS_METHOD,
+          invocationIds,
+          declarationIds: [
+            Declaration.create({
+              type: CONST,
+              declParamIds,
+            }),
+          ],
+        }),
+      )
+
+      Declaration.update({ type: CLASS_COMPONENT, invocationIds: [] })
+      return session.state
+    }
+
+
+    case CONVERT_TO_STATELESS_FUNCTION_COMPONENT: {
+      const { declarationId } = action.payload
+
+      Declaration.withId(declarationId)
+
+      // noop if there is more than a render method
+      if (Declaration.ref().declarationIds.length > 1) {
+        return session.state
+      }
+
+      const renderDeclId = Declaration.declarations.find(
+        id => Declaration.withId(id).name.ref() === 'render'
+      )
+
+      const { declarationIds: constId, invocationIds } = Declaration.withId(renderDeclId).ref()
+      Declaration.delete()
+
+      const { declParamids } = Declaration.withId(constId).ref()
+      Declaration.delete()
+
+      Declaration.withId(declarationId).update({
+        type: STATELESS_FUNCTION_COMPONENT,
+        declarationIds: [],
+        invocationIds,
+        declParamids,
+      })
+
+
       return session.state
     }
 
@@ -481,6 +539,10 @@ export const changeDeclarationText = createAction(
   CHANGE_DECLARATION_TEXT
 )
 
-export const toggleComponentType = createAction(
-  TOGGLE_COMPONENT_TYPE
+export const convertToClassCompmonent = createAction(
+  CONVERT_TO_CLASS_COMPONENT
+)
+
+export const convertToStatelessFunctionComponent = createAction(
+  CONVERT_TO_STATELESS_FUNCTION_COMPONENT
 )
