@@ -11,7 +11,7 @@ File.stateKey = 'files'
 File.fields = {
   nameId: fk('Name'),
   type: attr(JS),
-  children: array([]),
+  children: array([], 'File', 'parentId'),
   declarationIds: array([], 'Declaration'), // defines a many-to-one relation
 }
 

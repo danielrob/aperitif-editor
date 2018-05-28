@@ -234,6 +234,7 @@ export default function appReducer(state = getTestDB(), action) {
 
       if (toRoot) {
         rootFiles = [...rootFiles, sourceFileId]
+        File.withId(sourceFileId).update({ parentId: undefined })
       } else {
         File.withId(targetDirectoryId).children.insert(sourceFileId)
       }

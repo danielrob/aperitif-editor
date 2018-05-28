@@ -29,7 +29,7 @@ const Editor = ({ imports, declarations, defaultExport, connectActiveEditorAreaT
   connectActiveEditorAreaTarget(
     <div className="active-zone">
       <Imports key="imports" imports={imports} />
-      <br />
+      {!!imports.length && <br />}
       {declarations.map(declaration => {
         const { type, declarationId } = declaration
         const Renderer = renderers[type] || Standard

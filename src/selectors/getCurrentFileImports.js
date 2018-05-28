@@ -3,15 +3,45 @@ import { createSelector } from 'reselect'
 
 import { PARAM_INVOCATION, STYLED_COMPONENT, STATELESS_FUNCTION_COMPONENT, CLASS_COMPONENT } from 'constantz'
 import { composed } from 'utils'
-import { selectInvocations, selectDeclarations, getCurrentFileDeclarations, selectNames } from './baseSelectors'
+import { selectFiles, selectInvocations, selectDeclarations, getCurrentFileDeclarations, selectNames, selectCurrentFile } from './baseSelectors'
+
+const getRelativePath = (currentFile, declarationId, files, declarations, names, nameId) => {
+  const { fileId: sourceFileId } = declarations[declarationId]
+
+  let currentFileAncestor = currentFile
+  let backwardsPath = ''
+
+  let sourceAncestor = files[sourceFileId]
+  let forwardsPath = `${names[nameId]}`
+
+  if (names[sourceAncestor.nameId] === 'index') {
+    sourceAncestor = files[sourceAncestor.parentId]
+  }
+
+  while (sourceAncestor.parentId !== currentFileAncestor.parentId) {
+    if (sourceAncestor.parentId) {
+      sourceAncestor = files[sourceAncestor.parentId] || {}
+      forwardsPath = `${names[sourceAncestor.nameId]}/${forwardsPath}`
+    }
+
+    if (currentFileAncestor.parentId) {
+      currentFileAncestor = files[currentFileAncestor.parentId]
+      backwardsPath = `../${backwardsPath}`
+    }
+  }
+
+  return `${backwardsPath || './'}${forwardsPath}`
+}
 
 const getCurrentFileImports = createSelector( // which also represent all imports
+  selectCurrentFile,
+  selectFiles,
   selectInvocations,
   selectDeclarations,
   getCurrentFileDeclarations,
   selectNames,
   composed(
-    (invocations, allDeclarations, declarations, names) => {
+    (currentFile, files, invocations, allDeclarations, declarations, names) => {
       // Much simpler to handle these specific import cases here than in an abstract manner
       const imports = []
 
@@ -32,7 +62,9 @@ const getCurrentFileImports = createSelector( // which also represent all import
           const thisInvocation = isAnImportInvocation(nameId, type, declarations) ? [{
             id,
             importName: names[nameId],
-            source: source || `../${names[nameId]}`, // TODO: derive paths
+            source: source || getRelativePath(
+              currentFile, declarationId, files, allDeclarations, names, nameId
+            ),
             order: nameId,
             declarationId,
           }] : []

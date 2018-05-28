@@ -17,7 +17,7 @@ class Model {
     this.foreignKeys = {}
 
     Object.keys(fields).forEach(key => {
-      const { type, defaultValue, modelName } = fields[key]
+      const { type, defaultValue, modelName, methodName } = fields[key]
 
       switch (type) {
         case 'attr': {
@@ -60,7 +60,7 @@ class Model {
           if (modelName) {
             this.hasManyRelations = {
               ...this.hasManyRelations,
-              [key]: modelName,
+              [key]: { modelName, methodName },
             }
           }
           break
@@ -87,8 +87,8 @@ class Model {
 
     const hasManyModel = this.hasManyRelations[key]
     if (hasManyModel) {
-      this.session[hasManyModel].withId(insertValue).update({
-        [`${this.modelName.toLowerCase()}Id`]: id,
+      this.session[hasManyModel.modelName].withId(insertValue).update({
+        [hasManyModel.methodName || `${this.modelName.toLowerCase()}Id`]: id,
       })
     }
   }
@@ -164,8 +164,8 @@ class Model {
       const hasManyModel = this.hasManyRelations[key]
       if (hasManyModel) {
         newModel[key].forEach(relationModelId => {
-          this.session[hasManyModel].withId(relationModelId).update({
-            [`${this.modelName.toLowerCase()}Id`]: id,
+          this.session[hasManyModel.modelName].withId(relationModelId).update({
+            [hasManyModel.methodName || `${this.modelName.toLowerCase()}Id`]: id,
           })
         })
       }
@@ -193,8 +193,8 @@ class Model {
       const hasManyModel = this.hasManyRelations[key]
       if (hasManyModel) {
         mergeProps[key].forEach(relationModelId => {
-          this.session[hasManyModel].withId(relationModelId).update({
-            [`${this.modelName.toLowerCase()}Id`]: result.id,
+          this.session[hasManyModel.modelName].withId(relationModelId).update({
+            [hasManyModel.methodName || `${this.modelName.toLowerCase()}Id`]: result.id,
           })
         })
       }
@@ -252,9 +252,10 @@ export const fk = (modelName, methodName) => ({
   methodName,
 })
 
-export const array = (opts, modelName) => ({
+export const array = (opts, modelName, methodName) => ({
   type: 'array',
   modelName,
+  methodName,
 })
 
 // model utils
