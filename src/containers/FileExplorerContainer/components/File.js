@@ -39,11 +39,6 @@ class File extends React.Component {
   }
 }
 
-export default styled(File).as.div`
-  cursor: pointer;
-  ${props => !props.initial && 'margin-left: 10px;'}
-  ${props => props.isDirectory && 'padding: 5px 0;'}
-`
 
 File.propTypes = forbidExtraProps({
   // passed by parent / file explorer
@@ -65,3 +60,10 @@ File.propTypes = forbidExtraProps({
   onClick: T.func.isRequired,
   isDirectory: T.bool.isRequired,
 })
+
+
+export default styled(File).as.div`
+  cursor: pointer;
+  ${props => !props.initial && 'margin-left: 10px;'}
+  ${props => props.isDirectory && 'padding: 5px 0;'}
+`

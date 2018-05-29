@@ -43,6 +43,38 @@ class OpenTagContainer extends React.Component {
   }
 }
 
+
+OpenTagContainer.propTypes = {
+  name: T.string.isRequired,
+  nameId: T.number.isRequired,
+  callParams: T.arrayOf(T.shape({
+    id: T.number.isRequired,
+    name: T.string.isRequired,
+    declIsSpreadMember: T.bool,
+    valueString: T.string,
+  })).isRequired,
+  closed: T.bool.isRequired,
+  hasPropsSpread: T.bool.isRequired,
+  pseudoSpreadPropsName: T.string,
+  inline: T.bool.isRequired,
+  depth: T.number.isRequired,
+  // ...spread - see ComponentInvocationTree
+
+  // Injected by connect:
+  addAttributeToComponentInvocation: T.func.isRequired,
+  addPropsSpreadToComponentInvocation: T.func.isRequired,
+
+  // Injected by React DnD:
+  connectDropTarget: T.func.isRequired,
+  isOverOpenTag: T.bool.isRequired,
+  dragItem: T.shape({ type: T.string }).isRequired,
+}
+
+OpenTagContainer.defaultProps = {
+  pseudoSpreadPropsName: null,
+}
+
+
 /* connect */
 const mapDispatchToProps = {
   addAttributeToComponentInvocation,
@@ -88,34 +120,3 @@ export default compose(
     DraggableTypes.PROPS_SPREAD,
   ], dropzoneTarget, collect)
 )(OpenTagContainer)
-
-/* propTypes */
-OpenTagContainer.propTypes = {
-  name: T.string.isRequired,
-  nameId: T.number.isRequired,
-  callParams: T.arrayOf(T.shape({
-    id: T.number.isRequired,
-    name: T.string.isRequired,
-    declIsSpreadMember: T.bool,
-    valueString: T.string,
-  })).isRequired,
-  closed: T.bool.isRequired,
-  hasPropsSpread: T.bool.isRequired,
-  pseudoSpreadPropsName: T.string,
-  inline: T.bool.isRequired,
-  depth: T.number.isRequired,
-  // ...spread - see ComponentInvocationTree
-
-  // Injected by connect:
-  addAttributeToComponentInvocation: T.func.isRequired,
-  addPropsSpreadToComponentInvocation: T.func.isRequired,
-
-  // Injected by React DnD:
-  connectDropTarget: T.func.isRequired,
-  isOverOpenTag: T.bool.isRequired,
-  dragItem: T.shape({ type: T.string }).isRequired,
-}
-
-OpenTagContainer.defaultProps = {
-  pseudoSpreadPropsName: null,
-}

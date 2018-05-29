@@ -25,20 +25,19 @@ const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, 
           position={props.childInvocations.length}
           shouldDisplay={props.isOverCIT2 && !props.closed}
         />
-        <CloseTag name={props.name} depth={props.depth} inline={props.inline} shouldDisplay={!props.closed} />
+        <CloseTag
+          name={props.name}
+          depth={props.depth}
+          inline={props.inline}
+          shouldDisplay={!props.closed}
+        />
       </div>
     )}
   </React.Fragment>
 )
 
-export default styled(ComponentInvocationTree).as.div`
-  color: ${theme.colors.darkgreen};
-  padding-left: 0;
-  cursor: ${props => (props.initial ? 'inherit' : 'pointer')}
-  user-select: text;
-  line-height: 2;
-`
 
+/* propTypes */
 ComponentInvocationTree.propTypes = forbidExtraProps({
   // passed by parent
   invocationId: T.number.isRequired,
@@ -78,3 +77,13 @@ ComponentInvocationTree.defaultProps = {
   type: null,
   pseudoSpreadPropsName: null,
 }
+
+
+/* style, export */
+export default styled(ComponentInvocationTree).as.div`
+  color: ${theme.colors.darkgreen};
+  padding-left: 0;
+  cursor: ${props => (props.initial ? 'inherit' : 'pointer')}
+  user-select: text;
+  line-height: 2;
+`

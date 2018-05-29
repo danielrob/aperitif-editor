@@ -60,4 +60,3 @@ TestModel.fields = {
   arrayAttr: array(),
 }
 
-

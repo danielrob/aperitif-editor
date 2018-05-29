@@ -26,8 +26,6 @@ const collect = (connect, monitor) => ({
 /* compose */
 const PropContainer = DragSource(PROP, propSource, collect)(Prop)
 
-/* export */
-export default PropContainer
 
 /* propTypes */
 PropContainer.propTypes = {
@@ -37,3 +35,7 @@ PropContainer.propTypes = {
   isLast: T.bool.isRequired,
   isSpreadMember: T.bool.isRequired,
 }
+
+
+/* export */
+export default PropContainer

@@ -73,14 +73,6 @@ const OpenTag = ({
   )
 }
 
-export default styled(OpenTag).as.div`
-  ${props => props.inline && 'display: inline-block;'}
-  .new-attribute-preview {
-    color: ${theme.color.darkgreen};
-    transition: 250ms;
-  }
-`
-
 /* propTypes */
 OpenTag.propTypes = forbidExtraProps({
   nameId: T.number.isRequired,
@@ -107,3 +99,13 @@ OpenTag.propTypes = forbidExtraProps({
 OpenTag.defaultProps = {
   pseudoSpreadPropsName: null,
 }
+
+
+/* style, export */
+export default styled(OpenTag).as.div`
+  ${props => props.inline && 'display: inline-block;'}
+  .new-attribute-preview {
+    color: ${theme.color.darkgreen};
+    transition: 250ms;
+  }
+`

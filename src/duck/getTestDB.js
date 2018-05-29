@@ -72,7 +72,7 @@ export default function getTestDB() {
   ].map(name => Name.create(name))
 
   // CallParams
-  const REACT_CHILDREN_CALL_PARAM_ID = CallParam.create({ declParamId: 2 });
+  const REACT_CHILDREN_CALL_PARAM_ID = CallParam.create({ declParamId: 2 })
 
   // DeclParams
   DeclParam.create({ nameId: childrenNameId })

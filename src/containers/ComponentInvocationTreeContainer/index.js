@@ -30,12 +30,62 @@ class ComponentInvocationTreeContainer extends React.Component {
     return !isDragging ? connectDragSource(
       <div>
         <div ref={componentInvocationRef} style={{ display: 'table', width: 'auto' }}>
-          <ComponentInvocationTree {...props} inline={doInline} isOverCI={isOverCI} closed={isClosed} />
+          <ComponentInvocationTree
+            {...props}
+            inline={doInline}
+            isOverCI={isOverCI}
+            closed={isClosed}
+          />
         </div>
       </div>
     ) : null
   }
 }
+
+ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
+  // passed by parent
+  invocationId: T.number.isRequired,
+  initial: T.bool,
+  depth: T.number.isRequired,
+  parentId: T.number,
+  type: T.oneOf([COMPONENT_INVOCATION, PARAM_INVOCATION]),
+
+  // injected by getCIDimensionsInjector
+  componentInvocationRef: T.shape({ current: T.any }).isRequired,
+  ciDimensions: T.shape({ clientWidth: T.number, clientHeight: T.number }).isRequired,
+
+  // injected by makeGetInvocation
+  nameId: T.number.isRequired,
+  name: T.string.isRequired,
+  childInvocations: T.arrayOf(T.object).isRequired,
+  callParamIds: T.arrayOf(T.number).isRequired,
+  callParams: T.arrayOf(T.object).isRequired,
+  paramChildren: T.arrayOf(T.object),
+  closed: T.bool.isRequired,
+  hasPropsSpread: T.bool.isRequired,
+  inline: T.bool.isRequired,
+  pseudoSpreadPropsName: T.string,
+
+  // Injected by React DnD:
+  connectDragSource: T.func.isRequired,
+  connectDropTarget: T.func.isRequired,
+  connectClosingDropTarget: T.func.isRequired,
+  isDragging: T.bool,
+  isOverCIT1: T.bool.isRequired,
+  isOverCIT2: T.bool.isRequired,
+  dragItem: T.shape({ name: T.string }),
+})
+
+ComponentInvocationTreeContainer.defaultProps = {
+  parentId: null,
+  paramChildren: [],
+  initial: false,
+  dragItem: null,
+  isDragging: false,
+  type: null,
+  pseudoSpreadPropsName: null,
+}
+
 
 /* connect */
 const makeMapStateToProps = () => {
@@ -91,49 +141,3 @@ export default compose(
   DropTarget(acceptedDropTypes, dropzoneTarget, targetCollect),
   DropTarget(acceptedDropTypes, dropzoneTarget, targetTwoCollect)
 )(ComponentInvocationTreeContainer)
-
-
-/* propTypes */
-ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
-  // passed by parent
-  invocationId: T.number.isRequired,
-  initial: T.bool,
-  depth: T.number.isRequired,
-  parentId: T.number,
-  type: T.oneOf([COMPONENT_INVOCATION, PARAM_INVOCATION]),
-
-  // injected by getCIDimensionsInjector
-  componentInvocationRef: T.shape({ current: T.any }).isRequired,
-  ciDimensions: T.shape({ clientWidth: T.number, clientHeight: T.number }).isRequired,
-
-  // injected by makeGetInvocation
-  nameId: T.number.isRequired,
-  name: T.string.isRequired,
-  childInvocations: T.arrayOf(T.object).isRequired,
-  callParamIds: T.arrayOf(T.number).isRequired,
-  callParams: T.arrayOf(T.object).isRequired,
-  paramChildren: T.arrayOf(T.object),
-  closed: T.bool.isRequired,
-  hasPropsSpread: T.bool.isRequired,
-  inline: T.bool.isRequired,
-  pseudoSpreadPropsName: T.string,
-
-  // Injected by React DnD:
-  connectDragSource: T.func.isRequired,
-  connectDropTarget: T.func.isRequired,
-  connectClosingDropTarget: T.func.isRequired,
-  isDragging: T.bool,
-  isOverCIT1: T.bool.isRequired,
-  isOverCIT2: T.bool.isRequired,
-  dragItem: T.shape({ name: T.string }),
-})
-
-ComponentInvocationTreeContainer.defaultProps = {
-  parentId: null,
-  paramChildren: [],
-  initial: false,
-  dragItem: null,
-  isDragging: false,
-  type: null,
-  pseudoSpreadPropsName: null,
-}

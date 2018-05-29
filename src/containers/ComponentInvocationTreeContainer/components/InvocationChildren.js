@@ -40,9 +40,6 @@ const InvocationChildren = ({ invocationId: parentId, childInvocations, inline, 
     []
   )
 
-export default InvocationChildren
-
-
 /* propTypes */
 InvocationChildren.propTypes = {
   invocationId: T.number.isRequired,
@@ -51,3 +48,6 @@ InvocationChildren.propTypes = {
   isOverCI: T.bool.isRequired,
   // ...props - see ComponentInvocationTree
 }
+
+export default InvocationChildren
+

@@ -64,7 +64,7 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
             )}
             {oneOf(C.array.of.object)(payload) && (
               <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithMap">
-                {'{'}{name}.map({singular(name)} => (<br />
+                {'{'}{name}.map({singular(name)} => (<br />
                 {indent(1)}{'<'}{capitalize(singular(name))}{` key={${singular(name)}.id} {...${singular(name)}} />`}<br />
                 )){'}'}
               </PropDropzoneContainer>
@@ -82,16 +82,6 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
   ) : null
 }
 
-export default styled(CIDropzones).as.div`
-  display: ${props => props.shouldDisplay ? 'flex' : 'none'};
-  line-height: 1.4;
-`
-
-const Zones = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: ${theme.color.washedDarkGreen};
-`
 
 /* propTypes */
 CIDropzones.propTypes = {
@@ -106,3 +96,18 @@ CIDropzones.propTypes = {
 CIDropzones.defaultProps = {
   dragItem: {},
 }
+
+
+/* Zones */
+const Zones = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: ${theme.color.washedDarkGreen};
+`
+
+
+/* style, export */
+export default styled(CIDropzones).as.div`
+  display: ${props => props.shouldDisplay ? 'flex' : 'none'};
+  line-height: 1.4;
+`

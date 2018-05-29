@@ -31,6 +31,41 @@ class PropDropzoneContainer extends React.Component {
   }
 }
 
+const dropActionMap = {
+  asParamInvocation: 'addParamAsComponentInvocationChild',
+  newWithSpread: 'addNewComponentToInvocationWithSpread',
+  newWithMap: 'addNewComponentToInvocationWithMap',
+  newWithAttribute: 'addNewComponentToInvocationWithAttribute',
+  newWithChild: 'addNewComponentToInvocationWithChildren',
+  newStyled: 'addNewStyledComponentToInvocation',
+}
+
+PropDropzoneContainer.propTypes = forbidExtraProps({
+  // passed by parent
+  targetInvocationId: T.number.isRequired,
+  targetPosition: T.number.isRequired,
+  children: T.node.isRequired,
+  dropActionKey: T.oneOf(Object.keys(dropActionMap)),
+
+  // connect
+  addParamAsComponentInvocationChild: T.func.isRequired,
+  addNewComponentToInvocationWithMap: T.func.isRequired,
+  addNewComponentToInvocationWithSpread: T.func.isRequired,
+  addNewComponentToInvocationWithAttribute: T.func.isRequired,
+  addNewComponentToInvocationWithChildren: T.func.isRequired,
+  addNewStyledComponentToInvocation: T.func.isRequired,
+  moveInvocation: T.func.isRequired,
+
+  // React Dnd
+  connectDropTarget: T.func.isRequired,
+  isOver: T.bool.isRequired,
+})
+
+PropDropzoneContainer.defaultProps = {
+  dropActionKey: null,
+}
+
+
 /* connect */
 const mapDispatchToProps = {
   addParamAsComponentInvocationChild,
@@ -43,15 +78,6 @@ const mapDispatchToProps = {
 }
 
 /* dnd */
-const dropActionMap = {
-  asParamInvocation: 'addParamAsComponentInvocationChild',
-  newWithSpread: 'addNewComponentToInvocationWithSpread',
-  newWithMap: 'addNewComponentToInvocationWithMap',
-  newWithAttribute: 'addNewComponentToInvocationWithAttribute',
-  newWithChild: 'addNewComponentToInvocationWithChildren',
-  newStyled: 'addNewStyledComponentToInvocation',
-}
-
 const dropzoneTarget = {
   drop(props, monitor) {
     switch (monitor.getItemType()) {
@@ -98,29 +124,3 @@ export default compose(
   connect(null, mapDispatchToProps),
   DropTarget([PROP, PARAM_INVOCATION], dropzoneTarget, collect)
 )(PropDropzoneContainer)
-
-/* propTypes */
-PropDropzoneContainer.propTypes = forbidExtraProps({
-  // passed by parent
-  targetInvocationId: T.number.isRequired,
-  targetPosition: T.number.isRequired,
-  children: T.node.isRequired,
-  dropActionKey: T.oneOf(Object.keys(dropActionMap)),
-
-  // connect
-  addParamAsComponentInvocationChild: T.func.isRequired,
-  addNewComponentToInvocationWithMap: T.func.isRequired,
-  addNewComponentToInvocationWithSpread: T.func.isRequired,
-  addNewComponentToInvocationWithAttribute: T.func.isRequired,
-  addNewComponentToInvocationWithChildren: T.func.isRequired,
-  addNewStyledComponentToInvocation: T.func.isRequired,
-  moveInvocation: T.func.isRequired,
-
-  // React Dnd
-  connectDropTarget: T.func.isRequired,
-  isOver: T.bool.isRequired,
-})
-
-PropDropzoneContainer.defaultProps = {
-  dropActionKey: null,
-}

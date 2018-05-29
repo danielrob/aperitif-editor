@@ -19,22 +19,6 @@ class IntermediaryDropzonesContainer extends React.Component {
   }
 }
 
-/* dnd */
-// target
-const dropzoneTarget = {}
-
-const targetCollect = (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOverThisDropzone: getIsValidOver(monitor),
-  dragItem: monitor.getItem(),
-})
-
-/* compose export */
-export default compose(
-  DropTarget(acceptedDropTypes, dropzoneTarget, targetCollect)
-)(IntermediaryDropzonesContainer)
-
-/* propTypes */
 IntermediaryDropzonesContainer.propTypes = forbidExtraProps({
   // from parent
   invocationId: T.number.isRequired,
@@ -50,3 +34,19 @@ IntermediaryDropzonesContainer.propTypes = forbidExtraProps({
 IntermediaryDropzonesContainer.defaultProps = {
   dragItem: null,
 }
+
+/* dnd */
+// target
+const dropzoneTarget = {}
+
+const targetCollect = (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOverThisDropzone: getIsValidOver(monitor),
+  dragItem: monitor.getItem(),
+})
+
+/* compose export */
+export default compose(
+  DropTarget(acceptedDropTypes, dropzoneTarget, targetCollect)
+)(IntermediaryDropzonesContainer)
+

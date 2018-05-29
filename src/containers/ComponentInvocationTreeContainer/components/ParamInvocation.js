@@ -31,7 +31,7 @@ const ParamInvocation = ({
           {name}
           {chainedInvocation &&
             <React.Fragment>
-              .map({singular(name)} => (
+              .map({singular(name)} => (
               <ComponentInvocationTreeContainer
                 key={chainedInvocation.id}
                 parentId={parentId}
@@ -48,16 +48,9 @@ const ParamInvocation = ({
     </React.Fragment>
   )
 }
-export default styled(ParamInvocation).as.div`
-  ${props => props.inline && 'display: inline-block;'}
-  color: ${theme.colors.darkblue}
-  .dragsource {
-    display: inline-block;
-    user-select: text;
-    cursor: pointer;
-  }
-`
 
+
+/* propTypes */
 ParamInvocation.propTypes = forbidExtraProps({
   name: T.string.isRequired,
   parentId: T.number.isRequired,
@@ -72,3 +65,16 @@ ParamInvocation.propTypes = forbidExtraProps({
 ParamInvocation.defaultProps = {
   chainedInvocations: [],
 }
+
+
+/* style, export */
+export default styled(ParamInvocation).as.div`
+  ${props => props.inline && 'display: inline-block;'}
+  color: ${theme.colors.darkblue}
+  .dragsource {
+    display: inline-block;
+    user-select: text;
+    cursor: pointer;
+  }
+`
+

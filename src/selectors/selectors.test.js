@@ -1,7 +1,5 @@
-import { DEFAULT } from 'constantz'
 import getTestDB from 'duck/getTestDB'
 import {
-  selectNames,
   getCurrentFileDeclarations,
   getCurrentFileImports,
   getCurrentFileDefaultExport,

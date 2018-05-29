@@ -20,13 +20,16 @@ const Prop = ({ name, isLast, connectDragSource }) => (
   </React.Fragment>
 )
 
-export default styled(Prop).as.div`
-  display: inline-block;
-  cursor: pointer;
-  color: ${theme.colors.darkgreen};
-`
+
 Prop.propTypes = {
   name: T.string.isRequired,
   isLast: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
 }
+
+
+export default styled(Prop).as.div`
+  display: inline-block;
+  cursor: pointer;
+  color: ${theme.colors.darkgreen};
+`

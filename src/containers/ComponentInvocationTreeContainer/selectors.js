@@ -73,6 +73,6 @@ export const makeGetParamInvocation = () => createSelector(
       id,
       name: names[nameId],
       declIsSpreadMember: isSpreadMember,
-      chainedInvocations: invocationIds.map(id => invocations[id])
+      chainedInvocations: invocationIds.map(id => invocations[id]),
     }
   })

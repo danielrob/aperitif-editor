@@ -1,5 +1,5 @@
 import getTestDB from './getTestDB'
-import appReducer, { moveParamToSpread } from './'
+import appReducer from './'
 
 const initialState = getTestDB()
 

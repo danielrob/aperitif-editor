@@ -25,6 +25,21 @@ class AddInvocationFromFileDropzone extends React.Component {
   }
 }
 
+AddInvocationFromFileDropzone.propTypes = forbidExtraProps({
+  // passed by parent
+  targetInvocationId: T.number.isRequired,
+  targetPosition: T.number.isRequired,
+  children: T.node.isRequired,
+
+  // mapDispatchToProps
+  addInvocationFromFileToCI: T.func.isRequired,
+
+  // Injected by React DnD:
+  connectDropTarget: T.func.isRequired,
+  isOver: T.bool.isRequired,
+})
+
+
 /* connect */
 const mapDispatchToProps = {
   addInvocationFromFileToCI,
@@ -51,17 +66,3 @@ export default compose(
   DropTarget([FILE, DIR], dropzoneTarget, collect)
 )(AddInvocationFromFileDropzone)
 
-/* propTypes */
-AddInvocationFromFileDropzone.propTypes = forbidExtraProps({
-  // passed by parent
-  targetInvocationId: T.number.isRequired,
-  targetPosition: T.number.isRequired,
-  children: T.node.isRequired,
-
-  // mapDispatchToProps
-  addInvocationFromFileToCI: T.func.isRequired,
-
-  // Injected by React DnD:
-  connectDropTarget: T.func.isRequired,
-  isOver: T.bool.isRequired,
-})

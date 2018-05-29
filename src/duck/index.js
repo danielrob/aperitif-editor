@@ -322,7 +322,7 @@ export default function appReducer(state = getTestDB(), action) {
             Invocation.create({
               nameId,
               type: PARAM_INVOCATION,
-              callParamIds: [CallParam.create({ declParamId: paramId })]
+              callParamIds: [CallParam.create({ declParamId: paramId })],
             }),
           ],
           declarationId: newDeclarationId,

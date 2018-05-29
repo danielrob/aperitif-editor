@@ -41,6 +41,41 @@ class FileContainer extends React.Component {
   }
 }
 
+
+/* propTypes */
+FileContainer.propTypes = forbidExtraProps({
+  // passed by parent / file explorer
+  fileId: T.number.isRequired,
+  parentName: or([T.string.isRequired, explicitNull()]), // eslint-disable-line
+  initial: T.bool,
+  path: T.arrayOf(T.number),
+
+  // from makeSelectFile
+  name: T.string.isRequired,
+  type: T.oneOf(fileTypesArray).isRequired,
+  fileChildren: T.arrayOf(T.number).isRequired,
+  isDirectory: T.bool.isRequired,
+  isCurrent: T.bool.isRequired,
+  declarationIds: T.arrayOf(T.number).isRequired,
+
+  // mapDispatchToProps
+  changeFile: T.func.isRequired,
+  moveDeclarationToFile: T.func.isRequired,
+  moveFile: T.func.isRequired,
+
+  // injected by React DnD
+  connectDragSource: T.func.isRequired,
+  connectDragPreview: T.func.isRequired,
+  connectDropTarget: T.func.isRequired,
+  isDragging: T.bool.isRequired,
+})
+
+FileContainer.defaultProps = {
+  initial: false,
+  path: [],
+}
+
+
 /* connect */
 const makeMapStateToProps = () => {
   const getFile = makeGetFile()
@@ -118,37 +153,3 @@ export default compose(
   DragSource(getType, sourceSpec, sourceCollect),
   DropTarget(getTargetTypes, dropzoneTarget, targetCollect)
 )(FileContainer)
-
-
-/* propTypes */
-FileContainer.propTypes = forbidExtraProps({
-  // passed by parent / file explorer
-  fileId: T.number.isRequired,
-  parentName: or([T.string.isRequired, explicitNull()]), // eslint-disable-line
-  initial: T.bool,
-  path: T.arrayOf(T.number),
-
-  // from makeSelectFile
-  name: T.string.isRequired,
-  type: T.oneOf(fileTypesArray).isRequired,
-  fileChildren: T.arrayOf(T.number).isRequired,
-  isDirectory: T.bool.isRequired,
-  isCurrent: T.bool.isRequired,
-  declarationIds: T.arrayOf(T.number).isRequired,
-
-  // mapDispatchToProps
-  changeFile: T.func.isRequired,
-  moveDeclarationToFile: T.func.isRequired,
-  moveFile: T.func.isRequired,
-
-  // injected by React DnD
-  connectDragSource: T.func.isRequired,
-  connectDragPreview: T.func.isRequired,
-  connectDropTarget: T.func.isRequired,
-  isDragging: T.bool.isRequired,
-})
-
-FileContainer.defaultProps = {
-  initial: false,
-  path: [],
-}

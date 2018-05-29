@@ -16,6 +16,23 @@ const ParamInvocationContainer = ({
   ...props
 }) => <ParamInvocation {...props} />
 
+ParamInvocationContainer.propTypes = forbidExtraProps({
+  id: T.number.isRequired,
+  depth: T.number.isRequired,
+  parentId: T.number.isRequired,
+  invocationId: T.number.isRequired,
+  name: T.string.isRequired,
+  declIsSpreadMember: T.bool.isRequired,
+  isPIDragging: T.bool.isRequired,
+  connectDragSource: T.func.isRequired,
+  chainedInvocations: T.arrayOf(T.shape({})),
+  inline: T.bool.isRequired,
+})
+
+ParamInvocationContainer.defaultProps = {
+  chainedInvocations: [],
+}
+
 /* connect */
 const makeMapStateToProps = () => {
   const getInvocation = makeGetParamInvocation()
@@ -50,20 +67,3 @@ export default compose(
   DragSource(PARAM_INVOCATION, propSource, collect),
 )(ParamInvocationContainer)
 
-/* propTypes */
-ParamInvocationContainer.propTypes = forbidExtraProps({
-  id: T.number.isRequired,
-  depth: T.number.isRequired,
-  parentId: T.number.isRequired,
-  invocationId: T.number.isRequired,
-  name: T.string.isRequired,
-  declIsSpreadMember: T.bool.isRequired,
-  isPIDragging: T.bool.isRequired,
-  connectDragSource: T.func.isRequired,
-  chainedInvocations: T.arrayOf(T.shape({})),
-  inline: T.bool.isRequired,
-})
-
-ParamInvocationContainer.defaultProps = {
-  chainedInvocations: [],
-}

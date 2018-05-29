@@ -24,6 +24,26 @@ class ReorderDropzoneContainer extends React.Component {
   }
 }
 
+ReorderDropzoneContainer.propTypes = forbidExtraProps({
+  // passed by parent
+  targetInvocationId: T.number.isRequired,
+  targetPosition: T.number.isRequired,
+  parentId: T.number.isRequired,
+  type: T.oneOf([COMPONENT_INVOCATION]).isRequired,
+
+  // from dragItem via parent
+  sourceInvocationId: T.number.isRequired,
+  ciDimensions: T.shape({ clientWidth: T.number, clientHeight: T.number }).isRequired,
+  depth: T.number.isRequired,
+
+  // connect
+  moveInvocation: T.func.isRequired,
+
+  // React Dnd
+  connectDropTarget: T.func.isRequired,
+})
+
+
 /* connect */
 const mapDispatchToProps = { moveInvocation }
 
@@ -55,24 +75,3 @@ export default compose(
   connect(null, mapDispatchToProps),
   DropTarget(COMPONENT_INVOCATION, dropzoneTarget, collect)
 )(ReorderDropzoneContainer)
-
-
-/* propTypes */
-ReorderDropzoneContainer.propTypes = forbidExtraProps({
-  // passed by parent
-  targetInvocationId: T.number.isRequired,
-  targetPosition: T.number.isRequired,
-  parentId: T.number.isRequired,
-  type: T.oneOf([COMPONENT_INVOCATION]).isRequired,
-
-  // from dragItem via parent
-  sourceInvocationId: T.number.isRequired,
-  ciDimensions: T.shape({ clientWidth: T.number, clientHeight: T.number }).isRequired,
-  depth: T.number.isRequired,
-
-  // connect
-  moveInvocation: T.func.isRequired,
-
-  // React Dnd
-  connectDropTarget: T.func.isRequired,
-})

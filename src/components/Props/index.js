@@ -23,11 +23,14 @@ const Props = ({ params, spreadParams, declarationId }) => (
   </React.Fragment>
 )
 
-export default styled(Props).as.span`
-`
 
+/* propTypes */
 Props.propTypes = {
   params: T.arrayOf(T.object).isRequired,
   spreadParams: T.arrayOf(T.object).isRequired,
   declarationId: T.number.isRequired,
 }
+
+
+export default styled(Props).as.span`
+`
