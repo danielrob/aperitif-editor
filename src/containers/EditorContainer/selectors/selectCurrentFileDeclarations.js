@@ -6,8 +6,9 @@ import {
   selectNames,
   selectInvocations,
   selectParams,
-  getCurrentFileDeclarations,
 } from 'selectors'
+
+import { getCurrentFileDeclarations } from './selectors'
 
 const { LOOKTHROUGH } = declarationTypes
 
@@ -33,3 +34,4 @@ export const selectCurrentFileDeclarations = createSelector(
         exportType,
       }))
 )
+

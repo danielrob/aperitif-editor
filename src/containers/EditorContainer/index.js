@@ -4,17 +4,20 @@ import { DropTarget } from 'react-dnd'
 import { createStructuredSelector } from 'reselect'
 
 import { compose } from 'utils'
+
+import { FILE, STYLED_COMPONENT } from 'constantz'
+import { mergeFile } from 'duck'
+import {
+  selectDeclarations,
+  selectCurrentFileId,
+} from 'selectors'
+
 import {
   getCurrentFileImports,
   getCurrentFileDefaultExport,
-  selectCurrentFileId,
-  selectDeclarations,
-} from 'selectors'
-import { FILE, STYLED_COMPONENT } from 'constantz'
-import { mergeFile } from 'duck'
-
+  selectCurrentFileDeclarations,
+} from './selectors'
 import { Editor } from './components'
-import { selectCurrentFileDeclarations } from './selectors'
 
 class EditorContainer extends React.Component {
   render() {

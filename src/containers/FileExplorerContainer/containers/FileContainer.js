@@ -8,8 +8,8 @@ import { findDOMNode } from 'react-dom'
 import { compose } from 'utils'
 import { fileTypesArray, DIR, FILE, STYLED_COMPONENT } from 'constantz'
 import { changeFile, moveDeclarationToFile, moveFile } from 'duck'
+import { makeSelectFile } from 'selectors'
 
-import { makeGetFile } from '../selectors'
 import { File } from '../components'
 
 class FileContainer extends React.Component {
@@ -78,7 +78,7 @@ FileContainer.defaultProps = {
 
 /* connect */
 const makeMapStateToProps = () => {
-  const getFile = makeGetFile()
+  const getFile = makeSelectFile()
   return (state, props) => getFile(state, props)
 }
 

@@ -3,7 +3,7 @@ import {
   getCurrentFileDeclarations,
   getCurrentFileImports,
   getCurrentFileDefaultExport,
-} from 'selectors'
+} from './'
 
 const appState = {
   app: getTestDB(),

@@ -1,39 +1,27 @@
 import { uniqBy, sortBy } from 'lodash'
 import { createSelector } from 'reselect'
 
-import { PARAM_INVOCATION, STYLED_COMPONENT, STATELESS_FUNCTION_COMPONENT, CLASS_COMPONENT } from 'constantz'
 import { composed } from 'utils'
-import { selectFiles, selectInvocations, selectDeclarations, getCurrentFileDeclarations, selectNames, selectCurrentFile } from './baseSelectors'
+import {
+  PARAM_INVOCATION,
+  STYLED_COMPONENT,
+  STATELESS_FUNCTION_COMPONENT,
+  CLASS_COMPONENT,
+} from 'constantz'
 
-const getRelativePath = (currentFile, declarationId, files, declarations, names, nameId) => {
-  const { fileId: sourceFileId } = declarations[declarationId]
+import {
+  selectFiles,
+  selectInvocations,
+  selectDeclarations,
+  selectNames,
+} from 'selectors'
 
-  let currentFileAncestor = currentFile
-  let backwardsPath = ''
+import {
+  selectCurrentFile,
+  getCurrentFileDeclarations,
+} from './selectors'
 
-  let sourceAncestor = files[sourceFileId]
-  let forwardsPath = `${names[nameId]}`
-
-  if (names[sourceAncestor.nameId] === 'index') {
-    sourceAncestor = files[sourceAncestor.parentId]
-  }
-
-  while (sourceAncestor.parentId !== currentFileAncestor.parentId) {
-    if (sourceAncestor.parentId) {
-      sourceAncestor = files[sourceAncestor.parentId] || {}
-      forwardsPath = `${names[sourceAncestor.nameId]}/${forwardsPath}`
-    }
-
-    if (currentFileAncestor.parentId) {
-      currentFileAncestor = files[currentFileAncestor.parentId]
-      backwardsPath = `../${backwardsPath}`
-    }
-  }
-
-  return `${backwardsPath || './'}${forwardsPath}`
-}
-
-const getCurrentFileImports = createSelector( // which also represent all imports
+export const getCurrentFileImports = createSelector(
   selectCurrentFile,
   selectFiles,
   selectInvocations,
@@ -100,4 +88,31 @@ const isAnImportInvocation = (invocationNameId, type, declarations) =>
   !declarations.find(({ nameId }) => nameId === invocationNameId) &&
   ![PARAM_INVOCATION].includes(type)
 
-export default getCurrentFileImports
+
+const getRelativePath = (currentFile, declarationId, files, declarations, names, nameId) => {
+  const { fileId: sourceFileId } = declarations[declarationId]
+
+  let currentFileAncestor = currentFile
+  let backwardsPath = ''
+
+  let sourceAncestor = files[sourceFileId]
+  let forwardsPath = `${names[nameId]}`
+
+  if (names[sourceAncestor.nameId] === 'index') {
+    sourceAncestor = files[sourceAncestor.parentId]
+  }
+
+  while (sourceAncestor.parentId !== currentFileAncestor.parentId) {
+    if (sourceAncestor.parentId) {
+      sourceAncestor = files[sourceAncestor.parentId] || {}
+      forwardsPath = `${names[sourceAncestor.nameId]}/${forwardsPath}`
+    }
+
+    if (currentFileAncestor.parentId) {
+      currentFileAncestor = files[currentFileAncestor.parentId]
+      backwardsPath = `../${backwardsPath}`
+    }
+  }
+
+  return `${backwardsPath || './'}${forwardsPath}`
+}
