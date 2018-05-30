@@ -9,3 +9,4 @@ export const indent = (amount = 1) => spaces(amount * 2)
 export const getId = ((id = 0) => () => (`${id += 1}`))() // eslint-disable-line
 export const oneOf = (...fns) => item =>
   fns.slice(1).reduce((out, fn) => out || fn(item), fns[0](item))
+export const sortAlphabetically = (a, b) => (a < b && '-1') || (b < a && '1') || 0

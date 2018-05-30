@@ -40,7 +40,7 @@ class StyledComponent extends React.Component {
             </span>
           )}
         />
-        =
+        {' '}=
         styled.<AutosizeInput {...tagInput} /><Backtick />
         <TemplateStringTextArea value={text} onChange={this.onChange} />
         <Backtick />
