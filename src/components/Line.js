@@ -1,12 +1,31 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-as-components'
-import { SEMIS } from 'constantz'
 
-const Line = ({ children, statement }) => (
+import { updatePreferences } from 'duck'
+import { selectPreferences } from 'selectors'
+
+const Line = ({ children, semis, statement, updatePreferences }) => (
   <React.Fragment>
     {children}
-    {SEMIS && statement && ';'}
+    <span
+      className="semi"
+      onClick={() => updatePreferences({ semis: !semis })}
+    >
+      {semis && statement && ';'}
+    </span>
   </React.Fragment>
 )
 
-export default styled(Line).as.div``
+const mapStateToProps = state => selectPreferences(state)
+const mapDispatchToProps = { updatePreferences }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(styled(Line).as.div`
+  .semi {
+    cursor: pointer;
+    ${props => !props.semis && 'padding-right: 10px;'}
+  }
+`)

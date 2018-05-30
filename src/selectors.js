@@ -8,6 +8,7 @@ export const selectFiles = s => s.app.files
 export const selectDeclarations = s => s.app.declarations
 export const selectInvocations = s => s.app.invocations
 export const selectParams = s => s.app.params
+export const selectPreferences = s => s.app.preferences
 
 /*
   Single Model selectors - `makeSelect${modelName}`

@@ -200,5 +200,8 @@ export default function getTestDB() {
     ...session.state,
     rootFiles: [appDir, appContainerDir, indexFile],
     currentFileId: 1,
+    preferences: {
+      semis: true,
+    },
   }
 }

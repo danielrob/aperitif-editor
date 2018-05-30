@@ -44,6 +44,7 @@ export const UPDATE_INVOCATION = 'UPDATE_INVOCATION'
 export const UPDATE_NAME = 'UPDATE_NAME'
 export const UPDATE_DECLARATION = 'UPDATE_DECLARATION'
 export const UPDATE_DECL_PARAM = 'UPDATE_DECL_PARAM'
+export const UPDATE_PREFERENCES = 'UPDATE_PREFERENCES'
 
 export default function appReducer(state = getTestDB(), action) {
   const session = orm.session(state)
@@ -529,6 +530,16 @@ export default function appReducer(state = getTestDB(), action) {
       return session.state
     }
 
+    case UPDATE_PREFERENCES: {
+      return {
+        ...state,
+        preferences: {
+          ...state.preferences,
+          ...action.payload,
+        },
+      }
+    }
+
 
     default:
       return state
@@ -617,4 +628,8 @@ export const addPropsSpreadToComponentInvocation = createAction(
     invocationId,
     hasPropsSpread: true,
   })
+)
+
+export const updatePreferences = createAction(
+  UPDATE_PREFERENCES
 )
