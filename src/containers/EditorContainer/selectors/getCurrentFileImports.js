@@ -7,6 +7,7 @@ import {
   STYLED_COMPONENT,
   STATELESS_FUNCTION_COMPONENT,
   CLASS_COMPONENT,
+  RESOLVE_ALIASES,
 } from 'constantz'
 
 import {
@@ -47,15 +48,24 @@ export const getCurrentFileImports = createSelector(
       return declarations.reduce((out, declaration) => {
         const reduceRecursively = (priorInvocations, id) => {
           const { nameId, type, source, invocationIds, declarationId } = invocations[id]
-          const thisInvocation = isAnImportInvocation(nameId, type, declarations) ? [{
-            id,
-            importName: names[nameId],
-            source: source || getRelativePath(
+
+          let thisInvocation
+          if (isAnImportInvocation(nameId, type, declarations)) {
+            const resolvedSource = source || getRelativePath(
               currentFile, declarationId, files, allDeclarations, names, nameId
-            ),
-            order: nameId,
-            declarationId,
-          }] : []
+            )
+            thisInvocation = [{
+              id,
+              importName: names[nameId],
+              source: resolvedSource,
+              order: nameId,
+              declarationId,
+              isNamed: RESOLVE_ALIASES.includes(resolvedSource),
+            }]
+          } else {
+            thisInvocation = []
+          }
+
           return [
             ...priorInvocations,
             ...thisInvocation,
@@ -114,5 +124,9 @@ const getRelativePath = (currentFile, declarationId, files, declarations, names,
     }
   }
 
-  return `${backwardsPath || './'}${forwardsPath}`
+  const indexedAlias =
+    !sourceAncestor.parentId &&
+    RESOLVE_ALIASES.find(alias => forwardsPath.startsWith(alias))
+
+  return indexedAlias || `${backwardsPath || './'}${forwardsPath}`
 }

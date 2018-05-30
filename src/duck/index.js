@@ -224,9 +224,24 @@ export default function appReducer(state = getTestDB(), action) {
 
 
     case MOVE_FILE: {
-      const { targetDirectoryId, sourceFileId, toRoot } = action.payload
+      const { targetDirectoryId, toRoot } = action.payload
+      let { sourceFileId } = action.payload
       let { rootFiles } = state
 
+      // make any index.js that includes a component declaration a proxy to it's parent
+      if (
+        File.withId(sourceFileId).name.ref() === 'index' &&
+        File.declarations.find(
+          id => componentDeclarationTypes.includes(Declaration.withId(id).ref().type)
+        )
+      ) {
+        sourceFileId = File.ref().parentId
+        if (targetDirectoryId === sourceFileId) {
+          return state
+        }
+      }
+
+      // The guts of the move
       if (rootFiles.includes(sourceFileId)) {
         rootFiles = rootFiles.filter(id => id !== sourceFileId)
       } else {
@@ -238,6 +253,34 @@ export default function appReducer(state = getTestDB(), action) {
         File.withId(sourceFileId).update({ parentId: undefined })
       } else {
         File.withId(targetDirectoryId).children.insert(sourceFileId)
+      }
+
+      const { nameId, type } = session.state.files[sourceFileId]
+      const name = session.state.names[nameId]
+
+      // Name clash concerns - chose to take the path of auto-renaming with alert
+      let suffix = 0
+      const findTakenName = id => {
+        const { nameId: childNameId, type: childType } = session.state.files[id]
+        const childName = session.state.names[childNameId]
+        return (
+          id !== sourceFileId &&
+          `${name}${suffix || ''}` === childName &&
+          type === childType
+        )
+      }
+
+      const targetNameChildIds = toRoot ?
+        rootFiles :
+        File.withId(targetDirectoryId).children
+
+      while (targetNameChildIds.find(findTakenName)) {
+        suffix += 1
+      }
+
+      if (suffix) {
+        Name.withId(nameId).update(`${Name.ref()}${suffix || ''}`)
+        alert(`${name} => ${Name.withId(nameId).ref()}`) // eslint-disable-line no-alert
       }
 
       return {

@@ -17,10 +17,9 @@ class File extends React.Component {
       isDragging,
       connectDragPreview,
       connectDropTarget,
-      initial,
       path,
     } = this.props
-    const displayName = name.includes('index') && !initial && isDragging ? parentName : name
+    const displayName = (name.includes('index') && isDragging && parentName) || name
 
     return connectDropTarget(
       <div>
@@ -47,7 +46,6 @@ File.propTypes = forbidExtraProps({
   // eslint-disable-next-line react/require-default-props
   parentName: or([T.string.isRequired, explicitNull()]),
   fileChildren: T.arrayOf(T.number).isRequired,
-  initial: T.bool.isRequired,
   path: T.arrayOf(T.number).isRequired,
 
   // Injected by React DnD:
@@ -64,6 +62,6 @@ File.propTypes = forbidExtraProps({
 
 export default styled(File).as.div`
   cursor: pointer;
-  ${props => !props.initial && 'margin-left: 10px;'}
+  ${props => props.parentName && 'margin-left: 10px;'}
   ${props => props.isDirectory && 'padding: 5px 0;'}
 `

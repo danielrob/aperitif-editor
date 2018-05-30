@@ -118,62 +118,75 @@ export default function getTestDB() {
   })
 
   // dirs
-  const appDir = File.create({ // App
-    nameId: appDirName,
-    type: DIR,
-    children: [
-      File.create({ // index.js
-        nameId: appIndexIdName,
-        declarationIds: [
-          appDeclId,
-        ],
-      }),
-      File.create({ // AppWrapper.js
-        nameId: appWrapperName,
-        declarationIds: [
-          appWrapperDeclId,
-        ],
-      }),
-    ],
-  })
+  const components =
+    File.create({
+      nameId: Name.create('components'),
+      type: DIR,
+      children: [
+        File.create({ // App
+          nameId: appDirName,
+          type: DIR,
+          children: [
+            File.create({ // index.js
+              nameId: appIndexIdName,
+              declarationIds: [
+                appDeclId,
+              ],
+            }),
+            File.create({ // AppWrapper.js
+              nameId: appWrapperName,
+              declarationIds: [
+                appWrapperDeclId,
+              ],
+            }),
+          ],
+        }),
+      ],
+    })
 
-  const appContainerDir = File.create({
-    nameId: appContainerName,
+  const containers = File.create({
+    nameId: Name.create('containers'),
     type: DIR,
     children: [
       File.create({
-        nameId: appContainerIndexName,
-        declarationIds: [
-          Declaration.create({
-            type: CLASS_COMPONENT,
-            nameId: appContainerName,
+        nameId: appContainerName,
+        type: DIR,
+        children: [
+          File.create({
+            nameId: appContainerIndexName,
             declarationIds: [
               Declaration.create({
-                nameId: Name.create('state'),
-                type: CLASS_PROP,
-                declParamIds: [
-                  DeclParam.create({
-                    nameId: data,
-                    assignNameId: Name.create('sampleApiResponse'),
-                  }),
-                ],
-              }),
-              Declaration.create({
-                nameId: Name.create('render'),
-                type: CLASS_METHOD,
+                type: CLASS_COMPONENT,
+                nameId: appContainerName,
                 declarationIds: [
                   Declaration.create({
-                    type: CONST,
-                    nameId: data,
-                    text: 'this.state.data',
+                    nameId: Name.create('state'),
+                    type: CLASS_PROP,
+                    declParamIds: [
+                      DeclParam.create({
+                        nameId: data,
+                        assignNameId: Name.create('sampleApiResponse'),
+                      }),
+                    ],
                   }),
-                ],
-                invocationIds: [
-                  Invocation.create({
-                    nameId: appDirName,
-                    closed: true,
-                    declarationId: appDeclId,
-                    pseudoSpreadPropsNameId: data,
+                  Declaration.create({
+                    nameId: Name.create('render'),
+                    type: CLASS_METHOD,
+                    declarationIds: [
+                      Declaration.create({
+                        type: CONST,
+                        nameId: data,
+                        text: 'this.state.data',
+                      }),
+                    ],
+                    invocationIds: [
+                      Invocation.create({
+                        nameId: appDirName,
+                        closed: true,
+                        declarationId: appDeclId,
+                        pseudoSpreadPropsNameId: data,
+                      }),
+                    ],
                   }),
                 ],
               }),
@@ -198,7 +211,7 @@ export default function getTestDB() {
 
   return {
     ...session.state,
-    rootFiles: [appDir, appContainerDir, indexFile],
+    rootFiles: [components, containers, indexFile],
     currentFileId: 1,
     preferences: {
       semis: true,

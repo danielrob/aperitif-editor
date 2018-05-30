@@ -1,7 +1,4 @@
-export const required = 'required'
-export const requiredOrNull = 'requiredOrNull'
-
-export const SEMIS = true
+export const RESOLVE_ALIASES = ['containers', 'components']
 
 /* fileTypes */
 export const JS = 'js'
@@ -36,6 +33,7 @@ export const declarationTypes = {
 export const componentDeclarationTypes = [
   STATELESS_FUNCTION_COMPONENT,
   STYLED_COMPONENT,
+  CLASS_COMPONENT,
 ]
 
 /* export types */

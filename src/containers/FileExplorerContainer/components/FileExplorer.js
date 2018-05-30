@@ -4,18 +4,20 @@ import theme from 'theme-proxy'
 
 import { FileContainer } from '../containers'
 
-const FileExplorer = ({ rootFiles }) =>
-  rootFiles.map(fileId => (
-    <FileContainer
-      key={fileId}
-      fileId={fileId}
-      initial
-    />
-  ))
+const FileExplorer = ({ rootFiles }) => (
+  <React.Fragment>
+    {rootFiles.map(fileId => (
+      <FileContainer
+        key={fileId}
+        fileId={fileId}
+      />
+    ))}
+  </React.Fragment>
+)
 
 export default styled(FileExplorer).as.div`
   position: relative;
-  padding: 50px 40px;
+  padding: 50px 40px 0 40px;
   background-color: ${theme.colors.washedpink};
   color: ${theme.colors.darkblue};
 `

@@ -1,5 +1,7 @@
 import invariant from 'invariant'
-import { required, requiredOrNull } from 'constantz'
+
+export const required = 'required'
+export const requiredOrNull = 'requiredOrNull'
 
 class Model {
   constructor(orm, modelClass) {
@@ -54,6 +56,7 @@ class Model {
             find: cb => this.bindArrayMethod(key, 'find', cb),
             findIndex: cb => this.bindArrayMethod(key, 'findIndex', cb),
             includes: cb => this.bindArrayMethod(key, 'includes', cb),
+            forEach: cb => this.bindArrayMethod(key, 'forEach', cb),
             length: () => this.getModelData()[this.currentQueryResult.result.id][key].length,
           }
 

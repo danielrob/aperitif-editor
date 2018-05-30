@@ -4,9 +4,15 @@ import { Line, Keyword } from 'components'
 const Imports = ({ imports }) => (
   <div>
     {' '}
-    {imports.map(imp => (
-      <Line statement key={imp.id}>
-        <Keyword>import</Keyword> {imp.importName} <Keyword>from</Keyword> '{imp.source}'
+    {imports.map(({ id, isNamed, importName, source }) => (
+      <Line statement key={id}>
+        <Keyword>import</Keyword>
+        {' '}
+        {isNamed && '{ '}
+        {importName}
+        {isNamed && ' }'}
+        {' '}
+        <Keyword>from</Keyword> '{source}'
       </Line>
     ))}{' '}
   </div>

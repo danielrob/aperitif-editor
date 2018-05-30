@@ -6,7 +6,7 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { fileTypesArray, DIR, FILE, STYLED_COMPONENT } from 'constantz'
+import { fileTypesArray, DIR, FILE, STYLED_COMPONENT, RESOLVE_ALIASES } from 'constantz'
 import { changeFile, moveDeclarationToFile, moveFile } from 'duck'
 import { makeSelectFile } from 'selectors'
 
@@ -47,7 +47,6 @@ FileContainer.propTypes = forbidExtraProps({
   // passed by parent / file explorer
   fileId: T.number.isRequired,
   parentName: or([T.string.isRequired, explicitNull()]), // eslint-disable-line
-  initial: T.bool,
   path: T.arrayOf(T.number),
 
   // from makeSelectFile
@@ -71,7 +70,6 @@ FileContainer.propTypes = forbidExtraProps({
 })
 
 FileContainer.defaultProps = {
-  initial: false,
   path: [],
 }
 
@@ -91,8 +89,8 @@ const getType = ({ isDirectory }) => (isDirectory ? DIR : FILE)
 
 const sourceSpec = {
   beginDrag(props) {
-    const { fileId, isDirectory, declarationIds, name, initial, parentName } = props
-    const dropName = (name.includes('index') && !initial) ? parentName : name
+    const { fileId, isDirectory, declarationIds, name, parentName } = props
+    const dropName = (name.includes('index') && parentName) || name
     return {
       type: getType(props),
       fileId,
@@ -100,6 +98,13 @@ const sourceSpec = {
       declarationIds,
       dropName,
     }
+  },
+  canDrag(props) {
+    const { name, parentName } = props
+    return (
+      !RESOLVE_ALIASES.includes(name) &&
+      !(!parentName && name === 'index')
+    )
   },
 }
 
@@ -130,7 +135,7 @@ const dropzoneTarget = {
   },
 
   canDrop(props, monitor) {
-    const { fileId, isDirectory, path } = props
+    const { fileId, isDirectory, path = [] } = props
     return (
       isDirectory &&
       monitor.isOver({ shallow: true }) &&
