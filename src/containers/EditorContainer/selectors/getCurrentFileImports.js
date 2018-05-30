@@ -1,4 +1,4 @@
-import { uniqBy, sortBy } from 'lodash'
+import { uniqBy, sortBy, groupBy, map } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { composed } from 'utils'
@@ -31,9 +31,9 @@ export const getCurrentFileImports = createSelector(
   selectNames,
   composed(
     (currentFile, files, invocations, allDeclarations, declarations, names) => {
-      // Much simpler to handle these specific import cases here than in an abstract manner
       const imports = []
 
+      // Much simpler to handle these specific import cases here than in an abstract manner
       if (declarations.find(({ type }) => type === STYLED_COMPONENT)) {
         imports.push({ id: 'styled', importName: 'styled', source: 'styled-components', order: 1 })
       }
@@ -45,6 +45,8 @@ export const getCurrentFileImports = createSelector(
         imports.push({ id: 'react', importName: 'React', source: 'react', order: 0 })
       }
 
+      // For the invocations in the invocation trees in the declaration trees of the declarations...
+      // ... we check if each invocation represents an import. If so resolve that import.
       return declarations.reduce((out, declaration) => {
         const reduceRecursively = (priorInvocations, id) => {
           const { nameId, type, source, invocationIds, declarationId } = invocations[id]
@@ -55,11 +57,10 @@ export const getCurrentFileImports = createSelector(
               currentFile, declarationId, files, allDeclarations, names, nameId
             )
             thisInvocation = [{
-              id,
+              id, // just needs to be unique
               importName: names[nameId],
               source: resolvedSource,
               order: nameId,
-              declarationId,
               isNamed: RESOLVE_ALIASES.includes(resolvedSource),
             }]
           } else {
@@ -90,6 +91,12 @@ export const getCurrentFileImports = createSelector(
     },
     imports => uniqBy(imports, 'importName'),
     imports => sortBy(imports, 'order'),
+    imports => map(groupBy(imports, 'source'), group =>
+      group.reduce(({ importName, ...rest }, current) => ({
+        ...rest,
+        importName: importName ? `${importName}, ${current.importName}` : current.importName,
+      })),
+    ),
   )
 )
 
