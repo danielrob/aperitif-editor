@@ -3,34 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "airbnb-prop-types": "^2.9.0",
+    "airbnb-prop-types": "^2.10.0",
     "browser-locale": "^1.0.3",
     "check-types": "^7.3.0",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
     "invariant": "^2.2.4",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.10",
     "pluralize": "^7.0.0",
     "prop-types": "^15.6.1",
-    "react": "^16.3.2",
+    "react": "^16.4.0",
     "react-autosize-textarea": "^3.0.3",
     "react-dnd": "^2.6.0",
     "react-dnd-html5-backend": "^2.6.0",
-    "react-dom": "^16.3.2",
+    "react-dom": "^16.4.0",
     "react-helmet": "^5.2.0",
     "react-input-autosize": "^2.2.1",
     "react-intl": "^2.4.0",
-    "react-loadable": "^5.3.1",
+    "react-loadable": "^5.4.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
-    "redux-actions": "^2.3.0",
+    "redux-actions": "^2.4.0",
     "reselect": "^3.0.1",
     "sanitize.css": "^5.0.0",
     "styled-as-components": "*",
-    "styled-components": "^3.2.6",
+    "styled-components": "^3.3.2",
     "typeface-oxygen-mono": "0.0.54"
   },
   "scripts": {
@@ -42,8 +42,8 @@
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0"
+    "eslint-plugin-react": "^7.9.1"
   }
 }
