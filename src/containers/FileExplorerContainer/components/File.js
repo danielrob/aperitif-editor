@@ -54,14 +54,14 @@ File.propTypes = forbidExtraProps({
   isDragging: T.bool.isRequired,
 
   // for wrapper
-  innerRef: T.func.isRequired,
+  innerRef: T.func.isRequired,  
   onClick: T.func.isRequired,
   isDirectory: T.bool.isRequired,
 })
 
 
 export default styled(File).as.div`
-  cursor: pointer;
+  ${props => props.parentName && 'cursor: pointer;'}
   ${props => props.parentName && 'margin-left: 10px;'}
   ${props => props.isDirectory && 'padding: 5px 0;'}
 `

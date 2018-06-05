@@ -48,11 +48,13 @@ const createComponentBundle = ({
     ],
   })
 
+  File.withId(session.state.rootFiles[0]).children.insert(directoryId)
+
   // refresh session data
   orm.session({
     ...session.state,
-    rootFiles: [directoryId, ...session.state.rootFiles],
   })
+
 
   return [
     componentNameId,

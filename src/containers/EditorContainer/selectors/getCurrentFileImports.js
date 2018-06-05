@@ -61,6 +61,7 @@ export const getCurrentFileImports = createSelector(
               importName: names[nameId],
               source: resolvedSource,
               order: nameId,
+              declarationIds: [declarationId],
               isNamed: RESOLVE_ALIASES.includes(resolvedSource),
             }]
           } else {
@@ -92,8 +93,9 @@ export const getCurrentFileImports = createSelector(
     imports => uniqBy(imports, 'importName'),
     imports => sortBy(imports, 'order'),
     imports => map(groupBy(imports, 'source'), group =>
-      group.reduce(({ importName, ...rest }, current) => ({
+      group.reduce(({ importName, declarationIds, ...rest }, current) => ({
         ...rest,
+        declarationIds: [...declarationIds, ...current.declarationIds],
         importName: importName ? `${importName}, ${current.importName}` : current.importName,
       })),
     ),

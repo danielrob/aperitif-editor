@@ -58,7 +58,7 @@ const editorTarget = {
       .find(id => projectDeclarations[id].type === STYLED_COMPONENT)
 
     const isInSameComponentBundle = imports
-      .find(({ declarationId }) => declarationId === styledComponentId)
+      .find(({ declarationIds: dIds }) => (dIds || []).includes(styledComponentId))
 
     return monitor.isOver({ shallow: true }) &&
       styledComponentId &&
