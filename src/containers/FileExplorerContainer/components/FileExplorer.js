@@ -20,4 +20,6 @@ export default styled(FileExplorer).as.div`
   padding: 50px 40px 0 40px;
   background-color: ${theme.colors.washedpink};
   color: ${theme.colors.darkblue};
+  height: 100%;
+  overflow-y: auto;
 `

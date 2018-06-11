@@ -18,8 +18,8 @@ export default class App extends Component {
   render() {
     return (
       <AppWrapper>
-        <Helmet titleTemplate="%s - r-apide" defaultTitle="r-apide">
-          <meta name="description" content="R-apide" />
+        <Helmet titleTemplate="%s - Apéro" defaultTitle="Apéro">
+          <meta name="description" content="React Apéro Editor" />
         </Helmet>
         <Header />
         <Switch>

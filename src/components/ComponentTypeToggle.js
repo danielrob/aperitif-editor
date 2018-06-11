@@ -17,7 +17,7 @@ class ComponentTypeToggle extends React.Component {
 
   render() {
     return (
-      <span onClick={this.onClick}>
+      <span onClick={this.onClick} style={{ userSelect: 'all' }}>
         <Keyword>{this.props.text}</Keyword>
       </span>
     )

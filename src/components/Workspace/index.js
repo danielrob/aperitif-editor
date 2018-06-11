@@ -23,7 +23,6 @@ export default styled(Workspace).as.div`
     left: 0;
     bottom: 0;
     width: ${props => props.width}px;
-    overflow-y: scroll;
   }
   & > div:last-child {
     top: 0;
