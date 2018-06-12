@@ -6,14 +6,12 @@ import theme from 'theme-proxy'
 
 const PropDropzone = ({ children }) => <div>{children}</div>
 
-
 /* propTypes */
 PropDropzone.propTypes = forbidExtraProps({
   isOver: T.bool.isRequired,
   children: T.node.isRequired,
   innerRef: T.func.isRequired,
 })
-
 
 /* style, export */
 export default styled(PropDropzone).as.div`

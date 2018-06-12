@@ -2,7 +2,9 @@ import T from 'prop-types'
 import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
+
 import theme from 'theme-proxy'
+import { paramInvocationPropTypes } from 'model-prop-types'
 import { singular } from 'pluralize'
 
 import { indent } from 'utils'
@@ -10,14 +12,16 @@ import { indent } from 'utils'
 import { ComponentInvocationTreeContainer } from 'containers'
 
 const ParamInvocation = ({
-  declIsSpreadMember,
   connectDragSource,
-  chainedInvocations,
   isPIDragging,
   parentId,
   inline,
-  name,
   depth,
+  invocation: {
+    name,
+    declIsSpreadMember,
+    chainedInvocations,
+  },
 }) => {
   const chainedInvocation = chainedInvocations[0]
 
@@ -52,20 +56,18 @@ const ParamInvocation = ({
 
 /* propTypes */
 ParamInvocation.propTypes = forbidExtraProps({
-  name: T.string.isRequired,
+  // passed by parent
   parentId: T.number.isRequired,
-  depth: T.number.isRequired,
-  isPIDragging: T.bool.isRequired,
-  declIsSpreadMember: T.bool.isRequired,
-  connectDragSource: T.func.isRequired,
-  chainedInvocations: T.arrayOf(T.shape({})),
   inline: T.bool.isRequired,
+  depth: T.number.isRequired,
+
+  // injected by makeSelectParamInvocation
+  invocation: paramInvocationPropTypes.isRequired,
+
+  // injected by DragSource
+  isPIDragging: T.bool.isRequired,
+  connectDragSource: T.func.isRequired,
 })
-
-ParamInvocation.defaultProps = {
-  chainedInvocations: [],
-}
-
 
 /* style, export */
 export default styled(ParamInvocation).as.div`

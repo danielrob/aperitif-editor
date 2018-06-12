@@ -1,6 +1,7 @@
 import T from 'prop-types'
 import React from 'react'
 
+import { invocationPropTypes } from 'model-prop-types'
 import { COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
 import { ComponentInvocationTreeContainer } from 'containers'
 
@@ -11,7 +12,14 @@ const types = {
   [PARAM_INVOCATION]: ParamInvocationContainer,
 }
 
-const InvocationChildren = ({ invocationId: parentId, childInvocations, inline, depth }) =>
+const InvocationChildren = ({
+  invocation: {
+    invocationId: parentId,
+    childInvocations,
+    inline,
+  },
+  depth,
+}) =>
   childInvocations.reduce(
     (out, { id: invocationId, type }, position) => {
       const Component = types[type] || ComponentInvocationTreeContainer
@@ -21,7 +29,7 @@ const InvocationChildren = ({ invocationId: parentId, childInvocations, inline, 
           key={invocationId}
           parentId={parentId}
           invocationId={invocationId}
-          inline={inline}
+          parentIsInline={inline}
           depth={depth + 1}
         />
       )
@@ -42,11 +50,9 @@ const InvocationChildren = ({ invocationId: parentId, childInvocations, inline, 
 
 /* propTypes */
 InvocationChildren.propTypes = {
-  invocationId: T.number.isRequired,
-  childInvocations: T.arrayOf(T.object).isRequired,
+  invocation: invocationPropTypes.isRequired,
   depth: T.number.isRequired,
   isOverCI: T.bool.isRequired,
-  // ...props - see ComponentInvocationTree
 }
 
 export default InvocationChildren

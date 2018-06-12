@@ -1,5 +1,3 @@
-import T from 'prop-types'
-import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DragSource } from 'react-dnd'
@@ -8,41 +6,22 @@ import { PARAM_INVOCATION } from 'constantz'
 import { compose } from 'utils'
 
 import { ParamInvocation } from '../components'
-import { makeGetParamInvocation } from '../selectors'
+import { makeSelectParamInvocation } from '../selectors'
 
-const ParamInvocationContainer = ({
-  id,
-  invocationId,
-  ...props
-}) => <ParamInvocation {...props} />
-
-ParamInvocationContainer.propTypes = forbidExtraProps({
-  id: T.number.isRequired,
-  depth: T.number.isRequired,
-  parentId: T.number.isRequired,
-  invocationId: T.number.isRequired,
-  name: T.string.isRequired,
-  declIsSpreadMember: T.bool.isRequired,
-  isPIDragging: T.bool.isRequired,
-  connectDragSource: T.func.isRequired,
-  chainedInvocations: T.arrayOf(T.shape({})),
-  inline: T.bool.isRequired,
-})
-
-ParamInvocationContainer.defaultProps = {
-  chainedInvocations: [],
-}
+const ParamInvocationContainer = props => <ParamInvocation {...props} />
 
 /* connect */
 const makeMapStateToProps = () => {
-  const getInvocation = makeGetParamInvocation()
-  return (state, props) => getInvocation(state, props)
+  const getInvocation = makeSelectParamInvocation()
+  return (state, props) => ({
+    invocation: getInvocation(state, props),
+  })
 }
 
 /* dnd */
 const propSource = {
   beginDrag(props) {
-    const { id, name, parentId, invocationId } = props
+    const { invocation: { callParamId, name, invocationId }, parentId } = props
     return {
       // hover preview
       name,
@@ -51,7 +30,7 @@ const propSource = {
       sourceParentId: parentId,
       sourceInvocationId: invocationId,
       // canDrop
-      callParamId: id,
+      callParamId,
     }
   },
 }

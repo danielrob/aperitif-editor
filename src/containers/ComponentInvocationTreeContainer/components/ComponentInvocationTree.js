@@ -4,80 +4,90 @@ import React from 'react'
 import styled from 'styled-as-components'
 
 import theme from 'theme-proxy'
+import { invocationPropTypes } from 'model-prop-types'
 import { COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
 import { OpenTagContainer } from 'containers'
 
 import { InvocationChildren, CloseTag, CIDropzones } from './'
 
-const ComponentInvocationTree = ({ connectDropTarget, connectClosingDropTarget, ...props }) => (
+const ComponentInvocationTree = ({
+  depth,
+  invocation,
+  invocation: { invocationId, childInvocations, closed, inline },
+  connectDropTarget,
+  connectClosingDropTarget,
+  isOverCIT1,
+  isOverCIT2,
+  dragItem,
+  isOverCI,
+}) => (
   <React.Fragment>
+    {/* <Open> */}
     {connectDropTarget(
       <div style={{ display: 'inline-block' }}>
-        <OpenTagContainer {...props} />
-        <CIDropzones {...props} position={0} shouldDisplay={props.isOverCIT1 && !props.closed} />
+        <OpenTagContainer
+          depth={depth}
+          invocation={invocation}
+        />
+        <CIDropzones
+          invocationId={invocationId}
+          depth={depth}
+          dragItem={dragItem}
+          position={0}
+          shouldDisplay={isOverCIT1 && !closed}
+        />
       </div>
     )}
-    <InvocationChildren {...props} />
+    {/* {children} */}
+    <InvocationChildren
+      depth={depth}
+      invocation={invocation}
+      isOverCI={isOverCI}
+    />
+    {/* </Close> */}
     {connectClosingDropTarget(
-      <div style={{ display: props.inline ? 'inline-block' : 'block' }}>
+      <div style={{ display: inline ? 'inline-block' : 'block' }}>
         <CIDropzones
-          {...props}
-          position={props.childInvocations.length}
-          shouldDisplay={props.isOverCIT2 && !props.closed}
+          invocationId={invocationId}
+          depth={depth}
+          dragItem={dragItem}
+          position={childInvocations.length}
+          shouldDisplay={isOverCIT2 && !closed}
         />
         <CloseTag
-          name={props.name}
-          depth={props.depth}
-          inline={props.inline}
-          shouldDisplay={!props.closed}
+          depth={depth}
+          invocation={invocation}
         />
       </div>
     )}
   </React.Fragment>
 )
 
-
 /* propTypes */
 ComponentInvocationTree.propTypes = forbidExtraProps({
-  // passed by parent
-  invocationId: T.number.isRequired,
+  // parent
   depth: T.number.isRequired,
   initial: T.bool.isRequired,
   parentId: T.number,
   type: T.oneOf([COMPONENT_INVOCATION, PARAM_INVOCATION]),
 
-  // injected by makeGetInvocation
-  name: T.string.isRequired,
-  nameId: T.number.isRequired,
-  childInvocations: T.arrayOf(T.object).isRequired,
-  callParamIds: T.arrayOf(T.number).isRequired,
-  callParams: T.arrayOf(T.object).isRequired,
-  paramChildren: T.arrayOf(T.object),
-  closed: T.bool.isRequired,
-  hasPropsSpread: T.bool.isRequired,
-  pseudoSpreadPropsName: T.string,
-  inline: T.bool.isRequired,
+  // container
+  invocation: invocationPropTypes.isRequired,
+  isOverCI: T.bool.isRequired,
 
-  // Injected by React DnD:
+  // React DnD:
   connectDropTarget: T.func.isRequired,
   connectClosingDropTarget: T.func.isRequired,
-  isOverCIT1: T.bool.isRequired, // opening tag down
-  isOverCIT2: T.bool.isRequired, // closing tag up
+  isOverCIT1: T.bool.isRequired,
+  isOverCIT2: T.bool.isRequired,
   dragItem: T.shape({ name: T.string }),
-
-  // injected by container
-  ciDimensions: T.shape({ clientWidth: T.number, clientHeight: T.number }).isRequired,
-  isOverCI: T.bool.isRequired, // whole component
 })
 
 ComponentInvocationTree.defaultProps = {
-  paramChildren: [],
   dragItem: null,
   parentId: null,
   type: null,
-  pseudoSpreadPropsName: null,
 }
-
 
 /* style, export */
 export default styled(ComponentInvocationTree).as.div`

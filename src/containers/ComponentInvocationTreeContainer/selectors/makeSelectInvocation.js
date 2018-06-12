@@ -5,13 +5,14 @@ import { selectNames, selectParams, selectInvocations } from 'selectors'
 const selectInvocation = (state, props) => selectInvocations(state)[props.invocationId]
 
 // component invocation selector => <Component>
-export const makeGetInvocation = () => createSelector(
+export const makeSelectInvocation = () => createSelector(
   selectNames,
   selectParams,
   selectInvocation,
   selectInvocations,
   (names, allParams, invocation, invocations) => {
     const {
+      id,
       nameId,
       type,
       invocationIds,
@@ -23,11 +24,11 @@ export const makeGetInvocation = () => createSelector(
     } = invocation
 
     return {
+      invocationId: id,
       nameId,
       name: names[nameId],
       type,
       childInvocations: invocationIds.map(id => invocations[id]),
-      callParamIds,
       callParams: callParamIds.map(id => {
         const { declParamId } = allParams[id]
 
@@ -53,26 +54,5 @@ export const makeGetInvocation = () => createSelector(
       closed: !!closed,
       pseudoSpreadPropsName: names[pseudoSpreadPropsNameId],
       hasPropsSpread,
-    }
-  })
-
-// param invocation selector => {param}
-export const makeGetParamInvocation = () => createSelector(
-  selectNames,
-  selectParams,
-  selectInvocation,
-  selectInvocations,
-  (names, allParams, invocation, invocations) => {
-    const { nameId, callParamIds, invocationIds } = invocation
-    // callParamIds is a singleton for paramInvocations so e.g. allParams[[1]] is fine 🕊
-    const { id, declParamId } = allParams[callParamIds]
-
-    const { isSpreadMember } = allParams[declParamId]
-
-    return {
-      id,
-      name: names[nameId],
-      declIsSpreadMember: isSpreadMember,
-      chainedInvocations: invocationIds.map(id => invocations[id]),
     }
   })

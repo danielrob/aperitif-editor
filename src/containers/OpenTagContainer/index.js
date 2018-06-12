@@ -15,29 +15,19 @@ class OpenTagContainer extends React.Component {
   render() {
     const {
       connectDropTarget,
-      nameId,
-      callParams,
-      closed,
-      hasPropsSpread,
-      inline,
-      depth,
       dragItem,
       isOverOpenTag,
-      pseudoSpreadPropsName,
+      depth,
+      invocation,
     } = this.props
 
     return (
       <OpenTag
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        nameId={nameId}
-        callParams={callParams}
-        closed={closed}
-        hasPropsSpread={hasPropsSpread}
-        pseudoSpreadPropsName={pseudoSpreadPropsName}
-        inline={inline}
         depth={depth}
         dragItem={dragItem}
         isOverOpenTag={isOverOpenTag}
+        invocation={invocation}
       />
     )
   }
@@ -45,20 +35,23 @@ class OpenTagContainer extends React.Component {
 
 
 OpenTagContainer.propTypes = {
-  name: T.string.isRequired,
-  nameId: T.number.isRequired,
-  callParams: T.arrayOf(T.shape({
-    id: T.number.isRequired,
-    name: T.string.isRequired,
-    declIsSpreadMember: T.bool,
-    valueString: T.string,
-  })).isRequired,
-  closed: T.bool.isRequired,
-  hasPropsSpread: T.bool.isRequired,
-  pseudoSpreadPropsName: T.string,
-  inline: T.bool.isRequired,
   depth: T.number.isRequired,
-  // ...spread - see ComponentInvocationTree
+
+  invocation: T.shape({
+    name: T.string.isRequired,
+    closed: T.bool.isRequired,
+    inline: T.bool.isRequired,
+
+    nameId: T.number.isRequired,
+    callParams: T.arrayOf(T.shape({
+      id: T.number.isRequired,
+      name: T.string.isRequired,
+      declIsSpreadMember: T.bool,
+      valueString: T.string,
+    })).isRequired,
+    hasPropsSpread: T.bool.isRequired,
+    pseudoSpreadPropsName: T.string,
+  }).isRequired,
 
   // Injected by connect:
   addAttributeToComponentInvocation: T.func.isRequired,
@@ -68,10 +61,6 @@ OpenTagContainer.propTypes = {
   connectDropTarget: T.func.isRequired,
   isOverOpenTag: T.bool.isRequired,
   dragItem: T.shape({ type: T.string }).isRequired,
-}
-
-OpenTagContainer.defaultProps = {
-  pseudoSpreadPropsName: null,
 }
 
 

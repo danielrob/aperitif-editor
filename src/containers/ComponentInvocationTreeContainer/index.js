@@ -4,13 +4,15 @@ import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget, DragSource } from 'react-dnd'
-import { COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
+
+import { invocationPropTypes } from 'model-prop-types'
+import { COMPONENT_INVOCATION } from 'constantz'
 import { compose } from 'utils'
 
 import { acceptedDropTypes, getIsValidOver } from './helpers'
 import { ComponentInvocationTree } from './components'
 import getCIDimensionsInjector from './getCIDimensionsInjector'
-import { makeGetInvocation } from './selectors'
+import { makeSelectInvocation } from './selectors'
 
 class ComponentInvocationTreeContainer extends React.Component {
   render() {
@@ -18,13 +20,18 @@ class ComponentInvocationTreeContainer extends React.Component {
       connectDragSource,
       componentInvocationRef,
       isDragging,
-      inline,
+      parentIsInline,
+      invocation: { closed, inline, ...invocation },
+      invocationId, // selector / dnd only
+      parentId, // dnd only
+      ciDimensions, // dnd only
       ...props
     } = this.props
-    const { isOverCIT1, isOverCIT2, closed } = props
+
+    const { isOverCIT1, isOverCIT2 } = props
     const isOverCI = isOverCIT1 || isOverCIT2
     const isClosed = closed && (!isOverCI || C.boolean(props.dragItem.payload))
-    const doInline = inline && !isOverCI
+    const displayInline = (parentIsInline || inline) && !isOverCI
 
     // https://github.com/react-dnd/react-dnd/issues/998
     return !isDragging ? connectDragSource(
@@ -32,9 +39,12 @@ class ComponentInvocationTreeContainer extends React.Component {
         <div ref={componentInvocationRef} style={{ display: 'table', width: 'auto' }}>
           <ComponentInvocationTree
             {...props}
-            inline={doInline}
             isOverCI={isOverCI}
-            closed={isClosed}
+            invocation={{
+              closed: isClosed,
+              inline: displayInline,
+              ...invocation,
+            }}
           />
         </div>
       </div>
@@ -48,49 +58,44 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
   initial: T.bool,
   depth: T.number.isRequired,
   parentId: T.number,
-  type: T.oneOf([COMPONENT_INVOCATION, PARAM_INVOCATION]),
+  parentIsInline: T.bool,
 
-  // injected by getCIDimensionsInjector
+  // connect
+  invocation: invocationPropTypes.isRequired,
+
+  // getCIDimensionsInjector
   componentInvocationRef: T.shape({ current: T.any }).isRequired,
   ciDimensions: T.shape({ clientWidth: T.number, clientHeight: T.number }).isRequired,
 
-  // injected by makeGetInvocation
-  nameId: T.number.isRequired,
-  name: T.string.isRequired,
-  childInvocations: T.arrayOf(T.object).isRequired,
-  callParamIds: T.arrayOf(T.number).isRequired,
-  callParams: T.arrayOf(T.object).isRequired,
-  paramChildren: T.arrayOf(T.object),
-  closed: T.bool.isRequired,
-  hasPropsSpread: T.bool.isRequired,
-  inline: T.bool.isRequired,
-  pseudoSpreadPropsName: T.string,
-
-  // Injected by React DnD:
+  // DragSource
   connectDragSource: T.func.isRequired,
-  connectDropTarget: T.func.isRequired,
-  connectClosingDropTarget: T.func.isRequired,
   isDragging: T.bool,
+
+  // DragTarget 1
+  connectDropTarget: T.func.isRequired,
   isOverCIT1: T.bool.isRequired,
-  isOverCIT2: T.bool.isRequired,
   dragItem: T.shape({ name: T.string }),
+
+  // DragTarget 2
+  connectClosingDropTarget: T.func.isRequired,
+  isOverCIT2: T.bool.isRequired,
+
 })
 
 ComponentInvocationTreeContainer.defaultProps = {
   parentId: null,
-  paramChildren: [],
   initial: false,
   dragItem: null,
   isDragging: false,
-  type: null,
-  pseudoSpreadPropsName: null,
+  parentIsInline: false,
 }
-
 
 /* connect */
 const makeMapStateToProps = () => {
-  const getInvocation = makeGetInvocation()
-  return (state, props) => getInvocation(state, props)
+  const getInvocation = makeSelectInvocation()
+  return (state, props) => ({
+    invocation: getInvocation(state, props),
+  })
 }
 
 const mapDispatchToProps = { }
@@ -130,7 +135,6 @@ const targetCollect = (connect, monitor) => ({
 const targetTwoCollect = (connect, monitor) => ({
   connectClosingDropTarget: connect.dropTarget(),
   isOverCIT2: getIsValidOver(monitor),
-  dragItem: monitor.getItem(),
 })
 
 /* compose export */

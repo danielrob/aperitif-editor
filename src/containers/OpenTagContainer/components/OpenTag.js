@@ -5,6 +5,7 @@ import React from 'react'
 import styled from 'styled-as-components'
 
 import theme from 'theme-proxy'
+import { invocationPropTypes } from 'model-prop-types'
 import { PROP, PROPS_SPREAD } from 'constantz'
 import { indent } from 'utils'
 import { Input } from 'components'
@@ -12,14 +13,16 @@ import { Input } from 'components'
 import { canDropPropToOpenTag } from '../helpers'
 
 const OpenTag = ({
-  nameId,
   isOverOpenTag,
   dragItem,
-  callParams,
-  closed,
-  hasPropsSpread,
-  pseudoSpreadPropsName,
   depth,
+  invocation: {
+    callParams,
+    closed,
+    hasPropsSpread,
+    pseudoSpreadPropsName,
+    nameId,
+  },
 }) => {
   const spreadPropsIsOver = isOverOpenTag && dragItem.type === PROPS_SPREAD
   const propIsOver = isOverOpenTag && dragItem.type === PROP &&
@@ -75,31 +78,14 @@ const OpenTag = ({
 
 /* propTypes */
 OpenTag.propTypes = forbidExtraProps({
-  nameId: T.number.isRequired,
-  callParams: T.arrayOf(T.shape({
-    id: T.number.isRequired,
-    name: T.string.isRequired,
-    declIsSpreadMember: T.bool,
-    valueString: T.string,
-  }).isRequired).isRequired,
-  closed: T.bool.isRequired,
-  hasPropsSpread: T.bool.isRequired,
-  pseudoSpreadPropsName: T.string,
-  inline: T.bool.isRequired,
+  invocation: invocationPropTypes.isRequired,
   depth: T.number.isRequired,
-
   // for wrapper
   innerRef: T.func.isRequired,
-
   // Injected by React DnD:
   isOverOpenTag: T.bool.isRequired,
   dragItem: T.shape({ type: T.string }).isRequired,
 })
-
-OpenTag.defaultProps = {
-  pseudoSpreadPropsName: null,
-}
-
 
 /* style, export */
 export default styled(OpenTag).as.div`
