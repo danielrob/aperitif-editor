@@ -12,6 +12,7 @@ import {
   CLASS_COMPONENT,
   CLASS_METHOD,
   STATELESS_FUNCTION_COMPONENT,
+  ARRAY_MAP_METHOD,
 } from 'constantz'
 import { capitalize } from 'utils'
 
@@ -463,16 +464,22 @@ export default function appReducer(state = getInitialState(), action) {
           callParamIds: [CallParam.create({ declParamId: paramId })],
           invocationIds: [
             Invocation.create({
-              nameId: componentNameId,
-              declarationId: newComponentDeclarationId,
-              callParamIds: [
-                CallParam.create({
-                  nameId: KEY_NAME_ID,
-                  valueNameIds: [mapPseudoParamNameId, ID_NAME_ID],
+              type: ARRAY_MAP_METHOD,
+              nameId: mapPseudoParamNameId,
+              invocationIds: [
+                Invocation.create({
+                  nameId: componentNameId,
+                  declarationId: newComponentDeclarationId,
+                  callParamIds: [
+                    CallParam.create({
+                      nameId: KEY_NAME_ID,
+                      valueNameIds: [mapPseudoParamNameId, ID_NAME_ID],
+                    }),
+                  ],
+                  pseudoSpreadPropsNameId: mapPseudoParamNameId,
+                  closed: true,
                 }),
               ],
-              pseudoSpreadPropsNameId: mapPseudoParamNameId,
-              closed: true,
             }),
           ],
         }),

@@ -1,11 +1,10 @@
 import React from 'react'
-import { singular } from 'pluralize'
-import { JSX } from 'components'
+import { JSX, Input } from 'components'
 import { indent } from 'utils'
 
-const ArrayMapInvocation = ({ invocation: { invocationId, name, invocationIds }, depth }) => (
+const ArrayMapInvocation = ({ invocation: { invocationId, nameId, invocationIds }, depth }) => (
   <React.Fragment>
-    .map({singular(name)} => (
+    .map(<Input nameId={nameId} /> => (
     <JSX
       parentId={invocationId}
       invocationId={invocationIds[0]}
