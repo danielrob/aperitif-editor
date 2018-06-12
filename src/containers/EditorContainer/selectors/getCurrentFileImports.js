@@ -45,6 +45,13 @@ export const getCurrentFileImports = createSelector(
         imports.push({ id: 'react', importName: 'React', source: 'react', order: 0 })
       }
 
+      if (
+        declarations.find(({ type, declParamIds }) =>
+          declParamIds.length && [STATELESS_FUNCTION_COMPONENT, CLASS_COMPONENT].includes(type))
+      ) {
+        imports.push({ id: 'prop-types', importName: 'T', source: 'prop-types', order: -1 })
+      }
+
       // For the invocations in the invocation trees in the declaration trees of the declarations...
       // ... we check if each invocation represents an import. If so resolve that import.
       return declarations.reduce((out, declaration) => {

@@ -38,13 +38,14 @@ PropContainer.propTypes = forbidExtraProps({
   assignNameId: T.number,
   isLast: T.bool.isRequired,
   isSpreadMember: T.bool.isRequired,
-  payload: T.any.isRequired, // eslint-disable-line react/forbid-prop-types
+  payload: T.any, // eslint-disable-line react/forbid-prop-types
   count: T.number,
 })
 
 PropContainer.defaultProps = {
   count: null,
   assignNameId: null,
+  payload: null,
 }
 
 

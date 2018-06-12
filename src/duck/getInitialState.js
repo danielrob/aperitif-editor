@@ -17,8 +17,8 @@ import {
 
 import orm from 'orm'
 
-// import apiResponse from './apiArrayResponse.json'
-import apiResponse from './apiObjectResponse.json'
+import apiResponse from './apiArrayResponse.json'
+// import apiResponse from './apiObjectResponse.json'
 
 export const REACT_CHILDREN_DECLARATION_PARAM_ID = 2
 export const REACT_CHILDREN_CALL_PARAM_ID = 1
@@ -86,6 +86,7 @@ export default function getInitialState() {
       DeclParam.create({
         nameId: Name.create(key),
         payload: apiResponse[key],
+        count: 1,
       })
     )
   }

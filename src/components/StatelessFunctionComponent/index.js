@@ -1,6 +1,6 @@
 import { partition } from 'lodash'
 import React from 'react'
-import { JSX, Props, Line, Keyword, Input, ComponentTypeToggle } from 'components'
+import { JSX, Props, Line, Keyword, Input, ComponentTypeToggle, PropTypes } from 'components'
 import { INLINE, CLASS_COMPONENT } from 'constantz'
 
 export default class StatelessFunctionComponent extends React.Component {
@@ -26,6 +26,8 @@ export default class StatelessFunctionComponent extends React.Component {
           <JSX key={id} invocationId={id} initial />)
         }
         <Line statement>{invocations.length > 1 && ']'})</Line>
+        <br />
+        <PropTypes nameId={nameId} props={allParams} />
       </div>
     )
   }
