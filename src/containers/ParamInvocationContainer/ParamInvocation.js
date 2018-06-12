@@ -5,7 +5,6 @@ import styled from 'styled-as-components'
 
 import theme from 'theme-proxy'
 import { paramInvocationPropTypes } from 'model-prop-types'
-import { singular } from 'pluralize'
 
 import { indent } from 'utils'
 
@@ -15,50 +14,40 @@ const ParamInvocation = ({
   connectDragSource,
   isPIDragging,
   parentId,
-  inline,
   depth,
   invocation: {
     name,
     declIsSpreadMember,
-    chainedInvocations,
+    invocationIds,
+    inline,
   },
-}) => {
-  const chainedInvocation = chainedInvocations[0]
-
-  return isPIDragging ? null : (
-    <React.Fragment>
-      {!inline && indent(depth)}
-      {connectDragSource(
-        <div className="dragsource">
-          {'{'}
-          {declIsSpreadMember && 'props.'}
-          {name}
-          {chainedInvocation &&
-            <React.Fragment>
-              .map({singular(name)} => (
-              <JSX
-                key={chainedInvocation.id}
-                parentId={parentId}
-                invocationId={chainedInvocation.id}
-                depth={1}
-                initial
-              />
-              ))
-            </React.Fragment>
-          }
-          {'}'}
-        </div>
-      )}
-    </React.Fragment>
-  )
-}
+}) => isPIDragging ? null : (
+  <React.Fragment>
+    {!inline && indent(depth)}
+    {connectDragSource(
+      <div className="dragsource">
+        {'{'}
+        {declIsSpreadMember && 'props.'}
+        {name}
+        {invocationIds.length === 1 &&
+          <JSX
+            parentId={parentId}
+            invocationId={invocationIds}
+            depth={1}
+            initial
+          />
+        }
+        {'}'}
+      </div>
+    )}
+  </React.Fragment>
+)
 
 
 /* propTypes */
 ParamInvocation.propTypes = forbidExtraProps({
   // passed by parent
   parentId: T.number.isRequired,
-  inline: T.bool.isRequired,
   depth: T.number.isRequired,
 
   // injected by makeSelectParamInvocation
@@ -71,7 +60,7 @@ ParamInvocation.propTypes = forbidExtraProps({
 
 /* style, export */
 export default styled(ParamInvocation).as.div`
-  ${props => props.inline && 'display: inline-block;'}
+  ${props => props.invocation.inline && 'display: inline-block;'}
   color: ${theme.colors.darkblue}
   .dragsource {
     display: inline-block;

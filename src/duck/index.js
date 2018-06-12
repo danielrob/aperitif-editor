@@ -15,12 +15,12 @@ import {
 } from 'constantz'
 import { capitalize } from 'utils'
 
-import getTestDB, {
+import getInitialState, {
   REACT_CHILDREN_INVOCATION_ID,
   REACT_CHILDREN_DECLARATION_PARAM_ID,
   KEY_NAME_ID,
   ID_NAME_ID,
-} from './getTestDB'
+} from './getInitialState'
 
 // Editor
 export const CHANGE_EDITOR_CURRENT_FILE = 'CHANGE_EDITOR_CURRENT_FILE'
@@ -46,7 +46,7 @@ export const UPDATE_DECLARATION = 'UPDATE_DECLARATION'
 export const UPDATE_DECL_PARAM = 'UPDATE_DECL_PARAM'
 export const UPDATE_PREFERENCES = 'UPDATE_PREFERENCES'
 
-export default function appReducer(state = getTestDB(), action) {
+export default function appReducer(state = getInitialState(), action) {
   const session = orm.session(state)
   const { Name, DeclParam, CallParam, Declaration, Invocation, File } = session
 

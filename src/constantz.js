@@ -48,12 +48,16 @@ export const exportTypes = {
   false: 'no export',
 }
 
-/* draggable / invocation types */
+/* draggable types */
 export const PROP = 'prop'
-export const COMPONENT_INVOCATION = 'component invocation'
-export const PARAM_INVOCATION = 'param invocation'
 export const PROPS_SPREAD = '...props'
 export const FILE = 'file'
+
+/* invocation (some are draggable) types */
+export const COMPONENT_INVOCATION = 'component invocation'
+export const PARAM_INVOCATION = 'param invocation'
+export const VAR_INVOCATION = 'var invocation'
+export const ARRAY_MAP_METHOD = '.map invocation'
 
 export const DraggableTypes = {
   PROP,

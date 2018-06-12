@@ -15,7 +15,20 @@ export const selectPreferences = s => s.app.preferences
 /*
   Atomic model selectors
 */
-export const selectInvocation = (state, props) => selectInvocations(state)[props.invocationId]
+export const selectInvocation = createSelector(
+  selectNames,
+  selectInvocations,
+  (state, props) => props.invocationId,
+  (names, invocations, invocationId) => {
+    const { id, nameId, ...rest } = invocations[invocationId]
+    return {
+      invocationId,
+      name: names[nameId],
+      nameId,
+      ...rest,
+    }
+  }
+)
 
 /*
   Single Model selectors - `makeSelect${modelName}`
@@ -29,7 +42,7 @@ export const makeSelectDeclaration = () => createSelector(
   (names, declarations, declarationId) => {
     const { id, nameId, ...rest } = declarations[declarationId]
     return {
-      declarationId: id,
+      declarationId,
       name: names[nameId],
       nameId,
       ...rest,

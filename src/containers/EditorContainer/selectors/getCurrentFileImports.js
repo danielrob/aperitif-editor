@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 
 import { composed } from 'utils'
 import {
-  PARAM_INVOCATION,
+  COMPONENT_INVOCATION,
   STYLED_COMPONENT,
   STATELESS_FUNCTION_COMPONENT,
   CLASS_COMPONENT,
@@ -52,7 +52,7 @@ export const getCurrentFileImports = createSelector(
           const { nameId, type, source, invocationIds, declarationId } = invocations[id]
 
           let thisInvocation
-          if (isAnImportInvocation(nameId, type, declarations)) {
+          if (isAnImportInvocation(nameId, type, declarations, source)) {
             const resolvedSource = source || getRelativePath(
               currentFile, declarationId, files, allDeclarations, names, nameId
             )
@@ -103,9 +103,12 @@ export const getCurrentFileImports = createSelector(
 )
 
 
-const isAnImportInvocation = (invocationNameId, type, declarations) =>
-  !declarations.find(({ nameId }) => nameId === invocationNameId) &&
-  ![PARAM_INVOCATION].includes(type)
+const isAnImportInvocation = (invocationNameId, type, declarations, source) =>
+  source ||
+  (
+    !declarations.find(({ nameId }) => nameId === invocationNameId) &&
+    [COMPONENT_INVOCATION].includes(type)
+  )
 
 
 const getRelativePath = (currentFile, declarationId, files, declarations, names, nameId) => {

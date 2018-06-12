@@ -9,7 +9,7 @@ const makeSelectInvocation = () => createSelector(
   selectInvocation,
   (names, allParams, invocation) => {
     const {
-      id,
+      invocationId,
       nameId,
       type,
       invocationIds,
@@ -21,7 +21,7 @@ const makeSelectInvocation = () => createSelector(
     } = invocation
 
     return {
-      invocationId: id,
+      invocationId,
       nameId,
       name: names[nameId],
       type,

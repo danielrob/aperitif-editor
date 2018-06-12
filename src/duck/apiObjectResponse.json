@@ -1,0 +1,8 @@
+{
+  "bool": true,
+  "string": "strrrrrriiing",
+  "null": null,
+  "arrays": [{ "id": 2, "name": "woot", "height": "1.82m" }],
+  "object": { "yes": "yes", "we": "we", "spread": "spread", "array": [] },
+  "number": 6
+}

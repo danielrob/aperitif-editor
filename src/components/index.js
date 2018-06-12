@@ -14,3 +14,5 @@ export { default as StatelessFunctionComponent } from './StatelessFunctionCompon
 export { default as StyledComponent } from './StyledComponent'
 export { default as Standard } from './Standard'
 export { default as JSX } from './JSX'
+export { default as ArrayMapInvocation } from './ArrayMapInvocation'
+export { default as VarInvocation } from './VarInvocation'
