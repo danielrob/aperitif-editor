@@ -26,31 +26,47 @@ const renderers = {
   [PROJECT_INDEX]: ProjectIndex,
 }
 
-const Editor = ({ imports, declarations, defaultExport, connectActiveEditorAreaTarget }) =>
-  connectActiveEditorAreaTarget(
-    <div className="active-zone">
-      <Imports key="imports" imports={imports} />
-      {!!imports.length && <br />}
-      {declarations.map(declaration => {
-        const { type, declarationId } = declaration
-        const Renderer = renderers[type] || Standard
-        return (
-          <div key={declarationId}>
-            <Renderer {...declaration} />
-            <br />
-          </div>
-        )
-      })}
-      <DefaultExport nameId={defaultExport} />
-      <ReactTooltip
-        id="prop"
-        effect="solid"
-        delayShow={100}
-        // type="success"
-        getContent={dataTip => <pre>{dataTip}</pre>}
-      />
-    </div>
-  )
+class Editor extends React.Component {
+  keydown = (event) => {
+    if (event.keyCode === 27) {
+      document.activeElement.blur()
+    }
+  }
+  componentDidMount() {
+    document.addEventListener('keydown', this.keydown, false)
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.keydown, false)
+  }
+  render() {
+    const { imports, declarations, defaultExport, connectActiveEditorAreaTarget } = this.props
+    return connectActiveEditorAreaTarget(
+      <div className="active-zone">
+        <Imports key="imports" imports={imports} />
+        {!!imports.length && <br />}
+        {declarations.map(declaration => {
+          const { type, declarationId } = declaration
+          const Renderer = renderers[type] || Standard
+          return (
+            <div key={declarationId}>
+              <Renderer {...declaration} />
+              <br />
+            </div>
+          )
+        })}
+        <DefaultExport nameId={defaultExport} />
+        <ReactTooltip
+          id="prop"
+          effect="solid"
+          delayShow={100}
+          // type="success"
+          getContent={dataTip => <pre>{dataTip}</pre>}
+        />
+      </div>
+    )
+  }
+}
+
 
 export default styled(Editor).as.div`
   background-color: ${theme.colors.white};
