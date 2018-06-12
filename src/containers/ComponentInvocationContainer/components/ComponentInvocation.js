@@ -6,14 +6,14 @@ import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 import { invocationPropTypes } from 'model-prop-types'
 import { COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
-import { OpenTagContainer } from 'containers'
 
+import { OpenTagContainer } from '../containers'
 import { InvocationChildren, CloseTag, CIDropzones } from './'
 
-const ComponentInvocationTree = ({
+const ComponentInvocation = ({
   depth,
   invocation,
-  invocation: { invocationId, childInvocations, closed, inline },
+  invocation: { invocationId, invocationIds, closed, inline },
   connectDropTarget,
   connectClosingDropTarget,
   isOverCIT1,
@@ -51,7 +51,7 @@ const ComponentInvocationTree = ({
           invocationId={invocationId}
           depth={depth}
           dragItem={dragItem}
-          position={childInvocations.length}
+          position={invocationIds.length}
           shouldDisplay={isOverCIT2 && !closed}
         />
         <CloseTag
@@ -64,7 +64,7 @@ const ComponentInvocationTree = ({
 )
 
 /* propTypes */
-ComponentInvocationTree.propTypes = forbidExtraProps({
+ComponentInvocation.propTypes = forbidExtraProps({
   // parent
   depth: T.number.isRequired,
   initial: T.bool.isRequired,
@@ -83,14 +83,14 @@ ComponentInvocationTree.propTypes = forbidExtraProps({
   dragItem: T.shape({ name: T.string }),
 })
 
-ComponentInvocationTree.defaultProps = {
+ComponentInvocation.defaultProps = {
   dragItem: null,
   parentId: null,
   type: null,
 }
 
 /* style, export */
-export default styled(ComponentInvocationTree).as.div`
+export default styled(ComponentInvocation).as.div`
   color: ${theme.colors.darkgreen};
   padding-left: 0;
   cursor: ${props => (props.initial ? 'inherit' : 'pointer')}

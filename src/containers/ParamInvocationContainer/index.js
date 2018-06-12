@@ -5,8 +5,8 @@ import { DragSource } from 'react-dnd'
 import { PARAM_INVOCATION } from 'constantz'
 import { compose } from 'utils'
 
-import { ParamInvocation } from '../components'
-import { makeSelectParamInvocation } from '../selectors'
+import ParamInvocation from './ParamInvocation'
+import makeSelectParamInvocation from './makeSelectParamInvocation'
 
 const ParamInvocationContainer = props => <ParamInvocation {...props} />
 

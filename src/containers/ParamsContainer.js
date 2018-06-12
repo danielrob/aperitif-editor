@@ -8,11 +8,7 @@ import { makeSelectSomeParams } from 'selectors'
 class ParamsContainer extends React.Component {
   render() {
     const [spreadParams, params] = partition(this.props.params, p => p.isSpreadMember)
-    return (
-      <React.Fragment>
-        {this.props.children(params, spreadParams)}
-      </React.Fragment>
-    )
+    return this.props.children(params, spreadParams)
   }
 }
 

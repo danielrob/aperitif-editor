@@ -90,7 +90,6 @@ CIDropzones.propTypes = {
   dragItem: T.shape({ name: T.string }),
   depth: T.number.isRequired,
   position: T.number.isRequired,
-  // ...props - see ComponentInvocationTree
 }
 
 CIDropzones.defaultProps = {

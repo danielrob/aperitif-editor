@@ -5,7 +5,7 @@ export const invocationPropTypes = T.shape({
   invocationId: T.number.isRequired,
   name: T.string.isRequired,
   nameId: T.number.isRequired,
-  childInvocations: T.arrayOf(T.object).isRequired,
+  invocationIds: T.arrayOf(T.number).isRequired,
   callParams: T.arrayOf(T.object).isRequired,
   hasPropsSpread: T.bool.isRequired,
   pseudoSpreadPropsName: T.string,

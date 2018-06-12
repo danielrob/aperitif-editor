@@ -1,11 +1,9 @@
 import { createSelector } from 'reselect'
 
-import { selectNames, selectParams, selectInvocations } from 'selectors'
-
-const selectInvocation = (state, props) => selectInvocations(state)[props.invocationId]
+import { selectNames, selectInvocation, selectParams, selectInvocations } from 'selectors'
 
 // param invocation selector => {param}
-export const makeSelectParamInvocation = () => createSelector(
+const makeSelectParamInvocation = () => createSelector(
   selectNames,
   selectParams,
   selectInvocation,
@@ -25,3 +23,6 @@ export const makeSelectParamInvocation = () => createSelector(
       chainedInvocations: invocationIds.map(id => invocations[id]),
     }
   })
+
+
+export default makeSelectParamInvocation

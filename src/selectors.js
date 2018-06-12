@@ -13,6 +13,11 @@ export const selectParams = s => s.app.params
 export const selectPreferences = s => s.app.preferences
 
 /*
+  Atomic model selectors
+*/
+export const selectInvocation = (state, props) => selectInvocations(state)[props.invocationId]
+
+/*
   Single Model selectors - `makeSelect${modelName}`
 */
 export const makeSelectName = () => (state, props) => selectNames(state)[props.nameId]

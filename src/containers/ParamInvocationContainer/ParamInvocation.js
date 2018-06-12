@@ -9,7 +9,7 @@ import { singular } from 'pluralize'
 
 import { indent } from 'utils'
 
-import { ComponentInvocationTreeContainer } from 'containers'
+import { JSX } from 'components'
 
 const ParamInvocation = ({
   connectDragSource,
@@ -36,7 +36,7 @@ const ParamInvocation = ({
           {chainedInvocation &&
             <React.Fragment>
               .map({singular(name)} => (
-              <ComponentInvocationTreeContainer
+              <JSX
                 key={chainedInvocation.id}
                 parentId={parentId}
                 invocationId={chainedInvocation.id}

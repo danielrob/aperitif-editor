@@ -1,7 +1,6 @@
 import { partition } from 'lodash'
 import React from 'react'
-import { Props, Line, Keyword, Input, ComponentTypeToggle } from 'components'
-import { ComponentInvocationTreeContainer } from 'containers'
+import { JSX, Props, Line, Keyword, Input, ComponentTypeToggle } from 'components'
 import { INLINE, CLASS_COMPONENT } from 'constantz'
 
 export default class StatelessFunctionComponent extends React.Component {
@@ -24,7 +23,7 @@ export default class StatelessFunctionComponent extends React.Component {
           {invocations.length > 1 && '['}
         </Line>{' '}
         {invocations.map(({ id }) =>
-          <ComponentInvocationTreeContainer key={id} invocationId={id} depth={1} initial />)
+          <JSX key={id} invocationId={id} initial />)
         }
         <Line statement>{invocations.length > 1 && ']'})</Line>
       </div>

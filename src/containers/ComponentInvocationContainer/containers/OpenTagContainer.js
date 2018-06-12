@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
+import { invocationPropTypes } from 'model-prop-types'
 import { addAttributeToComponentInvocation, addPropsSpreadToComponentInvocation } from 'duck'
 import { DraggableTypes } from 'constantz'
 import { compose } from 'utils'
 
-import { canDropPropToOpenTag } from './helpers'
-import { OpenTag } from './components'
+import { OpenTag, canDropPropToOpenTag } from '../components'
 
 class OpenTagContainer extends React.Component {
   render() {
@@ -37,21 +37,7 @@ class OpenTagContainer extends React.Component {
 OpenTagContainer.propTypes = {
   depth: T.number.isRequired,
 
-  invocation: T.shape({
-    name: T.string.isRequired,
-    closed: T.bool.isRequired,
-    inline: T.bool.isRequired,
-
-    nameId: T.number.isRequired,
-    callParams: T.arrayOf(T.shape({
-      id: T.number.isRequired,
-      name: T.string.isRequired,
-      declIsSpreadMember: T.bool,
-      valueString: T.string,
-    })).isRequired,
-    hasPropsSpread: T.bool.isRequired,
-    pseudoSpreadPropsName: T.string,
-  }).isRequired,
+  invocation: invocationPropTypes.isRequired,
 
   // Injected by connect:
   addAttributeToComponentInvocation: T.func.isRequired,
@@ -109,3 +95,4 @@ export default compose(
     DraggableTypes.PROPS_SPREAD,
   ], dropzoneTarget, collect)
 )(OpenTagContainer)
+

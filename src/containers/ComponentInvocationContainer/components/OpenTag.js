@@ -10,8 +10,6 @@ import { PROP, PROPS_SPREAD } from 'constantz'
 import { indent } from 'utils'
 import { Input } from 'components'
 
-import { canDropPropToOpenTag } from '../helpers'
-
 const OpenTag = ({
   isOverOpenTag,
   dragItem,
@@ -89,9 +87,14 @@ OpenTag.propTypes = forbidExtraProps({
 
 /* style, export */
 export default styled(OpenTag).as.div`
-  ${props => props.inline && 'display: inline-block;'}
+  ${props => props.invocation.inline && 'display: inline-block;'}
   .new-attribute-preview {
     color: ${theme.color.darkgreen};
     transition: 250ms;
   }
 `
+
+// helpers
+export const canDropPropToOpenTag = (targetCallParams, pseudoSpreadPropsName, propBeingDragged) =>
+  !targetCallParams.find(({ declParamId }) => declParamId === propBeingDragged.paramId)
+  && pseudoSpreadPropsName !== propBeingDragged.name

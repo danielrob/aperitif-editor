@@ -2,30 +2,22 @@ import T from 'prop-types'
 import React from 'react'
 
 import { invocationPropTypes } from 'model-prop-types'
-import { COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
-import { ComponentInvocationTreeContainer } from 'containers'
+import { JSX } from 'components'
 
-import { ParamInvocationContainer, IntermediaryDropzonesContainer } from '../containers'
-
-const types = {
-  [COMPONENT_INVOCATION]: ComponentInvocationTreeContainer,
-  [PARAM_INVOCATION]: ParamInvocationContainer,
-}
+import { IntermediaryDropzonesContainer } from '../containers'
 
 const InvocationChildren = ({
   invocation: {
     invocationId: parentId,
-    childInvocations,
+    invocationIds,
     inline,
   },
   depth,
 }) =>
-  childInvocations.reduce(
-    (out, { id: invocationId, type }, position) => {
-      const Component = types[type] || ComponentInvocationTreeContainer
-
+  invocationIds.reduce(
+    (out, invocationId, position) => {
       out.push(
-        <Component
+        <JSX
           key={invocationId}
           parentId={parentId}
           invocationId={invocationId}

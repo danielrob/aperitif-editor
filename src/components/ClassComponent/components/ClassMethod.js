@@ -1,7 +1,7 @@
 import React from 'react'
 import { indent } from 'utils'
-import { Keyword, Props } from 'components'
-import { ComponentInvocationTreeContainer, DeclarationContainer, ParamsContainer } from 'containers'
+import { JSX, Keyword, Props } from 'components'
+import { DeclarationContainer, ParamsContainer } from 'containers'
 
 export default class ClassMethod extends React.Component {
   render() {
@@ -40,7 +40,7 @@ export default class ClassMethod extends React.Component {
         {indent(2)}
         <Keyword>return </Keyword> (
         {invocationIds.map(id => (
-          <ComponentInvocationTreeContainer key={id} invocationId={id} initial depth={3} />
+          <JSX key={id} invocationId={id} initial depth={3} />
         ))}
         {indent(2)})<br />
         {indent(1)}

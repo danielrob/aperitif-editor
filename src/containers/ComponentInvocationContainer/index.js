@@ -10,11 +10,11 @@ import { COMPONENT_INVOCATION } from 'constantz'
 import { compose } from 'utils'
 
 import { acceptedDropTypes, getIsValidOver } from './helpers'
-import { ComponentInvocationTree } from './components'
+import { ComponentInvocation } from './components'
 import getCIDimensionsInjector from './getCIDimensionsInjector'
-import { makeSelectInvocation } from './selectors'
+import makeSelectInvocation from './makeSelectInvocation'
 
-class ComponentInvocationTreeContainer extends React.Component {
+class ComponentInvocationContainer extends React.Component {
   render() {
     const {
       connectDragSource,
@@ -37,7 +37,7 @@ class ComponentInvocationTreeContainer extends React.Component {
     return !isDragging ? connectDragSource(
       <div>
         <div ref={componentInvocationRef} style={{ display: 'table', width: 'auto' }}>
-          <ComponentInvocationTree
+          <ComponentInvocation
             {...props}
             isOverCI={isOverCI}
             invocation={{
@@ -52,7 +52,7 @@ class ComponentInvocationTreeContainer extends React.Component {
   }
 }
 
-ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
+ComponentInvocationContainer.propTypes = forbidExtraProps({
   // passed by parent
   invocationId: T.number.isRequired,
   initial: T.bool,
@@ -82,7 +82,7 @@ ComponentInvocationTreeContainer.propTypes = forbidExtraProps({
 
 })
 
-ComponentInvocationTreeContainer.defaultProps = {
+ComponentInvocationContainer.defaultProps = {
   parentId: null,
   initial: false,
   dragItem: null,
@@ -144,4 +144,4 @@ export default compose(
   DragSource(COMPONENT_INVOCATION, propSource, sourceCollect),
   DropTarget(acceptedDropTypes, dropzoneTarget, targetCollect),
   DropTarget(acceptedDropTypes, dropzoneTarget, targetTwoCollect)
-)(ComponentInvocationTreeContainer)
+)(ComponentInvocationContainer)
