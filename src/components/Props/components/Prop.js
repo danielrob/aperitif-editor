@@ -1,17 +1,20 @@
 import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
+import JSstringify from 'javascript-stringify'
 
 import theme from 'theme-proxy'
 import { spaces } from 'utils'
 
-const Prop = ({ name, isLast, connectDragSource }) => (
+const Prop = ({ name, isLast, payload, connectDragSource }) => (
   <React.Fragment>
     {connectDragSource(
       <span
         style={{
           userSelect: 'text',
         }}
+        data-tip={JSstringify(payload, null, 2)}
+        data-for="prop"
       >
         {name}
       </span>
@@ -20,13 +23,11 @@ const Prop = ({ name, isLast, connectDragSource }) => (
   </React.Fragment>
 )
 
-
 Prop.propTypes = {
   name: T.string.isRequired,
   isLast: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
 }
-
 
 export default styled(Prop).as.div`
   display: inline-block;

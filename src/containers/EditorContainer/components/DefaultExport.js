@@ -1,12 +1,12 @@
 import React from 'react'
-import { Line, Keyword } from 'components'
+import { Line, Keyword, Input } from 'components'
 
-const DefaultExport = ({ name }) =>
-  name ? (
+const DefaultExport = ({ nameId }) =>
+  nameId ? (
     <Line statement>
       <Keyword>export default</Keyword>
       {' '}
-      {name}
+      <Input nameId={nameId} />
     </Line>
   ) : null
 

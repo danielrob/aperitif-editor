@@ -1,6 +1,6 @@
 import React from 'react'
 import { indent } from 'utils'
-import { JSX, Keyword, Props } from 'components'
+import { JSX, Keyword, Props, Input } from 'components'
 import { DeclarationContainer, ParamsContainer } from 'containers'
 
 export default class ClassMethod extends React.Component {
@@ -13,7 +13,7 @@ export default class ClassMethod extends React.Component {
         {!!declarationIds.length && indent(2)}
         {declarationIds.map(id => (
           <DeclarationContainer key={id} declarationId={id}>
-            {({ name, declParamIds }) => (
+            {({ name, nameId, declParamIds }) => (
               <span>
                 <Keyword>const </Keyword>
                 {declParamIds.length ? (
@@ -30,7 +30,10 @@ export default class ClassMethod extends React.Component {
                     <span> = <Keyword>this</Keyword>.props</span>
                   </span>
                 ) : (
-                  <span>{name} = <Keyword>this</Keyword>.state.{name}</span>
+                  <span>
+                    <Input nameId={nameId} />
+                    {' '} = <Keyword>this</Keyword>.state.{name}
+                  </span>
                 )}
                 <br />
               </span>

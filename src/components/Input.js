@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { changeName } from 'duck'
 import { createStructuredSelector } from 'reselect'
@@ -6,6 +7,18 @@ import { makeSelectName } from 'selectors'
 import AutosizeInput from 'react-input-autosize'
 
 class Input extends React.Component {
+  state = {
+    displayInput: false,
+  }
+
+  onClick = () => {
+    this.setState({ displayInput: true })
+  }
+
+  onBlur = () => {
+    this.setState({ displayInput: false })
+  }
+
   onChange = e => {
     const { changeName, nameId } = this.props
     const pos = e.target.selectionStart - 1
@@ -21,9 +34,21 @@ class Input extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.pointer) {
+    if (this.props.pointer && this.inputRef) {
       // style prop & styled-components not playing nice with AutosizeInput
       this.inputRef.style.cursor = 'pointer'
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.state.displayInput) {
+      this.componentDidMount()
+      if (document.activeElement !== this.inputRef) {
+        this.inputRef.focus()
+        this.inputRef.setSelectionRange(0, this.inputRef.value.length)
+      }
+    } else {
+      this.inputRef = null
     }
   }
 
@@ -32,10 +57,17 @@ class Input extends React.Component {
     const input = {
       value: name,
       onChange: this.onChange,
+      onBlur: this.onBlur,
     }
 
     return (
-      <AutosizeInput inputRef={ref => { this.inputRef = ref }} type="text" {...input} />
+      this.state.displayInput ?
+        <React.Fragment>
+          <AutosizeInput inputRef={ref => { this.inputRef = ref }} type="text" {...input} />
+          <span style={{ display: 'inline-block', marginLeft: '-2px' }} />
+        </React.Fragment>
+        :
+        <Name onClick={this.onClick}>{name}</Name>
     )
   }
 }
@@ -50,3 +82,7 @@ const makeMapStateToProps = () => {
 }
 
 export default connect(makeMapStateToProps, mapDispatchToProps)(Input)
+
+const Name = styled.span`
+  cursor: text;
+`

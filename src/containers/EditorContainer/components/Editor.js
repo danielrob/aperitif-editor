@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
+import ReactTooltip from 'react-tooltip'
 
 import {
   StatelessFunctionComponent,
@@ -40,7 +41,14 @@ const Editor = ({ imports, declarations, defaultExport, connectActiveEditorAreaT
           </div>
         )
       })}
-      <DefaultExport key="defaultExport" name={defaultExport} />
+      <DefaultExport nameId={defaultExport} />
+      <ReactTooltip
+        id="prop"
+        effect="solid"
+        delayShow={100}
+        // type="success"
+        getContent={dataTip => <pre>{dataTip}</pre>}
+      />
     </div>
   )
 
