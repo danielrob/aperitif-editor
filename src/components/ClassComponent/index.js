@@ -1,5 +1,5 @@
 import React from 'react'
-import { Keyword, Input, ComponentTypeToggle } from 'components'
+import { Keyword, Input, ComponentTypeToggle, PropTypes } from 'components'
 import { DeclarationContainer } from 'containers'
 import { INLINE, STATELESS_FUNCTION_COMPONENT } from 'constantz'
 import styled from 'styled-as-components'
@@ -8,8 +8,7 @@ import { ClassPropertyDeclarationFactory } from './components'
 
 class ClassComponent extends React.Component {
   render() {
-    const { declarationId, exportType, nameId, declarationIds } = this.props
-
+    const { declarationId, exportType, nameId, declParams: props, declarationIds } = this.props
     return (
       <React.Fragment>
         {/* open */}
@@ -23,10 +22,13 @@ class ClassComponent extends React.Component {
         <br />
         {declarationIds.map(id => (
           <DeclarationContainer key={id} declarationId={id}>
-            {declaration => <ClassPropertyDeclarationFactory {...declaration} />}
+            {declaration => <ClassPropertyDeclarationFactory props={props} {...declaration} />}
           </DeclarationContainer>
         ))}
         {'}'}
+        <br />
+        <br />
+        <PropTypes nameId={nameId} props={props} />
       </React.Fragment>
     )
   }

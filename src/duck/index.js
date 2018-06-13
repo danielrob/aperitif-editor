@@ -5,7 +5,7 @@ import orm from 'orm'
 import { createComponentBundle } from 'orm/model-utils'
 import {
   DIR,
-  CONST,
+  PROPS,
   componentDeclarationTypes,
   PARAM_INVOCATION,
   STYLED_COMPONENT,
@@ -62,14 +62,11 @@ export default function appReducer(state = getInitialState(), action) {
           type: CLASS_METHOD,
           invocationIds,
           declarationIds: [
-            Declaration.create({
-              type: CONST,
-              declParamIds,
-            }),
+            Declaration.create({ type: PROPS }),
           ],
         }),
       )
-      Declaration.update({ type: CLASS_COMPONENT, invocationIds: [] })
+      Declaration.update({ type: CLASS_COMPONENT, declParamIds, invocationIds: [] })
 
       return session.state
     }

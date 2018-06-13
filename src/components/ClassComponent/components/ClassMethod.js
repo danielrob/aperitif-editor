@@ -1,11 +1,13 @@
 import React from 'react'
+import { partition } from 'lodash'
 import { indent } from 'utils'
 import { JSX, Keyword, Props, Input } from 'components'
-import { DeclarationContainer, ParamsContainer } from 'containers'
+import { DeclarationContainer } from 'containers'
 
 export default class ClassMethod extends React.Component {
   render() {
-    const { declarationId, declarationIds, invocationIds } = this.props
+    const { declarationId, declarationIds, invocationIds, props } = this.props
+    const [spreadProps, nonSpreadProps] = partition(props, p => p.isSpreadMember)
     return (
       <div>
         {indent(1)}render() {'{'}
@@ -13,26 +15,22 @@ export default class ClassMethod extends React.Component {
         {!!declarationIds.length && indent(2)}
         {declarationIds.map(id => (
           <DeclarationContainer key={id} declarationId={id}>
-            {({ name, nameId, declParamIds }) => (
+            {({ nameId }) => (
               <span>
                 <Keyword>const </Keyword>
-                {declParamIds.length ? (
+                {props.length ? (
                   <span>
-                    <ParamsContainer paramIds={declParamIds}>
-                      {(params, spreadParams) => (
-                        <Props
-                          params={params}
-                          spreadParams={spreadParams}
-                          declarationId={declarationId}
-                        />
-                      )}
-                    </ParamsContainer>
+                    <Props
+                      params={nonSpreadProps}
+                      spreadParams={spreadProps}
+                      declarationId={declarationId}
+                    />
                     <span> = <Keyword>this</Keyword>.props</span>
                   </span>
                 ) : (
                   <span>
-                    <Input nameId={nameId} />
-                    {' '} = <Keyword>this</Keyword>.state.{name}
+                    {'{ '}<Input nameId={nameId} />{' } '}
+                     = <Keyword>this</Keyword>.state
                   </span>
                 )}
                 <br />

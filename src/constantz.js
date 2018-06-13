@@ -17,6 +17,7 @@ export const STATELESS_FUNCTION_COMPONENT = 'stateless_function_component'
 export const STYLED_COMPONENT = 'styled_component'
 export const CONST = 'const'
 export const STANDARD = 'standard'
+export const PROPS = 'props'
 
 export const declarationTypes = {
   PROJECT_INDEX,
@@ -28,6 +29,7 @@ export const declarationTypes = {
   STYLED_COMPONENT,
   CONST,
   STANDARD,
+  PROPS,
 }
 
 export const componentDeclarationTypes = [
