@@ -21,9 +21,13 @@ class ClassComponent extends React.Component {
         <Input nameId={nameId} /> <Keyword> extends </Keyword> React.Component {'{'}
         <br />
         {declarationIds.map(id => (
-          <DeclarationContainer key={id} declarationId={id}>
-            {declaration => <ClassPropertyDeclarationFactory props={props} {...declaration} />}
-          </DeclarationContainer>
+          <DeclarationContainer
+            key={id}
+            declarationId={id}
+            render={declaration => (
+              <ClassPropertyDeclarationFactory thiz={{ props }} {...declaration} />
+            )}
+          />
         ))}
         {'}'}
         <br />

@@ -6,7 +6,7 @@ import { DeclarationContainer } from 'containers'
 
 export default class ClassMethod extends React.Component {
   render() {
-    const { declarationId, declarationIds, invocationIds, props } = this.props
+    const { declarationId, declarationIds, invocationIds, thiz: { props } } = this.props
     const [spreadProps, nonSpreadProps] = partition(props, p => p.isSpreadMember)
     return (
       <div>
@@ -14,8 +14,10 @@ export default class ClassMethod extends React.Component {
         <br />
         {!!declarationIds.length && indent(2)}
         {declarationIds.map(id => (
-          <DeclarationContainer key={id} declarationId={id}>
-            {({ nameId }) => (
+          <DeclarationContainer
+            key={id}
+            declarationId={id}
+            render={({ nameId }) => (
               <span>
                 <Keyword>const </Keyword>
                 {props.length ? (
@@ -36,7 +38,7 @@ export default class ClassMethod extends React.Component {
                 <br />
               </span>
             )}
-          </DeclarationContainer>
+          />
         ))}
         {indent(2)}
         <Keyword>return </Keyword> (

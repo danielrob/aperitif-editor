@@ -8,7 +8,7 @@ class DeclarationContainer extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.props.children(this.props.declaration)}
+        {this.props.render(this.props.declaration)}
       </React.Fragment>
     )
   }
