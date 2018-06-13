@@ -1,13 +1,14 @@
 import { createSelector } from 'reselect'
 
-import { selectNames, selectInvocation, selectParams } from 'selectors'
+import { selectNames, selectInvocation, selectCallParams, selectDeclParams } from 'selectors'
 
 // component invocation selector => <Component>
 const makeSelectInvocation = () => createSelector(
   selectNames,
-  selectParams,
+  selectCallParams,
+  selectDeclParams,
   selectInvocation,
-  (names, allParams, invocation) => {
+  (names, callParams, declParams, invocation) => {
     const {
       invocationId,
       nameId,
@@ -27,11 +28,11 @@ const makeSelectInvocation = () => createSelector(
       type,
       invocationIds,
       callParams: callParamIds.map(id => {
-        const { declParamId } = allParams[id]
+        const { declParamId } = callParams[id]
 
         // literal callParam case e.g. key={name.id} or height={100}
         if (!declParamId) {
-          const { id: paramId, valueNameIds, nameId } = allParams[id]
+          const { id: paramId, valueNameIds, nameId } = callParams[id]
           return {
             id: paramId,
             name: names[nameId],
@@ -39,7 +40,7 @@ const makeSelectInvocation = () => createSelector(
           }
         }
 
-        const { nameId, isSpreadMember } = allParams[declParamId]
+        const { nameId, isSpreadMember } = declParams[declParamId]
         return {
           id,
           name: names[nameId],

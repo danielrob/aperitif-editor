@@ -11,7 +11,7 @@ Invocation.fields = {
   nameId: fk('Name'),
   declarationId: fk('Declaration'),
   source: attr(null),
-  callParamIds: array(),
+  callParamIds: array([], 'CallParam', 'invocationId'),
   invocationIds: array(),
   // type specific items
   type: attr(COMPONENT_INVOCATION),

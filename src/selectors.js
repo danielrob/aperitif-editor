@@ -9,7 +9,8 @@ export const selectNames = s => s.app.names
 export const selectFiles = s => s.app.files
 export const selectDeclarations = s => s.app.declarations
 export const selectInvocations = s => s.app.invocations
-export const selectParams = s => s.app.params
+export const selectCallParams = s => s.app.callParams
+export const selectDeclParams = s => s.app.declParams
 export const selectPreferences = s => s.app.preferences
 
 /*
@@ -82,20 +83,5 @@ export const makeSelectFile = () => createSelector(
       declarationIds,
     }
   }
-)
-
-
-/*
-  Filtered set of Model selectors - `selectSome${modelName}s`
-*/
-export const makeSelectSomeParams = () => createSelector(
-  selectNames,
-  selectParams,
-  (state, props) => props.paramIds,
-  (names, params, filterIds) =>
-    filterIds.map(id => ({
-      name: names[params[id].nameId],
-      ...params[id],
-    }))
 )
 

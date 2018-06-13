@@ -134,7 +134,7 @@ export default function appReducer(state = getInitialState(), action) {
 
       if (Invocation.declaration) {
         const nameMatchParamId = Invocation.declaration.declParams.find(
-          id => state.params[id].nameId === nameId
+          id => state.declParams[id].nameId === nameId
         )
 
         if (nameMatchParamId) {

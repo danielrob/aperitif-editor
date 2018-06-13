@@ -5,7 +5,7 @@ import { declarationTypes } from 'constantz'
 import {
   selectNames,
   selectInvocations,
-  selectParams,
+  selectDeclParams,
 } from 'selectors'
 
 import { getCurrentFileDeclarations } from './selectors'
@@ -15,7 +15,7 @@ const { LOOKTHROUGH } = declarationTypes
 export const selectCurrentFileDeclarations = createSelector(
   selectNames,
   getCurrentFileDeclarations,
-  selectParams,
+  selectDeclParams,
   selectInvocations,
   (names, declarations, params, invocations) =>
     declarations
