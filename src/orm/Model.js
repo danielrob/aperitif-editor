@@ -135,9 +135,10 @@ class Model {
 
   find = iteratee => {
     const modelData = this.getModelData()
-    return this.withId(Object.keys(modelData).find(
+    const found = Object.keys(modelData).find(
       key => iteratee(modelData[key].id, modelData[key], modelData)
-    ))
+    )
+    return found ? this.withId(found) : null
   }
 
   // refresh = () => {
