@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import { Switch, Route } from 'react-router-dom'
 import styled from 'styled-components'
+// import ReactTooltip from 'react-tooltip'
 
 import { Header, Footer } from 'components'
 import { WelcomePage, NotFoundPage, WorkspaceContainer } from 'containers'
@@ -28,6 +29,13 @@ export default class App extends Component {
           <Route path="" component={NotFoundPage} />
         </Switch>
         <Footer />
+        {/* <ReactTooltip
+          id="prop"
+          effect="solid"
+          delayShow={100}
+          // type="success"
+          getContent={dataTip => <pre>{dataTip}</pre>}
+        /> */}
       </AppWrapper>
     )
   }

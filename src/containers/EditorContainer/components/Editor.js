@@ -35,6 +35,9 @@ class Editor extends React.Component {
   componentDidMount() {
     document.addEventListener('keydown', this.keydown, false)
   }
+  componentDidUpdate() {
+    ReactTooltip.rebuild()
+  }
   componentWillUnmount() {
     document.removeEventListener('keydown', this.keydown, false)
   }
