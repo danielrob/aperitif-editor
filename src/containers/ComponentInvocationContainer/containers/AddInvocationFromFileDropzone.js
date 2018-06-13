@@ -51,6 +51,8 @@ const dropzoneTarget = {
     const { addInvocationFromFileToCI, targetInvocationId, targetPosition } = props
     const { fileId, isDirectory } = monitor.getItem()
 
+    console.log('CIdropzones', monitor.didDrop())
+
     addInvocationFromFileToCI({ targetInvocationId, targetPosition, fileId, isDirectory })
   },
 }

@@ -2,10 +2,12 @@ import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
+import { paramPropTypes } from 'model-prop-types'
 import { sortProps } from './helpers'
 
 import { SpreadPropsContainer, PropContainer } from './containers'
 
+// A param is a prop, ...is a param is a prop ♪♫♬ ♪♫♬
 const Props = ({ params, spreadParams, declarationId }) => (
   <React.Fragment>
     {' '}
@@ -13,8 +15,13 @@ const Props = ({ params, spreadParams, declarationId }) => (
     <span>
       {params
         .sort(sortProps)
-        .map((prop, i) => (
-          <PropContainer key={prop.name} isLast={i === params.length - 1} {...prop} />
+        .map((param, i) => (
+          <PropContainer
+            key={param.name}
+            isLast={i === params.length - 1}
+            {...param}
+            declarationId={declarationId}
+          />
         ))}
       {!params.length && '()'}
     </span>
@@ -26,7 +33,7 @@ const Props = ({ params, spreadParams, declarationId }) => (
 
 /* propTypes */
 Props.propTypes = {
-  params: T.arrayOf(T.object).isRequired,
+  params: T.arrayOf(T.shape(paramPropTypes)).isRequired,
   spreadParams: T.arrayOf(T.object).isRequired,
   declarationId: T.number.isRequired,
 }

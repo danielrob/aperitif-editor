@@ -21,3 +21,15 @@ export const paramInvocationPropTypes = T.shape({
   declIsSpreadMember: T.bool.isRequired,
   chainedInvocations: T.arrayOf(T.object),
 })
+
+
+// param
+export const paramPropTypes = {
+  id: T.number.isRequired,
+  name: T.string.isRequired,
+  nameId: T.number.isRequired,
+  payload: T.any,
+  isSpreadMember: T.bool.isRequired,
+  count: T.number.isRequired,
+  assignNameId: T.number,
+}

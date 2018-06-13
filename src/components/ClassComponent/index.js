@@ -27,7 +27,6 @@ class ClassComponent extends React.Component {
         ))}
         {'}'}
         <br />
-        <br />
         <PropTypes nameId={nameId} props={props} />
       </React.Fragment>
     )

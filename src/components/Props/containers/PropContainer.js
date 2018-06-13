@@ -4,19 +4,25 @@ import { DragSource } from 'react-dnd'
 import { PROP } from 'constantz'
 import ReactTooltip from 'react-tooltip'
 
+import { paramPropTypes } from 'model-prop-types'
 import { Prop } from '../components'
 
 /* dnd */
 const propSource = {
-  beginDrag({ id, name, nameId, payload }) {
-    ReactTooltip.hide()
+  beginDrag({ id, name, nameId, payload, declarationId, count }) {
+    ReactTooltip.hide() // disable tooltips
     return {
+      declarationId,
       paramId: id,
       name,
       nameId,
       payload,
       type: PROP,
+      count,
     }
+  },
+  endDrag() {
+    ReactTooltip.show() // enable tooltips
   },
 }
 
@@ -32,14 +38,9 @@ const PropContainer = DragSource(PROP, propSource, collect)(Prop)
 
 /* propTypes */
 PropContainer.propTypes = forbidExtraProps({
-  id: T.number.isRequired,
-  name: T.string.isRequired,
-  nameId: T.number.isRequired,
-  assignNameId: T.number,
+  declarationId: T.number.isRequired,
   isLast: T.bool.isRequired,
-  isSpreadMember: T.bool.isRequired,
-  payload: T.any, // eslint-disable-line react/forbid-prop-types
-  count: T.number,
+  ...paramPropTypes,
 })
 
 PropContainer.defaultProps = {

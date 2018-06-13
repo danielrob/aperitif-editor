@@ -5,8 +5,8 @@ import { createStructuredSelector } from 'reselect'
 
 import { compose } from 'utils'
 
-import { FILE, STYLED_COMPONENT } from 'constantz'
-import { mergeFile } from 'duck'
+import { FILE, PROP, STYLED_COMPONENT } from 'constantz'
+import { mergeFile, removeProp } from 'duck'
 import {
   selectDeclarations,
   selectCurrentFileId,
@@ -36,6 +36,8 @@ class EditorContainer extends React.Component {
   }
 }
 
+
+/* connect */
 const mapStateToProps = createStructuredSelector({
   // to inject
   imports: getCurrentFileImports,
@@ -46,33 +48,64 @@ const mapStateToProps = createStructuredSelector({
   projectDeclarations: selectDeclarations,
 })
 
-const mapDispatchToProps = { mergeFile }
+const mapDispatchToProps = { mergeFile, removeProp }
 
-// whole editor area target
+
+/* dnd */
 const editorTarget = {
+  // canDrop
   canDrop(props, monitor) {
-    const { projectDeclarations, imports } = props
-    const { declarationIds } = monitor.getItem()
+    switch (monitor.getItemType()) {
+      case FILE: {
+        const { projectDeclarations, imports } = props
+        const { declarationIds } = monitor.getItem()
 
-    const styledComponentId = declarationIds
-      .find(id => projectDeclarations[id].type === STYLED_COMPONENT)
+        const styledComponentId = declarationIds
+          .find(id => projectDeclarations[id].type === STYLED_COMPONENT)
 
-    const isInSameComponentBundle = imports
-      .find(({ declarationIds: dIds }) => (dIds || []).includes(styledComponentId))
+        const isInSameComponentBundle = imports
+          .find(({ declarationIds: dIds }) => (dIds || []).includes(styledComponentId))
 
-    return monitor.isOver({ shallow: true }) &&
-      styledComponentId &&
-      isInSameComponentBundle
+        return (
+          styledComponentId &&
+          isInSameComponentBundle
+        )
+      }
+      default: {
+        return true
+      }
+    }
   },
 
+  // drop
   drop(props, monitor) {
-    const { mergeFile, currentFileId } = props
-    const { fileId } = monitor.getItem()
+    // This is the fallback drop zone
+    if (monitor.didDrop()) {
+      return
+    }
 
-    mergeFile({
-      sourceFileId: fileId,
-      targetFileId: currentFileId,
-    })
+    switch (monitor.getItemType()) {
+      case FILE: {
+        const { mergeFile, currentFileId } = props
+        const { fileId } = monitor.getItem()
+
+        return mergeFile({
+          sourceFileId: fileId,
+          targetFileId: currentFileId,
+        })
+      }
+
+      case PROP: {
+        const { removeProp } = props
+        const { declarationId, paramId, count } = monitor.getItem()
+        return removeProp({
+          declarationId,
+          paramId,
+          count,
+        })
+      }
+      // no default
+    }
   },
 }
 
@@ -83,16 +116,9 @@ const editorCollect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-// active editor area target
-const activeEditorAreaCollect = (connect) => ({
-  connectActiveEditorAreaTarget: connect.dropTarget(),
-})
-
-const dropTypes = [FILE]
 
 /* compose export */
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  DropTarget(dropTypes, editorTarget, editorCollect),
-  DropTarget(dropTypes, {}, activeEditorAreaCollect),
+  DropTarget([FILE, PROP], editorTarget, editorCollect),
 )(EditorContainer)

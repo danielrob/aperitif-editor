@@ -15,6 +15,7 @@ const Prop = ({ name, isLast, payload, connectDragSource }) => (
         }}
         data-tip={JSstringify(payload, null, 2)}
         data-for="prop"
+        data-delay-show="100"
       >
         {name}
       </span>
@@ -27,6 +28,7 @@ Prop.propTypes = {
   name: T.string.isRequired,
   isLast: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
+  declarationId: T.number.isRequired,
 }
 
 export default styled(Prop).as.div`

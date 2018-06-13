@@ -44,6 +44,7 @@ export const CONVERT_TO_STATELESS_FUNCTION_COMPONENT = 'CONVERT_TO_STATELESS_FUN
 export const UPDATE_INVOCATION = 'UPDATE_INVOCATION'
 export const UPDATE_NAME = 'UPDATE_NAME'
 export const UPDATE_DECLARATION = 'UPDATE_DECLARATION'
+export const REMOVE_PROP = 'REMOVE_PROP'
 export const UPDATE_DECL_PARAM = 'UPDATE_DECL_PARAM'
 export const UPDATE_PREFERENCES = 'UPDATE_PREFERENCES'
 
@@ -564,6 +565,19 @@ export default function appReducer(state = getInitialState(), action) {
     }
 
 
+    case REMOVE_PROP: {
+      const { declarationId, paramId, count } = action.payload
+      if (
+        count === 1 ||
+        confirm('prop is passed by multiple invocations, confirm deletion?') // eslint-disable-line
+      ) {
+        // FIXME: remove all call params from callers
+        Declaration.withId(declarationId).declParams.remove(paramId)
+      }
+      return session.state
+    }
+
+
     case UPDATE_DECL_PARAM: {
       const { paramId, ...updates } = action.payload
       DeclParam.withId(paramId).update(updates)
@@ -659,6 +673,10 @@ export const changeName = createAction(
 
 export const updateDeclaration = createAction(
   UPDATE_DECLARATION,
+)
+
+export const removeProp = createAction(
+  REMOVE_PROP
 )
 
 export const moveParamToSpread = createAction(

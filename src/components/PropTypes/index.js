@@ -10,15 +10,20 @@ import { sortProps } from 'components/Props/helpers'
 
 const PropTypes = ({ props, nameId }) => {
   const maxCount = (maxBy(props, 'count') || { count: 0 }).count
-  return (
+  return !!props.length && (
     <React.Fragment>
+      <br />
       <Input nameId={nameId} />.propTypes = {'{'}
       {props.sort(sortProps).map(
         ({ name, count, payload }) =>
           count && (
-            <div>
+            <div key={name}>
               {indent(1)}
-              <span data-tip={JSstringify(payload, null, 2)} data-for="prop">
+              <span
+                data-tip={JSstringify(payload, null, 2)}
+                data-for="prop"
+                data-delay-show="250"
+              >
                 {name}
               </span>
               : {getPropType(payload)}
@@ -56,9 +61,13 @@ const getPropType = (payload, nested) => {
         T.shape({'{'}
         <br />
         {Object.keys(payload).map(key => (
-          <React.Fragment>
+          <React.Fragment key={key}>
             {indent(2)}
-            <span data-tip={JSstringify(payload[key], null, 2)} data-for="prop">
+            <span
+              data-tip={JSstringify(payload[key], null, 2)}
+              data-for="prop"
+              data-delay-show="250"
+            >
               {key}
             </span>
             : {getPropType(payload[key], true)},

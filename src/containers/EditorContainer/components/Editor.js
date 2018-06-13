@@ -39,8 +39,8 @@ class Editor extends React.Component {
     document.removeEventListener('keydown', this.keydown, false)
   }
   render() {
-    const { imports, declarations, defaultExport, connectActiveEditorAreaTarget } = this.props
-    return connectActiveEditorAreaTarget(
+    const { imports, declarations, defaultExport } = this.props
+    return (
       <div className="active-zone">
         <Imports key="imports" imports={imports} />
         {!!imports.length && <br />}

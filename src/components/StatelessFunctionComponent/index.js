@@ -26,7 +26,6 @@ export default class StatelessFunctionComponent extends React.Component {
           <JSX key={id} invocationId={id} initial />)
         }
         <Line statement>{invocations.length > 1 && ']'})</Line>
-        <br />
         <PropTypes nameId={nameId} props={allParams} />
       </div>
     )
