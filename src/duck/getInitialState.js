@@ -86,7 +86,6 @@ export default function getInitialState() {
       DeclParam.create({
         nameId: Name.create(key),
         payload: apiResponse[key],
-        count: 1,
       })
     )
   }
@@ -98,7 +97,6 @@ export default function getInitialState() {
       DeclParam.create({
         nameId: Name.create(key),
         payload: mergedObjectsInPayloadArray[key],
-        count: 1,
       })
     )
   }

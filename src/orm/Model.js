@@ -141,6 +141,30 @@ class Model {
     return found ? this.withId(found) : null
   }
 
+  where = iteratee => {
+    const modelData = this.getModelData()
+    const partialTable = Object.keys(modelData).reduce(
+      (out, key) => {
+        if (iteratee(modelData[key], modelData[key].id, modelData)) {
+          return {
+            ...out,
+            [key]: modelData[key],
+          }
+        }
+        return out
+      }, {}
+    )
+    this.setCurrentQueryResult(partialTable, true)
+    return this
+  }
+
+  each = iteratee => {
+    const modelData = this.currentQueryResult.result
+    Object.keys(modelData).forEach(key =>
+      iteratee(modelData[key], modelData[key].id, modelData)
+    )
+  }
+
   // refresh = () => {
   //   const { isSet, result } = this.currentQueryResult
   //   return isSet ? this.all() : this.withId(result.id)

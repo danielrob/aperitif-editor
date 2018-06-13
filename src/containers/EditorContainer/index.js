@@ -97,10 +97,11 @@ const editorTarget = {
 
       case PROP: {
         const { removeProp } = props
-        const { declarationId, paramId, count } = monitor.getItem()
+        const { declarationId, paramId, nameId, count } = monitor.getItem()
         return removeProp({
           declarationId,
           paramId,
+          nameId,
           count,
         })
       }

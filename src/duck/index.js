@@ -138,9 +138,9 @@ export default function appReducer(state = getInitialState(), action) {
         )
 
         if (nameMatchParamId) {
-          DeclParam.withId(nameMatchParamId).migrate({ count: count => (count ? count + 1 : 1) })
+          DeclParam.withId(nameMatchParamId).migrate({ count: count => count + 1 })
         } else {
-          Invocation.declaration.declParams.insert(DeclParam.create({ nameId, count: 1, payload }))
+          Invocation.declaration.declParams.insert(DeclParam.create({ nameId, payload }))
         }
       }
 
@@ -401,7 +401,6 @@ export default function appReducer(state = getInitialState(), action) {
         DeclParam.create({
           nameId: Name.create(key),
           payload: payload[key],
-          count: 1,
         })
       )
 
@@ -449,7 +448,6 @@ export default function appReducer(state = getInitialState(), action) {
           DeclParam.create({
             nameId: Name.create(key),
             payload: mergedObjectsInPayloadArray[key],
-            count: 1,
           })
         ),
         invocationIds: [],
@@ -566,13 +564,38 @@ export default function appReducer(state = getInitialState(), action) {
 
 
     case REMOVE_PROP: {
-      const { declarationId, paramId, count } = action.payload
+      const { declarationId, paramId, nameId, count } = action.payload
+      // cannot remove a decl param which has been invoked somewhere.
+      if (CallParam.find((id, model) => model.declParamId === paramId)) {
+        return session.state
+      }
       if (
         count === 1 ||
         confirm('prop is passed by multiple invocations, confirm deletion?') // eslint-disable-line
       ) {
-        // FIXME: remove all call params from callers
+        // remove declParam
+        DeclParam.withId(paramId).delete()
+        // remove declParam from the component declaration's declParams
         Declaration.withId(declarationId).declParams.remove(paramId)
+        // get all invocations of the component declaration in question
+        Invocation
+          .where(({ declarationId: dId }) => dId === declarationId)
+          // for each
+          .each(({ id: invocationId, callParamIds }) => {
+            // find any (the) passed prop (callParam) with same effective nameId
+            const sourceCallParamId = callParamIds.find(id => {
+              const { declParamId } = CallParam.withId(id).ref()
+              if (!declParamId) {
+                return false
+              }
+              return DeclParam.withId(declParamId).ref().nameId === nameId
+            })
+            if (sourceCallParamId) {
+              // remove it, and remove it from the invocation callParams
+              Invocation.withId(invocationId).callParams.remove(sourceCallParamId)
+              CallParam.withId(sourceCallParamId).delete()
+            }
+          })
       }
       return session.state
     }
