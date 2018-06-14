@@ -108,6 +108,7 @@ const propSource = {
     return {
       type: COMPONENT_INVOCATION,
       sourceInvocationId: invocationId,
+      sourceParentId: parentId,
       ciDimensions,
       depth,
       parentId,

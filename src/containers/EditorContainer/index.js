@@ -5,8 +5,12 @@ import { createStructuredSelector } from 'reselect'
 
 import { compose } from 'utils'
 
-import { FILE, PROP, STYLED_COMPONENT } from 'constantz'
-import { mergeFile, removeProp } from 'duck'
+import { FILE, PROP, STYLED_COMPONENT, COMPONENT_INVOCATION } from 'constantz'
+import {
+  mergeFile,
+  removeProp,
+  removeComponentInvocation,
+} from 'duck'
 import {
   selectDeclarations,
   selectCurrentFileId,
@@ -48,7 +52,11 @@ const mapStateToProps = createStructuredSelector({
   projectDeclarations: selectDeclarations,
 })
 
-const mapDispatchToProps = { mergeFile, removeProp }
+const mapDispatchToProps = {
+  mergeFile,
+  removeProp,
+  removeComponentInvocation,
+}
 
 
 /* dnd */
@@ -105,6 +113,15 @@ const editorTarget = {
           count,
         })
       }
+
+      case COMPONENT_INVOCATION: {
+        const { removeComponentInvocation } = props
+        const { sourceInvocationId, sourceParentId } = monitor.getItem()
+        return removeComponentInvocation({
+          sourceInvocationId,
+          sourceParentId,
+        })
+      }
       // no default
     }
   },
@@ -121,5 +138,5 @@ const editorCollect = (connect, monitor) => ({
 /* compose export */
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  DropTarget([FILE, PROP], editorTarget, editorCollect),
+  DropTarget([FILE, PROP, COMPONENT_INVOCATION], editorTarget, editorCollect),
 )(EditorContainer)

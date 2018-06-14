@@ -1,5 +1,4 @@
 import T from 'prop-types'
-import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
@@ -24,7 +23,7 @@ class ReorderDropzoneContainer extends React.Component {
   }
 }
 
-ReorderDropzoneContainer.propTypes = forbidExtraProps({
+ReorderDropzoneContainer.propTypes = {
   // passed by parent
   targetInvocationId: T.number.isRequired,
   targetPosition: T.number.isRequired,
@@ -41,7 +40,7 @@ ReorderDropzoneContainer.propTypes = forbidExtraProps({
 
   // React Dnd
   connectDropTarget: T.func.isRequired,
-})
+}
 
 
 /* connect */

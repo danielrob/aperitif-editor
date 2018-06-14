@@ -44,9 +44,10 @@ export const CONVERT_TO_STATELESS_FUNCTION_COMPONENT = 'CONVERT_TO_STATELESS_FUN
 export const UPDATE_INVOCATION = 'UPDATE_INVOCATION'
 export const UPDATE_NAME = 'UPDATE_NAME'
 export const UPDATE_DECLARATION = 'UPDATE_DECLARATION'
-export const REMOVE_PROP = 'REMOVE_PROP'
 export const UPDATE_DECL_PARAM = 'UPDATE_DECL_PARAM'
 export const UPDATE_PREFERENCES = 'UPDATE_PREFERENCES'
+export const REMOVE_PROP = 'REMOVE_PROP'
+export const REMOVE_CI = 'REMOVE_CI'
 
 export default function appReducer(state = getInitialState(), action) {
   const session = orm.session(state)
@@ -563,6 +564,31 @@ export default function appReducer(state = getInitialState(), action) {
     }
 
 
+    case UPDATE_DECL_PARAM: {
+      const { paramId, ...updates } = action.payload
+      DeclParam.withId(paramId).update(updates)
+      return session.state
+    }
+
+
+    case UPDATE_INVOCATION: {
+      const { invocationId, ...updates } = action.payload
+      Invocation.withId(invocationId).update(updates)
+      return session.state
+    }
+
+
+    case UPDATE_PREFERENCES: {
+      return {
+        ...state,
+        preferences: {
+          ...state.preferences,
+          ...action.payload,
+        },
+      }
+    }
+
+
     case REMOVE_PROP: {
       const { declarationId, paramId, nameId, count } = action.payload
       // cannot remove a decl param which has been invoked somewhere.
@@ -601,29 +627,13 @@ export default function appReducer(state = getInitialState(), action) {
     }
 
 
-    case UPDATE_DECL_PARAM: {
-      const { paramId, ...updates } = action.payload
-      DeclParam.withId(paramId).update(updates)
+    case REMOVE_CI: {
+      const { sourceInvocationId, sourceParentId } = action.payload
+      Invocation.withId(sourceParentId).invocations.remove(sourceInvocationId)
+      Invocation.migrate({ closed: (_, { invocationIds }) => !invocationIds.length })
+      Invocation.withId(sourceInvocationId).delete()
       return session.state
     }
-
-
-    case UPDATE_INVOCATION: {
-      const { invocationId, ...updates } = action.payload
-      Invocation.withId(invocationId).update(updates)
-      return session.state
-    }
-
-    case UPDATE_PREFERENCES: {
-      return {
-        ...state,
-        preferences: {
-          ...state.preferences,
-          ...action.payload,
-        },
-      }
-    }
-
 
     default:
       return state
@@ -698,10 +708,6 @@ export const updateDeclaration = createAction(
   UPDATE_DECLARATION,
 )
 
-export const removeProp = createAction(
-  REMOVE_PROP
-)
-
 export const moveParamToSpread = createAction(
   UPDATE_DECL_PARAM,
   ({ paramId }) => ({
@@ -720,4 +726,12 @@ export const addPropsSpreadToComponentInvocation = createAction(
 
 export const updatePreferences = createAction(
   UPDATE_PREFERENCES
+)
+
+export const removeProp = createAction(
+  REMOVE_PROP
+)
+
+export const removeComponentInvocation = createAction(
+  REMOVE_CI
 )
