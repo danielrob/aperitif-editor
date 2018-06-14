@@ -9,6 +9,7 @@ Declaration.stateKey = 'declarations'
 
 Declaration.fields = {
   nameId: fk('Name'),
+  fileId: fk('File'),
   type: attr(STATELESS_FUNCTION_COMPONENT),
   declParamIds: array([], 'DeclParam', 'declarationId'),
   exportType: attr(DEFAULT),

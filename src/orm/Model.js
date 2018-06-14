@@ -27,22 +27,23 @@ class Model {
           break
         }
         case 'fk': {
-          invariant(orm[modelName], `Did not find model ${modelName} in registry.`)
-          this.foreignKeys[key] = orm[modelName].stateKey
-          this.defaultProps[key] = null
-          const Model = orm.modelClasses[modelName]
-          if (key.endsWith('Id')) {
-            Object.defineProperty(this, key.replace('Id', ''), {
-              get() {
-                const { result: { id } } = this.currentQueryResult
-                const currentValue = this.getModelData()[id][key]
-                if (currentValue) {
-                  return new Model(orm, Model).withId(currentValue)
-                }
-                return null
-              },
-            })
-          }
+          setTimeout(() => { // oh beautiful hacks: wait until all models are registered
+            invariant(orm[modelName], `Did not find model ${modelName} in registry.`)
+            this.foreignKeys[key] = orm[modelName].stateKey
+            this.defaultProps[key] = null
+            if (key.endsWith('Id')) {
+              Object.defineProperty(this, key.replace('Id', ''), {
+                get() {
+                  const { result: { id } } = this.currentQueryResult
+                  const currentValue = this.getModelData()[id][key]
+                  if (currentValue) {
+                    return orm[modelName].withId(currentValue)
+                  }
+                  return null
+                },
+              })
+            }
+          })
           break
         }
         case 'array': {
