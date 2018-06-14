@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { createStructuredSelector } from 'reselect'
+import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
 import { compose } from 'utils'
 
@@ -52,10 +53,14 @@ const mapStateToProps = createStructuredSelector({
   projectDeclarations: selectDeclarations,
 })
 
+const { undo, redo } = UndoActionCreators
+
 const mapDispatchToProps = {
   mergeFile,
   removeProp,
   removeComponentInvocation,
+  undo,
+  redo,
 }
 
 

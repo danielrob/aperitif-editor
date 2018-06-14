@@ -31,6 +31,18 @@ class Editor extends React.Component {
     if (event.keyCode === 27) {
       document.activeElement.blur()
     }
+    if (event.keyCode === 90 && (event.ctrlKey || event.metaKey)) {
+      if (event.shiftKey) {
+        this.props.redo()
+      } else {
+        this.props.undo()
+      }
+      event.preventDefault()
+    }
+    if (event.keyCode === 89 && (event.ctrlKey || event.metaKey)) {
+      this.props.redo()
+      event.preventDefault()
+    }
   }
   componentDidMount() {
     document.addEventListener('keydown', this.keydown, false)

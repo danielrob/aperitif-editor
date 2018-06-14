@@ -1,4 +1,5 @@
 /* eslint-disable prefer-const */
+import undoable, { groupByActionTypes } from 'redux-undo'
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
 import orm from 'orm'
@@ -49,7 +50,11 @@ export const UPDATE_PREFERENCES = 'UPDATE_PREFERENCES'
 export const REMOVE_PROP = 'REMOVE_PROP'
 export const REMOVE_CI = 'REMOVE_CI'
 
-export default function appReducer(state = getInitialState(), action) {
+export default undoable(appReducer, {
+  groupBy: groupByActionTypes(UPDATE_NAME),
+})
+
+function appReducer(state = getInitialState(), action) {
   const session = orm.session(state)
   const { Name, DeclParam, CallParam, Declaration, Invocation, File } = session
 

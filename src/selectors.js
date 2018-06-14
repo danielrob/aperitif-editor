@@ -3,15 +3,15 @@ import { createSelector } from 'reselect'
 import { DIR } from 'constantz'
 import { sortAlphabetically } from 'utils'
 
-export const selectCurrentFileId = s => s.app.currentFileId
-export const selectRootFiles = s => s.app.rootFiles
-export const selectNames = s => s.app.names
-export const selectFiles = s => s.app.files
-export const selectDeclarations = s => s.app.declarations
-export const selectInvocations = s => s.app.invocations
-export const selectCallParams = s => s.app.callParams
-export const selectDeclParams = s => s.app.declParams
-export const selectPreferences = s => s.app.preferences
+export const selectCurrentFileId = s => s.app.present.currentFileId
+export const selectRootFiles = s => s.app.present.rootFiles
+export const selectNames = s => s.app.present.names
+export const selectFiles = s => s.app.present.files
+export const selectDeclarations = s => s.app.present.declarations
+export const selectInvocations = s => s.app.present.invocations
+export const selectCallParams = s => s.app.present.callParams
+export const selectDeclParams = s => s.app.present.declParams
+export const selectPreferences = s => s.app.present.preferences
 
 /*
   Atomic model selectors
