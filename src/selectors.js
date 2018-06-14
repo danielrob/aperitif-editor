@@ -57,7 +57,7 @@ export const makeSelectFile = () => createSelector(
   selectCurrentFileId,
   (state, props) => props.fileId,
   (names, files, currentFileId, fileId) => {
-    const { id, nameId, type, children, declarationIds } = files[fileId]
+    const { nameId, type, children, declarationIds } = files[fileId]
     const sortedChildren = children.sort((a, b) => {
       const aName = names[files[a].nameId]
       const bName = names[files[b].nameId]
@@ -75,11 +75,13 @@ export const makeSelectFile = () => createSelector(
 
 
     return {
+      nameId,
       name: names[nameId],
       type,
       fileChildren: [...directories, ...fichiers],
       isDirectory: !!children.length || type === DIR,
-      isCurrent: id === currentFileId,
+      isCurrent: fileId === currentFileId,
+      containsCurrent: children.includes(currentFileId),
       declarationIds,
     }
   }

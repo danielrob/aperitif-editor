@@ -19,7 +19,7 @@ export default styled(FileExplorer).as.div`
   position: relative;
   padding: 50px 40px 0 40px;
   background-color: ${theme.colors.washedpink};
-  color: ${theme.colors.darkblue};
+  color: ${theme.colors.darkblue}; // #545ab7
   height: 100%;
   overflow-y: auto;
 `

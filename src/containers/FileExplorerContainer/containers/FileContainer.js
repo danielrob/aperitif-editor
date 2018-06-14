@@ -23,7 +23,6 @@ class FileContainer extends React.Component {
     const {
       connectDragSource,
       fileId, // eslint-disable-line no-unused-vars
-      isCurrent, // eslint-disable-line no-unused-vars
       declarationIds, // eslint-disable-line no-unused-vars
       changeFile, // eslint-disable-line no-unused-vars
       moveDeclarationToFile, // eslint-disable-line no-unused-vars
@@ -50,12 +49,14 @@ FileContainer.propTypes = forbidExtraProps({
   path: T.arrayOf(T.number),
 
   // from makeSelectFile
+  nameId: T.number.isRequired,
   name: T.string.isRequired,
   type: T.oneOf(fileTypesArray).isRequired,
   fileChildren: T.arrayOf(T.number).isRequired,
   isDirectory: T.bool.isRequired,
   isCurrent: T.bool.isRequired,
   declarationIds: T.arrayOf(T.number).isRequired,
+  containsCurrent: T.bool.isRequired,
 
   // mapDispatchToProps
   changeFile: T.func.isRequired,

@@ -4,12 +4,14 @@ import React from 'react'
 import styled from 'styled-as-components'
 
 import { fileTypes, fileTypesArray } from 'constantz'
+import { Input, ReactIcon, FolderIcon } from 'components'
 
 import { FileContainer } from '../containers'
 
 class File extends React.Component {
   render() {
     const {
+      nameId,
       name,
       parentName,
       type,
@@ -18,13 +20,27 @@ class File extends React.Component {
       connectDragPreview,
       connectDropTarget,
       path,
+      isDirectory,
+      isCurrent,
+      containsCurrent,
     } = this.props
     const displayName = (name.includes('index') && isDragging && parentName) || name
 
     return connectDropTarget(
       <div>
-        {connectDragPreview(<span>{displayName}</span>, { captureDraggingState: true })}
-        {type && type !== fileTypes.DIR && `.${type}`}
+        <FileName {...this.props}>
+          {isCurrent && <span role="img" aria-label="pointer" className="pointer">👉</span>}
+          {type === fileTypes.JS && <ReactIcon />}
+          {connectDragPreview(
+            <div style={{ display: 'inline-block' }}>
+              {isDirectory && <FolderIcon open={containsCurrent} />}
+              {displayName === name && !name.includes('index') ? <Input nameId={nameId} /> : displayName}
+            </div>
+          , { captureDraggingState: true }
+          )}
+          {type && type !== fileTypes.DIR && `.${type}`}
+
+        </FileName>
         {fileChildren.map(fileId => (
           <FileContainer
             key={fileId}
@@ -41,12 +57,15 @@ class File extends React.Component {
 
 File.propTypes = forbidExtraProps({
   // passed by parent / file explorer
+  nameId: T.number.isRequired,
   name: T.string.isRequired,
   type: T.oneOf(fileTypesArray).isRequired,
   // eslint-disable-next-line react/require-default-props
   parentName: or([T.string.isRequired, explicitNull()]),
   fileChildren: T.arrayOf(T.number).isRequired,
   path: T.arrayOf(T.number).isRequired,
+  isCurrent: T.bool.isRequired,
+  containsCurrent: T.bool.isRequired,
 
   // Injected by React DnD:
   connectDragPreview: T.func.isRequired,
@@ -54,7 +73,7 @@ File.propTypes = forbidExtraProps({
   isDragging: T.bool.isRequired,
 
   // for wrapper
-  innerRef: T.func.isRequired,  
+  innerRef: T.func.isRequired,
   onClick: T.func.isRequired,
   isDirectory: T.bool.isRequired,
 })
@@ -64,4 +83,11 @@ export default styled(File).as.div`
   ${props => props.parentName && 'cursor: pointer;'}
   ${props => props.parentName && 'margin-left: 10px;'}
   ${props => props.isDirectory && 'padding: 5px 0;'}
+  .pointer {
+    margin-right: -10px;
+  }
+`
+
+const FileName = styled.div`
+  white-space: nowrap;
 `

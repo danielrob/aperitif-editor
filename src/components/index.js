@@ -1,3 +1,4 @@
+export * from './Icons'
 export { default as Props } from './Props'
 export { default as Backtick } from './Backtick'
 export { default as ClassComponent } from './ClassComponent'
