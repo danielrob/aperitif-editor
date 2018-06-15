@@ -1,5 +1,5 @@
 import React from 'react'
-import { Line, Keyword } from 'components'
+import { Line, Keyword, Input } from 'components'
 import { indent } from 'utils'
 
 export default class ProjectIndex extends React.Component {
@@ -7,15 +7,18 @@ export default class ProjectIndex extends React.Component {
     return (
       <div>
         <Line statement>
-          <Keyword>import</Keyword> {'{'} render {'}'} <Keyword>from</Keyword> 'react-dom'
+          <Keyword>import</Keyword> React <Keyword>from</Keyword> 'react'
         </Line>
         <Line statement>
-          <Keyword>import</Keyword> {'{'} AppContainer {'}'} <Keyword>from</Keyword> 'containers'
+          <Keyword>import</Keyword> ReactDOM <Keyword>from</Keyword> 'react-dom'
+        </Line>
+        <Line statement>
+          <Keyword>import</Keyword> {'{'} <Input nameId={5} /> {'}'} <Keyword>from</Keyword> 'containers'
         </Line>
         <br />
         <Line statement>
-          render(<br />
-          <Keyword>{indent(1)}{'<AppContainer />'}</Keyword>,<br />
+          ReactDOM.render(<br />
+          <Keyword>{indent(1)}{'<'}<Input nameId={5} />{'/>'}</Keyword>,<br />
           {indent(1)}document.getElementById('root')<br />
           )
         </Line>
