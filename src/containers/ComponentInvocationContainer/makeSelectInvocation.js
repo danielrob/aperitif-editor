@@ -1,13 +1,13 @@
 import { createSelector } from 'reselect'
 
-import { selectNames, selectInvocation, selectCallParams, selectDeclParams } from 'selectors'
+import { selectNames, makeSelectInvocation as msI, selectCallParams, selectDeclParams } from 'selectors'
 
 // component invocation selector => <Component>
 const makeSelectInvocation = () => createSelector(
   selectNames,
   selectCallParams,
   selectDeclParams,
-  selectInvocation,
+  msI(),
   (names, callParams, declParams, invocation) => {
     const {
       invocationId,

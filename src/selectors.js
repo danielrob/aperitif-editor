@@ -16,7 +16,7 @@ export const selectPreferences = s => s.app.present.preferences
 /*
   Atomic model selectors
 */
-export const selectInvocation = createSelector(
+export const makeSelectInvocation = () => createSelector(
   selectNames,
   selectInvocations,
   (state, props) => props.invocationId,

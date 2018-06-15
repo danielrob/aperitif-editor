@@ -1,13 +1,13 @@
 import { createSelector } from 'reselect'
 
-import { selectNames, selectInvocation, selectCallParams, selectDeclParams } from 'selectors'
+import { selectNames, makeSelectInvocation, selectCallParams, selectDeclParams } from 'selectors'
 
 // param invocation selector => {param}
 const makeSelectParamInvocation = () => createSelector(
   selectNames,
   selectCallParams,
   selectDeclParams,
-  selectInvocation,
+  makeSelectInvocation(),
   (names, callParams, declParams, invocation) => {
     const { invocationId, nameId, callParamIds, invocationIds } = invocation
     // callParamIds is a singleton for paramInvocations so e.g. allParams[[1]] is fine 🕊

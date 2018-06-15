@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
-import { selectInvocation } from 'selectors'
+import { makeSelectInvocation } from 'selectors'
 
 class InvocationContainer extends React.Component {
   render() {
@@ -10,7 +10,14 @@ class InvocationContainer extends React.Component {
   }
 }
 
+const makeMapStateToProps = () => {
+  const selectInvocation = makeSelectInvocation()
+  return createStructuredSelector({
+    invocation: selectInvocation,
+  })
+}
+
 export default connect(
-  createStructuredSelector({ invocation: selectInvocation }),
+  makeMapStateToProps,
   null
 )(InvocationContainer)
