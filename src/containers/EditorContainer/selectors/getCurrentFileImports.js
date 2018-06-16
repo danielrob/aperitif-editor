@@ -32,6 +32,9 @@ export const getCurrentFileImports = createSelector(
   composed(
     (currentFile, files, invocations, allDeclarations, declarations, names) => {
       const imports = []
+      if (!currentFile) {
+        return imports
+      }
 
       // Much simpler to handle these specific import cases here than in an abstract manner
       if (declarations.find(({ type }) => type === STYLED_COMPONENT)) {

@@ -10,5 +10,6 @@ export const selectCurrentFile = createSelector(
 export const getCurrentFileDeclarations = createSelector(
   selectDeclarations,
   selectCurrentFile,
-  (declarations, currentFile) => currentFile.declarationIds.map(id => declarations[id])
+  (declarations, currentFile) =>
+    currentFile ? currentFile.declarationIds.map(id => declarations[id]) : []
 )
