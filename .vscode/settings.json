@@ -1,6 +1,11 @@
 {
   "files.exclude": {
-      "src/": true,
+      "**/src": true,
       ".vscode/": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/src": true
   }
 }
