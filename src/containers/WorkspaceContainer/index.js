@@ -9,20 +9,24 @@ export default class WorkspaceContainer extends React.Component {
     }
   }
 
-  handleMouseMove = ({ clientX }) => {
+  handleMouseMove = e => {
+    const { clientX } = e
     this.setState({
       width: Math.min(Math.max(clientX, 10), document.body.clientWidth * 0.45),
     })
+    e.preventDefault()
   }
 
-  handleMouseUp = () => {
+  handleMouseUp = e => {
     document.removeEventListener('mousemove', this.handleMouseMove)
     document.removeEventListener('mouseup', this.handleMouseUp)
+    e.preventDefault()
   }
 
-  handleDividerMouseDown = () => {
+  handleDividerMouseDown = e => {
     document.addEventListener('mousemove', this.handleMouseMove)
     document.addEventListener('mouseup', this.handleMouseUp)
+    e.preventDefault()
   }
 
   render() {
