@@ -122,6 +122,7 @@ function appReducer(state = getInitialState(), action) {
       return {
         ...state,
         currentFileId: nextId || currentFileId,
+        selectedFileId: action.payload,
       }
     }
 

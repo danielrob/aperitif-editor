@@ -54,8 +54,9 @@ FileContainer.propTypes = forbidExtraProps({
   type: T.oneOf(fileTypesArray).isRequired,
   fileChildren: T.arrayOf(T.number).isRequired,
   isDirectory: T.bool.isRequired,
-  isCurrent: T.bool.isRequired,
   declarationIds: T.arrayOf(T.number).isRequired,
+  isCurrent: T.bool.isRequired,
+  isSelected: T.bool.isRequired,
   containsCurrent: T.bool.isRequired,
 
   // mapDispatchToProps

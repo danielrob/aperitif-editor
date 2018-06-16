@@ -249,6 +249,7 @@ export default function getInitialState() {
     ...session.state,
     rootFiles: [components, containers, indexFile],
     currentFileId: 1,
+    selectedFileId: 1,
     preferences: {
       semis: true,
     },

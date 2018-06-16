@@ -4,6 +4,7 @@ import { DIR } from 'constantz'
 import { sortAlphabetically } from 'utils'
 
 export const selectCurrentFileId = s => s.app.present.currentFileId
+export const selectSelectedFileId = s => s.app.present.selectedFileId
 export const selectRootFiles = s => s.app.present.rootFiles
 export const selectNames = s => s.app.present.names
 export const selectFiles = s => s.app.present.files
@@ -55,8 +56,9 @@ export const makeSelectFile = () => createSelector(
   selectNames,
   selectFiles,
   selectCurrentFileId,
+  selectSelectedFileId,
   (state, props) => props.fileId,
-  (names, files, currentFileId, fileId) => {
+  (names, files, currentFileId, selectedFileId, fileId) => {
     const { nameId, type, children, declarationIds } = files[fileId]
     const sortedChildren = children.sort((a, b) => {
       const aName = names[files[a].nameId]
@@ -81,6 +83,7 @@ export const makeSelectFile = () => createSelector(
       fileChildren: [...directories, ...fichiers],
       isDirectory: !!children.length || type === DIR,
       isCurrent: fileId === currentFileId,
+      isSelected: fileId === selectedFileId,
       containsCurrent: children.includes(currentFileId),
       declarationIds,
     }

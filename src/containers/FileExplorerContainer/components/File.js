@@ -22,6 +22,7 @@ class File extends React.Component {
       path,
       isDirectory,
       isCurrent,
+      isSelected,
       containsCurrent,
     } = this.props
     const displayName = (name.includes('index') && isDragging && parentName) || name
@@ -34,7 +35,10 @@ class File extends React.Component {
           {connectDragPreview(
             <div style={{ display: 'inline-block' }}>
               {isDirectory && <FolderIcon open={containsCurrent} />}
-              {displayName === name && !name.includes('index') ? <Input nameId={nameId} /> : displayName}
+              {!name.includes('index') && parentName ?
+                <Input nameId={nameId} pointer shouldActivateOnClick={isSelected} /> :
+                displayName
+              }
             </div>
           , { captureDraggingState: true }
           )}
@@ -65,6 +69,7 @@ File.propTypes = forbidExtraProps({
   fileChildren: T.arrayOf(T.number).isRequired,
   path: T.arrayOf(T.number).isRequired,
   isCurrent: T.bool.isRequired,
+  isSelected: T.bool.isRequired,
   containsCurrent: T.bool.isRequired,
 
   // Injected by React DnD:

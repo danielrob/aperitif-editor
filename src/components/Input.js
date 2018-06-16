@@ -7,12 +7,18 @@ import { makeSelectName } from 'selectors'
 import AutosizeInput from 'react-input-autosize'
 
 class Input extends React.Component {
+  static defaultProps = {
+    shouldActivateOnClick: true,
+  }
+
   state = {
     displayInput: false,
   }
 
   onClick = () => {
-    this.setState({ displayInput: true })
+    if (this.props.shouldActivateOnClick) {
+      this.setState({ displayInput: true })
+    }
   }
 
   onBlur = () => {
@@ -33,16 +39,8 @@ class Input extends React.Component {
     changeName({ nameId, value: nextName })
   }
 
-  componentDidMount() {
-    if (this.props.pointer && this.inputRef) {
-      // style prop & styled-components not playing nice with AutosizeInput
-      this.inputRef.style.cursor = 'pointer'
-    }
-  }
-
   componentDidUpdate() {
     if (this.state.displayInput) {
-      this.componentDidMount()
       if (document.activeElement !== this.inputRef) {
         this.inputRef.focus()
         this.inputRef.setSelectionRange(0, this.inputRef.value.length)
@@ -53,7 +51,7 @@ class Input extends React.Component {
   }
 
   render() {
-    const { name } = this.props
+    const { name, pointer } = this.props
     const input = {
       value: name,
       onChange: this.onChange,
@@ -67,7 +65,7 @@ class Input extends React.Component {
           <span style={{ display: 'inline-block', marginLeft: '-2px' }} />
         </React.Fragment>
         :
-        <Name onClick={this.onClick}>{name}</Name>
+        <Name onClick={this.onClick} pointer={pointer}>{name}</Name>
     )
   }
 }
@@ -84,5 +82,5 @@ const makeMapStateToProps = () => {
 export default connect(makeMapStateToProps, mapDispatchToProps)(Input)
 
 const Name = styled.span`
-  cursor: text;
+  cursor: ${props => props.pointer ? 'pointer' : 'text'};
 `
