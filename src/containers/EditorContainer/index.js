@@ -1,3 +1,5 @@
+import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
@@ -27,18 +29,46 @@ import { Editor } from './components'
 class EditorContainer extends React.Component {
   render() {
     const {
-      connectEditorTarget,
-      isOverPassiveEditorArea, // ignore-line no-unused
-      currentFileId, // ignore-line no-unused
-      projectDeclarations, // ignore-line no-unused
+      connectDropTarget,
+      currentFileId, // dnd only
+      projectDeclarations, // dnd only
+      mergeFile, // dnd only
+      removeProp, // dnd only
+      removeComponentInvocation, // dnd only
       ...props
     } = this.props
-    return connectEditorTarget(
+    return connectDropTarget(
       <div style={{ overflow: 'auto', paddingBottom: '200px' }}>
         <Editor {...props} />
       </div>
     )
   }
+}
+
+
+/* propTypes */
+EditorContainer.propTypes = forbidExtraProps({
+  // mapStateToProps
+  imports: T.arrayOf(T.object).isRequired,
+  declarations: T.arrayOf(T.object).isRequired,
+  defaultExport: T.number,
+  currentFileId: T.number,
+  projectDeclarations: T.object.isRequired, // eslint-disable-line react/forbid-prop-types
+
+  // mapDispatchToProps
+  mergeFile: T.func.isRequired,
+  removeProp: T.func.isRequired,
+  removeComponentInvocation: T.func.isRequired,
+  undo: T.func.isRequired,
+  redo: T.func.isRequired,
+
+  // dnd
+  connectDropTarget: T.func.isRequired,
+})
+
+EditorContainer.defaultProps = {
+  currentFileId: null,
+  defaultExport: null,
 }
 
 
@@ -132,11 +162,8 @@ const editorTarget = {
   },
 }
 
-const editorCollect = (connect, monitor) => ({
-  connectEditorTarget: connect.dropTarget(),
-  isOverPassiveEditorArea: monitor.isOver({ shallow: true }),
-  isOverEditor: monitor.isOver(),
-  dragItem: monitor.getItem(),
+const editorCollect = connect => ({
+  connectDropTarget: connect.dropTarget(),
 })
 
 

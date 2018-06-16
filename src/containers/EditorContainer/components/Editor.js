@@ -1,3 +1,5 @@
+import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
@@ -82,6 +84,21 @@ class Editor extends React.Component {
   }
 }
 
+/* propTypes */
+Editor.propTypes = forbidExtraProps({
+  // data
+  imports: T.arrayOf(T.object).isRequired,
+  declarations: T.arrayOf(T.object).isRequired,
+  defaultExport: T.number,
+
+  // action dispatchers
+  undo: T.func.isRequired,
+  redo: T.func.isRequired,
+})
+
+Editor.defaultProps = {
+  defaultExport: null,
+}
 
 export default styled(Editor).as.div`
   background-color: ${theme.colors.white};
