@@ -1,3 +1,8 @@
+/*
+  Icons: https://material.io/tools/icons/?icon=folder_open&style=baseline
+  Apache license version 2.0
+*/
+
 import React from 'react'
 
 const FolderIcon = props =>

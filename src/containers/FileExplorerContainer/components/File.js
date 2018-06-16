@@ -4,7 +4,7 @@ import React from 'react'
 import styled from 'styled-as-components'
 
 import { fileTypes, fileTypesArray } from 'constantz'
-import { Input, ReactIcon, FolderIcon } from 'components'
+import { Input, ReactIcon, FolderIcon, AddButton } from 'components'
 
 import { FileContainer } from '../containers'
 
@@ -30,34 +30,42 @@ class File extends React.Component {
     return connectDropTarget(
       <div>
         <FileName {...this.props}>
-          {isCurrent && <span role="img" aria-label="pointer" className="pointer">👉</span>}
+          {isCurrent && (
+            <span role="img" aria-label="pointer" className="pointer">
+              👉{' '}
+            </span>
+          )}
           {type === fileTypes.JS && <ReactIcon />}
           {connectDragPreview(
             <div style={{ display: 'inline-block' }}>
               {isDirectory && <FolderIcon open={containsCurrent} />}
-              {!name.includes('index') && parentName ?
-                <Input nameId={nameId} pointer shouldActivateOnClick={isSelected} /> :
+              {!name.includes('index') && parentName ? (
+                <Input nameId={nameId} pointer shouldActivateOnClick={isSelected} />
+              ) : (
                 displayName
-              }
-            </div>
-          , { captureDraggingState: true }
+              )}
+            </div>,
+            { captureDraggingState: true }
           )}
           {type && type !== fileTypes.DIR && `.${type}`}
-
+          {name === 'components' && (
+            <React.Fragment>
+              <AddButton left="11" />
+            </React.Fragment>
+          )}
+          {name === 'containers' && (
+            <React.Fragment>
+              <AddButton left="11" />
+            </React.Fragment>
+          )}
         </FileName>
         {fileChildren.map(fileId => (
-          <FileContainer
-            key={fileId}
-            fileId={fileId}
-            parentName={name}
-            path={[...path, fileId]}
-          />
+          <FileContainer key={fileId} fileId={fileId} parentName={name} path={[...path, fileId]} />
         ))}
       </div>
     )
   }
 }
-
 
 File.propTypes = forbidExtraProps({
   // passed by parent / file explorer
@@ -82,7 +90,6 @@ File.propTypes = forbidExtraProps({
   onClick: T.func.isRequired,
   isDirectory: T.bool.isRequired,
 })
-
 
 export default styled(File).as.div`
   ${props => props.parentName && 'cursor: pointer;'}
