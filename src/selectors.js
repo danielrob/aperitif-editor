@@ -3,9 +3,9 @@ import { createSelector } from 'reselect'
 import { DIR } from 'constantz'
 import { sortAlphabetically } from 'utils'
 
-export const selectCurrentFileId = s => s.app.present.currentFileId
-export const selectSelectedFileId = s => s.app.present.selectedFileId
-export const selectRootFiles = s => s.app.present.rootFiles
+export const selectCurrentFileId = s => s.app.present.editor.currentFileId
+export const selectSelectedFileId = s => s.app.present.editor.selectedFileId
+export const selectRootFiles = s => s.app.present.editor.rootFiles
 export const selectNames = s => s.app.present.names
 export const selectFiles = s => s.app.present.files
 export const selectDeclarations = s => s.app.present.declarations
