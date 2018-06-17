@@ -11,7 +11,7 @@ import { addInvocationFromFileToCI } from 'duck'
 
 import { PropDropzone } from '../components'
 
-class AddInvocationFromFileDropzone extends React.Component {
+class AddInvocationFromFileDropzone extends React.PureComponent {
   render() {
     const { connectDropTarget, isOver, children } = this.props
     return (

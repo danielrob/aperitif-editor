@@ -26,7 +26,7 @@ import {
 } from './selectors'
 import { Editor } from './components'
 
-class EditorContainer extends React.Component {
+class EditorContainer extends React.PureComponent {
   render() {
     const {
       connectDropTarget,

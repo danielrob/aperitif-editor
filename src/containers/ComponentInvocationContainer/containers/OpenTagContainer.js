@@ -11,7 +11,7 @@ import { compose } from 'utils'
 
 import { OpenTag, canDropPropToOpenTag } from '../components'
 
-class OpenTagContainer extends React.Component {
+class OpenTagContainer extends React.PureComponent {
   render() {
     const {
       connectDropTarget,

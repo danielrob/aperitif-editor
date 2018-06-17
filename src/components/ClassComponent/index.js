@@ -6,7 +6,7 @@ import styled from 'styled-as-components'
 
 import { ClassPropertyDeclarationFactory } from './components'
 
-class ClassComponent extends React.Component {
+class ClassComponent extends React.PureComponent {
   render() {
     const { declarationId, exportType, nameId, declParams: props, declarationIds } = this.props
     return (

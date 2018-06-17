@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect'
 import { makeSelectName } from 'selectors'
 import AutosizeInput from 'react-input-autosize'
 
-class Input extends React.Component {
+class Input extends React.PureComponent {
   static defaultProps = {
     shouldActivateOnClick: true,
   }

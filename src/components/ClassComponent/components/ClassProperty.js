@@ -3,7 +3,7 @@ import { indent } from 'utils'
 
 import { JSX } from 'components'
 
-export default class ClassProperty extends React.Component {
+export default class ClassProperty extends React.PureComponent {
   render() {
     const { invocationIds } = this.props
     return (

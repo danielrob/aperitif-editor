@@ -7,7 +7,7 @@ import { compose } from 'utils'
 import { acceptedDropTypes, getIsValidOver } from '../helpers'
 import { CIDropzones } from '../components'
 
-class IntermediaryDropzonesContainer extends React.Component {
+class IntermediaryDropzonesContainer extends React.PureComponent {
   render() {
     const { connectDropTarget, isOverThisDropzone, inline, ...props } = this.props
 

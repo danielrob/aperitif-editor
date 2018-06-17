@@ -31,7 +31,7 @@ const renderers = {
   [JSON_TYPE]: JsonText,
 }
 
-class Editor extends React.Component {
+class Editor extends React.PureComponent {
   componentDidUpdate() {
     ReactTooltip.rebuild()
   }

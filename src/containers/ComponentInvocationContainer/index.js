@@ -14,7 +14,7 @@ import { ComponentInvocation } from './components'
 import getCIDimensionsInjector from './getCIDimensionsInjector'
 import makeSelectInvocation from './makeSelectInvocation'
 
-class ComponentInvocationContainer extends React.Component {
+class ComponentInvocationContainer extends React.PureComponent {
   render() {
     const {
       connectDragSource,

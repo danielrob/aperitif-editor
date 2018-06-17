@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect'
 
 import { makeSelectInvocation } from 'selectors'
 
-class InvocationContainer extends React.Component {
+class InvocationContainer extends React.PureComponent {
   render() {
     return this.props.render(this.props.invocation)
   }

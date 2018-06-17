@@ -3,7 +3,7 @@ import { DragSource } from 'react-dnd'
 import { compose } from 'utils'
 
 // Make one of the { componentDeclarationTypes } from constantz draggable
-class ComponentDragSource extends React.Component {
+class ComponentDragSource extends React.PureComponent {
   render() {
     const { connectDragSource, connectDragPreview } = this.props
     return (

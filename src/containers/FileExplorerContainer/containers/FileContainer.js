@@ -12,7 +12,7 @@ import { makeSelectFile } from 'selectors'
 
 import { File } from '../components'
 
-class FileContainer extends React.Component {
+class FileContainer extends React.PureComponent {
   onClickHandler = e => {
     const { changeFile, fileId } = this.props
     e.stopPropagation()

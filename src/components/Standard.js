@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class Standard extends React.Component {
+export default class Standard extends React.PureComponent {
   render() {
     return (
       <div>

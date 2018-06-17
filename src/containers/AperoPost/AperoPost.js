@@ -8,7 +8,7 @@ import { Flex } from 'components'
 import apiArrayResponse from './apiArrayResponse.json'
 import apiObjectResponse from './apiObjectResponse.json'
 
-class AperoPost extends React.Component {
+class AperoPost extends React.PureComponent {
   state = {
     textarea: null,
     error: null,

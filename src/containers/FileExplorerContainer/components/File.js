@@ -8,7 +8,7 @@ import { Input, ReactIcon, FolderIcon, JSONIcon, AddButton } from 'components'
 
 import { FileContainer } from '../containers'
 
-class File extends React.Component {
+class File extends React.PureComponent {
   render() {
     const {
       nameId,

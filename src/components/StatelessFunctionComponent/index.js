@@ -3,7 +3,7 @@ import React from 'react'
 import { JSX, Props, Line, Keyword, Input, ComponentTypeToggle, PropTypes } from 'components'
 import { INLINE, CLASS_COMPONENT } from 'constantz'
 
-export default class StatelessFunctionComponent extends React.Component {
+export default class StatelessFunctionComponent extends React.PureComponent {
   render() {
     const { declarationId, exportType, nameId, declParams: allParams, invocations } = this.props
     const [spreadParams, params] = partition(allParams, p => p.isSpreadMember)

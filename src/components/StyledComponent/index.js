@@ -8,7 +8,7 @@ import { ComponentDragSource } from 'containers'
 
 import TemplateStringTextArea from './TemplateStringTextArea'
 
-class StyledComponent extends React.Component {
+class StyledComponent extends React.PureComponent {
   onChange = e => {
     const { updateDeclaration, declarationId } = this.props
     updateDeclaration({ declarationId, text: e.target.value })

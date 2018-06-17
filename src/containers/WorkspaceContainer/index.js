@@ -1,7 +1,7 @@
 import React from 'react'
 import { Workspace } from 'components'
 
-export default class WorkspaceContainer extends React.Component {
+export default class WorkspaceContainer extends React.PureComponent {
   constructor() {
     super()
     this.state = {

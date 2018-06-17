@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect'
 
 import { makeSelectDeclaration } from 'selectors'
 
-class DeclarationContainer extends React.Component {
+class DeclarationContainer extends React.PureComponent {
   render() {
     return (
       <React.Fragment>

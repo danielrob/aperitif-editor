@@ -10,7 +10,7 @@ import { moveInvocation } from 'duck'
 
 import { ReorderDropzone } from '../components'
 
-class ReorderDropzoneContainer extends React.Component {
+class ReorderDropzoneContainer extends React.PureComponent {
   render() {
     const { connectDropTarget, ciDimensions, ...props } = this.props
     return (

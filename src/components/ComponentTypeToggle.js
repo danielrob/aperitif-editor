@@ -9,7 +9,7 @@ const toggleMap = {
   [CLASS_COMPONENT]: 'convertToClassCompmonent',
 }
 
-class ComponentTypeToggle extends React.Component {
+class ComponentTypeToggle extends React.PureComponent {
   onClick = () => {
     const { declarationId, targetType, ...props } = this.props
     props[toggleMap[targetType]]({ declarationId })

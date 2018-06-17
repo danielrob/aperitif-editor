@@ -4,7 +4,7 @@ import { indent } from 'utils'
 import { JSX, Keyword, Props, Input } from 'components'
 import { DeclarationContainer } from 'containers'
 
-export default class ClassMethod extends React.Component {
+export default class ClassMethod extends React.PureComponent {
   render() {
     const { declarationId, declarationIds, invocationIds, thiz: { props } } = this.props
     const [spreadProps, nonSpreadProps] = partition(props, p => p.isSpreadMember)

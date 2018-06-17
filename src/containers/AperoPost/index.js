@@ -5,7 +5,7 @@ import { initializeApp } from 'duck'
 
 import AperoPost from './AperoPost'
 
-class AperoPostContainer extends React.Component {
+class AperoPostContainer extends React.PureComponent {
   render() {
     return <AperoPost {...this.props} />
   }

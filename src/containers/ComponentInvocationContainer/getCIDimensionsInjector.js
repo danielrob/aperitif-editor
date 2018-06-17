@@ -1,7 +1,7 @@
 import React from 'react'
 
 const getCIDimensionsInjector = Component =>
-  class ClientHeightInjector extends React.Component {
+  class ClientHeightInjector extends React.PureComponent {
     constructor() {
       super()
       this.state = {

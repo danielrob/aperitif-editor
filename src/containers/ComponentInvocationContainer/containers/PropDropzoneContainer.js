@@ -20,7 +20,7 @@ import { REACT_CHILDREN_INVOCATION_ID } from 'duck/getTestDB'
 
 import { PropDropzone } from '../components'
 
-class PropDropzoneContainer extends React.Component {
+class PropDropzoneContainer extends React.PureComponent {
   render() {
     const { connectDropTarget, isOver, children } = this.props
     return (

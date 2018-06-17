@@ -10,7 +10,7 @@ import { moveParamToSpread } from 'duck'
 
 import { SpreadProps } from '../components'
 
-class SpreadPropsContainer extends React.Component {
+class SpreadPropsContainer extends React.PureComponent {
   render() {
     const { connectDropTarget } = this.props
     return (

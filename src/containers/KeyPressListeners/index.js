@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
-class KeyPressListeners extends React.Component {
+class KeyPressListeners extends React.PureComponent {
   keydown = event => {
     if (event.keyCode === 27) {
       document.activeElement.blur()
