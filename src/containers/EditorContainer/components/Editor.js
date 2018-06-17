@@ -29,31 +29,8 @@ const renderers = {
 }
 
 class Editor extends React.Component {
-  keydown = (event) => {
-    if (event.keyCode === 27) {
-      document.activeElement.blur()
-    }
-    if (event.keyCode === 90 && (event.ctrlKey || event.metaKey)) {
-      if (event.shiftKey) {
-        this.props.redo()
-      } else {
-        this.props.undo()
-      }
-      event.preventDefault()
-    }
-    if (event.keyCode === 89 && (event.ctrlKey || event.metaKey)) {
-      this.props.redo()
-      event.preventDefault()
-    }
-  }
-  componentDidMount() {
-    document.addEventListener('keydown', this.keydown, false)
-  }
   componentDidUpdate() {
     ReactTooltip.rebuild()
-  }
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.keydown, false)
   }
   render() {
     const { imports, declarations, defaultExport } = this.props
@@ -86,14 +63,9 @@ class Editor extends React.Component {
 
 /* propTypes */
 Editor.propTypes = forbidExtraProps({
-  // data
   imports: T.arrayOf(T.object).isRequired,
   declarations: T.arrayOf(T.object).isRequired,
   defaultExport: T.number,
-
-  // action dispatchers
-  undo: T.func.isRequired,
-  redo: T.func.isRequired,
 })
 
 Editor.defaultProps = {

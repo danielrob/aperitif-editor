@@ -4,7 +4,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { createStructuredSelector } from 'reselect'
-import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
 import { compose } from 'utils'
 
@@ -18,6 +17,7 @@ import {
   selectDeclarations,
   selectCurrentFileId,
 } from 'selectors'
+import { KeyPressListeners } from 'containers'
 
 import {
   getCurrentFileImports,
@@ -39,6 +39,7 @@ class EditorContainer extends React.Component {
     } = this.props
     return connectDropTarget(
       <div style={{ overflow: 'auto', paddingBottom: '200px' }}>
+        <KeyPressListeners />
         <Editor {...props} />
       </div>
     )
@@ -59,8 +60,6 @@ EditorContainer.propTypes = forbidExtraProps({
   mergeFile: T.func.isRequired,
   removeProp: T.func.isRequired,
   removeComponentInvocation: T.func.isRequired,
-  undo: T.func.isRequired,
-  redo: T.func.isRequired,
 
   // dnd
   connectDropTarget: T.func.isRequired,
@@ -83,14 +82,10 @@ const mapStateToProps = createStructuredSelector({
   projectDeclarations: selectDeclarations,
 })
 
-const { undo, redo } = UndoActionCreators
-
 const mapDispatchToProps = {
   mergeFile,
   removeProp,
   removeComponentInvocation,
-  undo,
-  redo,
 }
 
 
