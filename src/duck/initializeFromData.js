@@ -118,7 +118,6 @@ export default function initializeFromData(state, apiResponse) {
   const renderDataConstDeclaration = Declaration.create({
     type: CONST,
     nameId: dataNameId,
-    text: 'this.state.data',
   })
 
 

@@ -17,11 +17,10 @@ const Props = ({ params, spreadParams, declarationId, depth, parentheses }) => (
     <br />
     <span>
       {params
-        .map((param, i) => (
+        .map(param => (
           <React.Fragment key={param.nameId}>
             {indent(depth || 1)}
             <PropContainer
-              isLast={i === params.length - 1}
               {...param}
               declarationId={declarationId}
             />
@@ -30,7 +29,12 @@ const Props = ({ params, spreadParams, declarationId, depth, parentheses }) => (
         ))}
       {!params.length && '()'}
     </span>
-    <SpreadPropsContainer spreadParams={spreadParams} declarationId={declarationId} params={params} />{' '}
+    <SpreadPropsContainer
+      spreadParams={spreadParams}
+      declarationId={declarationId}
+      params={params}
+      depth={depth}
+    />{' '}
     {!!params.length && indent((depth || 1) - 1)}
     {!!params.length && '}'}
     {!!params.length && parentheses && ')'}{' '}

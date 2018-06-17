@@ -3,10 +3,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget, DragSource } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
+import { createStructuredSelector } from 'reselect'
 
 import { compose } from 'utils'
 import { DraggableTypes } from 'constantz'
 import { moveParamToSpread } from 'duck'
+import { selectNames } from 'selectors'
 
 import { SpreadProps } from '../components'
 
@@ -24,6 +26,10 @@ class SpreadPropsContainer extends React.PureComponent {
 
 /* connect */
 const mapDispatchToProps = { moveParamToSpread }
+
+const mapStateToProps = createStructuredSelector({
+  names: selectNames,
+})
 
 /* dnd */
 // source
@@ -58,7 +64,7 @@ const targetCollect = (connect, monitor) => ({
 
 /* compose export */
 export default compose(
-  connect(null, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   DragSource(DraggableTypes.PROPS_SPREAD, sourceSpec, sourceCollect),
   DropTarget(DraggableTypes.PROP, dropzoneTarget, targetCollect),
 )(SpreadPropsContainer)
