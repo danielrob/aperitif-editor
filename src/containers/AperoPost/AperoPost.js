@@ -18,7 +18,9 @@ class AperoPost extends React.PureComponent {
   }
   populate = () => {
     this.setState({
-      textarea: JSON.stringify(Math.random() > 0.49 ? apiArrayResponse : apiObjectResponse, null, 2),
+      textarea: JSON.stringify(
+        Math.random() > 0.49 ? apiArrayResponse : apiObjectResponse, null, 2
+      ),
     })
   }
   intialize = () => {
@@ -47,6 +49,12 @@ class AperoPost extends React.PureComponent {
     }
 
     this.setState({ error })
+  }
+
+  componentDidMount() {
+    if (process.env.NODE_ENV === 'development') {
+      this.props.initializeApp(apiArrayResponse)
+    }
   }
 
   render() {
