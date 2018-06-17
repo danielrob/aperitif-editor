@@ -12,9 +12,9 @@ export default styled(() => <PlusIcon />).as.span`
   display: inline-block;
   border: 1px solid #4e141421;
   border-radius: 8px;
-  padding: 2px 5px;
+  padding: 2px 4px;
   line-height: 0;
-  transform: translateY(-1px);
+  transform: translateY(-1.5px);
   margin-bottom: 5px;
   margin-left: ${props => props.left || 0}px;
 `

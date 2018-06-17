@@ -32,7 +32,7 @@ class File extends React.Component {
         <FileName {...this.props}>
           {isCurrent && (
             <span role="img" aria-label="pointer" className="pointer">
-              👉{' '}
+              👉
             </span>
           )}
           {type === fileTypes.JS && <ReactIcon />}
@@ -48,16 +48,8 @@ class File extends React.Component {
             { captureDraggingState: true }
           )}
           {type && type !== fileTypes.DIR && `.${type}`}
-          {name === 'components' && (
-            <React.Fragment>
-              <AddButton left="11" />
-            </React.Fragment>
-          )}
-          {name === 'containers' && (
-            <React.Fragment>
-              <AddButton left="11" />
-            </React.Fragment>
-          )}
+          {name === 'components' && <AddButton left="10" />}
+          {name === 'containers' && <AddButton left="10" />}
         </FileName>
         {fileChildren.map(fileId => (
           <FileContainer key={fileId} fileId={fileId} parentName={name} path={[...path, fileId]} />
@@ -93,7 +85,7 @@ File.propTypes = forbidExtraProps({
 
 export default styled(File).as.div`
   ${props => props.parentName && 'cursor: pointer;'}
-  ${props => props.parentName && 'margin-left: 10px;'}
+  ${props => props.parentName && 'margin-left: 15px;'}
   ${props => props.isDirectory && 'padding: 5px 0;'}
   .pointer {
     margin-right: -10px;
