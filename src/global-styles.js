@@ -180,4 +180,8 @@ injectGlobal`
     /* Move the label to the top */
     vertical-align:top;
   }
+
+  button {
+    cursor: pointer;
+  }
 `

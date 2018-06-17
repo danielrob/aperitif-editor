@@ -1,6 +1,6 @@
 import undoable, { groupByActionTypes } from 'redux-undo'
 
-import coreReducer, { UPDATE_NAME } from './core'
+import coreReducer, { UPDATE_NAME } from './duck'
 import editorReducer from './editor'
 import preferencesReducer from './preferences'
 
@@ -15,6 +15,6 @@ function reduceReducers(state = getInitialState(), action) {
   return reducers.reduce((state, reducer) => reducer(state, action), state)
 }
 
-export * from './core'
+export * from './duck'
 export * from './editor'
 export * from './preferences'

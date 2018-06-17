@@ -4,7 +4,7 @@ import { selectFiles, selectCurrentFileId, selectDeclarations } from 'selectors'
 export const selectCurrentFile = createSelector(
   selectFiles,
   selectCurrentFileId,
-  (files, currentFileId) => files[currentFileId]
+  (files, currentFileId) => currentFileId ? files[currentFileId] : null
 )
 
 export const getCurrentFileDeclarations = createSelector(

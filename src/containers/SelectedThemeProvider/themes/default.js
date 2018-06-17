@@ -6,6 +6,7 @@ export default {
     darkblue: '#010431',
     washedpink: '#ffc3f90a',
     orange: '#925e24',
+    error: '#8e0726',
   },
-  indentWidth: '10px',
+  lineHeightInPx: '24px',
 }

@@ -22,6 +22,9 @@ import {
   ID_NAME_ID,
 } from './getInitialState'
 
+import initializeFromData from './initializeFromData'
+
+export const INTIALIZE_APP = 'INTIALIZE_APP'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
@@ -48,6 +51,10 @@ export default function appReducer(state, action) {
   const { Name, DeclParam, CallParam, Declaration, Invocation, File } = session
 
   switch (action.type) {
+    case INTIALIZE_APP: {
+      return initializeFromData(state, action.payload)
+    }
+
     case CONVERT_TO_CLASS_COMPONENT: {
       const { declarationId } = action.payload
       const { invocationIds, declParamIds } = Declaration.withId(declarationId).ref()
@@ -273,7 +280,7 @@ export default function appReducer(state, action) {
 
     case MOVE_DECLARATION_TO_FILE: {
       const { targetDirectoryId, declarationId } = action.payload
-      const { currentFileId } = state
+      const { editor: { currentFileId } } = state
 
       const { nameId } = Declaration.withId(declarationId).ref()
 
@@ -609,6 +616,10 @@ export default function appReducer(state, action) {
       return state
   }
 }
+
+export const initializeApp = createAction(
+  INTIALIZE_APP
+)
 
 export const addNewComponentToInvocationWithChildren = createAction(
   ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN

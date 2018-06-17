@@ -17,7 +17,7 @@ import {
   selectDeclarations,
   selectCurrentFileId,
 } from 'selectors'
-import { KeyPressListeners } from 'containers'
+import { KeyPressListeners, AperoPost } from 'containers'
 
 import {
   getCurrentFileImports,
@@ -30,7 +30,7 @@ class EditorContainer extends React.Component {
   render() {
     const {
       connectDropTarget,
-      currentFileId, // dnd only
+      currentFileId,
       projectDeclarations, // dnd only
       mergeFile, // dnd only
       removeProp, // dnd only
@@ -38,9 +38,9 @@ class EditorContainer extends React.Component {
       ...props
     } = this.props
     return connectDropTarget(
-      <div style={{ overflow: 'auto', paddingBottom: '200px' }}>
+      <div style={{ overflow: 'auto' }}>
         <KeyPressListeners />
-        <Editor {...props} />
+        {currentFileId ? <Editor {...props} /> : <AperoPost />}
       </div>
     )
   }
