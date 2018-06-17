@@ -2,30 +2,36 @@ import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
+import { indent } from 'utils'
 import { paramPropTypes } from 'model-prop-types'
 import { sortProps } from './helpers'
 
 import { SpreadPropsContainer, PropContainer } from './containers'
 
 // A param is a prop, ...is a param is a prop ♪♫♬ ♪♫♬
-const Props = ({ params, spreadParams, declarationId }) => (
+const Props = ({ params, spreadParams, declarationId, depth }) => (
   <React.Fragment>
     {' '}
     {!!params.length && '({'}{' '}
+    <br />
     <span>
       {params
-        .sort(sortProps)
         .map((param, i) => (
-          <PropContainer
-            key={param.name}
-            isLast={i === params.length - 1}
-            {...param}
-            declarationId={declarationId}
-          />
+          <React.Fragment>
+            {indent(depth || 1)}
+            <PropContainer
+              key={param.name}
+              isLast={i === params.length - 1}
+              {...param}
+              declarationId={declarationId}
+            />
+            <br />
+          </React.Fragment>
         ))}
       {!params.length && '()'}
     </span>
     <SpreadPropsContainer spreadParams={spreadParams} declarationId={declarationId} params={params} />{' '}
+    {!!params.length && indent((depth || 1) - 1)}
     {!!params.length && '})'}{' '}
   </React.Fragment>
 )

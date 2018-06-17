@@ -11,12 +11,14 @@ import {
   StyledComponent,
   ProjectIndex,
   Standard,
+  JsonText,
 } from 'components'
 import {
   STATELESS_FUNCTION_COMPONENT,
   STYLED_COMPONENT,
   CLASS_COMPONENT,
   PROJECT_INDEX,
+  JSON_TYPE,
 } from 'constantz'
 
 import { Imports, DefaultExport } from './'
@@ -26,6 +28,7 @@ const renderers = {
   [STYLED_COMPONENT]: StyledComponent,
   [CLASS_COMPONENT]: ClassComponent,
   [PROJECT_INDEX]: ProjectIndex,
+  [JSON_TYPE]: JsonText,
 }
 
 class Editor extends React.Component {

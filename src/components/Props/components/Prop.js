@@ -34,5 +34,5 @@ Prop.propTypes = {
 export default styled(Prop).as.div`
   display: inline-block;
   cursor: pointer;
-  color: ${theme.colors.darkgreen};
+  // color: ${theme.colors.darkgreen};
 `

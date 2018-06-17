@@ -21,6 +21,7 @@
     "react-helmet": "^5.2.0",
     "react-input-autosize": "^2.2.1",
     "react-intl": "^2.4.0",
+    "react-json-syntax-highlighter": "^0.2.0",
     "react-loadable": "^5.4.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",

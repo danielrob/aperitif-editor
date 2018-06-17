@@ -2,10 +2,11 @@ export const RESOLVE_ALIASES = ['containers', 'components']
 
 /* fileTypes */
 export const JS = 'js'
+export const JSON_TYPE = 'json'
 export const DIR = 'dir'
 
-export const fileTypes = { JS, DIR }
-export const fileTypesArray = [JS, DIR]
+export const fileTypes = { JS, DIR, JSON_TYPE }
+export const fileTypesArray = [JS, DIR, JSON_TYPE]
 
 /* declarationTypes */
 export const PROJECT_INDEX = 'top level index.js file'
@@ -59,6 +60,7 @@ export const FILE = 'file'
 export const COMPONENT_INVOCATION = 'component invocation'
 export const PARAM_INVOCATION = 'param invocation'
 export const VAR_INVOCATION = 'var invocation'
+export const IMPORT_VAR = 'import var'
 export const ARRAY_MAP_METHOD = '.map invocation'
 
 export const DraggableTypes = {

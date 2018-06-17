@@ -8,6 +8,8 @@ import {
   STATELESS_FUNCTION_COMPONENT,
   CLASS_COMPONENT,
   RESOLVE_ALIASES,
+  IMPORT_VAR,
+  JSON_TYPE,
 } from 'constantz'
 
 import {
@@ -52,7 +54,7 @@ export const getCurrentFileImports = createSelector(
         declarations.find(({ type, declParamIds }) =>
           declParamIds.length && [STATELESS_FUNCTION_COMPONENT, CLASS_COMPONENT].includes(type))
       ) {
-        imports.push({ id: 'prop-types', importName: 'T', source: 'prop-types', order: -1 })
+        imports.push({ id: 'prop-types', importName: 'PropTypes', source: 'prop-types', order: -1 })
       }
 
       // For the invocations in the invocation trees in the declaration trees of the declarations...
@@ -117,12 +119,13 @@ const isAnImportInvocation = (invocationNameId, type, declarations, source) =>
   source ||
   (
     !declarations.find(({ nameId }) => nameId === invocationNameId) &&
-    [COMPONENT_INVOCATION].includes(type)
+    [COMPONENT_INVOCATION, IMPORT_VAR].includes(type)
   )
 
 
 const getRelativePath = (currentFile, declarationId, files, declarations, names, nameId) => {
   const { fileId: sourceFileId } = declarations[declarationId]
+  const resolveSuffix = files[sourceFileId].type === JSON_TYPE ? '.json' : ''
 
   let currentFileAncestor = currentFile
   let backwardsPath = ''
@@ -150,5 +153,5 @@ const getRelativePath = (currentFile, declarationId, files, declarations, names,
     !sourceAncestor.parentId &&
     RESOLVE_ALIASES.find(alias => forwardsPath.startsWith(alias))
 
-  return indexedAlias || `${backwardsPath || './'}${forwardsPath}`
+  return indexedAlias || `${backwardsPath || './'}${forwardsPath}${resolveSuffix}`
 }

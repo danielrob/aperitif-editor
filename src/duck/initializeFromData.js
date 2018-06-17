@@ -3,6 +3,8 @@ import C from 'check-types'
 
 import {
   DIR,
+  JSON_TYPE,
+  IMPORT_VAR,
   STYLED_COMPONENT,
   ARRAY_MAP_METHOD,
   VAR_INVOCATION,
@@ -157,12 +159,26 @@ export default function initializeFromData(state, apiResponse) {
     })
   }
 
+  // sampleResponse.json
+  const exampleResponseNameId = Name.create('exampleResponse')
+  const responseJsonDeclaration = Declaration.create({
+    type: JSON_TYPE,
+    nameId: exampleResponseNameId,
+    text: apiResponse,
+    exportType: false,
+  })
+
   // File.withId(CONTAINERS_FILE_ID).update({ children:
   const containerChildren = [
     File.create({
       nameId: appContainerNameId,
       type: DIR,
       children: [
+        File.create({
+          type: JSON_TYPE,
+          nameId: exampleResponseNameId,
+          declarationIds: [responseJsonDeclaration],
+        }),
         File.create({
           nameId: INDEX_NAME_ID,
           declarationIds: [
@@ -173,10 +189,12 @@ export default function initializeFromData(state, apiResponse) {
                 Declaration.create({
                   nameId: Name.create('state'),
                   type: CLASS_PROP,
-                  declParamIds: [
-                    DeclParam.create({
-                      nameId: dataNameId,
-                      assignNameId: Name.create('sampleApiResponse'),
+                  invocationIds: [
+                    Invocation.create({
+                      nameId: exampleResponseNameId,
+                      type: IMPORT_VAR,
+                      declarationId: responseJsonDeclaration,
+                      inline: true,
                     }),
                   ],
                 }),
@@ -211,8 +229,8 @@ export default function initializeFromData(state, apiResponse) {
     ...session.state,
     editor: {
       rootFiles: [...session.state.editor.rootFiles, indexFile],
-      currentFileId: 3,
-      selectedFileId: 3,
+      currentFileId: 7,
+      selectedFileId: 7,
     },
   }
 }

@@ -39,22 +39,22 @@ const PropTypes = ({ props, nameId }) => {
 
 export default PropTypes
 
-const getPropType = (payload, nested) => {
+const getPropType = (payload, name, nested) => {
   if (C.null(payload)) {
-    return 'T.any'
+    return 'PropTypes.any'
   }
   if (C.string(payload)) {
-    return 'T.string'
+    return 'PropTypes.string'
   }
   if (C.boolean(payload)) {
-    return 'T.bool'
+    return 'PropTypes.bool'
   }
   if (C.number(payload)) {
-    return 'T.number'
+    return 'PropTypes.number'
   }
   if (C.object(payload)) {
     if (nested) {
-      return 'T.object'
+      return 'PropTypes.object'
     }
     return (
       <React.Fragment>
@@ -70,7 +70,7 @@ const getPropType = (payload, nested) => {
             >
               {key}
             </span>
-            : {getPropType(payload[key], true)},
+            : {getPropType(payload[key], null, true)},
             <br />
           </React.Fragment>
         ))}
@@ -81,8 +81,8 @@ const getPropType = (payload, nested) => {
   }
   if (C.array(payload)) {
     if (nested) {
-      return 'T.array'
+      return 'PropTypes.array'
     }
-    return `T.arrayOf(${getPropType(payload[0], true)})`
+    return `PropTypes.arrayOf(${getPropType(payload[0], null, true)})`
   }
 }

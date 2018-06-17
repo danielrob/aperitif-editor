@@ -6,6 +6,7 @@ import {
   PARAM_INVOCATION,
   ARRAY_MAP_METHOD,
   VAR_INVOCATION,
+  IMPORT_VAR,
 } from 'constantz'
 import { ArrayMapInvocation, VarInvocation } from 'components'
 import {
@@ -20,6 +21,7 @@ const types = () => ({
   [PARAM_INVOCATION]: ParamInvocationContainer,
   [ARRAY_MAP_METHOD]: ArrayMapInvocation,
   [VAR_INVOCATION]: VarInvocation,
+  [IMPORT_VAR]: VarInvocation,
 })
 
 const JSX = ({ invocationId, initial, ...props }) => (

@@ -26,6 +26,7 @@ export default class ClassMethod extends React.Component {
                       params={nonSpreadProps}
                       spreadParams={spreadProps}
                       declarationId={declarationId}
+                      depth={3}
                     />
                     <span> = <Keyword>this</Keyword>.props</span>
                   </span>
