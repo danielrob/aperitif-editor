@@ -55,12 +55,12 @@ const makeMapStateToProps = () => {
 const propSource = {
   beginDrag(props) {
     const {
-      invocation: { callParamId, name, invocationId },
+      invocation: { callParamId, nameId, invocationId },
       parentId,
     } = props
     return {
       // hover preview
-      name,
+      nameId,
       type: PARAM_INVOCATION,
       // drop
       sourceParentId: parentId,

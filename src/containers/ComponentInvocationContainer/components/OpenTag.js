@@ -9,6 +9,7 @@ import { invocationPropTypes } from 'model-prop-types'
 import { PROP, PROPS_SPREAD } from 'constantz'
 import { indent } from 'utils'
 import { Input } from 'components'
+import { Name } from 'containers'
 
 const OpenTag = ({
   isOverOpenTag,
@@ -56,15 +57,15 @@ const OpenTag = ({
           {'}'}
         </span>
       )}
-      {standardCallParams.map(({ id, declIsSpreadMember, name, valueString = name }) =>
+      {standardCallParams.map(({ id, declIsSpreadMember, nameId, valueString }) =>
         !((hasPropsSpread || spreadPropsIsOver) && declIsSpreadMember) && (
           <span key={id}>
             {' '}
-            {name}
+            <Name nameId={nameId} />
             =
             {'{'}
             {declIsSpreadMember && 'props.'}
-            {valueString}
+            {valueString || <Name nameId={nameId} />}
             {'}'}
           </span>
         ))}

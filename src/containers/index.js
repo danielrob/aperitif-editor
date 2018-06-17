@@ -1,4 +1,5 @@
 export { default as AperoPost } from './AperoPost'
+export { default as Name } from './Name'
 export { default as App } from './App'
 export { default as DeclarationContainer } from './DeclarationContainer'
 export { default as ComponentInvocationContainer } from './ComponentInvocationContainer'

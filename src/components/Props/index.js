@@ -4,7 +4,7 @@ import styled from 'styled-as-components'
 
 import { indent } from 'utils'
 import { paramPropTypes } from 'model-prop-types'
-import { sortProps } from './helpers' // FIXME -> needs to be deterministic
+// import { sortProps } from './helpers' // FIXME -> needs to be deterministic
 
 import { SpreadPropsContainer, PropContainer } from './containers'
 
@@ -18,10 +18,9 @@ const Props = ({ params, spreadParams, declarationId, depth, parentheses }) => (
     <span>
       {params
         .map((param, i) => (
-          <React.Fragment>
+          <React.Fragment key={param.nameId}>
             {indent(depth || 1)}
             <PropContainer
-              key={param.name}
               isLast={i === params.length - 1}
               {...param}
               declarationId={declarationId}

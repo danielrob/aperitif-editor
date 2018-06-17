@@ -335,8 +335,10 @@ export default function appReducer(state, action) {
       const {
         targetInvocationId,
         targetPosition,
-        prop: { paramId, name, nameId },
+        prop: { paramId, nameId },
       } = action.payload
+
+      const name = Name.withId(nameId).ref()
 
       const newNameId = Name.create(capitalize(name))
 
@@ -382,8 +384,10 @@ export default function appReducer(state, action) {
       const {
         targetInvocationId,
         targetPosition,
-        prop: { name, payload },
+        prop: { nameId, payload },
       } = action.payload
+
+      const name = Name.withId(nameId).ref()
 
       // params
       const payloadDeclParams = Object.keys(payload).map(key =>
@@ -421,8 +425,9 @@ export default function appReducer(state, action) {
       const {
         targetInvocationId,
         targetPosition,
-        prop: { paramId, name, nameId, payload },
+        prop: { paramId, nameId, payload },
       } = action.payload
+      const name = Name.withId(nameId).ref()
 
       // payload is certfied checkTypes.array.of.object 🚀
       // some level of uniformity in payload data is assumed
@@ -480,8 +485,9 @@ export default function appReducer(state, action) {
       const {
         targetInvocationId,
         targetPosition,
-        prop: { paramId, name: baseName, nameId },
+        prop: { paramId, nameId },
       } = action.payload
+      const baseName = Name.withId(nameId).ref()
 
       const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,
@@ -514,8 +520,9 @@ export default function appReducer(state, action) {
       const {
         targetInvocationId,
         targetPosition,
-        prop: { paramId, name: baseName, nameId, payload },
+        prop: { paramId, nameId, payload },
       } = action.payload
+      const baseName = Name.withId(nameId).ref()
 
       const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,

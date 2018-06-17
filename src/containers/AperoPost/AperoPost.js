@@ -10,7 +10,7 @@ import apiObjectResponse from './apiObjectResponse.json'
 
 class AperoPost extends React.PureComponent {
   state = {
-    textarea: null,
+    textarea: '',
     error: null,
   }
   onChange = e => {
@@ -50,7 +50,6 @@ class AperoPost extends React.PureComponent {
   }
 
   render() {
-    const { ...props } = this.props
     const { textarea, error } = this.state
 
     return (
@@ -58,7 +57,7 @@ class AperoPost extends React.PureComponent {
         Apéro uses the response shapes of api endpoints intelligently.
         <br />
         <br />
-        <Flex end>
+        <Flex aiend>
           <TextArea
             value={textarea}
             name="apiResponseData"

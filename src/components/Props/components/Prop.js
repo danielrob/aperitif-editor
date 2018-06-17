@@ -5,8 +5,9 @@ import JSstringify from 'javascript-stringify'
 
 import theme from 'theme-proxy'
 import { spaces } from 'utils'
+import { Name } from 'containers'
 
-const Prop = ({ name, isLast, payload, connectDragSource }) => (
+const Prop = ({ nameId, isLast, payload, connectDragSource }) => (
   <React.Fragment>
     {connectDragSource(
       <span
@@ -17,7 +18,7 @@ const Prop = ({ name, isLast, payload, connectDragSource }) => (
         data-for="prop"
         data-delay-show="100"
       >
-        {name}
+        <Name nameId={nameId} />
       </span>
     )}
     {!isLast && `,${spaces(1)}`}
@@ -25,7 +26,7 @@ const Prop = ({ name, isLast, payload, connectDragSource }) => (
 )
 
 Prop.propTypes = {
-  name: T.string.isRequired,
+  nameId: T.number.isRequired,
   isLast: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
   declarationId: T.number.isRequired,

@@ -9,12 +9,11 @@ import { Prop } from '../components'
 
 /* dnd */
 const propSource = {
-  beginDrag({ id, name, nameId, payload, declarationId, count }) {
+  beginDrag({ id, nameId, payload, declarationId, count }) {
     ReactTooltip.hide() // disable tooltips
     return {
       declarationId,
       paramId: id,
-      name,
       nameId,
       payload,
       type: PROP,

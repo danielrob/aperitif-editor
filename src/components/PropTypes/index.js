@@ -5,8 +5,9 @@ import JSstringify from 'javascript-stringify'
 
 import { indent } from 'utils'
 import { Input, Line } from 'components'
+import { Name } from 'containers'
 
-import { sortProps } from 'components/Props/helpers'
+// import { sortProps } from 'components/Props/helpers' // Fixme
 
 const PropTypes = ({ props, nameId }) => {
   const maxCount = (maxBy(props, 'count') || { count: 0 }).count
@@ -14,17 +15,17 @@ const PropTypes = ({ props, nameId }) => {
     <React.Fragment>
       <br />
       <Input nameId={nameId} />.propTypes = {'{'}
-      {props.sort(sortProps).map(
-        ({ name, count, payload }) =>
+      {props.map(
+        ({ nameId, count, payload }) =>
           count && (
-            <div key={name}>
+            <div key={nameId}>
               {indent(1)}
               <span
                 data-tip={JSstringify(payload, null, 2)}
                 data-for="prop"
                 data-delay-show="250"
               >
-                {name}
+                <Name nameId={nameId} />
               </span>
               : {getPropType(payload)}
               {count === maxCount && C.not.null(payload) && '.isRequired'}
@@ -39,22 +40,22 @@ const PropTypes = ({ props, nameId }) => {
 
 export default PropTypes
 
-const getPropType = (payload, name, nested) => {
+const getPropType = (payload, pTName = 'PropTypes', nested) => {
   if (C.null(payload)) {
-    return 'PropTypes.any'
+    return `${pTName}.any`
   }
   if (C.string(payload)) {
-    return 'PropTypes.string'
+    return `${pTName}.string`
   }
   if (C.boolean(payload)) {
-    return 'PropTypes.bool'
+    return `${pTName}.bool`
   }
   if (C.number(payload)) {
-    return 'PropTypes.number'
+    return `${pTName}.number`
   }
   if (C.object(payload)) {
     if (nested) {
-      return 'PropTypes.object'
+      return `${pTName}.object`
     }
     return (
       <React.Fragment>
@@ -81,8 +82,8 @@ const getPropType = (payload, name, nested) => {
   }
   if (C.array(payload)) {
     if (nested) {
-      return 'PropTypes.array'
+      return `${pTName}.array`
     }
-    return `PropTypes.arrayOf(${getPropType(payload[0], null, true)})`
+    return `${pTName}.arrayOf(${getPropType(payload[0], null, true)})`
   }
 }

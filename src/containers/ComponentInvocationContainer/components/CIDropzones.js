@@ -6,6 +6,7 @@ import { singular } from 'pluralize'
 
 import theme from 'theme-proxy'
 import { capitalize, indent, oneOf } from 'utils'
+import { Name } from 'containers'
 import { PROP, PARAM_INVOCATION, DIR, FILE, COMPONENT_INVOCATION } from 'constantz'
 import {
   PropDropzoneContainer,
@@ -15,71 +16,78 @@ import {
 
 const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay }) => {
   const dropZoneProps = { targetInvocationId: invocationId, targetPosition: position }
-  const { type, name, dropName, payload } = dragItem || {}
+  const { type, nameId, dropName, payload } = dragItem || {}
 
-  return shouldDisplay && type ? (
-    <React.Fragment>
-      {indent(depth + 1)}
-      <Zones>
-        {/* reordering */}
-        {[COMPONENT_INVOCATION].includes(type) && (
-          <ReorderDropzoneContainer {...dropZoneProps} {...dragItem} />
-        )}
-        {[PARAM_INVOCATION].includes(type) && (
-          <PropDropzoneContainer {...dropZoneProps}>
-            {`{${name}}`}
-          </PropDropzoneContainer>
-        )}
-        {/* prop options */}
-        {[PROP].includes(type) && (
-          <React.Fragment>
-            {oneOf(C.string, C.number, C.null)(payload) && (
-              <PropDropzoneContainer {...dropZoneProps} dropActionKey="asParamInvocation">
+  return shouldDisplay && type ?
+    <Name
+      nameId={nameId}
+      render={name => (
+        <React.Fragment>
+          {indent(depth + 1)}
+          <Zones>
+            {/* reordering */}
+            {[COMPONENT_INVOCATION].includes(type) && (
+              <ReorderDropzoneContainer {...dropZoneProps} {...dragItem} />
+            )}
+            {[PARAM_INVOCATION].includes(type) && (
+              <PropDropzoneContainer {...dropZoneProps}>
                 {`{${name}}`}
               </PropDropzoneContainer>
             )}
-            {oneOf(C.string, C.number, C.null)(payload) && (
-              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithAttribute">
-                {'<'}{capitalize(name)}
-                {` ${name}={${name}}`}
-                {'/>'}
-              </PropDropzoneContainer>
+            {/* prop options */}
+            {[PROP].includes(type) && (
+              <React.Fragment>
+                {oneOf(C.string, C.number, C.null)(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="asParamInvocation">
+                    {`{${name}}`}
+                  </PropDropzoneContainer>
+                )}
+                {oneOf(C.string, C.number, C.null)(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithAttribute">
+                    {'<'}{capitalize(name)}
+                    {` ${name}={${name}}`}
+                    {'/>'}
+                  </PropDropzoneContainer>
+                )}
+                {C.object(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithSpread">
+                    {`<${capitalize(name)} ...{${name}} />`}
+                  </PropDropzoneContainer>
+                )}
+                {oneOf(C.string, C.number, C.null)(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyled">
+                    {'<Styled>'}{'{'}{name}{'}'}{'</Styled>'}
+                  </PropDropzoneContainer>
+                )}
+                {oneOf(C.string, C.number, C.null)(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithChild">
+                    {'<'}{capitalize(name)}{'>'}<br />
+                    {indent(1)}{'{'}{name}{'}'}<br />
+                    {'</'}{capitalize(name)}{'>'}
+                  </PropDropzoneContainer>
+                )}
+                {oneOf(C.array.of.object)(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithMap">
+                    {'{'}{name}.map({singular(name)} => (<br />
+                    {indent(1)}
+                    {'<'}{capitalize(singular(name))}
+                    {` key={${singular(name)}.id} {...${singular(name)}} />`}
+                    <br />
+                    )){'}'}
+                  </PropDropzoneContainer>
+                )}
+              </React.Fragment>
             )}
-            {C.object(payload) && (
-              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithSpread">
-                {`<${capitalize(name)} ...{${name}} />`}
-              </PropDropzoneContainer>
+            {/* file */}
+            {[DIR, FILE].includes(type) && (
+              <AddInvocationFromFileDropzone {...dropZoneProps}>
+                {'<'}{dropName}{' />'}
+              </AddInvocationFromFileDropzone>
             )}
-            {oneOf(C.string, C.number, C.null)(payload) && (
-              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyled">
-                {'<Styled>'}{'{'}{name}{'}'}{'</Styled>'}
-              </PropDropzoneContainer>
-            )}
-            {oneOf(C.string, C.number, C.null)(payload) && (
-              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithChild">
-                {'<'}{capitalize(name)}{'>'}<br />
-                {indent(1)}{'{'}{name}{'}'}<br />
-                {'</'}{capitalize(name)}{'>'}
-              </PropDropzoneContainer>
-            )}
-            {oneOf(C.array.of.object)(payload) && (
-              <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithMap">
-                {'{'}{name}.map({singular(name)} => (<br />
-                {indent(1)}{'<'}{capitalize(singular(name))}{` key={${singular(name)}.id} {...${singular(name)}} />`}<br />
-                )){'}'}
-              </PropDropzoneContainer>
-            )}
-          </React.Fragment>
-        )}
-        {/* file */}
-        {[DIR, FILE].includes(type) && (
-          <AddInvocationFromFileDropzone {...dropZoneProps}>
-            {'<'}{dropName}{' />'}
-          </AddInvocationFromFileDropzone>
-        )}
-      </Zones>
-    </React.Fragment>
-  ) : null
+          </Zones>
+        </React.Fragment>
+      )}
+    /> : null
 }
 
 

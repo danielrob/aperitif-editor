@@ -3,7 +3,6 @@ import T from 'prop-types'
 // makeSelectInvocation
 export const invocationPropTypes = T.shape({
   invocationId: T.number.isRequired,
-  name: T.string.isRequired,
   nameId: T.number.isRequired,
   invocationIds: T.arrayOf(T.number).isRequired,
   callParams: T.arrayOf(T.object).isRequired,
@@ -17,7 +16,7 @@ export const invocationPropTypes = T.shape({
 export const paramInvocationPropTypes = T.shape({
   invocationId: T.number.isRequired,
   callParamId: T.number.isRequired,
-  name: T.string.isRequired,
+  nameId: T.string.isRequired,
   declIsSpreadMember: T.bool.isRequired,
   chainedInvocations: T.arrayOf(T.object),
 })
@@ -26,7 +25,6 @@ export const paramInvocationPropTypes = T.shape({
 // param
 export const paramPropTypes = {
   id: T.number.isRequired,
-  name: T.string.isRequired,
   nameId: T.number.isRequired,
   payload: T.any,
   isSpreadMember: T.bool.isRequired,

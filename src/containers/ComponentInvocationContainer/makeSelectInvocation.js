@@ -24,7 +24,6 @@ const makeSelectInvocation = () => createSelector(
     return {
       invocationId,
       nameId,
-      name: names[nameId],
       type,
       invocationIds,
       callParams: callParamIds.map(id => {
@@ -35,7 +34,7 @@ const makeSelectInvocation = () => createSelector(
           const { id: paramId, valueNameIds, nameId } = callParams[id]
           return {
             id: paramId,
-            name: names[nameId],
+            nameId,
             valueString: valueNameIds.map(valueNameId => names[valueNameId]).join('.'),
           }
         }
@@ -43,7 +42,7 @@ const makeSelectInvocation = () => createSelector(
         const { nameId, isSpreadMember } = declParams[declParamId]
         return {
           id,
-          name: names[nameId],
+          nameId,
           declParamId,
           declIsSpreadMember: isSpreadMember,
         }

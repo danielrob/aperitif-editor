@@ -9,6 +9,7 @@ import { paramInvocationPropTypes } from 'model-prop-types'
 import { indent } from 'utils'
 
 import { JSX } from 'components'
+import { Name } from 'containers'
 
 const ParamInvocation = ({
   connectDragSource,
@@ -16,7 +17,7 @@ const ParamInvocation = ({
   parentId,
   depth,
   invocation: {
-    name,
+    nameId,
     declIsSpreadMember,
     invocationIds,
     inline,
@@ -28,7 +29,7 @@ const ParamInvocation = ({
       <div className="dragsource">
         {'{'}
         {declIsSpreadMember && 'props.'}
-        {name}
+        <Name nameId={nameId} />
         {invocationIds.length === 1 &&
           <JSX
             parentId={parentId}

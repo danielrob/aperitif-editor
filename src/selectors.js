@@ -6,27 +6,24 @@ import { sortAlphabetically } from 'utils'
 export const selectCurrentFileId = s => s.app.present.editor.currentFileId
 export const selectSelectedFileId = s => s.app.present.editor.selectedFileId
 export const selectRootFiles = s => s.app.present.editor.rootFiles
-export const selectNames = s => s.app.present.names
-export const selectFiles = s => s.app.present.files
-export const selectDeclarations = s => s.app.present.declarations
-export const selectInvocations = s => s.app.present.invocations
-export const selectCallParams = s => s.app.present.callParams
-export const selectDeclParams = s => s.app.present.declParams
+export const selectNames = s => s.app.present.names || {}
+export const selectFiles = s => s.app.present.files || {}
+export const selectDeclarations = s => s.app.present.declarations || {}
+export const selectInvocations = s => s.app.present.invocations || {}
+export const selectCallParams = s => s.app.present.callParams || {}
+export const selectDeclParams = s => s.app.present.declParams || {}
 export const selectPreferences = s => s.app.present.preferences
 
 /*
   Atomic model selectors
 */
 export const makeSelectInvocation = () => createSelector(
-  selectNames,
   selectInvocations,
   (state, props) => props.invocationId,
-  (names, invocations, invocationId) => {
-    const { id, nameId, ...rest } = invocations[invocationId]
+  (invocations, invocationId) => {
+    const { id, ...rest } = invocations[invocationId]
     return {
       invocationId,
-      name: names[nameId],
-      nameId,
       ...rest,
     }
   }
@@ -38,15 +35,12 @@ export const makeSelectInvocation = () => createSelector(
 export const makeSelectName = () => (state, props) => selectNames(state)[props.nameId]
 
 export const makeSelectDeclaration = () => createSelector(
-  selectNames,
   selectDeclarations,
   (state, props) => props.declarationId,
-  (names, declarations, declarationId) => {
-    const { id, nameId, ...rest } = declarations[declarationId]
+  (declarations, declarationId) => {
+    const { id, ...rest } = declarations[declarationId]
     return {
       declarationId,
-      name: names[nameId],
-      nameId,
       ...rest,
     }
   }

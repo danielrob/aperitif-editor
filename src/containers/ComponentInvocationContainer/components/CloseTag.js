@@ -3,11 +3,12 @@ import React from 'react'
 
 import { invocationPropTypes } from 'model-prop-types'
 import { indent } from 'utils'
+import { Name } from 'containers'
 
-const CloseTag = ({ depth, invocation: { inline, name, closed } }) => !closed ? (
+const CloseTag = ({ depth, invocation: { inline, nameId, closed } }) => !closed ? (
   <span>
     {!inline && indent(depth)}
-    {'<'}/{name}{'>'}
+    {'<'}/<Name nameId={nameId} />{'>'}
   </span>
 ) : null
 
