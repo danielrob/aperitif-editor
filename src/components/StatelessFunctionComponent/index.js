@@ -18,7 +18,7 @@ export default class StatelessFunctionComponent extends React.Component {
             text="const "
           />
           <Input nameId={nameId} /> =
-          <Props params={params} spreadParams={spreadParams} declarationId={declarationId} />
+          <Props params={params} spreadParams={spreadParams} declarationId={declarationId} parentheses />
            => (
           {invocations.length > 1 && '['}
         </Line>{' '}

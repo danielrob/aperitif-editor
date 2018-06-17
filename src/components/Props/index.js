@@ -4,15 +4,16 @@ import styled from 'styled-as-components'
 
 import { indent } from 'utils'
 import { paramPropTypes } from 'model-prop-types'
-import { sortProps } from './helpers'
+import { sortProps } from './helpers' // FIXME -> needs to be deterministic
 
 import { SpreadPropsContainer, PropContainer } from './containers'
 
 // A param is a prop, ...is a param is a prop ♪♫♬ ♪♫♬
-const Props = ({ params, spreadParams, declarationId, depth }) => (
+const Props = ({ params, spreadParams, declarationId, depth, parentheses }) => (
   <React.Fragment>
     {' '}
-    {!!params.length && '({'}{' '}
+    {!!params.length && parentheses && '('}
+    {!!params.length && '{'}{' '}
     <br />
     <span>
       {params
@@ -32,7 +33,8 @@ const Props = ({ params, spreadParams, declarationId, depth }) => (
     </span>
     <SpreadPropsContainer spreadParams={spreadParams} declarationId={declarationId} params={params} />{' '}
     {!!params.length && indent((depth || 1) - 1)}
-    {!!params.length && '})'}{' '}
+    {!!params.length && '}'}
+    {!!params.length && parentheses && ')'}{' '}
   </React.Fragment>
 )
 

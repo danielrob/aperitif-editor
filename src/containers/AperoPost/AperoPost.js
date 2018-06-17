@@ -86,6 +86,7 @@ const Error = styled.div`
 `
 
 const TextArea = styled.textarea`
+  white-space: nowrap;
   resize: none;
   border: 1px solid #ccc;
   outline: none;
