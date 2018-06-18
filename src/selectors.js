@@ -69,13 +69,16 @@ export const makeSelectFile = () => createSelector(
       files[id].isDirectory
     )
 
+    const isDir = !!children.length || type === DIR
 
     return {
+      fileId,
       nameId,
       name: names[nameId],
       type,
+      extension: type && !isDir ? `.${type}` : '',
       fileChildren: [...directories, ...fichiers],
-      isDirectory: !!children.length || type === DIR,
+      isDirectory: isDir,
       isCurrent: fileId === currentFileId,
       isSelected: fileId === selectedFileId,
       containsCurrent: children.includes(currentFileId),

@@ -6,9 +6,10 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { fileTypesArray, DIR, FILE, STYLED_COMPONENT, RESOLVE_ALIASES } from 'constantz'
+import { DIR, FILE, STYLED_COMPONENT, RESOLVE_ALIASES } from 'constantz'
 import { changeFile, moveDeclarationToFile, moveFile } from 'duck'
 import { makeSelectFile } from 'selectors'
+import { filePropTypes } from 'model-prop-types'
 
 import { File } from '../components'
 
@@ -22,11 +23,11 @@ class FileContainer extends React.PureComponent {
   render() {
     const {
       connectDragSource,
-      fileId, // eslint-disable-line no-unused-vars
-      declarationIds, // eslint-disable-line no-unused-vars
-      changeFile, // eslint-disable-line no-unused-vars
-      moveDeclarationToFile, // eslint-disable-line no-unused-vars
-      moveFile, // eslint-disable-line no-unused-vars
+      fileId, // dnd only
+      declarationIds, // dnd only
+      changeFile, // dnd only
+      moveDeclarationToFile, // dnd only
+      moveFile, // dnd only
       ...props
     } = this.props
 
@@ -49,15 +50,7 @@ FileContainer.propTypes = forbidExtraProps({
   path: T.arrayOf(T.number),
 
   // from makeSelectFile
-  nameId: T.number.isRequired,
-  name: T.string.isRequired,
-  type: T.oneOf(fileTypesArray).isRequired,
-  fileChildren: T.arrayOf(T.number).isRequired,
-  isDirectory: T.bool.isRequired,
-  declarationIds: T.arrayOf(T.number).isRequired,
-  isCurrent: T.bool.isRequired,
-  isSelected: T.bool.isRequired,
-  containsCurrent: T.bool.isRequired,
+  file: T.shape(filePropTypes).isRequired,
 
   // mapDispatchToProps
   changeFile: T.func.isRequired,
@@ -79,7 +72,9 @@ FileContainer.defaultProps = {
 /* connect */
 const makeMapStateToProps = () => {
   const getFile = makeSelectFile()
-  return (state, props) => getFile(state, props)
+  return (state, props) => ({
+    file: getFile(state, props),
+  })
 }
 
 const mapDispatchToProps = { changeFile, moveDeclarationToFile, moveFile }
@@ -87,11 +82,11 @@ const mapDispatchToProps = { changeFile, moveDeclarationToFile, moveFile }
 
 /* dnd */
 // source
-const getType = ({ isDirectory }) => (isDirectory ? DIR : FILE)
+const getType = ({ file: { isDirectory } }) => (isDirectory ? DIR : FILE)
 
 const sourceSpec = {
   beginDrag(props) {
-    const { fileId, isDirectory, declarationIds, name, parentName } = props
+    const { file: { fileId, isDirectory, declarationIds, name }, parentName } = props
     const dropName = (name.includes('index') && parentName) || name
     return {
       type: getType(props),
@@ -102,7 +97,7 @@ const sourceSpec = {
     }
   },
   canDrag(props) {
-    const { name, parentName } = props
+    const { file: { name }, parentName } = props
     return (
       !RESOLVE_ALIASES.includes(name) &&
       !(!parentName && name === 'index')
@@ -137,7 +132,7 @@ const dropzoneTarget = {
   },
 
   canDrop(props, monitor) {
-    const { fileId, isDirectory, path = [] } = props
+    const { fileId, file: { isDirectory }, path = [] } = props
     return (
       isDirectory &&
       monitor.isOver({ shallow: true }) &&
@@ -150,7 +145,7 @@ const targetCollect = connect => ({
   connectDropTarget: connect.dropTarget(),
 })
 
-const getTargetTypes = ({ isDirectory }) => isDirectory ?
+const getTargetTypes = ({ file: { isDirectory } }) => isDirectory ?
   [STYLED_COMPONENT, FILE, DIR] : []
 
 

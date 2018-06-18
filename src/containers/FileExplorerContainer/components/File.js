@@ -3,44 +3,41 @@ import { forbidExtraProps, or, explicitNull } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
-import { fileTypes, fileTypesArray } from 'constantz'
-import { Input, ReactIcon, FolderIcon, JSONIcon, AddButton } from 'components'
+import { Input } from 'components'
+import { filePropTypes } from 'model-prop-types'
 
-import { FileContainer } from '../containers'
+import { FileContainer, AddContainerButton, AddComponentButton } from '../containers'
+import FileIcon from './FileIcon'
 
 class File extends React.PureComponent {
   render() {
     const {
-      nameId,
-      name,
+      file,
+      file: {
+        nameId,
+        name,
+        extension,
+        fileChildren,
+        isSelected,
+        isContainersFolder = name === 'containers',
+        isComponentsFolder = name === 'components',
+      },
       parentName,
-      type,
-      fileChildren,
       isDragging,
       connectDragPreview,
       connectDropTarget,
       path,
-      isDirectory,
-      isCurrent,
-      isSelected,
-      containsCurrent,
     } = this.props
-    const displayName = (name.includes('index') && isDragging && parentName) || name
+    const isIndex = name.includes('index')
+    const displayName = (!isIndex && isDragging && parentName) || name
 
     return connectDropTarget(
       <div>
-        <FileName {...this.props}>
-          {isCurrent && (
-            <span role="img" aria-label="pointer" className="pointer">
-              👉
-            </span>
-          )}
-          {type === fileTypes.JS && <ReactIcon />}
-          {type === fileTypes.JSON_TYPE && <JSONIcon />}
+        <NoWrap>
+          <FileIcon file={file} />
           {connectDragPreview(
             <div style={{ display: 'inline-block' }}>
-              {isDirectory && <FolderIcon open={containsCurrent} />}
-              {!name.includes('index') && parentName ? (
+              {!isIndex && parentName ? (
                 <Input nameId={nameId} pointer shouldActivateOnClick={isSelected} />
               ) : (
                 displayName
@@ -48,12 +45,17 @@ class File extends React.PureComponent {
             </div>,
             { captureDraggingState: true }
           )}
-          {type && type !== fileTypes.DIR && `.${type}`}
-          {name === 'components' && <AddButton left="10" />}
-          {name === 'containers' && <AddButton left="10" />}
-        </FileName>
+          {extension}
+          {isComponentsFolder && <AddComponentButton left="10" />}
+          {isContainersFolder && <AddContainerButton left="10" />}
+        </NoWrap>
         {fileChildren.map(fileId => (
-          <FileContainer key={fileId} fileId={fileId} parentName={name} path={[...path, fileId]} />
+          <FileContainer
+            key={fileId}
+            fileId={fileId}
+            parentName={name}
+            path={[...path, fileId]}
+          />
         ))}
       </div>
     )
@@ -62,17 +64,11 @@ class File extends React.PureComponent {
 
 File.propTypes = forbidExtraProps({
   // passed by parent / file explorer
-  nameId: T.number.isRequired,
-  name: T.string.isRequired,
-  type: T.oneOf(fileTypesArray).isRequired,
   // eslint-disable-next-line react/require-default-props
   parentName: or([T.string.isRequired, explicitNull()]),
-  fileChildren: T.arrayOf(T.number).isRequired,
   path: T.arrayOf(T.number).isRequired,
-  isCurrent: T.bool.isRequired,
-  isSelected: T.bool.isRequired,
-  containsCurrent: T.bool.isRequired,
 
+  file: T.shape(filePropTypes).isRequired,
   // Injected by React DnD:
   connectDragPreview: T.func.isRequired,
   connectDropTarget: T.func.isRequired,
@@ -81,18 +77,14 @@ File.propTypes = forbidExtraProps({
   // for wrapper
   innerRef: T.func.isRequired,
   onClick: T.func.isRequired,
-  isDirectory: T.bool.isRequired,
 })
+
+const NoWrap = styled.div`
+  white-space: nowrap;
+`
 
 export default styled(File).as.div`
   ${props => props.parentName && 'cursor: pointer;'}
   ${props => props.parentName && 'margin-left: 15px;'}
-  ${props => props.isDirectory && 'padding: 5px 0;'}
-  .pointer {
-    margin-right: -10px;
-  }
-`
-
-const FileName = styled.div`
-  white-space: nowrap;
+  ${props => props.file.isDirectory && 'padding: 5px 0;'}
 `

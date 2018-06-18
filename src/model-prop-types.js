@@ -1,4 +1,5 @@
 import T from 'prop-types'
+import { fileTypesArray } from 'constantz'
 
 // makeSelectInvocation
 export const invocationPropTypes = T.shape({
@@ -30,4 +31,19 @@ export const paramPropTypes = {
   isSpreadMember: T.bool.isRequired,
   count: T.number.isRequired,
   assignNameId: T.number,
+}
+
+// makeSelectFile
+export const filePropTypes = {
+  fileId: T.number.isRequired,
+  name: T.string.isRequired,
+  nameId: T.number.isRequired,
+  extension: T.string.isRequired,
+  type: T.oneOf(fileTypesArray).isRequired,
+  fileChildren: T.arrayOf(T.number).isRequired,
+  declarationIds: T.arrayOf(T.number).isRequired,
+  isDirectory: T.bool.isRequired,
+  isCurrent: T.bool.isRequired,
+  isSelected: T.bool.isRequired,
+  containsCurrent: T.bool.isRequired,
 }
