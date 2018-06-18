@@ -4,12 +4,14 @@ import styled from 'styled-as-components'
 import { JS, JSON_TYPE } from 'constantz'
 import { ReactIcon, FolderIcon, JSONIcon } from 'components'
 
-const FileIcon = ({ file: { isCurrent, type, isDirectory, containsCurrent } }) => (
+const FileIcon = ({ file: { name, isCurrent, type, isDirectory, containsCurrent } }) => (
   <React.Fragment>
     {isCurrent && <Pointer />}
     {type === JS && <ReactIcon />}
     {type === JSON_TYPE && <JSONIcon />}
-    {isDirectory && <FolderIcon open={containsCurrent} />}
+    {isDirectory && (
+      <FolderIcon open={containsCurrent && !['components', 'containers'].includes(name)} />
+    )}
   </React.Fragment>
 )
 

@@ -202,9 +202,7 @@ export default function appReducer(state, action) {
       const { sourceFileId, targetFileId } = action.payload
 
       // find directory containing source file
-      const dirId = Object.keys(File.all().ref()).find(fileId =>
-        File.withId(fileId).children.includes(sourceFileId)
-      )
+      const dirId = File.withId(sourceFileId).ref().parentId
 
       // remove from that directory children
       File.withId(dirId).children.remove(sourceFileId)
@@ -215,6 +213,23 @@ export default function appReducer(state, action) {
 
       // migrate the dragged files declarations to the targetFile
       File.withId(targetFileId).migrate({ declarationIds: ids => [...ids, ...declarationIds] })
+
+      // If ony index remaining collapse e.g. App->index.js => App.js
+      if (File.withId(dirId).children.length() === 1) {
+        const dirsDirId = File.withId(dirId).ref().parentId
+        const dirsDirRef = File.withId(dirId).ref()
+        const indexFileId = dirsDirRef.children[0]
+
+        // rename the index file to the directory name
+        File.withId(indexFileId).update({
+          nameId: dirsDirRef.nameId,
+        })
+
+        // remove from that directory children
+        File.withId(dirsDirId).children.remove(dirId)
+        // Add the previous index file instead
+        File.withId(dirsDirId).children.insert(indexFileId)
+      }
 
       return session.state
     }
