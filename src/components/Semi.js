@@ -5,15 +5,10 @@ import styled from 'styled-as-components'
 import { updatePreferences } from 'duck'
 import { selectPreferences } from 'selectors'
 
-const Line = ({ children, semis, statement, updatePreferences }) => (
+const Semi = ({ semis }) => (
   <React.Fragment>
-    {children}
-    <span
-      className="semi"
-      onClick={() => updatePreferences({ semis: !semis })}
-    >
-      {semis && statement && ';'}
-    </span>
+    {semis && ';'}
+    <br />
   </React.Fragment>
 )
 
@@ -23,9 +18,9 @@ const mapDispatchToProps = { updatePreferences }
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(styled(Line).as.div`
-  .semi {
-    cursor: pointer;
-    ${props => !props.semis && 'padding-right: 10px;'}
-  }
+)(styled(Semi).as.span.attrs({
+  onClick: props => () => props.updatePreferences({ semis: !props.semis }),
+})`
+  cursor: pointer;
+  ${props => !props.semis && 'padding-left: 10px;'}
 `)

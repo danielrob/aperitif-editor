@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import AutosizeInput from 'react-input-autosize'
 
 import { updateDeclaration } from 'duck'
-import { Keyword, Backtick, Input } from 'components'
+import { Keyword, Backtick, Input, Semi } from 'components'
 import { ComponentDragSource } from 'containers'
 
 import TemplateStringTextArea from './TemplateStringTextArea'
@@ -44,6 +44,7 @@ class StyledComponent extends React.PureComponent {
         styled.<AutosizeInput {...tagInput} /><Backtick />
         <TemplateStringTextArea value={text} onChange={this.onChange} />
         <Backtick />
+        <Semi />
       </div>
     )
   }

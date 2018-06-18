@@ -4,7 +4,7 @@ import React from 'react'
 import JSstringify from 'javascript-stringify'
 
 import { indent } from 'utils'
-import { Input, Line } from 'components'
+import { Input, Semi } from 'components'
 import { Name } from 'containers'
 
 // import { sortProps } from 'components/Props/helpers' // Fixme
@@ -33,7 +33,7 @@ const PropTypes = ({ props, nameId }) => {
             </div>
           )
       )}
-      <Line statement>{'}'}</Line>
+      {'}'}<Semi />
     </React.Fragment>
   )
 }

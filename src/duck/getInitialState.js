@@ -57,7 +57,7 @@ export default function getInitialState() {
       selectedFileId: null,
     },
     preferences: {
-      semis: true,
+      semis: false,
     },
   }
 }

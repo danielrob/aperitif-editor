@@ -1,7 +1,7 @@
 import React from 'react'
 import { partition } from 'lodash'
 import { indent } from 'utils'
-import { JSX, Keyword, Props, Input } from 'components'
+import { JSX, Keyword, Props, Input, Semi } from 'components'
 import { DeclarationContainer } from 'containers'
 
 export default class ClassMethod extends React.PureComponent {
@@ -33,7 +33,7 @@ export default class ClassMethod extends React.PureComponent {
                 ) : (
                   <span>
                     {'{ '}<Input nameId={nameId} />{' } '}
-                     = <Keyword>this</Keyword>.state
+                     = <Keyword>this</Keyword>.state<Semi />
                   </span>
                 )}
                 <br />
@@ -46,7 +46,7 @@ export default class ClassMethod extends React.PureComponent {
         {invocationIds.map(id => (
           <JSX key={id} invocationId={id} initial depth={3} />
         ))}
-        {indent(2)})<br />
+        {indent(2)})<Semi />
         {indent(1)}
         {'}'}
         <br />

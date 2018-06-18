@@ -1,6 +1,6 @@
 import { partition } from 'lodash'
 import React from 'react'
-import { JSX, Props, Line, Keyword, Input, ComponentTypeToggle, PropTypes } from 'components'
+import { JSX, Props, Semi, Keyword, Input, ComponentTypeToggle, PropTypes } from 'components'
 import { INLINE, CLASS_COMPONENT } from 'constantz'
 
 export default class StatelessFunctionComponent extends React.PureComponent {
@@ -10,7 +10,7 @@ export default class StatelessFunctionComponent extends React.PureComponent {
 
     return (
       <div>
-        <Line>
+        <div>
           {exportType === INLINE && <Keyword>export</Keyword>}{' '}
           <ComponentTypeToggle
             declarationId={declarationId}
@@ -21,11 +21,11 @@ export default class StatelessFunctionComponent extends React.PureComponent {
           <Props params={params} spreadParams={spreadParams} declarationId={declarationId} parentheses />
            => (
           {invocations.length > 1 && '['}
-        </Line>{' '}
+        </div>{' '}
         {invocations.map(({ id }) =>
           <JSX key={id} invocationId={id} initial />)
         }
-        <Line statement>{invocations.length > 1 && ']'})</Line>
+        {invocations.length > 1 && ']'})<Semi />
         <PropTypes nameId={nameId} props={allParams} />
       </div>
     )

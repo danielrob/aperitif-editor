@@ -1,11 +1,11 @@
 import React from 'react'
-import { Line, Keyword } from 'components'
+import { Semi, Keyword } from 'components'
 
 const Imports = ({ imports }) => (
   <div>
     {' '}
-    {imports.map(({ id, isNamed, importName, source }) => (
-      <Line statement key={id}>
+    {imports.map(({ isNamed, importName, source }) => (
+      <React.Fragment>
         <Keyword>import</Keyword>
         {' '}
         {isNamed && '{ '}
@@ -13,7 +13,8 @@ const Imports = ({ imports }) => (
         {isNamed && ' }'}
         {' '}
         <Keyword>from</Keyword> '{source}'
-      </Line>
+        <Semi />
+      </React.Fragment>
     ))}{' '}
   </div>
 )

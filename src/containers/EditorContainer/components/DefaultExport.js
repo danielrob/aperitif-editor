@@ -1,13 +1,14 @@
 import React from 'react'
-import { Line, Keyword, Input } from 'components'
+import { Semi, Keyword, Input } from 'components'
 
 const DefaultExport = ({ nameId }) =>
   nameId ? (
-    <Line statement>
+    <React.Fragment>
       <Keyword>export default</Keyword>
       {' '}
       <Input nameId={nameId} />
-    </Line>
+      <Semi />
+    </React.Fragment>
   ) : null
 
 export default DefaultExport
