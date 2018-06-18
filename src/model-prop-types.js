@@ -1,5 +1,5 @@
 import T from 'prop-types'
-import { fileTypesArray } from 'constantz'
+import { fileTypesArray, declarationTypesArray, exportTypesArray } from 'constantz'
 
 // makeSelectInvocation
 export const invocationPropTypes = T.shape({
@@ -47,3 +47,17 @@ export const filePropTypes = {
   isSelected: T.bool.isRequired,
   containsCurrent: T.bool.isRequired,
 }
+
+// declaration
+export const declarationPropTypes = T.shape({
+  declarationId: T.number.isRequired,
+  nameId: T.number.isRequired,
+  fileId: T.number,
+  type: T.oneOf(declarationTypesArray).isRequired,
+  declParamIds: T.arrayOf(T.number).isRequired,
+  exportType: T.oneOf(exportTypesArray).isRequired,
+  declarationIds: T.arrayOf(T.number).isRequired,
+  invocationIds: T.arrayOf(T.number).isRequired,
+  tag: T.string,
+  text: T.string,
+})

@@ -1,12 +1,24 @@
+import T from 'prop-types'
 import React from 'react'
 import { partition } from 'lodash'
+
 import { indent } from 'utils'
 import { JSX, Keyword, Props, Input, Semi } from 'components'
 import { DeclarationContainer } from 'containers'
+import { declarationPropTypes } from 'model-prop-types'
 
 export default class ClassMethod extends React.PureComponent {
   render() {
-    const { declarationId, declarationIds, invocationIds, thiz: { props } } = this.props
+    const {
+      declaration: {
+        declarationId,
+        declarationIds,
+        invocationIds,
+      },
+      thiz: {
+        props,
+      },
+    } = this.props
     const [spreadProps, nonSpreadProps] = partition(props, p => p.isSpreadMember)
     return (
       <div>
@@ -28,12 +40,17 @@ export default class ClassMethod extends React.PureComponent {
                       declarationId={declarationId}
                       depth={3}
                     />
-                    <span> = <Keyword>this</Keyword>.props</span>
+                    <span>
+                      {' '}
+                      = <Keyword>this</Keyword>.props
+                    </span>
                   </span>
                 ) : (
                   <span>
-                    {'{ '}<Input nameId={nameId} />{' } '}
-                     = <Keyword>this</Keyword>.state<Semi />
+                    {'{ '}
+                    <Input nameId={nameId} />
+                    {' } '}
+                    = <Keyword>this</Keyword>.state<Semi />
                   </span>
                 )}
                 <br />
@@ -43,9 +60,7 @@ export default class ClassMethod extends React.PureComponent {
         ))}
         {indent(2)}
         <Keyword>return </Keyword> (
-        {invocationIds.map(id => (
-          <JSX key={id} invocationId={id} initial depth={3} />
-        ))}
+        {invocationIds.map(id => <JSX key={id} invocationId={id} initial depth={3} />)}
         {indent(2)})<Semi />
         {indent(1)}
         {'}'}
@@ -53,4 +68,9 @@ export default class ClassMethod extends React.PureComponent {
       </div>
     )
   }
+}
+
+ClassMethod.propTypes = {
+  thiz: T.shape({ props: T.array }).isRequired,
+  declaration: declarationPropTypes.isRequired,
 }

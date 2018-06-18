@@ -4,8 +4,8 @@ import { Semi, Keyword } from 'components'
 const Imports = ({ imports }) => (
   <div>
     {' '}
-    {imports.map(({ isNamed, importName, source }) => (
-      <React.Fragment>
+    {imports.map(({ id, isNamed, importName, source }) => (
+      <React.Fragment key={id}>
         <Keyword>import</Keyword>
         {' '}
         {isNamed && '{ '}

@@ -25,7 +25,7 @@ class ClassComponent extends React.PureComponent {
             key={id}
             declarationId={id}
             render={declaration => (
-              <ClassPropertyDeclarationFactory thiz={{ props }} {...declaration} />
+              <ClassPropertyDeclarationFactory thiz={{ props }} declaration={declaration} />
             )}
           />
         ))}

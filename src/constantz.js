@@ -6,7 +6,7 @@ export const JSON_TYPE = 'json'
 export const DIR = 'dir'
 
 export const fileTypes = { JS, DIR, JSON_TYPE }
-export const fileTypesArray = [JS, DIR, JSON_TYPE]
+export const fileTypesArray = Object.keys(fileTypes).map(k => fileTypes[k])
 
 /* declarationTypes */
 export const PROJECT_INDEX = 'top level index.js file'
@@ -19,6 +19,7 @@ export const STYLED_COMPONENT = 'styled_component'
 export const CONST = 'const'
 export const STANDARD = 'standard'
 export const PROPS = 'props'
+export const OBJECT_LITERAL_KEY = 'object literal key'
 
 export const declarationTypes = {
   PROJECT_INDEX,
@@ -31,7 +32,9 @@ export const declarationTypes = {
   CONST,
   STANDARD,
   PROPS,
+  OBJECT_LITERAL_KEY,
 }
+export const declarationTypesArray = Object.keys(declarationTypes).map(k => declarationTypes[k])
 
 export const componentDeclarationTypes = [
   STATELESS_FUNCTION_COMPONENT,
@@ -50,6 +53,7 @@ export const exportTypes = {
   INLINE,
   false: 'no export',
 }
+export const exportTypesArray = Object.keys(exportTypes).map(k => exportTypes[k])
 
 /* draggable types */
 export const PROP = 'prop'

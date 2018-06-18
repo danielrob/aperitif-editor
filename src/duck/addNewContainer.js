@@ -12,6 +12,7 @@ import {
   CLASS_METHOD,
   CLASS_PROP,
   CONST,
+  OBJECT_LITERAL_KEY,
 } from 'constantz'
 
 
@@ -184,6 +185,12 @@ export default function addNewContainer(session, apiResponse, baseName) {
                 Declaration.create({
                   nameId: Name.create('state'),
                   type: CLASS_PROP,
+                  declarationIds: [
+                    Declaration.create({
+                      nameId: dataNameId,
+                      type: OBJECT_LITERAL_KEY,
+                    }),
+                  ],
                   invocationIds: [
                     Invocation.create({
                       nameId: exampleResponseNameId,
