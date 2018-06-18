@@ -71,7 +71,7 @@ const getPropType = (payload, pTName = 'PropTypes', nested) => {
             >
               {key}
             </span>
-            : {getPropType(payload[key], null, true)},
+            : {getPropType(payload[key], pTName, true)},
             <br />
           </React.Fragment>
         ))}
@@ -84,6 +84,6 @@ const getPropType = (payload, pTName = 'PropTypes', nested) => {
     if (nested) {
       return `${pTName}.array`
     }
-    return `${pTName}.arrayOf(${getPropType(payload[0], null, true)})`
+    return `${pTName}.arrayOf(${getPropType(payload[0], pTName, true)})`
   }
 }

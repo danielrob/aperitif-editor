@@ -51,9 +51,9 @@ class Input extends React.PureComponent {
   }
 
   render() {
-    const { name, pointer } = this.props
+    const { name: { value }, pointer } = this.props
     const input = {
-      value: name,
+      value,
       onChange: this.onChange,
       onBlur: this.onBlur,
     }
@@ -65,7 +65,7 @@ class Input extends React.PureComponent {
           <span style={{ display: 'inline-block', marginLeft: '-2px' }} />
         </React.Fragment>
         :
-        <Name onClick={this.onClick} pointer={pointer}>{name}</Name>
+        <Name onClick={this.onClick} pointer={pointer}>{value}</Name>
     )
   }
 }

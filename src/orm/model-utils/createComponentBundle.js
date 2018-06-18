@@ -66,7 +66,7 @@ export default createComponentBundle
 
 const getNewComponentName = (names, baseName = 'NewComponent') => {
   let nextNameSuffix = null
-  const checkName = nameId => names[nameId] === `${baseName}${nextNameSuffix || ''}`
+  const checkName = nameId => names[nameId].value === `${baseName}${nextNameSuffix || ''}`
   while (Object.keys(names).find(checkName)) {
     nextNameSuffix += 1
   }

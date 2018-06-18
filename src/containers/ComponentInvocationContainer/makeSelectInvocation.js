@@ -35,7 +35,7 @@ const makeSelectInvocation = () => createSelector(
           return {
             id: paramId,
             nameId,
-            valueString: valueNameIds.map(valueNameId => names[valueNameId]).join('.'),
+            valueString: valueNameIds.map(valueNameId => names[valueNameId].value).join('.'),
           }
         }
 
@@ -49,7 +49,7 @@ const makeSelectInvocation = () => createSelector(
       }),
       inline,
       closed: !!closed,
-      pseudoSpreadPropsName: names[pseudoSpreadPropsNameId],
+      pseudoSpreadPropsName: (names[pseudoSpreadPropsNameId] || {}).value,
       hasPropsSpread,
     }
   })

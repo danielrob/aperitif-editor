@@ -19,7 +19,7 @@ function editorReducer(state, action, appState) {
       const { type, children } = files[nextId]
 
       if (type === DIR) {
-        nextId = children.find(fileId => names[files[fileId].nameId].includes('index'))
+        nextId = children.find(fileId => names[files[fileId].nameId].value.includes('index'))
       }
 
       return {

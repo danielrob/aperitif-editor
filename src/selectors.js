@@ -55,15 +55,14 @@ export const makeSelectFile = () => createSelector(
   (names, files, currentFileId, selectedFileId, fileId) => {
     const { nameId, type, children, declarationIds } = files[fileId]
     const sortedChildren = children.sort((a, b) => {
-      const aName = names[files[a].nameId]
-      const bName = names[files[b].nameId]
+      const aName = names[files[a].nameId].value
+      const bName = names[files[b].nameId].value
       return (
         (aName === 'index' && 1) ||
         (bName === 'index' && -1) ||
         sortAlphabetically(aName, bName)
       )
     })
-
 
     const [directories, fichiers] = partition(sortedChildren, id =>
       files[id].isDirectory
@@ -74,7 +73,7 @@ export const makeSelectFile = () => createSelector(
     return {
       fileId,
       nameId,
-      name: names[nameId],
+      name: names[nameId].value,
       type,
       extension: type && !isDir ? `.${type}` : '',
       fileChildren: [...directories, ...fichiers],

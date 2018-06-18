@@ -70,7 +70,7 @@ export const getCurrentFileImports = createSelector(
             )
             thisInvocation = [{
               id, // just needs to be unique
-              importName: names[nameId],
+              importName: names[nameId].value,
               source: resolvedSource,
               order: nameId,
               declarationIds: [declarationId],
@@ -131,16 +131,16 @@ const getRelativePath = (currentFile, declarationId, files, declarations, names,
   let backwardsPath = ''
 
   let sourceAncestor = files[sourceFileId]
-  let forwardsPath = `${names[nameId]}`
+  let forwardsPath = `${names[nameId].value}`
 
-  if (names[sourceAncestor.nameId] === 'index') {
+  if (names[sourceAncestor.nameId].value === 'index') {
     sourceAncestor = files[sourceAncestor.parentId]
   }
 
   while (sourceAncestor.parentId !== currentFileAncestor.parentId) {
     if (sourceAncestor.parentId) {
       sourceAncestor = files[sourceAncestor.parentId] || {}
-      forwardsPath = `${names[sourceAncestor.nameId]}/${forwardsPath}`
+      forwardsPath = `${names[sourceAncestor.nameId].value}/${forwardsPath}`
     }
 
     if (currentFileAncestor.parentId) {

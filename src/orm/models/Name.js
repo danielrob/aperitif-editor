@@ -1,36 +1,30 @@
-import invariant from 'invariant'
-import Model, { getNextId } from '../Model'
+import C from 'check-types'
+import Model, { attr, array } from '../Model'
 
 // Name is just a flat dictionary, so we override a few methods here.
 class Name extends Model {
-  create = (name) => {
-    const getModelData = this.getModelData()
-    const id = getNextId(getModelData)
+  constructor(...args) {
+    super(...args)
+    const { create } = this
 
-    this.setModelData({
-      ...getModelData,
-      [id]: name,
-    })
-    return id
+    // couldn't get super.create to work, so override this way
+    this.create = (name, mutable = true) => {
+      if (C.string(name)) {
+        return create({ value: name, mutable })
+      }
+      return create(name)
+    }
   }
-
-  withId = id => this.setCurrentQueryResult(id, false) && this
-
-  ref = () => {
-    const { result, isSet } = this.currentQueryResult
-    const data = this.getModelData()
-    return isSet ? data : data[result]
-  }
-
-  update = newName => {
-    const { result: nameId, isSet } = this.currentQueryResult
-    const modelData = this.getModelData()
-    invariant(!isSet, 'updating multiple entities at once is not supported')
-    this.setModelData({ ...modelData, [nameId]: newName })
-  }
+  value = () => this.ref().value
 }
 
 Name.modelName = 'Name'
 Name.stateKey = 'names'
+
+Name.fields = {
+  value: attr(),
+  mutable: attr(true),
+  composite: array(),
+}
 
 export default Name

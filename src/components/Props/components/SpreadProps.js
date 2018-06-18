@@ -8,7 +8,7 @@ const SpreadProps = ({ isOver, params, depth, spreadParams, connectDragSource, n
       style={{
         userSelect: 'text',
       }}
-      data-tip={`{ ${spreadParams.map(({ nameId }) => names[nameId]).join(', ')} }`}
+      data-tip={`{ ${spreadParams.map(({ nameId }) => names[nameId].value).join(', ')} }`}
       data-for="prop"
       data-delay-show="100"
     >

@@ -98,7 +98,7 @@ export default function appReducer(state, action) {
       }
 
       const renderDeclId = Declaration.declarations.find(
-        id => Declaration.withId(id).name.ref() === 'render'
+        id => Declaration.withId(id).name.value() === 'render'
       )
 
       const { declarationIds: constId, invocationIds } = Declaration.withId(renderDeclId).ref()
@@ -173,7 +173,7 @@ export default function appReducer(state, action) {
 
       let sourceFileId = fileId
       if (isDirectory) {
-        sourceFileId = File.withId(fileId).children.find(id => File.withId(id).name.ref() === 'index')
+        sourceFileId = File.withId(fileId).children.find(id => File.withId(id).name.value() === 'index')
       }
 
       const declarationId = File.withId(sourceFileId).declarations.find(id =>
@@ -242,7 +242,7 @@ export default function appReducer(state, action) {
 
       // make any index.js that includes a component declaration a proxy to it's parent
       if (
-        File.withId(sourceFileId).name.ref() === 'index' &&
+        File.withId(sourceFileId).name.value() === 'index' &&
         File.declarations.find(
           id => componentDeclarationTypes.includes(Declaration.withId(id).ref().type)
         )
@@ -268,7 +268,7 @@ export default function appReducer(state, action) {
       }
 
       const { nameId, type } = session.state.files[sourceFileId]
-      const name = session.state.names[nameId]
+      const name = session.state.names[nameId].value
 
       // Name clash concerns - chose to take the path of auto-renaming with alert
       let suffix = 0
@@ -291,8 +291,8 @@ export default function appReducer(state, action) {
       }
 
       if (suffix) {
-        Name.withId(nameId).update(`${Name.ref()}${suffix || ''}`)
-        alert(`${name} => ${Name.withId(nameId).ref()}`) // eslint-disable-line no-alert
+        Name.withId(nameId).update(`${Name.value()}${suffix || ''}`)
+        alert(`${name} => ${Name.withId(nameId).value()}`) // eslint-disable-line no-alert
       }
 
       return {
@@ -365,7 +365,7 @@ export default function appReducer(state, action) {
         prop: { paramId, nameId },
       } = action.payload
 
-      const name = Name.withId(nameId).ref()
+      const name = Name.withId(nameId).value()
 
       const newNameId = Name.create(capitalize(name))
 
@@ -414,7 +414,7 @@ export default function appReducer(state, action) {
         prop: { nameId, payload },
       } = action.payload
 
-      const name = Name.withId(nameId).ref()
+      const name = Name.withId(nameId).value()
 
       // params
       const payloadDeclParams = Object.keys(payload).map(key =>
@@ -454,7 +454,7 @@ export default function appReducer(state, action) {
         targetPosition,
         prop: { paramId, nameId, payload },
       } = action.payload
-      const name = Name.withId(nameId).ref()
+      const name = Name.withId(nameId).value()
 
       // payload is certfied checkTypes.array.of.object 🚀
       // some level of uniformity in payload data is assumed
@@ -514,7 +514,7 @@ export default function appReducer(state, action) {
         targetPosition,
         prop: { paramId, nameId },
       } = action.payload
-      const baseName = Name.withId(nameId).ref()
+      const baseName = Name.withId(nameId).value()
 
       const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,
@@ -549,7 +549,7 @@ export default function appReducer(state, action) {
         targetPosition,
         prop: { paramId, nameId, payload },
       } = action.payload
-      const baseName = Name.withId(nameId).ref()
+      const baseName = Name.withId(nameId).value()
 
       const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,
@@ -574,7 +574,7 @@ export default function appReducer(state, action) {
 
     case UPDATE_NAME: {
       const { nameId, value } = action.payload
-      Name.withId(nameId).update(value)
+      Name.withId(nameId).update({ value })
       return session.state
     }
 
