@@ -6,7 +6,7 @@ import { makeSelectName } from 'selectors'
 
 class Name extends React.PureComponent {
   render() {
-    const { render, name: { value } } = this.props
+    const { render, name: { value } = {} } = this.props
     return render ? render(value) : value || null
   }
 }

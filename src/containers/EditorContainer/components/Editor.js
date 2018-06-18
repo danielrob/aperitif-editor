@@ -33,8 +33,11 @@ const renderers = {
 
 class Editor extends React.PureComponent {
   componentDidUpdate() {
-    ReactTooltip.rebuild()
+    if (!this.props.dragItem) {
+      ReactTooltip.rebuild()
+    }
   }
+
   render() {
     const { imports, declarations, defaultExport } = this.props
     return (
@@ -55,10 +58,9 @@ class Editor extends React.PureComponent {
         <ReactTooltip
           id="prop"
           effect="solid"
-          delayShow={100}
-          // type="success"
           getContent={dataTip => <pre>{dataTip}</pre>}
         />
+        <br /* The EOF newline. The POSIX standard. https://stackoverflow.com/a/729795/4682556 */ />
       </div>
     )
   }
@@ -69,10 +71,14 @@ Editor.propTypes = forbidExtraProps({
   imports: T.arrayOf(T.object).isRequired,
   declarations: T.arrayOf(T.object).isRequired,
   defaultExport: T.number,
+  currentFileId: T.number,
+  dragItem: T.bool,
 })
 
 Editor.defaultProps = {
   defaultExport: null,
+  currentFileId: null,
+  dragItem: false,
 }
 
 export default styled(Editor).as.div`

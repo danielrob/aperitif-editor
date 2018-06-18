@@ -7,7 +7,7 @@ import { createStructuredSelector } from 'reselect'
 
 import { compose } from 'utils'
 
-import { FILE, PROP, STYLED_COMPONENT, COMPONENT_INVOCATION } from 'constantz'
+import { FILE, PROP, STYLED_COMPONENT, COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
 import {
   mergeFile,
   removeProp,
@@ -30,7 +30,6 @@ class EditorContainer extends React.PureComponent {
   render() {
     const {
       connectDropTarget,
-      currentFileId,
       projectDeclarations, // dnd only
       mergeFile, // dnd only
       removeProp, // dnd only
@@ -40,7 +39,7 @@ class EditorContainer extends React.PureComponent {
     return connectDropTarget(
       <div style={{ overflow: 'auto' }}>
         <KeyPressListeners />
-        {currentFileId ? <Editor {...props} /> : <AperoPostContainer />}
+        {props.currentFileId ? <Editor {...props} /> : <AperoPostContainer />}
       </div>
     )
   }
@@ -62,10 +61,12 @@ EditorContainer.propTypes = forbidExtraProps({
   removeComponentInvocation: T.func.isRequired,
 
   // dnd
+  dragItem: T.bool,
   connectDropTarget: T.func.isRequired,
 })
 
 EditorContainer.defaultProps = {
+  dragItem: false,
   currentFileId: null,
   defaultExport: null,
 }
@@ -144,6 +145,7 @@ const editorTarget = {
         })
       }
 
+      case PARAM_INVOCATION:
       case COMPONENT_INVOCATION: {
         const { removeComponentInvocation } = props
         const { sourceInvocationId, sourceParentId } = monitor.getItem()
@@ -157,13 +159,16 @@ const editorTarget = {
   },
 }
 
-const editorCollect = connect => ({
+const dropTypes = [FILE, PROP, COMPONENT_INVOCATION, PARAM_INVOCATION]
+
+const editorCollect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
+  dragItem: !!monitor.getItem(),
 })
 
 
 /* compose export */
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  DropTarget([FILE, PROP, COMPONENT_INVOCATION], editorTarget, editorCollect),
+  DropTarget(dropTypes, editorTarget, editorCollect),
 )(EditorContainer)

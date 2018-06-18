@@ -36,7 +36,7 @@ class StyledComponent extends React.PureComponent {
           render={(connectDragSource, connectDragPreview) => connectDragSource(
             <span>
               <Keyword>const </Keyword>
-              {connectDragPreview(<div style={{ display: 'inline-block' }}><Input nameId={nameId} /> </div>)}
+              {connectDragPreview(<div style={{ display: 'inline', userSelect: 'all' }}><Input nameId={nameId} /> </div>)}
             </span>
           )}
         />

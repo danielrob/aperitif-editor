@@ -1,5 +1,5 @@
-/* eslint-disable prefer-const */
 import C from 'check-types'
+import pluralize from 'pluralize'
 
 import {
   DIR,
@@ -41,7 +41,7 @@ export default function addNewContainer(session, apiResponse, baseName) {
   ] =
   [
     'data',
-    `${baseName}Container`, // APP_CONTAINER_NAME_ID if initializing
+    `${C.array(apiResponse) ? pluralize(baseName) : baseName}Container`, // APP_CONTAINER_NAME_ID if initializing
     baseName,
     `${baseName}Wrapper`,
   ].map(name => Name.create(name))

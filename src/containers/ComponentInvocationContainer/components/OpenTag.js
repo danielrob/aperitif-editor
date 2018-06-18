@@ -51,9 +51,16 @@ const OpenTag = ({
       {propIsOver && (
         <span className="new-attribute-preview">
           {' '}
-          {dragItem.name}={'{'}
-          {dragItem.isSpreadMember && 'props.'}
-          {dragItem.name}
+          <Name
+            nameId={dragItem.nameId}
+            render={name => (
+              <React.Fragment>
+                {name}={'{'}
+                {dragItem.isSpreadMember && 'props.'}
+                {name}
+              </React.Fragment>
+            )}
+          />
           {'}'}
         </span>
       )}
@@ -98,4 +105,4 @@ export default styled(OpenTag).as.div`
 // helpers
 export const canDropPropToOpenTag = (targetCallParams, pseudoSpreadPropsName, propBeingDragged) =>
   !targetCallParams.find(({ declParamId }) => declParamId === propBeingDragged.paramId)
-  && pseudoSpreadPropsName !== propBeingDragged.name
+  && pseudoSpreadPropsName !== propBeingDragged.nameId

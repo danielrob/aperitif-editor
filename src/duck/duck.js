@@ -1,4 +1,3 @@
-/* eslint-disable prefer-const */
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
 import orm from 'orm'
@@ -640,8 +639,13 @@ export default function appReducer(state, action) {
 
     case REMOVE_CI: {
       const { sourceInvocationId, sourceParentId } = action.payload
+      // remove source from parent
       Invocation.withId(sourceParentId).invocations.remove(sourceInvocationId)
+      // and close parent if need be
       Invocation.migrate({ closed: (_, { invocationIds }) => !invocationIds.length })
+      // remove any call params
+      Invocation.withId(sourceInvocationId).callParams.forEach(id => CallParam.withId(id).delete())
+      // delete the invocation
       Invocation.withId(sourceInvocationId).delete()
       return session.state
     }

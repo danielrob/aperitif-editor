@@ -59,7 +59,7 @@ const getPropType = (payload, pTName = 'PropTypes', nested) => {
     }
     return (
       <React.Fragment>
-        T.shape({'{'}
+        {pTName}.shape({'{'}
         <br />
         {Object.keys(payload).map(key => (
           <React.Fragment key={key}>

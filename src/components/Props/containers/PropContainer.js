@@ -38,7 +38,7 @@ const PropContainer = DragSource(PROP, propSource, collect)(Prop)
 /* propTypes */
 PropContainer.propTypes = forbidExtraProps({
   declarationId: T.number.isRequired,
-  isLast: T.bool.isRequired,
+  isLast: T.bool,
   ...paramPropTypes,
 })
 
@@ -46,6 +46,7 @@ PropContainer.defaultProps = {
   count: null,
   assignNameId: null,
   payload: null,
+  isLast: false,
 }
 
 

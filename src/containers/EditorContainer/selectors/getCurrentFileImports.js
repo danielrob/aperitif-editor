@@ -65,14 +65,14 @@ export const getCurrentFileImports = createSelector(
 
           let thisInvocation
           if (isAnImportInvocation(nameId, type, declarations, source)) {
-            const resolvedSource = source || getRelativePath(
+            const [resolvedSource, order] = source || getRelativePath(
               currentFile, declarationId, files, allDeclarations, names, nameId
             )
             thisInvocation = [{
               id, // just needs to be unique
               importName: names[nameId].value,
               source: resolvedSource,
-              order: nameId,
+              order,
               declarationIds: [declarationId],
               isNamed: RESOLVE_ALIASES.includes(resolvedSource),
             }]
@@ -122,7 +122,7 @@ const isAnImportInvocation = (invocationNameId, type, declarations, source) =>
     [COMPONENT_INVOCATION, IMPORT_VAR].includes(type)
   )
 
-
+// FIXME: forward paths e.g. the folder I'm currently in contains a folder with the file in it
 const getRelativePath = (currentFile, declarationId, files, declarations, names, nameId) => {
   const { fileId: sourceFileId } = declarations[declarationId]
   const resolveSuffix = files[sourceFileId].type === JSON_TYPE ? '.json' : ''
@@ -153,5 +153,8 @@ const getRelativePath = (currentFile, declarationId, files, declarations, names,
     !sourceAncestor.parentId &&
     RESOLVE_ALIASES.find(alias => forwardsPath.startsWith(alias))
 
-  return indexedAlias || `${backwardsPath || './'}${forwardsPath}${resolveSuffix}`
+  const path = indexedAlias || `${backwardsPath || './'}${forwardsPath}${resolveSuffix}`
+  const order = path.split('.').length
+
+  return [path, order]
 }

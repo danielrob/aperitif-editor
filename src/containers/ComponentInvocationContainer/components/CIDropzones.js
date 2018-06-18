@@ -38,8 +38,8 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
             {[PROP].includes(type) && (
               <React.Fragment>
                 {oneOf(C.string, C.number, C.null)(payload) && (
-                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="asParamInvocation">
-                    {`{${name}}`}
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyled">
+                    {'<styled.div>'}{'{'}{name}{'}'}{'</styled.div>'}
                   </PropDropzoneContainer>
                 )}
                 {oneOf(C.string, C.number, C.null)(payload) && (
@@ -49,14 +49,14 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
                     {'/>'}
                   </PropDropzoneContainer>
                 )}
+                {oneOf(C.string, C.number, C.null)(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="asParamInvocation">
+                    {`{${name}}`}
+                  </PropDropzoneContainer>
+                )}
                 {C.object(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithSpread">
                     {`<${capitalize(name)} ...{${name}} />`}
-                  </PropDropzoneContainer>
-                )}
-                {oneOf(C.string, C.number, C.null)(payload) && (
-                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyled">
-                    {'<Styled>'}{'{'}{name}{'}'}{'</Styled>'}
                   </PropDropzoneContainer>
                 )}
                 {oneOf(C.string, C.number, C.null)(payload) && (

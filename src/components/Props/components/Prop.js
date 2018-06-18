@@ -14,7 +14,7 @@ const Prop = ({ nameId, isLast, payload, connectDragSource }) => (
         style={{
           userSelect: 'text',
         }}
-        data-tip={JSstringify(payload, null, 2)}
+        data-tip={JSstringify(payload, null, 2, { maxDepth: 2, maxValues: 10 })}
         data-for="prop"
         data-delay-show="100"
       >
@@ -27,10 +27,15 @@ const Prop = ({ nameId, isLast, payload, connectDragSource }) => (
 
 Prop.propTypes = {
   nameId: T.number.isRequired,
-  isLast: T.bool.isRequired,
+  isLast: T.bool, // for inline props when we support that again
   connectDragSource: T.func.isRequired,
   declarationId: T.number.isRequired,
 }
+
+Prop.defaultProps = {
+  isLast: false,
+}
+
 
 export default styled(Prop).as.div`
   display: inline-block;

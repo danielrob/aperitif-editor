@@ -62,6 +62,10 @@ class AperoPost extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    isWelcome = false
+  }
+
   render() {
     const { textarea, error } = this.state
 
