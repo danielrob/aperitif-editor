@@ -1,6 +1,5 @@
 import T from 'prop-types'
 import React from 'react'
-import { partition } from 'lodash'
 
 import { indent } from 'utils'
 import { JSX, Keyword, Props, Input, Semi } from 'components'
@@ -19,7 +18,6 @@ export default class ClassMethod extends React.PureComponent {
         props,
       },
     } = this.props
-    const [spreadProps, nonSpreadProps] = partition(props, p => p.isSpreadMember)
     return (
       <div>
         {indent(1)}render() {'{'}
@@ -35,8 +33,7 @@ export default class ClassMethod extends React.PureComponent {
                 {props.length ? (
                   <span>
                     <Props
-                      params={nonSpreadProps}
-                      spreadParams={spreadProps}
+                      props={props}
                       declarationId={declarationId}
                       depth={3}
                     />

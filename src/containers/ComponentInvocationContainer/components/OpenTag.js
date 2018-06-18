@@ -105,4 +105,4 @@ export default styled(OpenTag).as.div`
 // helpers
 export const canDropPropToOpenTag = (targetCallParams, pseudoSpreadPropsName, propBeingDragged) =>
   !targetCallParams.find(({ declParamId }) => declParamId === propBeingDragged.paramId)
-  && pseudoSpreadPropsName !== propBeingDragged.nameId
+  && pseudoSpreadPropsName !== propBeingDragged.name

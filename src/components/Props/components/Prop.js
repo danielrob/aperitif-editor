@@ -2,12 +2,12 @@ import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 import JSstringify from 'javascript-stringify'
+import { paramPropTypes } from 'model-prop-types'
 
-import theme from 'theme-proxy'
 import { spaces } from 'utils'
 import { Name } from 'containers'
 
-const Prop = ({ nameId, isLast, payload, connectDragSource }) => (
+const Prop = ({ prop: { nameId, payload }, isLast, connectDragSource }) => (
   <React.Fragment>
     {connectDragSource(
       <span
@@ -26,19 +26,13 @@ const Prop = ({ nameId, isLast, payload, connectDragSource }) => (
 )
 
 Prop.propTypes = {
-  nameId: T.number.isRequired,
-  isLast: T.bool, // for inline props when we support that again
-  connectDragSource: T.func.isRequired,
   declarationId: T.number.isRequired,
+  isLast: T.bool.isRequired,
+  prop: T.shape(paramPropTypes).isRequired,
+  connectDragSource: T.func.isRequired,
 }
-
-Prop.defaultProps = {
-  isLast: false,
-}
-
 
 export default styled(Prop).as.div`
   display: inline-block;
   cursor: pointer;
-  // color: ${theme.colors.darkgreen};
 `

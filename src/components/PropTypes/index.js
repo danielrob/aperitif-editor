@@ -7,15 +7,13 @@ import { indent } from 'utils'
 import { Input, Semi } from 'components'
 import { Name } from 'containers'
 
-// import { sortProps } from 'components/Props/helpers' // Fixme
-
 const PropTypes = ({ props, nameId }) => {
   const maxCount = (maxBy(props, 'count') || { count: 0 }).count
   return !!props.length && (
     <React.Fragment>
       <br />
       <Input nameId={nameId} />.propTypes = {'{'}
-      {props.map(
+      {props.filter(({ isSpreadMember }) => !isSpreadMember).map(
         ({ nameId, count, payload }) =>
           count && (
             <div key={nameId}>

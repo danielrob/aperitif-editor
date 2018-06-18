@@ -68,7 +68,7 @@ const dropzoneTarget = {
         return addAttributeToComponentInvocation({ targetInvocationId, prop: monitor.getItem() })
       }
       case DraggableTypes.PROPS_SPREAD: {
-        const { invocationId, addPropsSpreadToComponentInvocation } = props
+        const { invocation: { invocationId }, addPropsSpreadToComponentInvocation } = props
         return addPropsSpreadToComponentInvocation({ invocationId })
       }
       default:

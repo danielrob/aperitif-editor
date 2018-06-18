@@ -34,6 +34,7 @@ const makeSelectInvocation = () => createSelector(
           const { id: paramId, valueNameIds, nameId } = callParams[id]
           return {
             id: paramId,
+            name: names[nameId].value,
             nameId,
             valueString: valueNameIds.map(valueNameId => names[valueNameId].value).join('.'),
           }
@@ -42,6 +43,7 @@ const makeSelectInvocation = () => createSelector(
         const { nameId, isSpreadMember } = declParams[declParamId]
         return {
           id,
+          name: names[nameId].value,
           nameId,
           declParamId,
           declIsSpreadMember: isSpreadMember,
@@ -49,7 +51,7 @@ const makeSelectInvocation = () => createSelector(
       }),
       inline,
       closed: !!closed,
-      pseudoSpreadPropsName: (names[pseudoSpreadPropsNameId] || {}).value,
+      pseudoSpreadPropsName: pseudoSpreadPropsNameId ? names[pseudoSpreadPropsNameId].value : null,
       hasPropsSpread,
     }
   })

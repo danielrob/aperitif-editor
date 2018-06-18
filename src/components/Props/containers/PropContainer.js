@@ -9,11 +9,12 @@ import { Prop } from '../components'
 
 /* dnd */
 const propSource = {
-  beginDrag({ id, nameId, payload, declarationId, count }) {
+  beginDrag({ prop: { id, nameId, name, payload, count }, declarationId }) {
     ReactTooltip.hide() // disable tooltips
     return {
       declarationId,
       paramId: id,
+      name,
       nameId,
       payload,
       type: PROP,
@@ -38,16 +39,9 @@ const PropContainer = DragSource(PROP, propSource, collect)(Prop)
 /* propTypes */
 PropContainer.propTypes = forbidExtraProps({
   declarationId: T.number.isRequired,
-  isLast: T.bool,
-  ...paramPropTypes,
+  prop: T.shape(paramPropTypes).isRequired,
+  isLast: T.bool.isRequired,
 })
-
-PropContainer.defaultProps = {
-  count: null,
-  assignNameId: null,
-  payload: null,
-  isLast: false,
-}
 
 
 /* export */
