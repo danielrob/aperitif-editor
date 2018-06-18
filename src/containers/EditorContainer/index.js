@@ -17,7 +17,7 @@ import {
   selectDeclarations,
   selectCurrentFileId,
 } from 'selectors'
-import { KeyPressListeners, AperoPost } from 'containers'
+import { KeyPressListeners, AperoPostContainer } from 'containers'
 
 import {
   getCurrentFileImports,
@@ -40,7 +40,7 @@ class EditorContainer extends React.PureComponent {
     return connectDropTarget(
       <div style={{ overflow: 'auto' }}>
         <KeyPressListeners />
-        {currentFileId ? <Editor {...props} /> : <AperoPost />}
+        {currentFileId ? <Editor {...props} /> : <AperoPostContainer />}
       </div>
     )
   }

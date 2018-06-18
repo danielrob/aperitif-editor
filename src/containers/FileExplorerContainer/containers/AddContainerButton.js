@@ -1,16 +1,16 @@
 import React from 'react'
 import { AddButton } from 'components'
 import { connect } from 'react-redux'
-import { newContainerPlease } from 'duck'
+import { openAPIInputScreen } from 'duck'
 
-const AddComponentButton = ({ newContainerPlease, ...props }) =>
+const AddComponentButton = ({ openAPIInputScreen, ...props }) =>
   (<AddButton
     {...props}
     onClick={e => {
       e.preventDefault()
       e.stopPropagation()
-      newContainerPlease()
+      openAPIInputScreen()
     }}
   />)
 
-export default connect(null, { newContainerPlease })(AddComponentButton)
+export default connect(null, { openAPIInputScreen })(AddComponentButton)

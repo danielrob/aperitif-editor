@@ -8,13 +8,13 @@ import { paramPropTypes } from 'model-prop-types'
 
 import { SpreadPropsContainer, PropContainer } from './containers'
 
-// A param is a prop, ...is a param is a prop ♪♫♬ ♪♫♬
+// A param is a prop, ...is a param is a prop ♪♫♬ ♪♫♬ <- clearly got bored
 const Props = ({ params, spreadParams, declarationId, depth, parentheses }) => (
   <React.Fragment>
     {' '}
     {!!params.length && parentheses && '('}
     {!!params.length && '{'}{' '}
-    <br />
+    {!!params.length && <br />}
     <span>
       {params
         .map(param => (

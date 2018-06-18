@@ -8,6 +8,8 @@ import { Flex } from 'components'
 import apiArrayResponse from './apiArrayResponse.json'
 import apiObjectResponse from './apiObjectResponse.json'
 
+let isWelcome = true
+
 class AperoPost extends React.PureComponent {
   state = {
     textarea: '',
@@ -19,12 +21,14 @@ class AperoPost extends React.PureComponent {
   populate = () => {
     this.setState({
       textarea: JSON.stringify(
-        Math.random() > 0.49 ? apiArrayResponse : apiObjectResponse, null, 2
+        Math.random() > 0.49 ? apiArrayResponse : apiObjectResponse,
+        null,
+        2
       ),
     })
   }
-  intialize = () => {
-    const { initializeApp } = this.props
+  submit = () => {
+    const { initializeApp, newContainerPlease, undo } = this.props
     const { textarea } = this.state
     let json
     let error
@@ -43,7 +47,7 @@ class AperoPost extends React.PureComponent {
 
     if (json) {
       if (C.object(json) || C.array.of.object(json)) {
-        return initializeApp(json)
+        return isWelcome ? initializeApp(json) : undo() && newContainerPlease(json)
       }
       error = 'The response shape must be an array of objects or an object'
     }
@@ -52,7 +56,8 @@ class AperoPost extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development' && isWelcome) {
+      isWelcome = false
       this.props.initializeApp(apiArrayResponse)
     }
   }
@@ -62,7 +67,10 @@ class AperoPost extends React.PureComponent {
 
     return (
       <React.Fragment>
-        Apéro uses the response shapes of api endpoints intelligently.
+        {isWelcome
+          ? 'Apéro uses the response shapes of api endpoints intelligently.'
+          : 'What api endpoint data will this container be responsible for?'
+        }
         <br />
         <br />
         <Flex aiend>
@@ -75,7 +83,8 @@ class AperoPost extends React.PureComponent {
             onChange={this.onChange}
           />
           <StartAppWrapper>
-            Then click ↓ <Button onClick={this.intialize}>Start App</Button>
+            Then click <br /> ↓{' '}
+            <Button onClick={this.submit}>{isWelcome ? 'Start App' : 'Add Container'}</Button>
           </StartAppWrapper>
         </Flex>
         <Error error={error}>{error}</Error>

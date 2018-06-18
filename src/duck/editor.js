@@ -3,7 +3,7 @@ import { createAction } from 'redux-actions'
 import { DIR } from 'constantz'
 
 export const CHANGE_FILE = 'CHANGE_FILE'
-export const NEW_CONTAINER_PLEASE = 'NEW_CONTAINER_PLEASE'
+export const OPEN_API_INPUT_SCREEN = 'OPEN_API_INPUT_SCREEN'
 
 export default (state, action) => ({
   ...state,
@@ -29,7 +29,7 @@ function editorReducer(state, action, appState) {
       }
     }
 
-    case NEW_CONTAINER_PLEASE: {
+    case OPEN_API_INPUT_SCREEN: {
       return {
         ...state,
         currentFileId: null,
@@ -47,6 +47,6 @@ export const changeFile = createAction(
   CHANGE_FILE
 )
 
-export const newContainerPlease = createAction(
-  NEW_CONTAINER_PLEASE
+export const openAPIInputScreen = createAction(
+  OPEN_API_INPUT_SCREEN
 )

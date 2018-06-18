@@ -23,8 +23,11 @@ import {
 } from './getInitialState'
 
 import initializeFromData from './initializeFromData'
+import addNewContainer from './addNewContainer'
 
 export const INTIALIZE_APP = 'INTIALIZE_APP'
+export const NEW_COMPONENT_PLEASE = 'NEW_COMPONENT_PLEASE'
+export const NEW_CONTAINER_PLEASE = 'NEW_CONTAINER_PLEASE'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
@@ -53,6 +56,15 @@ export default function appReducer(state, action) {
   switch (action.type) {
     case INTIALIZE_APP: {
       return initializeFromData(state, action.payload)
+    }
+
+    case NEW_COMPONENT_PLEASE: {
+      createComponentBundle({ baseName: 'NewComponent', session })
+      return session.state
+    }
+
+    case NEW_CONTAINER_PLEASE: {
+      return addNewContainer(session, action.payload, 'New')
     }
 
     case CONVERT_TO_CLASS_COMPONENT: {
@@ -626,6 +638,14 @@ export default function appReducer(state, action) {
 
 export const initializeApp = createAction(
   INTIALIZE_APP
+)
+
+export const newComponentPlease = createAction(
+  NEW_COMPONENT_PLEASE
+)
+
+export const newContainerPlease = createAction(
+  NEW_CONTAINER_PLEASE
 )
 
 export const addNewComponentToInvocationWithChildren = createAction(
