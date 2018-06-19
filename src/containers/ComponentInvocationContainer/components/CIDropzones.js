@@ -42,7 +42,7 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
                     {'<styled.div>'}{'{'}{name}{'}'}{'</styled.div>'}
                   </PropDropzoneContainer>
                 )}
-                {oneOf(C.string, C.number, C.null)(payload) && (
+                {oneOf(C.string, C.number, C.null, C.array.of.object)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithAttribute">
                     {'<'}{capitalize(name)}
                     {` ${name}={${name}}`}

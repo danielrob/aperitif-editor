@@ -8,8 +8,9 @@ import {
   JSON_TYPE,
   IMPORT_VAR,
   STYLED_COMPONENT,
+  COMPONENT_INVOCATION,
   ARRAY_MAP_METHOD,
-  VAR_INVOCATION,
+  PARAM_INVOCATION,
   CLASS_COMPONENT,
   CLASS_METHOD,
   CLASS_PROP,
@@ -22,52 +23,52 @@ import {
   ID_NAME_ID,
 } from 'constantz'
 
-
-import orm from 'orm'
-
-import { COMPONENTS_FILE_ID, CONTAINERS_FILE_ID, INDEX_NAME_ID, KEY_NAME_ID, ID_NAME_ID } from './getInitialState'
-
-export const APP_CONTAINER_NAME_ID = 8
-
 export default function addNewContainer(session, apiResponse, baseName) {
-  const {
-    Name,
-    DeclParam,
-    CallParam,
-    Declaration,
-    Invocation,
-    File,
-  } = session
+  const { Name, DeclParam, CallParam, Declaration, Invocation, File } = session
+  const payloadIsList = C.array.of.object(apiResponse)
+  const payloadIsObject = C.object(apiResponse)
+  invariant(payloadIsList || payloadIsObject, 'addNewContainer requires object or arrayOfObjects payload')
 
   // Names
   const [
     dataNameId,
-    appContainerNameId,
-    appDirNameId,
-    appWrapperNameId,
+    containerNameId,
+    componentNameId,
+    wrapperNameId,
   ] =
   [
     'data',
-    `${C.array(apiResponse) ? pluralize(baseName) : baseName}Container`, // APP_CONTAINER_NAME_ID if initializing
+    `${payloadIsList ? pluralize(baseName) : baseName}Container`, // APP_CONTAINER_NAME_ID if initializing
     baseName,
     `${baseName}Wrapper`,
   ].map(name => Name.create(name))
 
-  let declParamIds
-  let appInvocation
+  let listComponentNameId
+  let listWrapperNameId
+  if (payloadIsList) {
+    const listName = pluralize(baseName) === baseName ? `${baseName}List` : pluralize(baseName)
+    listComponentNameId = Name.create(listName)
+    listWrapperNameId = Name.create(`${listName}Wrapper`)
+  }
 
-  if (C.object(apiResponse)) {
+  // declaration params
+  let declParamIds
+  let listComponentDeclParamId
+
+  if (payloadIsObject) {
     [...declParamIds] = Object.keys(apiResponse).map(key =>
       DeclParam.create({
         nameId: Name.create(key),
         payload: apiResponse[key],
       })
     )
-  }
+  } else {
+    listComponentDeclParamId = DeclParam.create({
+      nameId: dataNameId,
+      payload: apiResponse,
+    })
 
-  if (C.array(apiResponse)) {
     const mergedObjectsInPayloadArray = Object.assign({}, ...apiResponse);
-
     [...declParamIds] = Object.keys(mergedObjectsInPayloadArray).map(key =>
       DeclParam.create({
         nameId: Name.create(key),
@@ -77,48 +78,130 @@ export default function addNewContainer(session, apiResponse, baseName) {
   }
 
   // declarations
-  const appWrapperDeclId = Declaration.create({
-    nameId: appWrapperNameId,
+  const wrapperDeclarationId = Declaration.create({
+    nameId: wrapperNameId,
     type: STYLED_COMPONENT,
     tag: 'div',
   })
 
-  const appDeclId = Declaration.create({
-    nameId: appDirNameId,
+  const componentDeclarationId = Declaration.create({
+    nameId: componentNameId,
     invocationIds: [
       Invocation.create({
-        nameId: appWrapperNameId,
+        nameId: wrapperNameId,
         callParamIds: [],
         closed: true,
-        declarationId: appWrapperDeclId,
+        declarationId: wrapperDeclarationId,
       }),
     ],
     declParamIds,
   })
 
+  let listWrapperDeclarationId
+  let listComponentDeclarationId
+  if (payloadIsList) {
+    const mapPseudoParamNameId = Name.create('item')
+
+    listWrapperDeclarationId = Declaration.create({
+      nameId: listWrapperNameId,
+      type: STYLED_COMPONENT,
+      tag: 'div',
+    })
+
+    listComponentDeclarationId = Declaration.create({
+      nameId: listComponentNameId,
+      invocationIds: [
+        Invocation.create({
+          nameId: listWrapperNameId,
+          declarationId: listWrapperDeclarationId,
+          invocationIds: [
+            Invocation.create({
+              nameId: dataNameId,
+              type: PARAM_INVOCATION,
+              callParamIds: [
+                CallParam.create({ declParamId: listComponentDeclParamId }),
+              ],
+              invocationIds: [
+                Invocation.create({
+                  nameId: mapPseudoParamNameId,
+                  type: ARRAY_MAP_METHOD,
+                  invocationIds: [
+                    Invocation.create({
+                      nameId: componentNameId,
+                      declarationId: componentDeclarationId,
+                      callParamIds: [
+                        CallParam.create({
+                          nameId: KEY_NAME_ID,
+                          valueNameIds: [mapPseudoParamNameId, ID_NAME_ID],
+                        }),
+                      ],
+                      pseudoSpreadPropsNameId: mapPseudoParamNameId,
+                      closed: true,
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+      declParamIds: [
+        listComponentDeclParamId,
+      ],
+    })
+  }
+
   // File.withId(COMPONENTS_FILE_ID).update({ children:
   const componentChildren = [
-    File.create({ // App
-      nameId: appDirNameId,
+    File.create({ // Component
+      nameId: componentNameId,
       type: DIR,
       children: [
         File.create({ // index.js
           nameId: INDEX_NAME_ID,
           declarationIds: [
-            appDeclId,
+            componentDeclarationId,
           ],
         }),
-        File.create({ // AppWrapper.js
-          nameId: appWrapperNameId,
+        File.create({ // ComponentWrapper.js
+          nameId: wrapperNameId,
           type: SC,
           declarationIds: [
-            appWrapperDeclId,
+            wrapperDeclarationId,
           ],
         }),
       ],
     }),
   ]
-  File.withId(COMPONENTS_FILE_ID).migrate({ children: old => [ ...old, ...componentChildren ] })
+
+  let listComponentChildren = []
+  if (payloadIsList) {
+    listComponentChildren = [
+      File.create({ // ListComponent
+        nameId: listComponentNameId,
+        type: DIR,
+        children: [
+          File.create({ // index.js
+            nameId: INDEX_NAME_ID,
+            declarationIds: [
+              listComponentDeclarationId,
+            ],
+          }),
+          File.create({ // ListComponentWrapper.js
+            nameId: listWrapperNameId,
+            type: SC,
+            declarationIds: [
+              listWrapperDeclarationId,
+            ],
+          }),
+        ],
+      }),
+    ]
+  }
+
+  File.withId(COMPONENTS_FILE_ID).migrate({
+    children: old => [...old, ...componentChildren, ...listComponentChildren],
+  })
 
   const renderDataConstDeclaration = Declaration.create({
     type: CONST,
@@ -126,44 +209,34 @@ export default function addNewContainer(session, apiResponse, baseName) {
   })
 
 
-  if (C.object(apiResponse)) {
-    appInvocation = Invocation.create({
-      nameId: appDirNameId,
+  /*
+    invocations
+  */
+  let componentInvocation
+  if (payloadIsObject) {
+    componentInvocation = Invocation.create({
+      nameId: componentNameId,
       closed: true,
-      declarationId: appDeclId,
+      declarationId: componentDeclarationId,
       pseudoSpreadPropsNameId: dataNameId,
     })
   } else {
-    const mapPseudoParamNameId = Name.create('item')
 
-    appInvocation = Invocation.create({
-      nameId: dataNameId,
-      type: VAR_INVOCATION,
-      declarationId: renderDataConstDeclaration,
-      invocationIds: [
-        Invocation.create({
-          nameId: mapPseudoParamNameId,
-          type: ARRAY_MAP_METHOD,
-          invocationIds: [
-            Invocation.create({
-              nameId: appDirNameId,
-              declarationId: appDeclId,
-              callParamIds: [
-                CallParam.create({
-                  nameId: KEY_NAME_ID,
-                  valueNameIds: [mapPseudoParamNameId, ID_NAME_ID],
-                }),
-              ],
-              pseudoSpreadPropsNameId: mapPseudoParamNameId,
-              closed: true,
-            }),
-          ],
+    componentInvocation = Invocation.create({
+      nameId: listComponentNameId,
+      type: COMPONENT_INVOCATION,
+      declarationId: listComponentDeclarationId,
+      callParamIds: [
+        CallParam.create({
+          nameId: dataNameId,
+          valueNameIds: [dataNameId],
         }),
       ],
+      closed: true,
     })
   }
 
-  // sampleResponse.json
+  // create sampleResponse.json
   const exampleResponseNameId = Name.create('exampleResponse')
   const responseJsonDeclaration = Declaration.create({
     type: JSON_TYPE,
@@ -175,7 +248,7 @@ export default function addNewContainer(session, apiResponse, baseName) {
   // File.withId(CONTAINERS_FILE_ID).update({ children:
   const containerChildren = [
     File.create({
-      nameId: appContainerNameId,
+      nameId: containerNameId,
       type: DIR,
       children: [
         File.create({
@@ -188,7 +261,7 @@ export default function addNewContainer(session, apiResponse, baseName) {
           declarationIds: [
             Declaration.create({
               type: CLASS_COMPONENT,
-              nameId: appContainerNameId,
+              nameId: containerNameId,
               declarationIds: [
                 Declaration.create({
                   nameId: Name.create('state'),
@@ -212,7 +285,7 @@ export default function addNewContainer(session, apiResponse, baseName) {
                   nameId: Name.create('render'),
                   type: CLASS_METHOD,
                   declarationIds: [renderDataConstDeclaration],
-                  invocationIds: [appInvocation],
+                  invocationIds: [componentInvocation],
                 }),
               ],
             }),
