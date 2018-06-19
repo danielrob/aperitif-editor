@@ -16,7 +16,7 @@ import {
   addNewStyledComponentToInvocation,
   moveInvocation,
 } from 'duck'
-import { REACT_CHILDREN_INVOCATION_ID } from 'duck/getTestDB'
+import { REACT_CHILDREN_INVOCATION_ID } from 'duck/tasks/getInitialState'
 
 import { PropDropzone } from '../components'
 

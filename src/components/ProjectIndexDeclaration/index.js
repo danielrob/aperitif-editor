@@ -1,7 +1,7 @@
 import React from 'react'
 import { Semi, Keyword, Input } from 'components'
 import { indent } from 'utils'
-import { APP_CONTAINER_NAME_ID } from 'duck/initializeFromData'
+import { APP_CONTAINER_NAME_ID } from 'duck/tasks/initializeFromData'
 
 export default class ProjectIndexDeclaration extends React.PureComponent {
   render() {

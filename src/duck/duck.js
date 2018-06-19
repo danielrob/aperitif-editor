@@ -1,7 +1,7 @@
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
+import { capitalize } from 'utils'
 import orm from 'orm'
-import { createComponentBundle } from 'orm/model-utils'
 import {
   PROPS,
   componentDeclarationTypes,
@@ -12,17 +12,15 @@ import {
   STATELESS_FUNCTION_COMPONENT,
   ARRAY_MAP_METHOD,
 } from 'constantz'
-import { capitalize } from 'utils'
 
 import {
   REACT_CHILDREN_INVOCATION_ID,
   REACT_CHILDREN_DECLARATION_PARAM_ID,
   KEY_NAME_ID,
   ID_NAME_ID,
-} from './getInitialState'
+} from './tasks/getInitialState'
 
-import initializeFromData from './initializeFromData'
-import addNewContainer from './addNewContainer'
+import { initializeFromData, addNewContainer, createComponentBundle } from './tasks'
 
 export const INTIALIZE_APP = 'INTIALIZE_APP'
 export const NEW_COMPONENT_PLEASE = 'NEW_COMPONENT_PLEASE'

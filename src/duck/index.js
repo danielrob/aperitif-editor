@@ -4,7 +4,7 @@ import coreReducer, { UPDATE_NAME } from './duck'
 import editorReducer from './editor'
 import preferencesReducer from './preferences'
 
-import getInitialState from './getInitialState'
+import { getInitialState } from './tasks'
 
 export default undoable(reduceReducers, {
   groupBy: groupByActionTypes(UPDATE_NAME),
