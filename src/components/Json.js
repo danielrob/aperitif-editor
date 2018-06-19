@@ -2,11 +2,12 @@ import React from 'react'
 import ReactJsonSyntaxHighlighter from 'react-json-syntax-highlighter'
 import styled from 'styled-as-components'
 
-const JsonText = ({ text }) => (
+const Json = ({ text }) => (
   <ReactJsonSyntaxHighlighter obj={text} />
 )
 
-export default styled(JsonText).as.div`
+export default styled(Json).as.div`
+  font-size: 14px;
   color: #8a6a6a;
 
   .string {

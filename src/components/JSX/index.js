@@ -8,7 +8,7 @@ import {
   VAR_INVOCATION,
   IMPORT_VAR,
 } from 'constantz'
-import { ArrayMapInvocation, VarInvocation } from 'components'
+import { MapInvocation, VarInvocation } from 'components'
 import {
   InvocationContainer,
   ComponentInvocationContainer,
@@ -19,7 +19,7 @@ import {
 const types = () => ({
   [COMPONENT_INVOCATION]: ComponentInvocationContainer,
   [PARAM_INVOCATION]: ParamInvocationContainer,
-  [ARRAY_MAP_METHOD]: ArrayMapInvocation,
+  [ARRAY_MAP_METHOD]: MapInvocation,
   [VAR_INVOCATION]: VarInvocation,
   [IMPORT_VAR]: VarInvocation,
 })
@@ -28,8 +28,9 @@ const JSX = ({ invocationId, initial, ...props }) => (
   <InvocationContainer
     invocationId={invocationId}
     render={invocation => {
-      const Invocation = types()[invocation.type] || ComponentInvocationContainer
       const propsToPass = initial ? { ...props, initial } : props
+
+      const Invocation = types()[invocation.type] || ComponentInvocationContainer
       return (
         <Invocation
           key={invocationId}

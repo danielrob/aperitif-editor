@@ -8,11 +8,11 @@ import { paramInvocationPropTypes } from 'model-prop-types'
 import { PARAM_INVOCATION } from 'constantz'
 import { compose } from 'utils'
 
-import ParamInvocation from './ParamInvocation'
+import { ParamInvocation } from 'components'
 import makeSelectParamInvocation from './makeSelectParamInvocation'
 
 const ParamInvocationContainer = ({
-  invocationId, // used by connect only
+  invocationId, // connect only
   invocation,
   parentIsInline,
   ...props
@@ -78,9 +78,6 @@ const collect = (connect, monitor) => ({
 
 /* compose export */
 export default compose(
-  connect(
-    makeMapStateToProps,
-    {}
-  ),
+  connect(makeMapStateToProps, {}),
   DragSource(PARAM_INVOCATION, propSource, collect)
 )(ParamInvocationContainer)

@@ -9,9 +9,9 @@ import {
   StatelessFunctionComponent,
   ClassComponent,
   StyledComponent,
-  ProjectIndex,
+  ProjectIndexDeclaration,
   Standard,
-  JsonText,
+  Json,
 } from 'components'
 import {
   STATELESS_FUNCTION_COMPONENT,
@@ -27,8 +27,8 @@ const renderers = {
   [STATELESS_FUNCTION_COMPONENT]: StatelessFunctionComponent,
   [STYLED_COMPONENT]: StyledComponent,
   [CLASS_COMPONENT]: ClassComponent,
-  [PROJECT_INDEX]: ProjectIndex,
-  [JSON_TYPE]: JsonText,
+  [PROJECT_INDEX]: ProjectIndexDeclaration,
+  [JSON_TYPE]: Json,
 }
 
 class Editor extends React.PureComponent {

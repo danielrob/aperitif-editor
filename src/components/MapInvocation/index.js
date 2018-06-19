@@ -2,7 +2,7 @@ import React from 'react'
 import { JSX, Input } from 'components'
 import { indent } from 'utils'
 
-const ArrayMapInvocation = ({ invocation: { invocationId, nameId, invocationIds }, depth }) => (
+const MapInvocation = ({ invocation: { invocationId, nameId, invocationIds }, depth }) => (
   <React.Fragment>
     .map(<Input nameId={nameId} /> => (
     <JSX
@@ -15,4 +15,4 @@ const ArrayMapInvocation = ({ invocation: { invocationId, nameId, invocationIds 
   </React.Fragment>
 )
 
-export default ArrayMapInvocation
+export default MapInvocation

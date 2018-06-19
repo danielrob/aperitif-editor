@@ -1,6 +1,6 @@
 import React from 'react'
-import { Keyword, Input, ComponentTypeToggle, PropTypes } from 'components'
-import { DeclarationContainer } from 'containers'
+import { Keyword, Input, PropTypes } from 'components'
+import { DeclarationContainer, ComponentTypeToggle } from 'containers'
 import { INLINE, STATELESS_FUNCTION_COMPONENT } from 'constantz'
 import styled from 'styled-as-components'
 

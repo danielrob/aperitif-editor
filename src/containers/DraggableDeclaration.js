@@ -2,8 +2,7 @@ import React from 'react'
 import { DragSource } from 'react-dnd'
 import { compose } from 'utils'
 
-// Make one of the { componentDeclarationTypes } from constantz draggable
-class ComponentDragSource extends React.PureComponent {
+class DraggableDeclaration extends React.PureComponent {
   render() {
     const { connectDragSource, connectDragPreview } = this.props
     return (
@@ -34,5 +33,5 @@ const sourceCollect = (connect) => ({
 /* compose export */
 export default compose(
   DragSource(({ type }) => type, sourceSpec, sourceCollect),
-)(ComponentDragSource)
+)(DraggableDeclaration)
 

@@ -4,7 +4,7 @@ import AutosizeInput from 'react-input-autosize'
 
 import { updateDeclaration } from 'duck'
 import { Keyword, Backtick, Input, Semi } from 'components'
-import { ComponentDragSource } from 'containers'
+import { DraggableDeclaration } from 'containers'
 
 import TemplateStringTextArea from './TemplateStringTextArea'
 
@@ -30,7 +30,7 @@ class StyledComponent extends React.PureComponent {
 
     return (
       <div>
-        <ComponentDragSource
+        <DraggableDeclaration
           type={type}
           declarationId={declarationId}
           render={(connectDragSource, connectDragPreview) => connectDragSource(
