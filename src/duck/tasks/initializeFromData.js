@@ -1,10 +1,6 @@
-import { PROJECT_INDEX, exportTypes } from 'constantz'
+import { PROJECT_INDEX, INDEX_NAME_ID, exportTypes } from 'constantz'
 import orm from 'orm'
-
 import addNewContainer from './addNewContainer'
-import { INDEX_NAME_ID } from './getInitialState'
-
-export const APP_CONTAINER_NAME_ID = 8
 
 export default function initializeFromData(state, apiResponse) {
   const session = orm.session(state)

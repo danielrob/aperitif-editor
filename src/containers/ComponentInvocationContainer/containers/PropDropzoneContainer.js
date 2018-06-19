@@ -6,7 +6,7 @@ import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { PROP, PARAM_INVOCATION } from 'constantz'
+import { PROP, PARAM_INVOCATION, REACT_CHILDREN_INVOCATION_ID } from 'constantz'
 import {
   addParamAsComponentInvocationChild,
   addNewComponentToInvocationWithMap,
@@ -16,7 +16,6 @@ import {
   addNewStyledComponentToInvocation,
   moveInvocation,
 } from 'duck'
-import { REACT_CHILDREN_INVOCATION_ID } from 'duck/tasks/getInitialState'
 
 import { PropDropzone } from '../components'
 

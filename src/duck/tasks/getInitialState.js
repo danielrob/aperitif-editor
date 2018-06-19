@@ -2,15 +2,6 @@ import { DIR, PARAM_INVOCATION } from 'constantz'
 
 import orm from 'orm'
 
-export const COMPONENTS_FILE_ID = 1
-export const CONTAINERS_FILE_ID = 2
-export const REACT_CHILDREN_DECLARATION_PARAM_ID = 1
-export const REACT_CHILDREN_CALL_PARAM_ID = 1
-export const REACT_CHILDREN_INVOCATION_ID = 1
-export const INDEX_NAME_ID = 1
-export const KEY_NAME_ID = 2
-export const ID_NAME_ID = 3
-
 export default function getInitialState() {
   const session = orm.session({})
 

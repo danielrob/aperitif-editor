@@ -11,14 +11,11 @@ import {
   CLASS_METHOD,
   STATELESS_FUNCTION_COMPONENT,
   ARRAY_MAP_METHOD,
-} from 'constantz'
-
-import {
   REACT_CHILDREN_INVOCATION_ID,
   REACT_CHILDREN_DECLARATION_PARAM_ID,
   KEY_NAME_ID,
   ID_NAME_ID,
-} from './tasks/getInitialState'
+} from 'constantz'
 
 import { initializeFromData, addNewContainer, createComponentBundle } from './tasks'
 
