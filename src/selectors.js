@@ -67,6 +67,9 @@ export const makeSelectFile = () => createSelector(
     const [directories, fichiers] = partition(sortedChildren, id =>
       files[id].type === DIR
     )
+    const [styled, others] = partition(fichiers, id =>
+      files[id].type === SC
+    )
 
     const isDir = type === DIR
 
@@ -76,7 +79,7 @@ export const makeSelectFile = () => createSelector(
       name: names[nameId].value,
       type,
       extension: (type === SC && '.js') || (!isDir ? `.${type}` : ''),
-      fileChildren: [...directories, ...fichiers],
+      fileChildren: [...directories, ...styled, ...others],
       isDirectory: isDir,
       isCurrent: fileId === currentFileId,
       isSelected: fileId === selectedFileId,
