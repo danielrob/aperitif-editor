@@ -1,14 +1,20 @@
 export const RESOLVE_ALIASES = ['containers', 'components']
 
-/* fileTypes */
+/*
+  fileTypes
+*/
 export const JS = 'js'
+export const SC = '💅'
 export const JSON_TYPE = 'json'
 export const DIR = 'dir'
 
-export const fileTypes = { JS, DIR, JSON_TYPE }
+export const fileTypes = { JS, SC, DIR, JSON_TYPE }
 export const fileTypesArray = Object.keys(fileTypes).map(k => fileTypes[k])
 
-/* declarationTypes */
+
+/*
+  declarationTypes
+*/
 export const PROJECT_INDEX = 'top level index.js file'
 export const LOOKTHROUGH = "I'm all about my invocation, that's it"
 export const CLASS_COMPONENT = 'class_component'
@@ -36,13 +42,47 @@ export const declarationTypes = {
 }
 export const declarationTypesArray = Object.keys(declarationTypes).map(k => declarationTypes[k])
 
+
+/*
+ component declaration types
+*/
 export const componentDeclarationTypes = [
   STATELESS_FUNCTION_COMPONENT,
   STYLED_COMPONENT,
   CLASS_COMPONENT,
 ]
 
-/* export types */
+
+/*
+  invocation types
+*/
+export const VAR_INVOCATION = 'var invocation'
+export const IMPORT_VAR = 'import var'
+export const ARRAY_MAP_METHOD = '.map invocation'
+export const COMPONENT_INVOCATION = 'component invocation' // also draggable
+export const PARAM_INVOCATION = 'param invocation' // also draggable
+
+
+/*
+  draggable types
+*/
+export const PROP = 'prop'
+export const PROPS_SPREAD = '...props'
+export const FILE = 'file'
+
+export const DraggableTypes = {
+  PROP,
+  COMPONENT_INVOCATION,
+  PARAM_INVOCATION,
+  PROPS_SPREAD,
+  FILE,
+  DIR,
+}
+
+
+/*
+  export types
+*/
 export const DEFAULT = 'export default'
 export const DEFAULT_INLINE = 'export default <declaration>'
 export const INLINE = 'export when declared'
@@ -54,24 +94,3 @@ export const exportTypes = {
   false: 'no export',
 }
 export const exportTypesArray = Object.keys(exportTypes).map(k => exportTypes[k])
-
-/* draggable types */
-export const PROP = 'prop'
-export const PROPS_SPREAD = '...props'
-export const FILE = 'file'
-
-/* invocation (some are draggable) types */
-export const COMPONENT_INVOCATION = 'component invocation'
-export const PARAM_INVOCATION = 'param invocation'
-export const VAR_INVOCATION = 'var invocation'
-export const IMPORT_VAR = 'import var'
-export const ARRAY_MAP_METHOD = '.map invocation'
-
-export const DraggableTypes = {
-  PROP,
-  COMPONENT_INVOCATION,
-  PARAM_INVOCATION,
-  PROPS_SPREAD,
-  FILE,
-  DIR,
-}

@@ -6,7 +6,7 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { DIR, FILE, STYLED_COMPONENT, RESOLVE_ALIASES } from 'constantz'
+import { DIR, FILE, STYLED_COMPONENT } from 'constantz'
 import { changeFile, moveDeclarationToFile, moveFile } from 'duck'
 import { makeSelectFile } from 'selectors'
 import { filePropTypes } from 'model-prop-types'
@@ -97,9 +97,9 @@ const sourceSpec = {
     }
   },
   canDrag(props) {
-    const { file: { name }, parentName } = props
+    const { file: { fileId, name }, parentName } = props
     return (
-      !RESOLVE_ALIASES.includes(name) &&
+      ![1, 2].includes(fileId) &&
       !(!parentName && name === 'index')
     )
   },

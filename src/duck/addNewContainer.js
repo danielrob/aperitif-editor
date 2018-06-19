@@ -3,6 +3,7 @@ import pluralize from 'pluralize'
 
 import {
   DIR,
+  SC,
   JSON_TYPE,
   IMPORT_VAR,
   STYLED_COMPONENT,
@@ -103,6 +104,7 @@ export default function addNewContainer(session, apiResponse, baseName) {
         }),
         File.create({ // AppWrapper.js
           nameId: appWrapperNameId,
+          type: SC,
           declarationIds: [
             appWrapperDeclId,
           ],

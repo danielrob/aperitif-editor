@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import orm from 'orm'
 import { capitalize } from 'utils'
-import { DIR, STYLED_COMPONENT } from 'constantz'
+import { DIR, SC, STYLED_COMPONENT } from 'constantz'
 
 const createComponentBundle = ({
   baseName,
@@ -44,7 +44,7 @@ const createComponentBundle = ({
     type: DIR,
     children: [
       File.create({ nameId: indexNameId, declarationIds: [newComponentDeclarationId] }),
-      File.create({ nameId: wrapperNameId, declarationIds: [wrapperDeclarationId] }),
+      File.create({ nameId: wrapperNameId, type: SC, declarationIds: [wrapperDeclarationId] }),
     ],
   })
 

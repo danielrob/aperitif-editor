@@ -1,6 +1,6 @@
 import { partition } from 'lodash'
 import { createSelector } from 'reselect'
-import { DIR } from 'constantz'
+import { DIR, SC } from 'constantz'
 import { sortAlphabetically } from 'utils'
 
 export const selectCurrentFileId = s => s.app.present.editor.currentFileId
@@ -65,21 +65,22 @@ export const makeSelectFile = () => createSelector(
     })
 
     const [directories, fichiers] = partition(sortedChildren, id =>
-      files[id].isDirectory
+      files[id].type === DIR
     )
 
-    const isDir = !!children.length || type === DIR
+    const isDir = type === DIR
 
     return {
       fileId,
       nameId,
       name: names[nameId].value,
       type,
-      extension: type && !isDir ? `.${type}` : '',
+      extension: (type === SC && '.js') || (!isDir ? `.${type}` : ''),
       fileChildren: [...directories, ...fichiers],
       isDirectory: isDir,
       isCurrent: fileId === currentFileId,
       isSelected: fileId === selectedFileId,
+      isEmptyDir: !children.length && type === DIR,
       containsCurrent: children.includes(currentFileId),
       declarationIds,
     }

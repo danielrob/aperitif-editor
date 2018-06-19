@@ -19,10 +19,9 @@ const FolderIcon = props =>
   )
 
 FolderIcon.defaultProps = {
-  width: '14px',
+  width: '15px',
   style: {
-    marginRight: '3px',
-    marginBottom: '3px',
+    margin: '0 3px 3px 4px',
     color: '#2f3267',
   },
 }
