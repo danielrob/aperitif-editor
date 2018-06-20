@@ -55,6 +55,13 @@ class AperoPost extends React.PureComponent {
     this.setState({ error })
   }
 
+  componentDidMount() {
+    if (process.env.NODE_ENV === 'development' && isWelcome) {
+      isWelcome = false
+      this.props.initializeApp(apiArrayResponse)
+    }
+  }
+
   componentWillUnmount() {
     isWelcome = false
   }
