@@ -7,7 +7,7 @@ export default function initializeFromData(state, apiResponse) {
 
   const { Declaration, File } = session
 
-  addNewContainer(session, apiResponse, 'GithubIssue')
+  addNewContainer(session, apiResponse, 'App')
 
   // files
   const indexFile = File.create({

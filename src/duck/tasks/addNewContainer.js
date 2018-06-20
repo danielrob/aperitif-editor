@@ -1,5 +1,5 @@
 import C from 'check-types'
-import pluralize from 'pluralize'
+import pluralize, { singular } from 'pluralize'
 import invariant from 'invariant'
 import orm from 'orm'
 import {
@@ -23,8 +23,10 @@ import {
   ID_NAME_ID,
 } from 'constantz'
 
-export default function addNewContainer(session, apiResponse, baseName) {
+export default function addNewContainer(session, apiResponse, _baseName) {
   const { Name, DeclParam, CallParam, Declaration, Invocation, File } = session
+  const baseName = singular(_baseName)
+  const isCalledApp = baseName === 'App'
   const payloadIsList = C.array.of.object(apiResponse)
   const payloadIsObject = C.object(apiResponse)
   invariant(payloadIsList || payloadIsObject, 'addNewContainer requires object or arrayOfObjects payload')
@@ -38,15 +40,16 @@ export default function addNewContainer(session, apiResponse, baseName) {
   ] =
   [
     'data',
-    `${payloadIsList ? pluralize(baseName) : baseName}Container`, // APP_CONTAINER_NAME_ID if initializing
-    baseName,
-    `${baseName}Wrapper`,
+    `${payloadIsList && !isCalledApp ? pluralize(baseName) : baseName}Container`, // APP_CONTAINER_NAME_ID if initializing
+    isCalledApp && payloadIsList ? 'DataItem' : baseName,
+    `${isCalledApp && payloadIsList ? 'DataItem' : baseName}Wrapper`,
   ].map(name => Name.create(name))
 
   let listComponentNameId
   let listWrapperNameId
   if (payloadIsList) {
-    const listName = pluralize(baseName) === baseName ? `${baseName}List` : pluralize(baseName)
+    let listName = pluralize(baseName) === baseName ? `${baseName}List` : pluralize(baseName)
+    listName = isCalledApp ? baseName : listName
     listComponentNameId = Name.create(listName)
     listWrapperNameId = Name.create(`${listName}Wrapper`)
   }
