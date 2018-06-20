@@ -58,6 +58,7 @@ class Editor extends React.PureComponent {
         <ReactTooltip
           id="prop"
           effect="solid"
+          showDelay={150}
           getContent={dataTip => <pre>{dataTip}</pre>}
         />
         <br /* The EOF newline. The POSIX standard. https://stackoverflow.com/a/729795/4682556 */ />

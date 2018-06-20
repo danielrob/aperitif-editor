@@ -4,6 +4,8 @@ import React from 'react'
 import styled from 'styled-as-components'
 import { partition } from 'lodash'
 
+import { PROP } from 'constantz'
+import { NullifyingDropTarget } from 'containers'
 import { indent } from 'utils'
 import { paramPropTypes } from 'model-prop-types'
 
@@ -15,7 +17,7 @@ const Props = ({ props, declarationId, depth, parentheses }) => {
   const hasProps = !!params.length
   const inline = params.length < 5
   return (
-    <React.Fragment>
+    <NullifyingDropTarget type={PROP}>
       {' '}
       {hasProps && parentheses && '('}
       {hasProps && '{'}{' '}
@@ -45,7 +47,7 @@ const Props = ({ props, declarationId, depth, parentheses }) => {
       {hasProps && !inline && indent((depth || 1) - 1)}
       {hasProps && '}'}
       {hasProps && parentheses && ')'}{' '}
-    </React.Fragment>
+    </NullifyingDropTarget>
   )
 }
 
