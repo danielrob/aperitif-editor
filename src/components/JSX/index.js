@@ -7,6 +7,7 @@ import {
   ARRAY_MAP_METHOD,
   VAR_INVOCATION,
   IMPORT_VAR,
+  PROPERTY_ACCESS,
 } from 'constantz'
 import { MapInvocation, VarInvocation } from 'components'
 import {
@@ -17,20 +18,21 @@ import {
 
 // functionize due to module importing problems
 const types = () => ({
-  [COMPONENT_INVOCATION]: ComponentInvocationContainer,
-  [PARAM_INVOCATION]: ParamInvocationContainer,
-  [ARRAY_MAP_METHOD]: MapInvocation,
-  [VAR_INVOCATION]: VarInvocation,
-  [IMPORT_VAR]: VarInvocation,
+  [COMPONENT_INVOCATION]: [ComponentInvocationContainer],
+  [PARAM_INVOCATION]: [ParamInvocationContainer],
+  [ARRAY_MAP_METHOD]: [MapInvocation],
+  [VAR_INVOCATION]: [VarInvocation],
+  [IMPORT_VAR]: [VarInvocation],
+  [PROPERTY_ACCESS]: [VarInvocation, { dot: true }],
 })
 
 const JSX = ({ invocationId, initial, ...props }) => (
   <InvocationContainer
     invocationId={invocationId}
     render={invocation => {
-      const propsToPass = initial ? { ...props, initial } : props
 
-      const Invocation = types()[invocation.type] || ComponentInvocationContainer
+      const [Invocation, configProps = {}] = types()[invocation.type] || ComponentInvocationContainer
+      const propsToPass = initial ? { ...props, ...configProps, initial } : { ...props, ...configProps }
       return (
         <Invocation
           key={invocationId}

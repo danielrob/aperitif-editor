@@ -21,6 +21,8 @@ import {
   INDEX_NAME_ID,
   KEY_NAME_ID,
   ID_NAME_ID,
+  VAR_INVOCATION,
+  PROPERTY_ACCESS,
 } from 'constantz'
 
 export default function addNewContainer(session, apiResponse, _baseName) {
@@ -135,7 +137,18 @@ export default function addNewContainer(session, apiResponse, _baseName) {
                       callParamIds: [
                         CallParam.create({
                           nameId: KEY_NAME_ID,
-                          valueNameIds: [mapPseudoParamNameId, ID_NAME_ID],
+                          valueInvocationId: Invocation.create({
+                            nameId: mapPseudoParamNameId,
+                            type: VAR_INVOCATION,
+                            inline: true,
+                            invocationIds: [
+                              Invocation.create({
+                                nameId: Name.create('id'),
+                                type: PROPERTY_ACCESS,
+                                inline: true,
+                              }),
+                            ],
+                          }),
                         }),
                       ],
                       pseudoSpreadPropsNameId: mapPseudoParamNameId,
@@ -224,7 +237,6 @@ export default function addNewContainer(session, apiResponse, _baseName) {
       pseudoSpreadPropsNameId: dataNameId,
     })
   } else {
-
     componentInvocation = Invocation.create({
       nameId: listComponentNameId,
       type: COMPONENT_INVOCATION,
@@ -232,7 +244,11 @@ export default function addNewContainer(session, apiResponse, _baseName) {
       callParamIds: [
         CallParam.create({
           nameId: dataNameId,
-          valueNameIds: [dataNameId],
+          valueInvocationId: Invocation.create({
+            nameId: dataNameId,
+            type: VAR_INVOCATION,
+            inline: true,
+          }),
         }),
       ],
       closed: true,

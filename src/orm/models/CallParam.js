@@ -6,9 +6,9 @@ CallParam.modelName = 'CallParam'
 CallParam.stateKey = 'callParams'
 
 CallParam.fields = {
-  declParamId: fk('DeclParam'),
   nameId: fk('Name'),
-  valueNameIds: array([]),
+  valueInvocationId: fk('Invocation'),
+  declParamId: fk('DeclParam'),
   isCallSpreadMember: attr(true),
 }
 

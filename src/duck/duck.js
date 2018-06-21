@@ -15,6 +15,8 @@ import {
   REACT_CHILDREN_DECLARATION_PARAM_ID,
   KEY_NAME_ID,
   ID_NAME_ID,
+  PROPERTY_ACCESS,
+  VAR_INVOCATION,
 } from 'constantz'
 
 import { initializeFromData, addNewContainer, createComponentBundle } from './tasks'
@@ -484,7 +486,16 @@ export default function appReducer(state, action) {
                   callParamIds: [
                     CallParam.create({
                       nameId: KEY_NAME_ID,
-                      valueNameIds: [mapPseudoParamNameId, ID_NAME_ID],
+                      invocationId: Invocation.create({
+                        nameId: mapPseudoParamNameId,
+                        type: VAR_INVOCATION,
+                        invocationIds: [
+                          Invocation.create({
+                            nameId: ID_NAME_ID,
+                            type: PROPERTY_ACCESS,
+                          }),
+                        ],
+                      }),
                     }),
                   ],
                   pseudoSpreadPropsNameId: mapPseudoParamNameId,
@@ -554,7 +565,7 @@ export default function appReducer(state, action) {
       Invocation.withId(targetInvocationId).invocations.insert(
         Invocation.create({
           nameId: componentNameId,
-          callParamIds: [CallParam.create({ declParamId: paramId })],
+          callParamIds: [CallParam.create({ nameId: Name.create(baseName), declParamId: paramId })],
           declarationId: newComponentDeclarationId,
           closed: true,
         }),

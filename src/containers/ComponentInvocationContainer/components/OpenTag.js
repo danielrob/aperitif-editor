@@ -8,7 +8,7 @@ import theme from 'theme-proxy'
 import { invocationPropTypes } from 'model-prop-types'
 import { PROP, PROPS_SPREAD } from 'constantz'
 import { indent } from 'utils'
-import { Input } from 'components'
+import { Input, JSX } from 'components'
 import { Name } from 'containers'
 
 const OpenTag = ({
@@ -35,7 +35,7 @@ const OpenTag = ({
       {indent(depth)}{'<'}<Input pointer nameId={nameId} />
       {keyParam && (
         <span>
-          {' '}{keyParam.name}={'{'}{keyParam.valueString}{'}'}
+          {' '}<Name nameId={keyParam.nameId} />={'{'}<JSX invocationId={keyParam.valueInvocationId} depth={0} />{'}'}
         </span>
       )}
       {(hasPropsSpread || spreadPropsIsOver) && (
@@ -64,18 +64,23 @@ const OpenTag = ({
           {'}'}
         </span>
       )}
-      {standardCallParams.map(({ id, declIsSpreadMember, nameId, valueString }) =>
-        !((hasPropsSpread || spreadPropsIsOver) && declIsSpreadMember) && (
-          <span key={id}>
-            {' '}
-            <Name nameId={nameId} />
-            =
-            {'{'}
-            {declIsSpreadMember && 'props.'}
-            {valueString || <Name nameId={nameId} />}
-            {'}'}
-          </span>
-        ))}
+      {standardCallParams.map(({ id, valueInvocationId, declIsSpreadMember, nameId, invokeNameId, valueString }) =>
+      valueInvocationId ? (
+        <span>
+          {' '}<Name nameId={nameId} />={'{'}<JSX invocationId={valueInvocationId} inline depth={0} />{'}'}
+        </span>
+      ) :
+      !((hasPropsSpread || spreadPropsIsOver) && declIsSpreadMember) && (
+        <span key={id}>
+          {' '}
+          <Input nameId={nameId} />
+          =
+          {'{'}
+          {declIsSpreadMember && 'props.'}
+          {valueString || <Name nameId={invokeNameId} />}
+          {'}'}
+        </span>
+      ))}
       {closed && ' /'}
       {'>'}
     </React.Fragment>

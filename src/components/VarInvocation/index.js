@@ -3,8 +3,9 @@ import styled from 'styled-as-components'
 import { JSX, Input } from 'components'
 import { indent } from 'utils'
 
-const VarInvocation = ({ invocation: { invocationId, nameId, invocationIds }, depth }) => (
+const VarInvocation = ({ invocation: { invocationId, nameId, invocationIds }, depth, dot }) => (
   <React.Fragment>
+    {dot && <span>.</span>}
     {indent(depth)}<Input nameId={nameId} />
     {invocationIds.length === 1 &&
       <JSX
@@ -18,5 +19,5 @@ const VarInvocation = ({ invocation: { invocationId, nameId, invocationIds }, de
 )
 
 export default styled(VarInvocation).as.div`
-  ${props => props.invocation.inline && 'display: inline-block;'}
+  ${props => (props.invocation.inline || props.dot) && 'display: inline-block;'}
 `

@@ -27,26 +27,25 @@ const makeSelectInvocation = () => createSelector(
       type,
       invocationIds,
       callParams: callParamIds.map(id => {
-        const { declParamId } = callParams[id]
+        const { declParamId, nameId, ...callParam } = callParams[id]
 
         // literal callParam case e.g. key={name.id} or height={100}
-        if (!declParamId) {
-          const { id: paramId, valueNameIds, nameId } = callParams[id]
+        if (declParamId) {
+          const { nameId: fallbackNameId, isSpreadMember } = declParams[declParamId]
           return {
-            id: paramId,
-            name: names[nameId].value,
-            nameId,
-            valueString: valueNameIds.map(valueNameId => names[valueNameId].value).join('.'),
+            id,
+            name: names[nameId || fallbackNameId].value,
+            nameId: nameId || fallbackNameId,
+            invokeNameId: fallbackNameId,
+            declParamId,
+            declIsSpreadMember: isSpreadMember,
           }
         }
-
-        const { nameId, isSpreadMember } = declParams[declParamId]
         return {
           id,
-          name: names[nameId].value,
           nameId,
-          declParamId,
-          declIsSpreadMember: isSpreadMember,
+          name: names[nameId].value,
+          ...callParam,
         }
       }),
       inline,

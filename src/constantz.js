@@ -69,6 +69,7 @@ export const componentDeclarationTypes = [
   invocation types
 */
 export const VAR_INVOCATION = 'var invocation'
+export const PROPERTY_ACCESS = '.property access'
 export const IMPORT_VAR = 'import var'
 export const ARRAY_MAP_METHOD = '.map invocation'
 export const COMPONENT_INVOCATION = 'component invocation' // also draggable
