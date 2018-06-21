@@ -4,6 +4,10 @@ import TextareaAutosize from 'react-autosize-textarea'
 
 const TemplateStringTextArea = styled(TextareaAutosize).attrs({
   cols: 100,
+  autocomplete: 'off',
+  autocorrect: 'off',
+  autocapitalize: 'off',
+  spellcheck: 'false',
 })`
   color: ${theme.colors.orange};
   border: none;
