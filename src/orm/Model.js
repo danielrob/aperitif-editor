@@ -55,6 +55,7 @@ class Model {
             // add back array methods
             filter: cb => this.bindArrayMethod(key, 'filter', cb),
             find: cb => this.bindArrayMethod(key, 'find', cb),
+            first: () => this.bindArrayMethod(key, 'find', () => true),
             findIndex: cb => this.bindArrayMethod(key, 'findIndex', cb),
             includes: cb => this.bindArrayMethod(key, 'includes', cb),
             forEach: cb => this.bindArrayMethod(key, 'forEach', cb),

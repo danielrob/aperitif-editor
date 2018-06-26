@@ -161,6 +161,15 @@ export default function appReducer(state, action) {
 
       Invocation.update({ closed: false })
 
+      // add children declaration param to the source declaration
+      Invocation.declaration.declParams.insert(REACT_CHILDREN_DECLARATION_PARAM_ID)
+
+      // add children invocation param to the source declarations first child
+      Invocation.withId(
+        Invocation.declaration.invocations.first()
+      ).invocations.insert(REACT_CHILDREN_INVOCATION_ID)
+      Invocation.update({ closed: false })
+
       return session.state
     }
 
