@@ -5,32 +5,32 @@ import styled from 'styled-as-components'
 import { partition } from 'lodash'
 
 import { PROP } from 'constantz'
-import { NullifyingDropTarget } from 'containers'
+import { StopDropTarget } from 'containers'
 import { indent } from 'utils'
 import { paramPropTypes } from 'model-prop-types'
 
-import { SpreadPropsContainer, PropContainer } from './containers'
+import { SpreadPropsContainer, PropDragContainer } from './containers'
 
-// A param is a prop, ...is a param is a prop ♪♫♬ ♪♫♬ <- clearly got bored
-const Props = ({ props, declarationId, depth, parentheses }) => {
-  const [spreadProps, params] = partition(props, p => p.isSpreadMember)
-  const hasProps = !!params.length
-  const inline = params.length < 5
+// A prop is a prop, ...is a prop is a prop ♪♫♬ ♪♫♬ <- clearly got bored
+const Props = ({ props: allProps, declarationId, depth, parentheses }) => {
+  const [spreadProps, props] = partition(allProps, p => p.isSpreadMember)
+  const hasProps = !!props.length
+  const inline = props.length < 5
   return (
-    <NullifyingDropTarget type={PROP}>
+    <StopDropTarget type={PROP}>
       {' '}
       {hasProps && parentheses && '('}
       {hasProps && '{'}{' '}
       {hasProps && !inline && <br />}
       <span>
-        {params
-          .map((param, index) => (
-            <React.Fragment key={param.nameId}>
+        {props
+          .map((prop, index) => (
+            <React.Fragment key={prop.nameId}>
               {!inline && indent(depth || 1)}
-              <PropContainer
-                prop={param}
+              <PropDragContainer
+                prop={prop}
                 declarationId={declarationId}
-                isLast={index === params.length - 1}
+                isLast={index === props.length - 1}
               />
               {!inline && <br />}
             </React.Fragment>
@@ -40,14 +40,14 @@ const Props = ({ props, declarationId, depth, parentheses }) => {
       <SpreadPropsContainer
         spreadProps={spreadProps}
         declarationId={declarationId}
-        params={params}
+        props={props}
         depth={depth}
         inline={inline}
       />{' '}
       {hasProps && !inline && indent((depth || 1) - 1)}
       {hasProps && '}'}
       {hasProps && parentheses && ')'}{' '}
-    </NullifyingDropTarget>
+    </StopDropTarget>
   )
 }
 

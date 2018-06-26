@@ -1,2 +1,2 @@
-export { default as PropContainer } from './PropContainer'
+export { default as PropDragContainer } from './PropDragContainer'
 export { default as SpreadPropsContainer } from './SpreadPropsContainer'

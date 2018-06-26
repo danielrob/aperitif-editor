@@ -120,9 +120,10 @@ export default function appReducer(state, action) {
         prop: { paramId },
       } = action.payload
       const { nameId, payload } = DeclParam.withId(paramId).ref()
+      const copyNameId = Name.create(Name.withId(nameId).value())
 
       Invocation.withId(targetInvocationId).callParams.insert(
-        CallParam.create({ declParamId: paramId }),
+        CallParam.create({ nameId: copyNameId, declParamId: paramId }),
         0
       )
 
@@ -486,9 +487,10 @@ export default function appReducer(state, action) {
                   callParamIds: [
                     CallParam.create({
                       nameId: KEY_NAME_ID,
-                      invocationId: Invocation.create({
+                      valueInvocationId: Invocation.create({
                         nameId: mapPseudoParamNameId,
                         type: VAR_INVOCATION,
+                        inline: true,
                         invocationIds: [
                           Invocation.create({
                             nameId: ID_NAME_ID,
@@ -555,17 +557,18 @@ export default function appReducer(state, action) {
         prop: { paramId, nameId, payload },
       } = action.payload
       const baseName = Name.withId(nameId).value()
+      const nameCopyId = Name.create(baseName)
 
       const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,
         session,
-        declParamIds: [DeclParam.create({ nameId, payload })],
+        declParamIds: [DeclParam.create({ nameId: nameCopyId, payload })],
       })
 
       Invocation.withId(targetInvocationId).invocations.insert(
         Invocation.create({
           nameId: componentNameId,
-          callParamIds: [CallParam.create({ nameId: Name.create(baseName), declParamId: paramId })],
+          callParamIds: [CallParam.create({ nameId: nameCopyId, declParamId: paramId })],
           declarationId: newComponentDeclarationId,
           closed: true,
         }),

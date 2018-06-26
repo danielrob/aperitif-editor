@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-as-components'
 import { indent } from 'utils'
 
-const SpreadProps = ({ isOver, params, depth, spreadProps, connectDragSource, names, inline }) =>
+const SpreadProps = ({ isOver, props, depth, spreadProps, connectDragSource, names, inline }) =>
   (!!spreadProps.length || isOver) ? (
     <span
       style={{
@@ -16,7 +16,7 @@ const SpreadProps = ({ isOver, params, depth, spreadProps, connectDragSource, na
       {inline && ', '}
       {connectDragSource(
         <div className="dragsource">
-          {!!params.length && '...'}props
+          {!!props.length && '...'}props
         </div>
       )}
       {!inline && <br />}

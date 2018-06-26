@@ -67,7 +67,7 @@ const OpenTag = ({
       {standardCallParams.map(({ id, valueInvocationId, declIsSpreadMember, nameId, invokeNameId, valueString }) =>
       valueInvocationId ? (
         <span>
-          {' '}<Name nameId={nameId} />={'{'}<JSX invocationId={valueInvocationId} inline depth={0} />{'}'}
+          {' '}<Input nameId={nameId} />={'{'}<JSX invocationId={valueInvocationId} inline depth={0} />{'}'}
         </span>
       ) :
       !((hasPropsSpread || spreadPropsIsOver) && declIsSpreadMember) && (

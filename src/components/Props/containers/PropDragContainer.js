@@ -1,11 +1,22 @@
 import T from 'prop-types'
 import { forbidExtraProps } from 'airbnb-prop-types'
+import React from 'react'
 import { DragSource } from 'react-dnd'
 import { PROP } from 'constantz'
 import ReactTooltip from 'react-tooltip'
 
 import { paramPropTypes } from 'model-prop-types'
 import { Prop } from '../components'
+
+const PropContainer = props => <Prop {...props} />
+
+/* propTypes */
+PropContainer.propTypes = forbidExtraProps({
+  declarationId: T.number.isRequired,
+  prop: T.shape(paramPropTypes).isRequired,
+  isLast: T.bool.isRequired,
+  connectDragSource: T.func.isRequired,
+})
 
 /* dnd */
 const propSource = {
@@ -26,23 +37,9 @@ const propSource = {
   },
 }
 
-const collect = (connect, monitor) => ({
+const collect = connect => ({
   connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging(),
 })
 
-
-/* compose */
-const PropContainer = DragSource(PROP, propSource, collect)(Prop)
-
-
-/* propTypes */
-PropContainer.propTypes = forbidExtraProps({
-  declarationId: T.number.isRequired,
-  prop: T.shape(paramPropTypes).isRequired,
-  isLast: T.bool.isRequired,
-})
-
-
-/* export */
-export default PropContainer
+/* compose export */
+export default DragSource(PROP, propSource, collect)(PropContainer)
