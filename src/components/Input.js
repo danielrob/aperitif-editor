@@ -60,10 +60,9 @@ class Input extends React.PureComponent {
 
     return (
       this.state.displayInput ?
-        <React.Fragment>
+        <HackAutosizeInput>
           <AutosizeInput inputRef={ref => { this.inputRef = ref }} type="text" {...input} />
-          <span style={{ display: 'inline-block', marginLeft: '-2px' }} />
-        </React.Fragment>
+        </HackAutosizeInput>
         :
         <Name onClick={this.onClick} pointer={pointer}>{value}</Name>
     )
@@ -80,6 +79,12 @@ const makeMapStateToProps = () => {
 }
 
 export default connect(makeMapStateToProps, mapDispatchToProps)(Input)
+
+const HackAutosizeInput = styled.span`
+  div[style] {
+    margin-right: ${window.navigator.userAgent.includes('Firefox') ? '-17px' : '-2px'};
+  }
+`
 
 const Name = styled.span`
   cursor: ${props => props.pointer ? 'pointer' : 'text'};
