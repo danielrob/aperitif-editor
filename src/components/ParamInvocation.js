@@ -33,7 +33,7 @@ const ParamInvocation = ({
         {invocationIds.length === 1 &&
           <JSX
             parentId={parentId}
-            invocationId={invocationIds}
+            invocationId={invocationIds[0]}
             depth={0}
             initial
           />

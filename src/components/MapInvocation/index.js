@@ -1,10 +1,11 @@
 import React from 'react'
-import { JSX, Input } from 'components'
+import { JSX } from 'components'
+import { NameInput } from 'containers'
 import { indent } from 'utils'
 
 const MapInvocation = ({ invocation: { invocationId, nameId, invocationIds }, depth }) => (
   <React.Fragment>
-    .map(<Input nameId={nameId} /> => (
+    .map(<NameInput nameId={nameId} /> => (
     <JSX
       parentId={invocationId}
       invocationId={invocationIds[0]}

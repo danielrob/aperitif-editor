@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
-import { capitalize } from 'utils'
+import { pascalCase, camelCase } from 'utils'
 import orm from 'orm'
 import {
   PROPS,
@@ -120,7 +120,7 @@ export default function appReducer(state, action) {
         prop: { paramId },
       } = action.payload
       const { nameId, payload } = DeclParam.withId(paramId).ref()
-      const copyNameId = Name.create(Name.withId(nameId).value())
+      const copyNameId = Name.create(camelCase(Name.withId(nameId).value()))
 
       Invocation.withId(targetInvocationId).callParams.insert(
         CallParam.create({ nameId: copyNameId, declParamId: paramId }),
@@ -161,14 +161,16 @@ export default function appReducer(state, action) {
 
       Invocation.update({ closed: false })
 
-      // add children declaration param to the source declaration
-      Invocation.declaration.declParams.insert(REACT_CHILDREN_DECLARATION_PARAM_ID)
+      if (Invocation.declaration.ref().type !== STYLED_COMPONENT) {
+        // add children declaration param to the source declaration
+        Invocation.declaration.declParams.insert(REACT_CHILDREN_DECLARATION_PARAM_ID)
 
-      // add children invocation param to the source declarations first child
-      Invocation.withId(
-        Invocation.declaration.invocations.first()
-      ).invocations.insert(REACT_CHILDREN_INVOCATION_ID)
-      Invocation.update({ closed: false })
+        // add children invocation param to the source declarations first child
+        Invocation.withId(
+          Invocation.declaration.invocations.first()
+        ).invocations.insert(REACT_CHILDREN_INVOCATION_ID)
+        Invocation.update({ closed: false })
+      }
 
       return session.state
     }
@@ -373,7 +375,7 @@ export default function appReducer(state, action) {
 
       const name = Name.withId(nameId).value()
 
-      const newNameId = Name.create(capitalize(name))
+      const newNameId = Name.create(pascalCase(name))
 
       const newDeclarationId = Declaration.create({
         nameId: newNameId,
@@ -566,7 +568,7 @@ export default function appReducer(state, action) {
         prop: { paramId, nameId, payload },
       } = action.payload
       const baseName = Name.withId(nameId).value()
-      const nameCopyId = Name.create(baseName)
+      const nameCopyId = Name.create(camelCase(baseName))
 
       const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,

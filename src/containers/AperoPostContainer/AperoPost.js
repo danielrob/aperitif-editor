@@ -106,7 +106,7 @@ const Error = styled.div`
 `
 
 const TextArea = styled.textarea`
-  white-space: nowrap;
+  white-space: pre-wrap;
   resize: none;
   border: 1px solid #ccc;
   outline: none;

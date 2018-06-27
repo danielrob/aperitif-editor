@@ -1,4 +1,4 @@
-
+import T from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget, DragSource } from 'react-dnd'
@@ -14,14 +14,24 @@ import { SpreadProps } from '../components'
 
 class SpreadPropsContainer extends React.PureComponent {
   render() {
-    const { connectDropTarget } = this.props
+    const {
+      moveParamToSpread, // drop target only
+      connectDropTarget,
+      ...props
+    } = this.props
     return (
       <SpreadProps
         innerRef={innerRef => connectDropTarget(findDOMNode(innerRef))}
-        {...this.props}
+        {...props}
       />
     )
   }
+}
+
+SpreadPropsContainer.propTypes = {
+  moveParamToSpread: T.func.isRequired,
+  // names: T.shape(T.string).isRequired,
+  declarationId: T.number.isRequired,
 }
 
 /* connect */

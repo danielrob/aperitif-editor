@@ -1,4 +1,4 @@
-import Model, { attr, array, fk } from '../Model'
+import Model, { attr, fk } from '../Model'
 
 class CallParam extends Model {}
 

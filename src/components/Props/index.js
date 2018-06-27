@@ -11,7 +11,6 @@ import { paramPropTypes } from 'model-prop-types'
 
 import { SpreadPropsContainer, PropDragContainer } from './containers'
 
-// A prop is a prop, ...is a prop is a prop ♪♫♬ ♪♫♬ <- clearly got bored
 const Props = ({ props: allProps, declarationId, depth, parentheses }) => {
   const [spreadProps, props] = partition(allProps, p => p.isSpreadMember)
   const hasProps = !!props.length

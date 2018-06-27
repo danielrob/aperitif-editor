@@ -17,7 +17,7 @@ export const invocationPropTypes = T.shape({
 export const paramInvocationPropTypes = T.shape({
   invocationId: T.number.isRequired,
   callParamId: T.number.isRequired,
-  nameId: T.string.isRequired,
+  nameId: T.number.isRequired,
   declIsSpreadMember: T.bool.isRequired,
   chainedInvocations: T.arrayOf(T.object),
 })

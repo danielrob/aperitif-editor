@@ -1,12 +1,13 @@
 import React from 'react'
-import { Semi, Keyword, Input } from 'components'
+import { Semi, Keyword } from 'components'
+import { NameInput } from 'containers'
 
 const DefaultExport = ({ nameId }) =>
   nameId ? (
     <React.Fragment>
       <Keyword>export default</Keyword>
       {' '}
-      <Input nameId={nameId} />
+      <NameInput nameId={nameId} />
       <Semi />
     </React.Fragment>
   ) : null

@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import AutosizeInput from 'react-input-autosize'
 
 import { updateDeclaration } from 'duck'
-import { Keyword, Backtick, Input, Semi } from 'components'
-import { DraggableDeclaration } from 'containers'
+import { Keyword, Backtick, Semi, Input } from 'components'
+import { DraggableDeclaration, NameInput } from 'containers'
 
 import TemplateStringTextArea from './TemplateStringTextArea'
 
@@ -14,16 +13,15 @@ class StyledComponent extends React.PureComponent {
     updateDeclaration({ declarationId, text: e.target.value })
   }
 
-  onTagChange = e => {
+  onTagChange = ({ value: tag }) => {
     const { updateDeclaration, declarationId } = this.props
-    updateDeclaration({ declarationId, tag: e.target.value })
+    updateDeclaration({ declarationId, tag })
   }
 
   render() {
     const { declarationId, nameId, type, tag, text = '  ' } = this.props
 
     const tagInput = {
-      type: 'text',
       value: tag,
       onChange: this.onTagChange,
     }
@@ -36,12 +34,12 @@ class StyledComponent extends React.PureComponent {
           render={(connectDragSource, connectDragPreview) => connectDragSource(
             <span>
               <Keyword>const </Keyword>
-              {connectDragPreview(<div style={{ display: 'inline', userSelect: 'all' }}><Input nameId={nameId} /> </div>)}
+              {connectDragPreview(<div style={{ display: 'inline', userSelect: 'all' }}><NameInput nameId={nameId} /> </div>)}
             </span>
           )}
         />
         {' '}=
-        styled.<AutosizeInput {...tagInput} /><Backtick />
+        styled.<Input {...tagInput} /><Backtick />
         <TemplateStringTextArea value={text} onChange={this.onChange} />
         <Backtick />
         <Semi />

@@ -8,8 +8,8 @@ import theme from 'theme-proxy'
 import { invocationPropTypes } from 'model-prop-types'
 import { PROP, PROPS_SPREAD } from 'constantz'
 import { indent } from 'utils'
-import { Input, JSX } from 'components'
-import { Name } from 'containers'
+import { JSX } from 'components'
+import { Name, NameInput } from 'containers'
 
 const OpenTag = ({
   isOverOpenTag,
@@ -32,7 +32,7 @@ const OpenTag = ({
 
   return (
     <React.Fragment>
-      {indent(depth)}{'<'}<Input pointer nameId={nameId} />
+      {indent(depth)}{'<'}<NameInput pointer nameId={nameId} />
       {keyParam && (
         <span>
           {' '}<Name nameId={keyParam.nameId} />={'{'}<JSX invocationId={keyParam.valueInvocationId} depth={0} />{'}'}
@@ -66,14 +66,14 @@ const OpenTag = ({
       )}
       {standardCallParams.map(({ id, valueInvocationId, declIsSpreadMember, nameId, invokeNameId, valueString }) =>
       valueInvocationId ? (
-        <span>
-          {' '}<Input nameId={nameId} />={'{'}<JSX invocationId={valueInvocationId} inline depth={0} />{'}'}
+        <span key={id}>
+          {' '}<NameInput nameId={nameId} />={'{'}<JSX invocationId={valueInvocationId} inline depth={0} />{'}'}
         </span>
       ) :
       !((hasPropsSpread || spreadPropsIsOver) && declIsSpreadMember) && (
         <span key={id}>
           {' '}
-          <Input nameId={nameId} />
+          <NameInput nameId={nameId} />
           =
           {'{'}
           {declIsSpreadMember && 'props.'}

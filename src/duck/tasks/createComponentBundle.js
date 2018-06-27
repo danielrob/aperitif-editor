@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import orm from 'orm'
-import { capitalize } from 'utils'
+import { pascalCase } from 'utils'
 import { DIR, SC, STYLED_COMPONENT } from 'constantz'
 
 const createComponentBundle = ({
@@ -12,7 +12,7 @@ const createComponentBundle = ({
   const { Name, Declaration, Invocation, File } = session
 
   /* names - for the new component bundle */
-  const componentName = getNewComponentName(Name.all().ref(), capitalize(baseName))
+  const componentName = getNewComponentName(Name.all().ref(), pascalCase(baseName))
   const componentNameId = Name.create(componentName)
   const indexNameId = Name.create('index')
   const wrapperNameId = Name.create(`${componentName}Wrapper`)

@@ -165,6 +165,8 @@ injectGlobal`
 
     /* Turn off scroll bars in IE unless needed */
     overflow:auto;
+
+    white-space: pre-wrap;
   }
 
   /* Selects

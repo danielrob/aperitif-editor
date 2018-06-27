@@ -20,7 +20,6 @@ import {
   CONTAINERS_FILE_ID,
   INDEX_NAME_ID,
   KEY_NAME_ID,
-  ID_NAME_ID,
   VAR_INVOCATION,
   PROPERTY_ACCESS,
 } from 'constantz'
@@ -36,11 +35,13 @@ export default function addNewContainer(session, apiResponse, _baseName) {
   // Names
   const [
     dataNameId,
+    data2NameId,
     containerNameId,
     componentNameId,
     wrapperNameId,
   ] =
   [
+    'data',
     'data',
     `${payloadIsList && !isCalledApp ? pluralize(baseName) : baseName}Container`, // APP_CONTAINER_NAME_ID if initializing
     isCalledApp && payloadIsList ? 'DataItem' : baseName,
@@ -69,7 +70,7 @@ export default function addNewContainer(session, apiResponse, _baseName) {
     )
   } else {
     listComponentDeclParamId = DeclParam.create({
-      nameId: dataNameId,
+      nameId: data2NameId,
       payload: apiResponse,
     })
 
@@ -121,7 +122,7 @@ export default function addNewContainer(session, apiResponse, _baseName) {
           declarationId: listWrapperDeclarationId,
           invocationIds: [
             Invocation.create({
-              nameId: dataNameId,
+              nameId: data2NameId,
               type: PARAM_INVOCATION,
               callParamIds: [
                 CallParam.create({ declParamId: listComponentDeclParamId }),
@@ -243,7 +244,7 @@ export default function addNewContainer(session, apiResponse, _baseName) {
       declarationId: listComponentDeclarationId,
       callParamIds: [
         CallParam.create({
-          nameId: dataNameId,
+          nameId: data2NameId,
           valueInvocationId: Invocation.create({
             nameId: dataNameId,
             type: VAR_INVOCATION,

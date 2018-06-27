@@ -1,16 +1,9 @@
+import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
-import { connect } from 'react-redux'
-import { changeName } from 'duck'
-import { createStructuredSelector } from 'reselect'
-import { makeSelectName } from 'selectors'
 import AutosizeInput from 'react-input-autosize'
 
-class Input extends React.PureComponent {
-  static defaultProps = {
-    shouldActivateOnClick: true,
-  }
-
+export default class Input extends React.PureComponent {
   state = {
     displayInput: false,
   }
@@ -26,7 +19,7 @@ class Input extends React.PureComponent {
   }
 
   onChange = e => {
-    const { changeName, nameId } = this.props
+    const { onChange, nameId } = this.props
     const pos = e.target.selectionStart - 1
     const nextName = e.target.value
 
@@ -36,7 +29,7 @@ class Input extends React.PureComponent {
       return
     }
 
-    changeName({ nameId, value: nextName })
+    onChange({ nameId, value: nextName })
   }
 
   componentDidUpdate() {
@@ -51,7 +44,7 @@ class Input extends React.PureComponent {
   }
 
   render() {
-    const { name: { value }, pointer } = this.props
+    const { value, pointer } = this.props
     const input = {
       value,
       onChange: this.onChange,
@@ -59,33 +52,34 @@ class Input extends React.PureComponent {
     }
 
     return (
-      this.state.displayInput ?
+      this.state.displayInput ? (
         <HackAutosizeInput>
           <AutosizeInput inputRef={ref => { this.inputRef = ref }} type="text" {...input} />
         </HackAutosizeInput>
-        :
-        <Name onClick={this.onClick} pointer={pointer}>{value}</Name>
+      ) : (
+        <DisplayName onClick={this.onClick} pointer={pointer}>{value}</DisplayName>
+      )
     )
   }
 }
 
-const mapDispatchToProps = { changeName }
-
-const makeMapStateToProps = () => {
-  const selectName = makeSelectName()
-  return createStructuredSelector({
-    name: selectName,
-  })
+Input.propTypes = {
+  value: T.string.isRequired,
+  pointer: T.bool,
+  shouldActivateOnClick: T.bool,
 }
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(Input)
+Input.defaultProps = {
+  shouldActivateOnClick: true,
+  pointer: false,
+}
 
 const HackAutosizeInput = styled.span`
   div[style] {
-    margin-right: ${window.navigator.userAgent.includes('Firefox') ? '-17px' : '-2px'};
+    margin-right: -1.9px;
   }
 `
 
-const Name = styled.span`
+const DisplayName = styled.span`
   cursor: ${props => props.pointer ? 'pointer' : 'text'};
 `

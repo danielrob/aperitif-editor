@@ -2,8 +2,8 @@ import T from 'prop-types'
 import React from 'react'
 
 import { indent } from 'utils'
-import { JSX, Keyword, Props, Input, Semi } from 'components'
-import { DeclarationContainer } from 'containers'
+import { JSX, Keyword, Props, Semi } from 'components'
+import { DeclarationContainer, NameInput } from 'containers'
 import { declarationPropTypes } from 'model-prop-types'
 
 export default class ClassMethod extends React.PureComponent {
@@ -45,7 +45,7 @@ export default class ClassMethod extends React.PureComponent {
                 ) : (
                   <span>
                     {'{ '}
-                    <Input nameId={nameId} />
+                    <NameInput nameId={nameId} />
                     {' } '}
                     = <Keyword>this</Keyword>.state<Semi />
                   </span>

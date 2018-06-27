@@ -4,15 +4,15 @@ import React from 'react'
 import JSstringify from 'javascript-stringify'
 
 import { indent } from 'utils'
-import { Input, Semi } from 'components'
-import { Name } from 'containers'
+import { Semi } from 'components'
+import { Name, NameInput } from 'containers'
 
 const PropTypes = ({ props, nameId }) => {
   const maxCount = (maxBy(props, 'count') || { count: 0 }).count
   return !!props.length && (
     <React.Fragment>
       <br />
-      <Input nameId={nameId} />.propTypes = {'{'}
+      <NameInput nameId={nameId} />.propTypes = {'{'}
       {props.filter(({ isSpreadMember }) => !isSpreadMember).map(
         ({ nameId, count, payload }) =>
           count && (

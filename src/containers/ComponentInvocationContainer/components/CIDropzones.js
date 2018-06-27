@@ -5,7 +5,7 @@ import styled from 'styled-as-components'
 import { singular } from 'pluralize'
 
 import theme from 'theme-proxy'
-import { capitalize, indent, oneOf } from 'utils'
+import { camelCase, pascalCase, indent, oneOf } from 'utils'
 import { Name } from 'containers'
 import { PROP, PARAM_INVOCATION, DIR, FILE, COMPONENT_INVOCATION } from 'constantz'
 import {
@@ -44,8 +44,8 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
                 )}
                 {oneOf(C.string, C.number, C.null, C.array.of.object)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithAttribute">
-                    {'<'}{capitalize(name)}
-                    {` ${name}={${name}}`}
+                    {'<'}{pascalCase(name)}
+                    {` ${camelCase(name)}={${name}}`}
                     {'/>'}
                   </PropDropzoneContainer>
                 )}
@@ -56,21 +56,21 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
                 )}
                 {C.object(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithSpread">
-                    {`<${capitalize(name)} ...{${name}} />`}
+                    {`<${pascalCase(name)} ...{${name}} />`}
                   </PropDropzoneContainer>
                 )}
                 {oneOf(C.string, C.number, C.null)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithChild">
-                    {'<'}{capitalize(name)}{'>'}<br />
+                    {'<'}{pascalCase(name)}{'>'}<br />
                     {indent(1)}{'{'}{name}{'}'}<br />
-                    {'</'}{capitalize(name)}{'>'}
+                    {'</'}{pascalCase(name)}{'>'}
                   </PropDropzoneContainer>
                 )}
                 {oneOf(C.array.of.object)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithMap">
                     {'{'}{name}.map({singular(name)} => (<br />
                     {indent(1)}
-                    {'<'}{capitalize(singular(name))}
+                    {'<'}{pascalCase(singular(name))}
                     {` key={${singular(name)}.id} {...${singular(name)}} />`}
                     <br />
                     )){'}'}

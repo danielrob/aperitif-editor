@@ -9,7 +9,7 @@ export const REACT_CHILDREN_INVOCATION_ID = 1
 export const INDEX_NAME_ID = 1
 export const KEY_NAME_ID = 2
 export const ID_NAME_ID = 3
-export const APP_CONTAINER_NAME_ID = 8
+export const APP_CONTAINER_NAME_ID = 9
 
 
 /*

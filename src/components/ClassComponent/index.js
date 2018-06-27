@@ -1,6 +1,6 @@
 import React from 'react'
-import { Keyword, Input, PropTypes } from 'components'
-import { DeclarationContainer, ComponentTypeToggle } from 'containers'
+import { Keyword, PropTypes } from 'components'
+import { DeclarationContainer, NameInput, ComponentTypeToggle } from 'containers'
 import { INLINE, STATELESS_FUNCTION_COMPONENT } from 'constantz'
 import styled from 'styled-as-components'
 
@@ -18,7 +18,7 @@ class ClassComponent extends React.PureComponent {
           targetType={STATELESS_FUNCTION_COMPONENT}
           text="class "
         />
-        <Input nameId={nameId} /> <Keyword> extends </Keyword> React.Component {'{'}
+        <NameInput nameId={nameId} /> <Keyword> extends </Keyword> React.Component {'{'}
         <br />
         {declarationIds.map(id => (
           <DeclarationContainer

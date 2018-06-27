@@ -5,6 +5,7 @@
   "dependencies": {
     "airbnb-prop-types": "^2.10.0",
     "browser-locale": "^1.0.3",
+    "camelcase": "^5.0.0",
     "check-types": "^7.3.0",
     "classnames": "^2.2.5",
     "history": "^4.7.2",

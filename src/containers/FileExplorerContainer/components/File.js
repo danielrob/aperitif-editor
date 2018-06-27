@@ -3,7 +3,7 @@ import { forbidExtraProps, or, explicitNull } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
-import { Input } from 'components'
+import { NameInput } from 'containers'
 import { filePropTypes } from 'model-prop-types'
 
 import { FileContainer, AddContainerButton, AddComponentButton } from '../containers'
@@ -38,7 +38,7 @@ class File extends React.PureComponent {
           {connectDragPreview(
             <div style={{ display: 'inline-block' }}>
               {!isIndex && parentName ? (
-                <Input nameId={nameId} pointer shouldActivateOnClick={isSelected} />
+                <NameInput nameId={nameId} pointer shouldActivateOnClick={isSelected} />
               ) : (
                 displayName
               )}

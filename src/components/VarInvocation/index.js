@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-as-components'
-import { JSX, Input } from 'components'
+import { JSX } from 'components'
+import { NameInput } from 'containers'
 import { indent } from 'utils'
 
 const VarInvocation = ({ invocation: { invocationId, nameId, invocationIds }, depth, dot }) => (
   <React.Fragment>
     {dot && <span>.</span>}
-    {indent(depth)}<Input nameId={nameId} />
+    {indent(depth)}<NameInput nameId={nameId} />
     {invocationIds.length === 1 &&
       <JSX
         parentId={invocationId}
