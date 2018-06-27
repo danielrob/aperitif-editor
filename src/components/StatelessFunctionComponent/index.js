@@ -1,11 +1,11 @@
 import React from 'react'
-import { JSX, Props, Semi, Keyword, PropTypes } from 'components'
-import { ComponentTypeToggle, NameInput } from 'containers'
+import { JSX, Semi, Keyword } from 'components'
+import { ComponentTypeToggle, PropsContainer, PropTypesContainer, NameInput } from 'containers'
 import { INLINE, CLASS_COMPONENT } from 'constantz'
 
 export default class StatelessFunctionComponent extends React.PureComponent {
   render() {
-    const { declarationId, exportType, nameId, declParams, invocations } = this.props
+    const { declarationId, exportType, nameId, declParamIds, invocations } = this.props
 
     return (
       <div>
@@ -17,7 +17,7 @@ export default class StatelessFunctionComponent extends React.PureComponent {
             text="const "
           />
           <NameInput nameId={nameId} /> =
-          <Props props={declParams} declarationId={declarationId} parentheses />
+          <PropsContainer declParamIds={declParamIds} declarationId={declarationId} parentheses />
            => (
           {invocations.length > 1 && '['}
         </div>{' '}
@@ -25,7 +25,7 @@ export default class StatelessFunctionComponent extends React.PureComponent {
           <JSX key={id} invocationId={id} initial />)
         }
         {invocations.length > 1 && ']'})<Semi />
-        <PropTypes nameId={nameId} props={declParams} />
+        <PropTypesContainer nameId={nameId} declParamIds={declParamIds} />
       </div>
     )
   }

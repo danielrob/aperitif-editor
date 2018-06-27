@@ -1,6 +1,6 @@
 import React from 'react'
-import { Keyword, PropTypes } from 'components'
-import { DeclarationContainer, NameInput, ComponentTypeToggle } from 'containers'
+import { Keyword } from 'components'
+import { DeclarationContainer, NameInput, ComponentTypeToggle, PropTypesContainer } from 'containers'
 import { INLINE, STATELESS_FUNCTION_COMPONENT } from 'constantz'
 import styled from 'styled-as-components'
 
@@ -8,7 +8,7 @@ import { ClassPropertyDeclarationFactory } from './components'
 
 class ClassComponent extends React.PureComponent {
   render() {
-    const { declarationId, exportType, nameId, declParams: props, declarationIds } = this.props
+    const { declarationId, exportType, nameId, declParamIds, declarationIds } = this.props
     return (
       <React.Fragment>
         {/* open */}
@@ -25,13 +25,13 @@ class ClassComponent extends React.PureComponent {
             key={id}
             declarationId={id}
             render={declaration => (
-              <ClassPropertyDeclarationFactory thiz={{ props }} declaration={declaration} />
+              <ClassPropertyDeclarationFactory thiz={{ declParamIds }} declaration={declaration} />
             )}
           />
         ))}
         {'}'}
         <br />
-        <PropTypes nameId={nameId} props={props} />
+        <PropTypesContainer nameId={nameId} declParamIds={declParamIds} />
       </React.Fragment>
     )
   }

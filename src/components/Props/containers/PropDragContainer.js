@@ -5,7 +5,7 @@ import { DragSource } from 'react-dnd'
 import { PROP } from 'constantz'
 import ReactTooltip from 'react-tooltip'
 
-import { paramPropTypes } from 'model-prop-types'
+import { declParamPropTypes } from 'model-prop-types'
 import { Prop } from '../components'
 
 const PropContainer = props => <Prop {...props} />
@@ -13,14 +13,14 @@ const PropContainer = props => <Prop {...props} />
 /* propTypes */
 PropContainer.propTypes = forbidExtraProps({
   declarationId: T.number.isRequired,
-  prop: T.shape(paramPropTypes).isRequired,
+  prop: T.shape(declParamPropTypes).isRequired,
   isLast: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
 })
 
 /* dnd */
 const propSource = {
-  beginDrag({ prop: { id, nameId, name, payload, count }, declarationId }) {
+  beginDrag({ prop: { id, nameId, name, payload, useCount, altIds }, declarationId }) {
     ReactTooltip.hide() // disable tooltips
     return {
       declarationId,
@@ -29,7 +29,8 @@ const propSource = {
       nameId,
       payload,
       type: PROP,
-      count,
+      useCount,
+      altIds,
     }
   },
   endDrag() {

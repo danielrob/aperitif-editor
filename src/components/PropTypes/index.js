@@ -1,4 +1,3 @@
-import { maxBy } from 'lodash'
 import C from 'check-types'
 import React from 'react'
 import JSstringify from 'javascript-stringify'
@@ -7,34 +6,30 @@ import { indent } from 'utils'
 import { Semi } from 'components'
 import { Name, NameInput } from 'containers'
 
-const PropTypes = ({ props, nameId }) => {
-  const maxCount = (maxBy(props, 'count') || { count: 0 }).count
-  return !!props.length && (
-    <React.Fragment>
-      <br />
-      <NameInput nameId={nameId} />.propTypes = {'{'}
-      {props.filter(({ isSpreadMember }) => !isSpreadMember).map(
-        ({ nameId, count, payload }) =>
-          count && (
-            <div key={nameId}>
-              {indent(1)}
-              <span
-                data-tip={JSstringify(payload, null, 2)}
-                data-for="prop"
-                data-delay-show="250"
-              >
-                <Name nameId={nameId} />
-              </span>
-              : {getPropType(payload)}
-              {count === maxCount && C.not.null(payload) && '.isRequired'}
-              ,
-            </div>
-          )
-      )}
-      {'}'}<Semi />
-    </React.Fragment>
-  )
-}
+const PropTypes = ({ props, nameId }) => !!props.length && (
+  <React.Fragment>
+    <br />
+    <NameInput nameId={nameId} />.propTypes = {'{'}
+    {props.filter(({ isSpreadMember, useCount }) => !isSpreadMember || useCount).map(
+      ({ nameId, useCount, payload }) => (
+        <div key={nameId}>
+          {indent(1)}
+          <span
+            data-tip={JSstringify(payload, null, 2)}
+            data-for="prop"
+            data-delay-show="250"
+          >
+            <Name nameId={nameId} />
+          </span>
+          : {getPropType(payload)}
+          {!!useCount && C.not.null(payload) && '.isRequired'}
+          ,
+        </div>
+        )
+    )}
+    {'}'}<Semi />
+  </React.Fragment>
+)
 
 export default PropTypes
 

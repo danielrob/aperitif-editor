@@ -24,13 +24,13 @@ export const paramInvocationPropTypes = T.shape({
 
 
 // param
-export const paramPropTypes = {
+export const declParamPropTypes = {
   id: T.number.isRequired,
   nameId: T.number.isRequired,
   payload: T.any,
   isSpreadMember: T.bool.isRequired,
-  count: T.number.isRequired,
-  assignNameId: T.number,
+  useCount: T.number.isRequired,
+  altIds: T.arrayOf(T.number).isRequired,
 }
 
 // makeSelectFile

@@ -2,8 +2,8 @@ import T from 'prop-types'
 import React from 'react'
 
 import { indent } from 'utils'
-import { JSX, Keyword, Props, Semi } from 'components'
-import { DeclarationContainer, NameInput } from 'containers'
+import { JSX, Keyword, Semi } from 'components'
+import { DeclarationContainer, NameInput, PropsContainer } from 'containers'
 import { declarationPropTypes } from 'model-prop-types'
 
 export default class ClassMethod extends React.PureComponent {
@@ -15,7 +15,7 @@ export default class ClassMethod extends React.PureComponent {
         invocationIds,
       },
       thiz: {
-        props,
+        declParamIds,
       },
     } = this.props
     return (
@@ -30,10 +30,10 @@ export default class ClassMethod extends React.PureComponent {
             render={({ nameId }) => (
               <span>
                 <Keyword>const </Keyword>
-                {props.length ? (
+                {declParamIds.length ? (
                   <span>
-                    <Props
-                      props={props}
+                    <PropsContainer
+                      declParamIds={declParamIds}
                       declarationId={declarationId}
                       depth={3}
                     />

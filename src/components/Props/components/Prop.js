@@ -2,7 +2,7 @@ import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 import JSstringify from 'javascript-stringify'
-import { paramPropTypes } from 'model-prop-types'
+import { declParamPropTypes } from 'model-prop-types'
 
 import { spaces } from 'utils'
 import { Name } from 'containers'
@@ -28,7 +28,7 @@ const Prop = ({ prop: { nameId, payload }, isLast, connectDragSource }) => (
 Prop.propTypes = {
   declarationId: T.number.isRequired,
   isLast: T.bool.isRequired,
-  prop: T.shape(paramPropTypes).isRequired,
+  prop: T.shape(declParamPropTypes).isRequired,
   connectDragSource: T.func.isRequired,
 }
 

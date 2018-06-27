@@ -145,12 +145,12 @@ class Model {
 
   where = iteratee => {
     const modelData = this.getModelData()
-    const partialTable = Object.keys(modelData).reduce(
-      (out, key) => {
-        if (iteratee(modelData[key], modelData[key].id, modelData)) {
+    const partialTable = Object.entries(modelData).reduce(
+      (out, [key, modelInstance]) => {
+        if (iteratee(modelInstance, modelInstance.id, modelData)) {
           return {
             ...out,
-            [key]: modelData[key],
+            [key]: modelInstance,
           }
         }
         return out
@@ -166,11 +166,6 @@ class Model {
       iteratee(modelData[key], modelData[key].id, modelData)
     )
   }
-
-  // refresh = () => {
-  //   const { isSet, result } = this.currentQueryResult
-  //   return isSet ? this.all() : this.withId(result.id)
-  // }
 
   // non-chainable
   ref = () => this.currentQueryResult.result

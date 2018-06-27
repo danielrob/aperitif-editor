@@ -7,11 +7,12 @@ import { partition } from 'lodash'
 import { PROP } from 'constantz'
 import { StopDropTarget } from 'containers'
 import { indent } from 'utils'
-import { paramPropTypes } from 'model-prop-types'
+import { declParamPropTypes } from 'model-prop-types'
 
 import { SpreadPropsContainer, PropDragContainer } from './containers'
 
 const Props = ({ props: allProps, declarationId, depth, parentheses }) => {
+
   const [spreadProps, props] = partition(allProps, p => p.isSpreadMember)
   const hasProps = !!props.length
   const inline = props.length < 5
@@ -53,7 +54,7 @@ const Props = ({ props: allProps, declarationId, depth, parentheses }) => {
 
 /* propTypes */
 Props.propTypes = forbidExtraProps({
-  props: T.arrayOf(T.shape(paramPropTypes)).isRequired,
+  props: T.arrayOf(T.shape(declParamPropTypes)).isRequired,
   declarationId: T.number.isRequired,
   depth: T.number,
   parentheses: T.bool,

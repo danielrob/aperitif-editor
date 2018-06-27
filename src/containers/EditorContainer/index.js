@@ -11,7 +11,7 @@ import { FILE, PROP, STYLED_COMPONENT, COMPONENT_INVOCATION, PARAM_INVOCATION } 
 import {
   mergeFile,
   removeProp,
-  removeComponentInvocation,
+  removeChildInvocation,
 } from 'duck'
 import {
   selectDeclarations,
@@ -33,7 +33,7 @@ class EditorContainer extends React.PureComponent {
       projectDeclarations, // dnd only
       mergeFile, // dnd only
       removeProp, // dnd only
-      removeComponentInvocation, // dnd only
+      removeChildInvocation, // dnd only
       ...props
     } = this.props
     return connectDropTarget(
@@ -58,7 +58,7 @@ EditorContainer.propTypes = forbidExtraProps({
   // mapDispatchToProps
   mergeFile: T.func.isRequired,
   removeProp: T.func.isRequired,
-  removeComponentInvocation: T.func.isRequired,
+  removeChildInvocation: T.func.isRequired,
 
   // dnd
   dragItem: T.bool,
@@ -86,7 +86,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = {
   mergeFile,
   removeProp,
-  removeComponentInvocation,
+  removeChildInvocation,
 }
 
 
@@ -136,20 +136,21 @@ const editorTarget = {
 
       case PROP: {
         const { removeProp } = props
-        const { declarationId, paramId, nameId, count } = monitor.getItem()
+        const { declarationId, paramId, nameId, altIds, useCount } = monitor.getItem()
         return removeProp({
           declarationId,
           paramId,
           nameId,
-          count,
+          altIds,
+          useCount,
         })
       }
 
       case PARAM_INVOCATION:
       case COMPONENT_INVOCATION: {
-        const { removeComponentInvocation } = props
+        const { removeChildInvocation } = props
         const { sourceInvocationId, sourceParentId } = monitor.getItem()
-        return removeComponentInvocation({
+        return removeChildInvocation({
           sourceInvocationId,
           sourceParentId,
         })

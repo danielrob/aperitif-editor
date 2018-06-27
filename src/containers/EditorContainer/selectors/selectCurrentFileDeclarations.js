@@ -18,13 +18,12 @@ export const selectCurrentFileDeclarations = createSelector(
   (declarations, params, invocations) =>
     declarations
       .filter(({ type }) => type !== LOOKTHROUGH)
-      .map(({ id, nameId, type, invocationIds, declParamIds, exportType, ...rest }) => ({
+      .map(({ id, nameId, type, invocationIds, exportType, ...rest }) => ({
         ...rest,
         declarationId: id,
         nameId,
         type,
         invocations: invocationIds.map(invocationId => invocations[invocationId]),
-        declParams: declParamIds.map(paramId => params[paramId]),
         exportType,
       }))
 )

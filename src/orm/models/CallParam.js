@@ -1,4 +1,4 @@
-import Model, { attr, fk } from '../Model'
+import Model, { fk } from '../Model'
 
 class CallParam extends Model {}
 
@@ -9,7 +9,6 @@ CallParam.fields = {
   nameId: fk('Name'),
   valueInvocationId: fk('Invocation'),
   declParamId: fk('DeclParam'),
-  isCallSpreadMember: attr(true),
 }
 
 export default CallParam

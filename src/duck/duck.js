@@ -43,7 +43,7 @@ export const UPDATE_NAME = 'UPDATE_NAME'
 export const UPDATE_DECLARATION = 'UPDATE_DECLARATION'
 export const UPDATE_DECL_PARAM = 'UPDATE_DECL_PARAM'
 export const REMOVE_PROP = 'REMOVE_PROP'
-export const REMOVE_CI = 'REMOVE_CI'
+export const REMOVE_CHILD_INVOCATION = 'REMOVE_CHILD_INVOCATION'
 
 export default function appReducer(state, action) {
   const session = orm.session(state)
@@ -122,21 +122,15 @@ export default function appReducer(state, action) {
       const { nameId, payload } = DeclParam.withId(paramId).ref()
       const copyNameId = Name.create(camelCase(Name.withId(nameId).value()))
 
+      DeclParam.withId(paramId).incrementUsage()
+
       Invocation.withId(targetInvocationId).callParams.insert(
         CallParam.create({ nameId: copyNameId, declParamId: paramId }),
         0
       )
 
       if (Invocation.declaration) {
-        const nameMatchParamId = Invocation.declaration.declParams.find(
-          id => state.declParams[id].nameId === nameId
-        )
-
-        if (nameMatchParamId) {
-          DeclParam.withId(nameMatchParamId).migrate({ count: count => count + 1 })
-        } else {
-          Invocation.declaration.declParams.insert(DeclParam.create({ nameId, payload }))
-        }
+        Invocation.declaration.declParams.insert(DeclParam.create({ nameId: copyNameId, payload }))
       }
 
       return session.state
@@ -149,6 +143,8 @@ export default function appReducer(state, action) {
         targetPosition,
         prop: { paramId, nameId },
       } = action.payload
+
+      DeclParam.withId(paramId).incrementUsage()
 
       Invocation.withId(targetInvocationId).invocations.insert(
         Invocation.create({
@@ -373,6 +369,8 @@ export default function appReducer(state, action) {
         prop: { paramId, nameId },
       } = action.payload
 
+      DeclParam.withId(paramId).incrementUsage()
+
       const name = Name.withId(nameId).value()
 
       const newNameId = Name.create(pascalCase(name))
@@ -419,8 +417,9 @@ export default function appReducer(state, action) {
       const {
         targetInvocationId,
         targetPosition,
-        prop: { nameId, payload },
+        prop: { nameId, paramId, payload },
       } = action.payload
+      DeclParam.withId(paramId).incrementUsage()
 
       const name = Name.withId(nameId).value()
 
@@ -444,7 +443,7 @@ export default function appReducer(state, action) {
           nameId: componentNameId,
           declarationId: newComponentDeclarationId,
           callParamIds: [],
-          pseudoSpreadPropsNameId: Name.create(name),
+          pseudoSpreadPropsNameId: nameId,
           closed: true,
         }),
         targetPosition
@@ -462,6 +461,7 @@ export default function appReducer(state, action) {
         targetPosition,
         prop: { paramId, nameId, payload },
       } = action.payload
+      DeclParam.withId(paramId).incrementUsage()
       const name = Name.withId(nameId).value()
 
       // payload is certfied checkTypes.array.of.object 🚀
@@ -532,6 +532,7 @@ export default function appReducer(state, action) {
         targetPosition,
         prop: { paramId, nameId },
       } = action.payload
+      DeclParam.withId(paramId).incrementUsage()
       const baseName = Name.withId(nameId).value()
 
       const [componentNameId, newComponentDeclarationId] = createComponentBundle({
@@ -567,6 +568,7 @@ export default function appReducer(state, action) {
         targetPosition,
         prop: { paramId, nameId, payload },
       } = action.payload
+      DeclParam.withId(paramId).incrementUsage()
       const baseName = Name.withId(nameId).value()
       const nameCopyId = Name.create(camelCase(baseName))
 
@@ -620,17 +622,23 @@ export default function appReducer(state, action) {
 
 
     case REMOVE_PROP: {
-      const { declarationId, paramId, nameId, count } = action.payload
+      const { declarationId, altIds, useCount } = action.payload
       // cannot remove a decl param which has been invoked somewhere.
-      if (CallParam.find((id, model) => model.declParamId === paramId)) {
+      if (useCount) {
         return session.state
       }
-      if (
-        count === 1 ||
-        confirm('prop is passed by multiple invocations, confirm deletion?') // eslint-disable-line
-      ) {
+
+      const nameIds = altIds.map(id => DeclParam.withId(id).ref().nameId)
+      if (Object.keys(CallParam.where(({ nameId }) => nameIds.includes(nameId)).ref()).length > 1) {
+        if (!confirm('this prop is passed by multiple useages of this component, confirm deletion?')) { // eslint-disable-line
+          return session.state
+        }
+      }
+
+      altIds.forEach(paramId => {
+        const { nameId: declParamNameId } = DeclParam.withId(paramId).ref()
         // remove declParam
-        DeclParam.withId(paramId).delete()
+        DeclParam.delete()
         // remove declParam from the component declaration's declParams
         Declaration.withId(declarationId).declParams.remove(paramId)
         // get all invocations of the component declaration in question
@@ -639,32 +647,34 @@ export default function appReducer(state, action) {
           // for each
           .each(({ id: invocationId, callParamIds }) => {
             // find any (the) passed prop (callParam) with same effective nameId
-            const sourceCallParamId = callParamIds.find(id => {
-              const { declParamId } = CallParam.withId(id).ref()
-              if (!declParamId) {
-                return false
-              }
-              return DeclParam.withId(declParamId).ref().nameId === nameId
-            })
+            const sourceCallParamId = callParamIds.find(id =>
+              CallParam.withId(id).ref().nameId === declParamNameId
+            )
             if (sourceCallParamId) {
               // remove it, and remove it from the invocation callParams
               Invocation.withId(invocationId).callParams.remove(sourceCallParamId)
               CallParam.withId(sourceCallParamId).delete()
             }
           })
-      }
+      })
       return session.state
     }
 
 
-    case REMOVE_CI: {
+    case REMOVE_CHILD_INVOCATION: {
       const { sourceInvocationId, sourceParentId } = action.payload
       // remove source from parent
       Invocation.withId(sourceParentId).invocations.remove(sourceInvocationId)
       // and close parent if need be
       Invocation.migrate({ closed: (_, { invocationIds }) => !invocationIds.length })
       // remove any call params
-      Invocation.withId(sourceInvocationId).callParams.forEach(id => CallParam.withId(id).delete())
+      Invocation.withId(sourceInvocationId).callParams.forEach(id => {
+        const { declParamId } = CallParam.withId(id).ref()
+        if (declParamId) {
+          DeclParam.withId(declParamId).decrementUsage()
+        }
+        CallParam.delete()
+      })
       // delete the invocation
       Invocation.withId(sourceInvocationId).delete()
       return session.state
@@ -771,6 +781,6 @@ export const removeProp = createAction(
   REMOVE_PROP
 )
 
-export const removeComponentInvocation = createAction(
-  REMOVE_CI
+export const removeChildInvocation = createAction(
+  REMOVE_CHILD_INVOCATION
 )
