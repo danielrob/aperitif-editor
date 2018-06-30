@@ -9,8 +9,8 @@ export default class App extends Component {
   render() {
     return (
       <AppWrapper>
-        <Helmet titleTemplate="%s - Apéro" defaultTitle="Apéro">
-          <meta name="description" content="React Apéro Editor" />
+        <Helmet titleTemplate="%s - Aperitif" defaultTitle="Aperitif">
+          <meta name="description" content="React Aperitif Editor" />
         </Helmet>
         <Switch>
           <Route exact path="/" component={WelcomePage} />

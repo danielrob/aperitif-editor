@@ -4,11 +4,11 @@ import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
 import { initializeApp, newContainerPlease } from 'duck'
 
-import AperoPost from './AperoPost'
+import AperitifPost from './AperitifPost'
 
-class AperoPostContainer extends React.PureComponent {
+class AperitifPostContainer extends React.PureComponent {
   render() {
-    return <AperoPost {...this.props} />
+    return <AperitifPost {...this.props} />
   }
 }
 
@@ -18,4 +18,4 @@ const mapDispatchToProps = {
   undo: UndoActionCreators.undo,
 }
 
-export default connect(null, mapDispatchToProps)(AperoPostContainer)
+export default connect(null, mapDispatchToProps)(AperitifPostContainer)

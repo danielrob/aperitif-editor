@@ -1,4 +1,4 @@
-export { default as AperoPostContainer } from './AperoPostContainer'
+export { default as AperitifPostContainer } from './AperitifPostContainer'
 export { default as App } from './App'
 export { default as ComponentTypeToggle } from './ComponentTypeToggle'
 export { default as DeclarationContainer } from './DeclarationContainer'

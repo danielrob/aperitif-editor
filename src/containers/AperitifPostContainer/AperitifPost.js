@@ -10,7 +10,7 @@ import apiObjectResponse from './apiObjectResponse.json'
 
 let isWelcome = true
 
-class AperoPost extends React.PureComponent {
+class AperitifPost extends React.PureComponent {
   state = {
     textarea: '',
     error: null,
@@ -72,7 +72,7 @@ class AperoPost extends React.PureComponent {
     return (
       <React.Fragment>
         {isWelcome
-          ? 'Apéro uses the response shapes of api endpoints intelligently.'
+          ? 'Aperitif uses the response shapes of api endpoints intelligently.'
           : 'What api endpoint data will this container be responsible for?'
         }
         <br />
@@ -136,7 +136,7 @@ const Button = styled.button`
   margin: 4px;
 `
 
-export default styled(AperoPost).as.div`
+export default styled(AperitifPost).as.div`
   padding: 50px 80px;
   max-width: 900px;
 `
