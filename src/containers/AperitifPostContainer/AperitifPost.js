@@ -56,10 +56,10 @@ class AperitifPost extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (process.env.NODE_ENV === 'development' && isWelcome) {
-      isWelcome = false
-      this.props.initializeApp(apiArrayResponse)
-    }
+    // if (process.env.NODE_ENV === 'development' && isWelcome) {
+    //   isWelcome = false
+    //   this.props.initializeApp(apiArrayResponse)
+    // }
   }
 
   componentWillUnmount() {
