@@ -13,5 +13,6 @@ export const oneOf = (...fns) => item =>
   fns.slice(1).reduce((out, fn) => out || fn(item), fns[0](item))
 export const sortAlphabetically = (a, b) => (a < b && '-1') || (b < a && '1') || 0
 export const toArray = obj => Object.entries(obj).map(([, value]) => value)
+export const lastItem = arr => arr[arr.length - 1]
 
 export { default as camelCase } from 'camelcase'

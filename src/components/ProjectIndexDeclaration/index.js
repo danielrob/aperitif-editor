@@ -8,8 +8,8 @@ export default class ProjectIndexDeclaration extends React.PureComponent {
   render() {
     return (
       <div>
-        <Keyword>import</Keyword> React <Keyword>from</Keyword> 'react' <Semi />
-        <Keyword>import</Keyword> ReactDOM <Keyword>from</Keyword> 'react-dom' <Semi />
+        <Keyword>import</Keyword> React <Keyword>from</Keyword> 'react'<Semi />
+        <Keyword>import</Keyword> ReactDOM <Keyword>from</Keyword> 'react-dom'<Semi />
         <Keyword>import</Keyword>{' { '}<NameInput nameId={APP_CONTAINER_NAME_ID} /> {' } '}
         <Keyword>from</Keyword>{' '}'containers' <Semi />
         <br />

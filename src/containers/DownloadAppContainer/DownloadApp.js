@@ -1,90 +1,124 @@
+import { set } from 'lodash'
 import React from 'react'
 import styled from 'styled-components'
-
-import { toArray } from 'utils'
-import { DIR } from 'constantz'
-
+import { DIR, SC } from 'constantz'
+import { lastItem } from 'utils'
 import { EditorContainer } from 'containers'
 
+import copyNodeText from './copyNodeText'
+import download from './download'
+
+/**
+ * DownloadApp
+ *
+ * Exporting is achieved by rendering the project files to a hidden dom node using the exact same
+ * EditorContainer component tree the real editor uses. The HTML text selection api is then used
+ * to copy the text in that hidden node. DownloadApp uses the component lifecycle itself + setState
+ * to loop through the files, until all files have been copied. Then a download is initiated, and
+ * DownloadApp signals to be unmounted.
+ */
 export default class DownloadApp extends React.Component {
   constructor(props) {
     super(props)
+    const { files, rootFiles } = props
 
-    const files = toArray(props.files).filter(({ type }) => type !== DIR)
+    this.fileTree = {}
+    this.hiddenNodeRef = React.createRef()
+    this.currentTraversal = [
+      {
+        id: 'root',
+        children: rootFiles,
+        currentIndex: 0,
+        max: rootFiles.length - 1,
+      },
+    ]
 
-    this.state = {
-      files,
-      filesIndex: 0,
-      maxFileIndex: files.length - 1,
+    let file = files[rootFiles[0]]
+
+    while (file.type === DIR) {
+      this.currentTraversal.push({
+        id: file.id,
+        children: file.children,
+        currentIndex: 0,
+        max: file.children.length - 1,
+      })
+      file = files[file.children[0]]
     }
+
+    // initialState
+    this.state = { currentFileId: file.id }
   }
 
-  backgroundExportEditor = React.createRef()
+  copyAndNextFile() {
+    const { files, names } = this.props
+    const { currentTraversal, fileTree } = this // Note: these are mutation managed state
 
-  componentDidMount() {
-    this.copyFileContents()
-    this.setState({ // eslint-disable-line react/no-did-mount-set-state
-      filesIndex: 1,
+    // add currently rendered file's text to output tree
+    const namePath = currentTraversal.reduce((out, node) => {
+      const file = files[node.children[node.currentIndex]]
+      const baseName = names[file.nameId].value
+      const ext = (file.type === SC && '|js') || (file.type === DIR ? '' : `|${file.type}`)
+
+      return `${out ? `${out}.` : ''}${baseName}${ext}`
+    }, null)
+
+    set(fileTree, namePath, copyNodeText(this.hiddenNodeRef.current))
+
+    // walk project's file tree - start by going up if needed
+    let node = lastItem(currentTraversal)
+
+    while (node.id !== 'root' && node.currentIndex === node.max) {
+      currentTraversal.pop()
+      node = lastItem(currentTraversal)
+    }
+
+    if (node.id === 'root' && node.currentIndex === node.max) {
+      this.props.onFinish()
+      download(fileTree)
+      return
+    }
+
+    // next item
+    node.currentIndex += 1
+
+    // go down if needed
+    let file = files[node.children[node.currentIndex]]
+
+    while (file.type === DIR) {
+      currentTraversal.push({
+        id: file.id,
+        children: file.children,
+        currentIndex: 0,
+        shouldIncrement: false,
+        max: file.children.length - 1,
+      })
+      file = files[file.children[0]]
+    }
+
+    // render new current file
+    node = lastItem(currentTraversal)
+
+    const nextCurrentFileId = node.children[node.currentIndex]
+
+    this.setState({
+      currentFileId: nextCurrentFileId,
     })
   }
 
-  componentDidUpdate() {
-    const { onFinish } = this.props
-    const { filesIndex, maxFileIndex } = this.state
-
-    this.copyFileContents()
-
-    if (filesIndex === maxFileIndex) {
-      onFinish()
-    } else {
-      this.setState({ // eslint-disable-line react/no-did-update-set-state
-        filesIndex: filesIndex + 1,
-      })
-    }
+  componentDidMount() {
+    this.copyAndNextFile()
   }
 
-  copyFileContents() {
-    /* eslint-disable */
-    ;(function selectText(e, r, s, d) {
-      d = document
-      if ((s = window.getSelection)) {
-        ;(r = d.createRange()).selectNode(e)
-        ;(s = s()).removeAllRanges()
-        s.addRange(r)
-      } else if (d.selection) {
-        ;(r = d.body.createTextRange()).moveToElementText(e)
-        r.select()
-      }
-    })(this.backgroundExportEditor.current)
-
-    console.log(
-      (function getSelectionText() {
-        var text = ''
-        if (window.getSelection) {
-          text = window.getSelection().toString()
-        } else if (document.selection && document.selection.type !== 'Control') {
-          text = document.selection.createRange().text
-        }
-        return text
-      })()
-    )
-
-    ;(function clearSelection() {
-      if (window.getSelection) {
-        window.getSelection().removeAllRanges()
-      } else if (document.selection) {
-        document.selection.empty()
-      }
-    })()
-    /* eslint-enable */
+  componentDidUpdate() {
+    this.copyAndNextFile()
   }
 
   render() {
-    const { files, filesIndex } = this.state
+    const { currentFileId } = this.state
 
     return (
-      <Wrapper innerRef={this.backgroundExportEditor}>
-        <EditorContainer currentFileId={files[filesIndex].id} />
+      <Wrapper innerRef={this.hiddenNodeRef}>
+        <EditorContainer currentFileId={currentFileId} />
       </Wrapper>
     )
   }
