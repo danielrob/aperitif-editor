@@ -23,15 +23,18 @@ import {
 
 import { Imports, DefaultExport } from './'
 
-const renderers = {
-  [STATELESS_FUNCTION_COMPONENT]: StatelessFunctionComponent,
-  [STYLED_COMPONENT]: StyledComponent,
-  [CLASS_COMPONENT]: ClassComponent,
-  [PROJECT_INDEX]: ProjectIndexDeclaration,
-  [JSON_TYPE]: Json,
-}
-
+/*
+  Component
+*/
 class Editor extends React.PureComponent {
+  static templates = {
+    [STATELESS_FUNCTION_COMPONENT]: StatelessFunctionComponent,
+    [STYLED_COMPONENT]: StyledComponent,
+    [CLASS_COMPONENT]: ClassComponent,
+    [PROJECT_INDEX]: ProjectIndexDeclaration,
+    [JSON_TYPE]: Json,
+  }
+
   componentDidUpdate() {
     if (!this.props.dragItem) {
       ReactTooltip.rebuild()
@@ -41,12 +44,11 @@ class Editor extends React.PureComponent {
   render() {
     const { imports, declarations, defaultExport } = this.props
     return (
-      <div className="active-zone">
+      <React.Fragment>
         <Imports key="imports" imports={imports} />
-        {!!imports.length && <br />}
         {declarations.map(declaration => {
           const { type, declarationId } = declaration
-          const Renderer = renderers[type] || Standard
+          const Renderer = Editor.templates[type] || Standard
           return (
             <div key={declarationId}>
               <Renderer {...declaration} />
@@ -61,14 +63,18 @@ class Editor extends React.PureComponent {
           showDelay={150}
           getContent={dataTip => <pre>{dataTip}</pre>}
         />
-        <br /* The EOF newline. The POSIX standard. https://stackoverflow.com/a/729795/4682556 */ />
-      </div>
+        <br /* The POSIX standard EOF newline. */ />
+      </React.Fragment>
     )
   }
 }
 
-/* propTypes */
+
+/*
+  propTypes
+*/
 Editor.propTypes = forbidExtraProps({
+  requestExport: T.func.isRequired,
   imports: T.arrayOf(T.object).isRequired,
   declarations: T.arrayOf(T.object).isRequired,
   defaultExport: T.number,
@@ -82,15 +88,13 @@ Editor.defaultProps = {
   dragItem: false,
 }
 
+
+/*
+  style + export
+*/
 export default styled(Editor).as.div`
   background-color: ${theme.colors.white};
   padding: 50px 100px;
   color: ${theme.colors.darkblue};
   min-width: 960px;
-
-  .active-zone {
-    display: inline-block;
-    padding: 50px 100px;
-    margin: -50px -100px;
-  }
 `

@@ -4,21 +4,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { createStructuredSelector } from 'reselect'
-
-import { compose } from 'utils'
-
-import { FILE, PROP, STYLED_COMPONENT, COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
-import {
-  mergeFile,
-  removeProp,
-  removeChildInvocation,
-} from 'duck'
-import {
-  selectDeclarations,
-  selectCurrentFileId,
-} from 'selectors'
 import { KeyPressListeners, AperitifPostContainer } from 'containers'
-
+import { FILE, PROP, STYLED_COMPONENT, COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
+import { compose } from 'utils'
+import { mergeFile, removeProp, removeChildInvocation } from 'duck'
+import { selectDeclarations, selectCurrentFileId } from 'selectors'
 import {
   getCurrentFileImports,
   getCurrentFileDefaultExport,
@@ -26,6 +16,10 @@ import {
 } from './selectors'
 import { Editor } from './components'
 
+
+/*
+  Component
+*/
 class EditorContainer extends React.PureComponent {
   render() {
     const {
@@ -46,8 +40,13 @@ class EditorContainer extends React.PureComponent {
 }
 
 
-/* propTypes */
+/*
+  propTypes
+*/
 EditorContainer.propTypes = forbidExtraProps({
+  // parent
+  requestExport: T.func.isRequired,
+
   // mapStateToProps
   imports: T.arrayOf(T.object).isRequired,
   declarations: T.arrayOf(T.object).isRequired,
@@ -72,7 +71,9 @@ EditorContainer.defaultProps = {
 }
 
 
-/* connect */
+/*
+  connect
+*/
 const mapStateToProps = createStructuredSelector({
   // to inject
   imports: getCurrentFileImports,
@@ -90,25 +91,27 @@ const mapDispatchToProps = {
 }
 
 
-/* dnd */
-const editorTarget = {
-  // canDrop
+/*
+  dnd
+*/
+const dropTypes = [FILE, PROP, COMPONENT_INVOCATION, PARAM_INVOCATION]
+
+const dropTarget = {
   canDrop(props, monitor) {
     switch (monitor.getItemType()) {
       case FILE: {
         const { projectDeclarations, imports } = props
         const { declarationIds } = monitor.getItem()
 
-        const styledComponentId = declarationIds
-          .find(id => projectDeclarations[id].type === STYLED_COMPONENT)
-
-        const isInSameComponentBundle = imports
-          .find(({ declarationIds: dIds }) => (dIds || []).includes(styledComponentId))
-
-        return (
-          styledComponentId &&
-          isInSameComponentBundle
+        const styledComponentId = declarationIds.find(
+          id => projectDeclarations[id].type === STYLED_COMPONENT
         )
+
+        const isInSameComponentBundle = imports.find(({ declarationIds: dIds }) =>
+          (dIds || []).includes(styledComponentId)
+        )
+
+        return styledComponentId && isInSameComponentBundle
       }
       default: {
         return true
@@ -116,7 +119,6 @@ const editorTarget = {
     }
   },
 
-  // drop
   drop(props, monitor) {
     // This is the fallback drop zone
     if (monitor.didDrop()) {
@@ -160,16 +162,15 @@ const editorTarget = {
   },
 }
 
-const dropTypes = [FILE, PROP, COMPONENT_INVOCATION, PARAM_INVOCATION]
-
-const editorCollect = (connect, monitor) => ({
+const dropCollect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   dragItem: !!monitor.getItem(),
 })
 
-
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  DropTarget(dropTypes, editorTarget, editorCollect),
+  DropTarget(dropTypes, dropTarget, dropCollect)
 )(EditorContainer)

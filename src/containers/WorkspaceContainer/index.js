@@ -1,13 +1,17 @@
 import React from 'react'
 import { Workspace } from 'components'
+import { DownloadApp } from 'containers'
 
 export default class WorkspaceContainer extends React.PureComponent {
   constructor() {
     super()
     this.state = {
       width: Math.min(document.body.clientWidth * 0.3, 300),
+      export: false,
     }
   }
+
+  toggleExport = () => this.setState({ export: !this.state.export })
 
   handleMouseMove = e => {
     const { clientX } = e
@@ -30,12 +34,15 @@ export default class WorkspaceContainer extends React.PureComponent {
   }
 
   render() {
-    return (
+    return [
       <Workspace
+        key="workspace"
         {...this.props}
         width={this.state.width}
         handleDividerMouseDown={this.handleDividerMouseDown}
-      />
-    )
+        requestExport={this.toggleExport}
+      />,
+      this.state.export && <DownloadApp key="export" />,
+    ]
   }
 }
