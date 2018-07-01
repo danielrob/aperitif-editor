@@ -1,6 +1,6 @@
 import React from 'react'
 import { Workspace } from 'components'
-import { DownloadApp } from 'containers'
+import { DownloadAppContainer } from 'containers'
 
 export default class WorkspaceContainer extends React.PureComponent {
   constructor() {
@@ -42,7 +42,7 @@ export default class WorkspaceContainer extends React.PureComponent {
         handleDividerMouseDown={this.handleDividerMouseDown}
         requestExport={this.toggleExport}
       />,
-      this.state.export && <DownloadApp key="export" />,
+      this.state.export && <DownloadAppContainer key="export" onFinish={this.toggleExport} />,
     ]
   }
 }

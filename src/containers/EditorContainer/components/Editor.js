@@ -21,7 +21,7 @@ import {
   JSON_TYPE,
 } from 'constantz'
 
-import { Imports, DefaultExport } from './'
+import { Imports, DefaultExport, ExportAppButton } from './'
 
 /*
   Component
@@ -42,9 +42,10 @@ class Editor extends React.PureComponent {
   }
 
   render() {
-    const { imports, declarations, defaultExport } = this.props
+    const { requestExport, imports, declarations, defaultExport } = this.props
     return (
       <React.Fragment>
+        <ExportAppButton onClick={requestExport} />
         <Imports key="imports" imports={imports} />
         {declarations.map(declaration => {
           const { type, declarationId } = declaration
@@ -74,7 +75,7 @@ class Editor extends React.PureComponent {
   propTypes
 */
 Editor.propTypes = forbidExtraProps({
-  requestExport: T.func.isRequired,
+  requestExport: T.func,
   imports: T.arrayOf(T.object).isRequired,
   declarations: T.arrayOf(T.object).isRequired,
   defaultExport: T.number,
@@ -86,6 +87,7 @@ Editor.defaultProps = {
   defaultExport: null,
   currentFileId: null,
   dragItem: false,
+  requestExport: null,
 }
 
 
