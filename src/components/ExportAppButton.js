@@ -10,7 +10,13 @@ const ExportAppButton = styled.button.attrs({
   right: ${props => props.left ? 'auto' : '20px'};
   left: ${props => props.left ? '20px' : 'auto'};
   border: 1px solid black;
-  padding: 5px;
+  padding: 3px;
+  font-size: 10px;
+  border-radius: 3px;
+  &:hover {
+    color: white;
+    background-color: #010431bb;
+  }
 `
 
 export default props => props.onClick ? <ExportAppButton {...props} /> : null

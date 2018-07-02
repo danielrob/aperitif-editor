@@ -45,8 +45,7 @@ class EditorContainer extends React.PureComponent {
 */
 EditorContainer.propTypes = forbidExtraProps({
   // parent
-  downloadApp: T.func,
-  exportToStackBlitz: T.func,
+  workspaceActions: T.objectOf(T.func),
 
   // mapStateToProps
   imports: T.arrayOf(T.object).isRequired,
@@ -69,8 +68,7 @@ EditorContainer.defaultProps = {
   dragItem: false,
   currentFileId: null,
   defaultExport: null,
-  downloadApp: null,
-  exportToStackBlitz: null,
+  workspaceActions: {},
 }
 
 

@@ -17,6 +17,7 @@ import {
   ID_NAME_ID,
   PROPERTY_ACCESS,
   VAR_INVOCATION,
+  ES_KEYWORDS,
 } from 'constantz'
 
 import { initializeFromData, addNewContainer, createComponentBundle } from './tasks'
@@ -475,7 +476,7 @@ export default function appReducer(state, action) {
         session,
         declParamIds: Object.keys(mergedObjectsInPayloadArray).map(key =>
           DeclParam.create({
-            nameId: Name.create(key),
+            nameId: Name.create(ES_KEYWORDS.includes(key) ? `_${key}` : key),
             payload: mergedObjectsInPayloadArray[key],
           })
         ),

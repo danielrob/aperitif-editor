@@ -5,7 +5,7 @@ import getStackBlitzProjectDef from './getStackBlitzProjectDef'
 export default function embedStackBlitz(fileTree) {
   const def = getStackBlitzProjectDef(fileTree)
   def.files['note.md'] = '## Note\nChanges in Aperitif will overwrite stackblitz editor changes'
-  stackblitz.embedProject(
+  return stackblitz.embedProject(
     document.getElementById('stackBlitzEmbed'),
     def,
     {

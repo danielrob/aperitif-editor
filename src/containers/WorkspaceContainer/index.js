@@ -5,12 +5,14 @@ import { ToTextContainer } from 'containers'
 import download from './download'
 import toStackBlitz from './toStackBlitz'
 import embedStackBlitz from './embedStackBlitz'
+import embedUpdate from './embedUpdate'
 
 export default class WorkspaceContainer extends React.PureComponent {
   static onTextFinishActions = {
     download,
     toStackBlitz,
     embedStackBlitz,
+    embedUpdate,
   }
 
   constructor() {
@@ -20,6 +22,7 @@ export default class WorkspaceContainer extends React.PureComponent {
       embedWidth: 0,
       toText: false,
       cbName: null,
+      vm: null,
     }
   }
 
@@ -29,9 +32,18 @@ export default class WorkspaceContainer extends React.PureComponent {
   onToTextFinish = fileTree => {
     const { cbName } = this.state
     this.setState({ toText: false })
-    WorkspaceContainer.onTextFinishActions[cbName](fileTree)
     if (cbName === 'embedStackBlitz') {
-      this.setState({ embedWidth: Math.max(document.body.clientWidth * 0.3, 250) })
+      embedStackBlitz(fileTree).then(vm => {
+        setTimeout(() => {
+          this.setState({
+            embedWidth: Math.max(document.body.clientWidth * 0.3, 250),
+            vm,
+            interval: setInterval(this.updateEmbed, 5000),
+          })
+        }, 500)
+      })
+    } else {
+      WorkspaceContainer.onTextFinishActions[cbName](fileTree, this.state)
     }
   }
 
@@ -40,6 +52,12 @@ export default class WorkspaceContainer extends React.PureComponent {
   handleExportToStackBlitz = () => this.startToText('toStackBlitz')
 
   handleStartPreview = () => this.startToText('embedStackBlitz')
+
+  updateEmbed = () => this.startToText('embedUpdate')
+
+  componentDidMount() {
+    this.handleStartPreview()
+  }
 
   /* Divider */
   handleDividerMouseMove = e => {

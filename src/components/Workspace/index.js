@@ -15,7 +15,7 @@ const Workspace = ({
   <React.Fragment>
     <FileExplorerContainer />
     <Divider width={width} onMouseDown={handleDividerMouseDown} />
-    <EditorContainer workspaceActions={workspaceActions} hasEmbed={!!embedWidth} />
+    <EditorContainer workspaceActions={workspaceActions} />
     <Divider
       width={document.body.clientWidth - embedWidth}
       onMouseDown={handleEmbedDividerMouseDown}

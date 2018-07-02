@@ -22,6 +22,7 @@ import {
   KEY_NAME_ID,
   VAR_INVOCATION,
   PROPERTY_ACCESS,
+  ES_KEYWORDS,
 } from 'constantz'
 
 export default function addNewContainer(session, apiResponse, _baseName) {
@@ -77,7 +78,7 @@ export default function addNewContainer(session, apiResponse, _baseName) {
     const mergedObjectsInPayloadArray = Object.assign({}, ...apiResponse);
     [...declParamIds] = Object.keys(mergedObjectsInPayloadArray).map(key =>
       DeclParam.create({
-        nameId: Name.create(key),
+        nameId: Name.create(ES_KEYWORDS.includes(key) ? `_${key}` : key),
         payload: mergedObjectsInPayloadArray[key],
       })
     )

@@ -43,14 +43,10 @@ class Editor extends React.PureComponent {
   }
 
   render() {
-    const { imports, declarations, defaultExport, workspaceActions: wAs, hasEmbed } = this.props
+    const { imports, declarations, defaultExport, workspaceActions } = this.props
     return (
       <React.Fragment>
-        {!hasEmbed &&
-          <React.Fragment>
-            <ExportAppButton onClick={wAs.embedStackBlitz} position={1} text="Preview" />
-          </React.Fragment>
-        }
+        <ExportAppButton onClick={workspaceActions.exportToStackBlitz} text="Export to StackBlitz" />
         <Imports key="imports" imports={imports} />
         {declarations.map(declaration => {
           const { type, declarationId } = declaration
