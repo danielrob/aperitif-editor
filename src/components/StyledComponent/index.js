@@ -6,6 +6,8 @@ import { Keyword, Backtick, Semi, Input } from 'components'
 import { DraggableDeclaration, NameInput } from 'containers'
 
 import TemplateStringTextArea from './TemplateStringTextArea'
+import Pre from './Pre'
+import TextAreaActivator from './TextAreaActivator'
 
 class StyledComponent extends React.PureComponent {
   onChange = e => {
@@ -34,13 +36,24 @@ class StyledComponent extends React.PureComponent {
           render={(connectDragSource, connectDragPreview) => connectDragSource(
             <span>
               <Keyword>const </Keyword>
-              {connectDragPreview(<div style={{ display: 'inline', userSelect: 'all' }}><NameInput nameId={nameId} /> </div>)}
+              {connectDragPreview(<span style={{ userSelect: 'all' }}><NameInput nameId={nameId} /> </span>)}
             </span>
           )}
         />
-        {' '}=
-        styled.<Input {...tagInput} /><Backtick />
-        <TemplateStringTextArea value={text} onChange={this.onChange} />
+        {' '}={' '}styled.<Input {...tagInput} /><Backtick />
+        <TextAreaActivator
+          render={({ over, lock, onLock, onUnlock }) => (over || lock) ? (
+            <TemplateStringTextArea
+              value={text}
+              onChange={this.onChange}
+              onFocus={onLock}
+              onBlur={onUnlock}
+            />
+          ) : (
+            <Pre>{text}</Pre>
+          )}
+        />
+
         <Backtick />
         <Semi />
       </div>

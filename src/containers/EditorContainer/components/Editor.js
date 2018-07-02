@@ -43,10 +43,11 @@ class Editor extends React.PureComponent {
   }
 
   render() {
-    const { imports, declarations, defaultExport, workspaceActions } = this.props
+    const { imports, declarations, defaultExport, workspaceActions: wAs } = this.props
     return (
       <React.Fragment>
-        <ExportAppButton onClick={workspaceActions.exportToStackBlitz} text="Export to StackBlitz" />
+        <ExportAppButton onClick={wAs.exportToStackBlitz} position={3} text="Export to StackBlitz" />
+        <ExportAppButton onClick={wAs.downloadApp} position={5} text="Download" />
         <Imports key="imports" imports={imports} />
         {declarations.map(declaration => {
           const { type, declarationId } = declaration
@@ -95,7 +96,9 @@ Editor.defaultProps = {
 /*
   style + export
 */
-export default styled(Editor).as.div`
+export default styled(Editor).as.div.attrs({
+  id: 'editor',
+})`
   background-color: ${theme.colors.white};
   padding: 50px 100px;
   color: ${theme.colors.darkblue};
