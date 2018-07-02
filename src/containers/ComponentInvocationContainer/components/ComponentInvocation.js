@@ -24,7 +24,7 @@ const ComponentInvocation = ({
   <React.Fragment>
     {/* <Open> */}
     {connectDropTarget(
-      <div style={{ display: 'inline-block' }}>
+      <span>
         <OpenTagContainer
           depth={depth}
           invocation={invocation}
@@ -36,7 +36,7 @@ const ComponentInvocation = ({
           position={0}
           shouldDisplay={isOverCIT1 && !closed}
         />
-      </div>
+      </span>
     )}
     {/* {children} */}
     <InvocationChildren
@@ -46,7 +46,7 @@ const ComponentInvocation = ({
     />
     {/* </Close> */}
     {connectClosingDropTarget(
-      <div style={{ display: inline ? 'inline-block' : 'block' }}>
+      <span>
         <CIDropzones
           invocationId={invocationId}
           depth={depth}
@@ -58,7 +58,7 @@ const ComponentInvocation = ({
           depth={depth}
           invocation={invocation}
         />
-      </div>
+      </span>
     )}
   </React.Fragment>
 )
@@ -90,7 +90,7 @@ ComponentInvocation.defaultProps = {
 }
 
 /* style, export */
-export default styled(ComponentInvocation).as.div`
+export default styled(ComponentInvocation).as.span`
   color: ${theme.colors.darkgreen};
   padding-left: 0;
   cursor: ${props => (props.initial ? 'inherit' : 'pointer')}

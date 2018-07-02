@@ -53,7 +53,6 @@ class StyledComponent extends React.PureComponent {
             <Pre>{text}</Pre>
           )}
         />
-
         <Backtick />
         <Semi />
       </div>

@@ -32,7 +32,6 @@ Prop.propTypes = {
   connectDragSource: T.func.isRequired,
 }
 
-export default styled(Prop).as.div`
-  display: inline-block;
+export default styled(Prop).as.span`
   cursor: pointer;
 `

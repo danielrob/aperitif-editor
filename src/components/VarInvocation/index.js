@@ -19,6 +19,6 @@ const VarInvocation = ({ invocation: { invocationId, nameId, invocationIds }, de
   </React.Fragment>
 )
 
-export default styled(VarInvocation).as.div`
+export default styled(VarInvocation).as.span`
   ${props => (props.invocation.inline || props.dot) && 'display: inline-block;'}
 `

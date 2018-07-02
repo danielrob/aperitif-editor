@@ -26,7 +26,7 @@ const ParamInvocation = ({
   <React.Fragment>
     {!inline && indent(depth)}
     {connectDragSource(
-      <div className="dragsource">
+      <span className="dragsource">
         {'{'}
         {declIsSpreadMember && 'props.'}
         <Name nameId={nameId} />
@@ -34,12 +34,12 @@ const ParamInvocation = ({
           <JSX
             parentId={parentId}
             invocationId={invocationIds[0]}
-            depth={0}
+            depth={depth}
             initial
           />
         }
         {'}'}
-      </div>
+      </span>
     )}
   </React.Fragment>
 )
@@ -60,11 +60,9 @@ ParamInvocation.propTypes = forbidExtraProps({
 })
 
 /* style, export */
-export default styled(ParamInvocation).as.div`
-  ${props => props.invocation.inline && 'display: inline-block;'}
+export default styled(ParamInvocation).as.span`
   color: ${theme.colors.darkblue}
   .dragsource {
-    display: inline-block;
     user-select: text;
     cursor: pointer;
   }

@@ -30,7 +30,6 @@ const JSX = ({ invocationId, initial, ...props }) => (
   <InvocationContainer
     invocationId={invocationId}
     render={invocation => {
-
       const [Invocation, configProps = {}] = types()[invocation.type] || ComponentInvocationContainer
       const propsToPass = initial ? { ...props, ...configProps, initial } : { ...props, ...configProps }
       return (
