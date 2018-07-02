@@ -6,18 +6,16 @@ import { lastItem } from 'utils'
 import { EditorContainer } from 'containers'
 
 import copyNodeText from './copyNodeText'
-import download from './download'
 
 /**
- * DownloadApp
+ * ToText
  *
  * Exporting is achieved by rendering the project files to a hidden dom node using the exact same
  * EditorContainer component tree the real editor uses. The HTML text selection api is then used
- * to copy the text in that hidden node. DownloadApp uses the component lifecycle itself + setState
- * to loop through the files, until all files have been copied. Then a download is initiated, and
- * DownloadApp signals to be unmounted.
+ * to copy the text in that hidden node. ToText uses the component lifecycle itself + setState
+ * to loop through the files, until all files have been copied. ToText is then unmounted.
  */
-export default class DownloadApp extends React.Component {
+export default class ToText extends React.Component {
   constructor(props) {
     super(props)
     const { files, rootFiles } = props
@@ -73,8 +71,7 @@ export default class DownloadApp extends React.Component {
     }
 
     if (node.id === 'root' && node.currentIndex === node.max) {
-      this.props.onFinish()
-      download(fileTree)
+      this.props.onFinish(fileTree)
       return
     }
 

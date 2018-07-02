@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { selectFiles, selectRootFiles, selectNames } from 'selectors'
 import { createStructuredSelector } from 'reselect'
 
-import DownloadApp from './DownloadApp'
+import ToText from './ToText'
 
-const DownloadAppContainer = props => <DownloadApp {...props} />
+const ToTextContainer = props => <ToText {...props} />
 
 const mapStateToProps = createStructuredSelector({
   files: selectFiles,
@@ -17,4 +17,4 @@ const mapStateToProps = createStructuredSelector({
 export default connect(
   mapStateToProps,
   null
-)(DownloadAppContainer)
+)(ToTextContainer)

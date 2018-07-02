@@ -1,6 +1,8 @@
 import React from 'react'
 import { Workspace } from 'components'
-import { DownloadAppContainer } from 'containers'
+import { ToTextContainer } from 'containers'
+
+import download from './download'
 
 export default class WorkspaceContainer extends React.PureComponent {
   constructor() {
@@ -12,6 +14,8 @@ export default class WorkspaceContainer extends React.PureComponent {
   }
 
   toggleExport = () => this.setState({ export: !this.state.export })
+
+  download = fileTree => download(fileTree) && this.toggleExport()
 
   handleMouseMove = e => {
     const { clientX } = e
@@ -40,9 +44,9 @@ export default class WorkspaceContainer extends React.PureComponent {
         {...this.props}
         width={this.state.width}
         handleDividerMouseDown={this.handleDividerMouseDown}
-        requestExport={this.toggleExport}
+        downloadApp={this.toggleExport}
       />,
-      this.state.export && <DownloadAppContainer key="export" onFinish={this.toggleExport} />,
+      this.state.export && <ToTextContainer key="export" onFinish={this.download} />,
     ]
   }
 }
