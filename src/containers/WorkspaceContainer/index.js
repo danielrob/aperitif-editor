@@ -1,5 +1,6 @@
 import React from 'react'
-import { Workspace } from 'components'
+
+import { Workspace, Frame } from 'components'
 import { ToTextContainer } from 'containers'
 
 import download from './download'
@@ -38,7 +39,7 @@ export default class WorkspaceContainer extends React.PureComponent {
           this.setState({
             embedWidth: Math.max(document.body.clientWidth * 0.3, 250),
             vm,
-            interval: setInterval(this.updateEmbed, 5000),
+            interval: setInterval(this.updateEmbed, 2500),
           })
         }, 500)
       })
@@ -119,7 +120,11 @@ export default class WorkspaceContainer extends React.PureComponent {
           embedStackBlitz: this.handleStartPreview,
         }}
       />,
-      this.state.toText && <ToTextContainer key="toText" onFinish={this.onToTextFinish} />,
+      this.state.toText && (
+        <Frame>
+          <ToTextContainer key="toText" onFinish={this.onToTextFinish} />
+        </Frame>
+      ),
     ]
   }
 }

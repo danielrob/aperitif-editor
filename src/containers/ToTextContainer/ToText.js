@@ -1,6 +1,5 @@
 import { set } from 'lodash'
 import React from 'react'
-import styled from 'styled-components'
 import { DIR, SC } from 'constantz'
 import { lastItem } from 'utils'
 import { EditorContainer } from 'containers'
@@ -114,18 +113,6 @@ export default class ToText extends React.Component {
   render() {
     const { currentFileId } = this.state
 
-    return (
-      <Wrapper innerRef={this.hiddenNodeRef}>
-        <EditorContainer currentFileId={currentFileId} />
-      </Wrapper>
-    )
+    return <EditorContainer currentFileId={currentFileId} />
   }
 }
-
-const Wrapper = styled.div`
-  position: absolute;
-  z-index: -1;
-  height: 1px;
-  width: 1px;
-  overflow: auto;
-`
