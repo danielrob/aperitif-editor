@@ -30,7 +30,7 @@ const Props = ({ props: allProps, declarationId, depth, parentheses }) => {
               <PropDragContainer
                 prop={prop}
                 declarationId={declarationId}
-                isLast={index === props.length - 1}
+                skipFinalComma={index === props.length - 1 && !spreadProps.length}
               />
               {!inline && <br />}
             </React.Fragment>

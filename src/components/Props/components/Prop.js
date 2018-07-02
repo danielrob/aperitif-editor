@@ -7,7 +7,7 @@ import { declParamPropTypes } from 'model-prop-types'
 import { spaces } from 'utils'
 import { Name } from 'containers'
 
-const Prop = ({ prop: { nameId, payload }, isLast, connectDragSource }) => (
+const Prop = ({ prop: { nameId, payload }, skipFinalComma, connectDragSource }) => (
   <React.Fragment>
     {connectDragSource(
       <span
@@ -21,13 +21,13 @@ const Prop = ({ prop: { nameId, payload }, isLast, connectDragSource }) => (
         <Name nameId={nameId} />
       </span>
     )}
-    {!isLast && `,${spaces(1)}`}
+    {!skipFinalComma && `,${spaces(1)}`}
   </React.Fragment>
 )
 
 Prop.propTypes = {
   declarationId: T.number.isRequired,
-  isLast: T.bool.isRequired,
+  skipFinalComma: T.bool.isRequired,
   prop: T.shape(declParamPropTypes).isRequired,
   connectDragSource: T.func.isRequired,
 }
