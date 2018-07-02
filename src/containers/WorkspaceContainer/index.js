@@ -3,20 +3,37 @@ import { Workspace } from 'components'
 import { ToTextContainer } from 'containers'
 
 import download from './download'
+import toStackBlitz from './toStackBlitz'
 
 export default class WorkspaceContainer extends React.PureComponent {
+  static onTextFinishActions = {
+    download,
+    toStackBlitz,
+  }
+
   constructor() {
     super()
     this.state = {
       width: Math.min(document.body.clientWidth * 0.3, 300),
-      export: false,
+      toText: false,
+      cbName: null,
     }
   }
 
-  toggleExport = () => this.setState({ export: !this.state.export })
+  /* Project Exporting */
+  startToText = cbName => this.setState({ toText: true, cbName })
 
-  download = fileTree => download(fileTree) && this.toggleExport()
+  onToTextFinish = fileTree => {
+    const { cbName } = this.state
+    this.setState({ toText: false })
+    WorkspaceContainer.onTextFinishActions[cbName](fileTree)
+  }
 
+  handleDownloadApp = () => this.startToText('download')
+
+  handleExportToStackBlitz = () => this.startToText('toStackBlitz')
+
+  /* Divider */
   handleMouseMove = e => {
     const { clientX } = e
     this.setState({
@@ -44,9 +61,12 @@ export default class WorkspaceContainer extends React.PureComponent {
         {...this.props}
         width={this.state.width}
         handleDividerMouseDown={this.handleDividerMouseDown}
-        downloadApp={this.toggleExport}
+        workspaceActions={{
+          downloadApp: this.handleDownloadApp,
+          exportToStackBlitz: this.handleExportToStackBlitz,
+        }}
       />,
-      this.state.export && <ToTextContainer key="export" onFinish={this.download} />,
+      this.state.toText && <ToTextContainer key="toText" onFinish={this.onToTextFinish} />,
     ]
   }
 }

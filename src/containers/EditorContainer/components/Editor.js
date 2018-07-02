@@ -42,10 +42,11 @@ class Editor extends React.PureComponent {
   }
 
   render() {
-    const { downloadApp, imports, declarations, defaultExport } = this.props
+    const { downloadApp, exportToStackBlitz, imports, declarations, defaultExport } = this.props
     return (
       <React.Fragment>
-        <ExportAppButton onClick={downloadApp} />
+        {/* <ExportAppButton onClick={downloadApp} position={1} text="Zip Download" /> */}
+        <ExportAppButton onClick={exportToStackBlitz} position={1} text="Export to StackBlitz" />
         <Imports key="imports" imports={imports} />
         {declarations.map(declaration => {
           const { type, declarationId } = declaration
@@ -76,6 +77,7 @@ class Editor extends React.PureComponent {
 */
 Editor.propTypes = forbidExtraProps({
   downloadApp: T.func,
+  exportToStackBlitz: T.func,
   imports: T.arrayOf(T.object).isRequired,
   declarations: T.arrayOf(T.object).isRequired,
   defaultExport: T.number,
@@ -88,6 +90,7 @@ Editor.defaultProps = {
   currentFileId: null,
   dragItem: false,
   downloadApp: null,
+  exportToStackBlitz: null,
 }
 
 

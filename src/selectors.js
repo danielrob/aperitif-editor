@@ -13,6 +13,7 @@ export const selectInvocations = s => s.app.present.invocations || {}
 export const selectCallParams = s => s.app.present.callParams || {}
 export const selectDeclParams = s => s.app.present.declParams || {}
 export const selectPreferences = s => s.app.present.preferences
+export const selectSemis = s => s.app.present.preferences.semis
 
 /*
   Atomic model selectors

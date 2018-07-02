@@ -14,7 +14,7 @@ export default class ProjectIndexDeclaration extends React.PureComponent {
         <Keyword>from</Keyword>{' '}'containers' <Semi />
         <br />
         ReactDOM.render(<br />
-        <Keyword>{indent(1)}{'<'}<NameInput nameId={APP_CONTAINER_NAME_ID} />{'/>'}</Keyword>,<br />
+        <Keyword>{indent(1)}{'<'}<NameInput nameId={APP_CONTAINER_NAME_ID} />{' />'}</Keyword>,<br />
         {indent(1)}document.getElementById('root')<br />
         )
         <Semi />

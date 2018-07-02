@@ -4,11 +4,11 @@ import { FileExplorerContainer, EditorContainer } from 'containers'
 
 import Divider from './Divider'
 
-const Workspace = ({ downloadApp, ...props }) => (
+const Workspace = ({ workspaceActions, ...props }) => (
   <React.Fragment>
     <FileExplorerContainer />
     <Divider {...props} />
-    <EditorContainer downloadApp={downloadApp} />
+    <EditorContainer {...workspaceActions} />
   </React.Fragment>
 )
 

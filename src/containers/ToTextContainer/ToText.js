@@ -6,6 +6,7 @@ import { lastItem } from 'utils'
 import { EditorContainer } from 'containers'
 
 import copyNodeText from './copyNodeText'
+import postProcessFileTree from './postProcessFileTree'
 
 /**
  * ToText
@@ -48,7 +49,7 @@ export default class ToText extends React.Component {
   }
 
   copyAndNextFile() {
-    const { files, names } = this.props
+    const { files, names, semis } = this.props
     const { currentTraversal, fileTree } = this // Note: these are mutation managed state
 
     // add currently rendered file's text to output tree
@@ -71,7 +72,7 @@ export default class ToText extends React.Component {
     }
 
     if (node.id === 'root' && node.currentIndex === node.max) {
-      this.props.onFinish(fileTree)
+      this.props.onFinish(postProcessFileTree(fileTree, semis))
       return
     }
 
