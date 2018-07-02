@@ -1,34 +1,9 @@
-import stackBlitz from '@stackblitz/sdk'
-import flatten from 'flat'
+import stackblitz from '@stackblitz/sdk'
+
+import getStackBlitzProjectDef from './getStackBlitzProjectDef'
 
 export default function toStackBlitz(fileTree) {
-  const files = Object.entries(flatten(fileTree, { delimiter: '/' }))
-    .reduce((out, [name, value]) => {
-      out[name.replace('|', '.')] = value // eslint-disable-line no-param-reassign
-      return out
-    }, {})
-
-  stackBlitz.openProject({
-    files,
-    title: 'string',
-    description: 'string',
-    template: 'create-react-app',
-    tags: [],
-    dependencies: {
-      react: 'latest',
-      'react-dom': 'latest',
-      'styled-components': 'latest',
-      'prop-types': 'latest',
-    },
-    // settings: {
-    //   compile: {
-    //     trigger: 'auto' | 'keystroke' | 'save',
-    //     action: 'hmr' | 'refresh',
-    //     clearConsole: boolean,
-    //   },
-    // },
-  },
-  {
+  stackblitz.openProject(getStackBlitzProjectDef(fileTree), {
     openFile: '', // Show a specific file on page load
     newWindow: true, // Open in new window or in current window
     hideDevTools: true, // Hide the debugging console

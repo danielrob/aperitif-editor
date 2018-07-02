@@ -4,53 +4,85 @@ import { ToTextContainer } from 'containers'
 
 import download from './download'
 import toStackBlitz from './toStackBlitz'
+import embedStackBlitz from './embedStackBlitz'
 
 export default class WorkspaceContainer extends React.PureComponent {
   static onTextFinishActions = {
     download,
     toStackBlitz,
+    embedStackBlitz,
   }
 
   constructor() {
     super()
     this.state = {
       width: Math.min(document.body.clientWidth * 0.3, 300),
+      embedWidth: 0,
       toText: false,
       cbName: null,
     }
   }
 
-  /* Project Exporting */
+  /* Project Exporting / Embed */
   startToText = cbName => this.setState({ toText: true, cbName })
 
   onToTextFinish = fileTree => {
     const { cbName } = this.state
     this.setState({ toText: false })
     WorkspaceContainer.onTextFinishActions[cbName](fileTree)
+    if (cbName === 'embedStackBlitz') {
+      this.setState({ embedWidth: Math.max(document.body.clientWidth * 0.3, 250) })
+    }
   }
 
   handleDownloadApp = () => this.startToText('download')
 
   handleExportToStackBlitz = () => this.startToText('toStackBlitz')
 
+  handleStartPreview = () => this.startToText('embedStackBlitz')
+
   /* Divider */
-  handleMouseMove = e => {
+  handleDividerMouseMove = e => {
     const { clientX } = e
     this.setState({
-      width: Math.min(Math.max(clientX, 10), document.body.clientWidth * 0.45),
+      width: Math.min(Math.max(clientX, 10), document.body.clientWidth * 0.55),
     })
     e.preventDefault()
   }
 
-  handleMouseUp = e => {
-    document.removeEventListener('mousemove', this.handleMouseMove)
-    document.removeEventListener('mouseup', this.handleMouseUp)
+  handleDividerMouseUp = e => {
+    document.removeEventListener('mousemove', this.handleDividerMouseMove)
+    document.removeEventListener('mouseup', this.handleDividerMouseUp)
     e.preventDefault()
   }
 
   handleDividerMouseDown = e => {
-    document.addEventListener('mousemove', this.handleMouseMove)
-    document.addEventListener('mouseup', this.handleMouseUp)
+    document.addEventListener('mousemove', this.handleDividerMouseMove)
+    document.addEventListener('mouseup', this.handleDividerMouseUp)
+    e.preventDefault()
+  }
+
+  /* EmbedDivider */
+  handleEmbedDividerMouseMove = e => {
+    const { clientX } = e
+    this.setState({
+      embedWidth: Math.min(
+        Math.max(document.body.clientWidth - clientX, 10),
+        (document.body.clientWidth - this.state.width - 10)
+      ),
+    })
+    e.preventDefault()
+  }
+
+  handleEmbedDividerMouseUp = e => {
+    document.removeEventListener('mousemove', this.handleEmbedDividerMouseMove)
+    document.removeEventListener('mouseup', this.handleEmbedDividerMouseUp)
+    e.preventDefault()
+  }
+
+  handleEmbedDividerMouseDown = e => {
+    document.addEventListener('mousemove', this.handleEmbedDividerMouseMove)
+    document.addEventListener('mouseup', this.handleEmbedDividerMouseUp)
     e.preventDefault()
   }
 
@@ -60,10 +92,13 @@ export default class WorkspaceContainer extends React.PureComponent {
         key="workspace"
         {...this.props}
         width={this.state.width}
+        embedWidth={this.state.embedWidth}
         handleDividerMouseDown={this.handleDividerMouseDown}
+        handleEmbedDividerMouseDown={this.handleEmbedDividerMouseDown}
         workspaceActions={{
           downloadApp: this.handleDownloadApp,
           exportToStackBlitz: this.handleExportToStackBlitz,
+          embedStackBlitz: this.handleStartPreview,
         }}
       />,
       this.state.toText && <ToTextContainer key="toText" onFinish={this.onToTextFinish} />,

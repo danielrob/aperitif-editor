@@ -12,6 +12,7 @@ import {
   ProjectIndexDeclaration,
   Standard,
   Json,
+  ExportAppButton,
 } from 'components'
 import {
   STATELESS_FUNCTION_COMPONENT,
@@ -21,7 +22,7 @@ import {
   JSON_TYPE,
 } from 'constantz'
 
-import { Imports, DefaultExport, ExportAppButton } from './'
+import { Imports, DefaultExport } from './'
 
 /*
   Component
@@ -42,11 +43,14 @@ class Editor extends React.PureComponent {
   }
 
   render() {
-    const { downloadApp, exportToStackBlitz, imports, declarations, defaultExport } = this.props
+    const { imports, declarations, defaultExport, workspaceActions: wAs, hasEmbed } = this.props
     return (
       <React.Fragment>
-        {/* <ExportAppButton onClick={downloadApp} position={1} text="Zip Download" /> */}
-        <ExportAppButton onClick={exportToStackBlitz} position={1} text="Export to StackBlitz" />
+        {!hasEmbed &&
+          <React.Fragment>
+            <ExportAppButton onClick={wAs.embedStackBlitz} position={1} text="Preview" />
+          </React.Fragment>
+        }
         <Imports key="imports" imports={imports} />
         {declarations.map(declaration => {
           const { type, declarationId } = declaration
@@ -76,8 +80,7 @@ class Editor extends React.PureComponent {
   propTypes
 */
 Editor.propTypes = forbidExtraProps({
-  downloadApp: T.func,
-  exportToStackBlitz: T.func,
+  workspaceActions: T.objectOf(T.func),
   imports: T.arrayOf(T.object).isRequired,
   declarations: T.arrayOf(T.object).isRequired,
   defaultExport: T.number,
@@ -89,8 +92,7 @@ Editor.defaultProps = {
   defaultExport: null,
   currentFileId: null,
   dragItem: false,
-  downloadApp: null,
-  exportToStackBlitz: null,
+  workspaceActions: {},
 }
 
 

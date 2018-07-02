@@ -11,10 +11,10 @@ const DividerWrapper = styled.div`
   background-color: ${theme.colors.darkblue}
 `
 
-const Divider = ({ width, handleDividerMouseDown }) => (
+const Divider = ({ width, onMouseDown }) => (
   <DividerWrapper
     style={{ left: `${width - dividerThickness}px` }}
-    onMouseDown={handleDividerMouseDown}
+    onMouseDown={onMouseDown}
   />
 )
 

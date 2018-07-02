@@ -16,7 +16,7 @@ export default function postProcessFileTree(fileTree, semis) {
   // indexes
   Object.entries(fileTree).forEach(([name, value]) => {
     if (RESOLVE_ALIASES.includes(name)) {
-      fileTree[name]['index|js'] = Object.keys(value).reduce((out, exportName) => {
+      fileTree[name]['index|js'] = Object.keys(value).sort().reduce((out, exportName) => {
         const exportLine = `export { default as ${exportName} } from './${exportName}'${semis ? ';' : ''}`
         return out ? `${out}\n${exportLine}` : exportLine
       }, '')
