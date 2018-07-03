@@ -95,14 +95,14 @@ export default class WorkspaceContainer extends React.PureComponent {
   }
 
   handleEmbedDividerMouseUp = e => {
-    document.removeEventListener('mousemove', this.handleEmbedDividerMouseMove)
-    document.removeEventListener('mouseup', this.handleEmbedDividerMouseUp)
+    window.removeEventListener('mousemove', this.handleEmbedDividerMouseMove)
+    window.removeEventListener('mouseup', this.handleEmbedDividerMouseUp)
     e.preventDefault()
   }
 
   handleEmbedDividerMouseDown = e => {
-    document.addEventListener('mousemove', this.handleEmbedDividerMouseMove)
-    document.addEventListener('mouseup', this.handleEmbedDividerMouseUp)
+    window.addEventListener('mousemove', this.handleEmbedDividerMouseMove)
+    window.addEventListener('mouseup', this.handleEmbedDividerMouseUp)
     e.preventDefault()
   }
 
