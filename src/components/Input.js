@@ -74,9 +74,12 @@ Input.defaultProps = {
   pointer: false,
 }
 
+// https://github.com/JedWatson/react-input-autosize/issues/135
+const ff = window.navigator.userAgent.includes('Firefox')
+const standardCorrection = 1.9 // keep this when 135 fixed
 const HackAutosizeInput = styled.span`
   div[style] {
-    margin-right: -1.9px;
+    margin-right: ${ff ? `-${15 + standardCorrection}px` : `-${standardCorrection}px`};
   }
 `
 
