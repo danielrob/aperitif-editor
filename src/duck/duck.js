@@ -342,6 +342,18 @@ export default function appReducer(state, action) {
         targetPosition,
       } = action.payload
 
+      let insertPosition = targetPosition
+      if (targetInvocationId === sourceParentId) {
+        const oldPosition = Invocation
+          .withId(sourceParentId)
+          .ref()
+          .invocationIds
+          .findIndex(id => id === sourceInvocationId)
+        if (oldPosition < targetPosition) {
+          insertPosition -= 1
+        }
+      }
+
       // remove from source
       Invocation
         .withId(sourceParentId)
@@ -355,7 +367,7 @@ export default function appReducer(state, action) {
       Invocation
         .withId(targetInvocationId)
         .invocations
-        .insert(sourceInvocationId, targetPosition)
+        .insert(sourceInvocationId, insertPosition)
 
       // open target
       Invocation.update({ closed: false })
@@ -428,7 +440,7 @@ export default function appReducer(state, action) {
       // params
       const payloadDeclParams = Object.keys(payload).map(key =>
         DeclParam.create({
-          nameId: Name.create(key),
+          nameId: Name.create(ES_KEYWORDS.includes(key) ? `_${key}` : key),
           payload: payload[key],
         })
       )

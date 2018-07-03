@@ -31,7 +31,7 @@ const InvocationChildren = ({
             key={`after-${invocationId}-dropzone`}
             invocationId={parentId}
             depth={depth}
-            position={position}
+            position={position + 1}
           />
         )
       }

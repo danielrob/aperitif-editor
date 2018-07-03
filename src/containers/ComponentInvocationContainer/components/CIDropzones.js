@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash'
 import T from 'prop-types'
 import C from 'check-types'
 import React from 'react'
@@ -18,7 +19,7 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
   const dropZoneProps = { targetInvocationId: invocationId, targetPosition: position }
   const { type, nameId, dropName, payload } = dragItem || {}
 
-  return shouldDisplay && type ?
+  return shouldDisplay && !isEmpty(dragItem) ?
     <Name
       nameId={nameId}
       render={name => (
