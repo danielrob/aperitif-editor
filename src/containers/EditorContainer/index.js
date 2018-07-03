@@ -139,13 +139,13 @@ const dropTarget = {
 
       case PROP: {
         const { removeProp } = props
-        const { declarationId, paramId, nameId, altIds, useCount } = monitor.getItem()
+        const { declarationId, paramId, nameId, altIds, invokeCount } = monitor.getItem()
         return removeProp({
           declarationId,
           paramId,
           nameId,
           altIds,
-          useCount,
+          invokeCount,
         })
       }
 

@@ -20,7 +20,7 @@ PropContainer.propTypes = forbidExtraProps({
 
 /* dnd */
 const propSource = {
-  beginDrag({ prop: { id, nameId, name, payload, useCount, altIds }, declarationId }) {
+  beginDrag({ prop: { id, nameId, name, payload, invokeCount, altIds }, declarationId }) {
     ReactTooltip.hide() // disable tooltips
     return {
       declarationId,
@@ -29,7 +29,7 @@ const propSource = {
       nameId,
       payload,
       type: PROP,
-      useCount,
+      invokeCount,
       altIds,
     }
   },

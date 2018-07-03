@@ -29,7 +29,7 @@ export const declParamPropTypes = {
   nameId: T.number.isRequired,
   payload: T.any,
   isSpreadMember: T.bool.isRequired,
-  useCount: T.number.isRequired,
+  invokeCount: T.number.isRequired,
   altIds: T.arrayOf(T.number).isRequired,
 }
 

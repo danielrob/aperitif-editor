@@ -10,8 +10,8 @@ const PropTypes = ({ props, nameId }) => !!props.length && (
   <React.Fragment>
     <br />
     <NameInput nameId={nameId} />.propTypes = {'{'}
-    {props.filter(({ isSpreadMember, useCount }) => !isSpreadMember || useCount).map(
-      ({ nameId, useCount, payload }) => (
+    {props.filter(({ isSpreadMember, invokeCount }) => !isSpreadMember || invokeCount).map(
+      ({ nameId, invokeCount, payload }) => (
         <div key={nameId}>
           {indent(1)}
           <span
@@ -22,7 +22,7 @@ const PropTypes = ({ props, nameId }) => !!props.length && (
             <Name nameId={nameId} />
           </span>
           : {getPropType(payload)}
-          {!!useCount && C.not.null(payload) && '.isRequired'}
+          {!!invokeCount && C.not.null(payload) && '.isRequired'}
           ,
         </div>
         )

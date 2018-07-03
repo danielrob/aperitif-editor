@@ -1,8 +1,8 @@
 import Model, { attr, fk } from '../Model'
 
 class DeclParam extends Model {
-  incrementUsage = () => this.migrate({ useCount: useCount => useCount + 1 })
-  decrementUsage = () => this.migrate({ useCount: useCount => useCount - 1 })
+  incrementUsage = () => this.migrate({ invokeCount: invokeCount => invokeCount + 1 })
+  decrementUsage = () => this.migrate({ invokeCount: invokeCount => invokeCount - 1 })
 }
 
 DeclParam.modelName = 'DeclParam'
@@ -13,7 +13,7 @@ DeclParam.fields = {
   payload: attr(null),
   // type specific items
   isSpreadMember: attr(false), // react component declarations
-  useCount: attr(0),
+  invokeCount: attr(0), // how many invocations of this param
 }
 
 export default DeclParam

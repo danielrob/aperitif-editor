@@ -20,7 +20,7 @@ const makeSelectDeclParams = () => createSelector(
       'name'
     )).map(([, group]) => ({
       ...group[0],
-      useCount: group.reduce((count, { useCount }) => count + useCount, 0),
+      invokeCount: group.reduce((count, { invokeCount }) => count + invokeCount, 0),
       altIds: group.map(({ id }) => id),
     }))
 )

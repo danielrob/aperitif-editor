@@ -623,9 +623,9 @@ export default function appReducer(state, action) {
 
 
     case REMOVE_PROP: {
-      const { declarationId, altIds, useCount } = action.payload
+      const { declarationId, altIds, invokeCount } = action.payload
       // cannot remove a decl param which has been invoked somewhere.
-      if (useCount) {
+      if (invokeCount) {
         return session.state
       }
 
