@@ -25,16 +25,18 @@ const createComponentBundle = ({
   })
 
   // NEW COMPONENT
+  let wrapperInvocationId
+
   const newComponentDeclarationId = Declaration.create({
     nameId: componentNameId,
     invocationIds: [
-      Invocation.create({
+      (wrapperInvocationId = Invocation.create({
         nameId: wrapperNameId,
         source: null,
         invocationIds,
         closed: !invocationIds.length,
         declarationId: wrapperDeclarationId,
-      }),
+      })),
     ],
     declParamIds,
   })
@@ -59,6 +61,7 @@ const createComponentBundle = ({
   return [
     componentNameId,
     newComponentDeclarationId,
+    wrapperInvocationId,
   ]
 }
 

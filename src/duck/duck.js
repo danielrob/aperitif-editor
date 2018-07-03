@@ -1,6 +1,7 @@
+import C from 'check-types'
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
-import { pascalCase, camelCase } from 'utils'
+import { pascalCase, camelCase, oneOf } from 'utils'
 import orm from 'orm'
 import {
   PROPS,
@@ -573,11 +574,27 @@ export default function appReducer(state, action) {
       const baseName = Name.withId(nameId).value()
       const nameCopyId = Name.create(camelCase(baseName))
 
-      const [componentNameId, newComponentDeclarationId] = createComponentBundle({
-        baseName,
-        session,
-        declParamIds: [DeclParam.create({ nameId: nameCopyId, payload })],
-      })
+      let declParamId
+      const [componentNameId, newComponentDeclarationId, wrapperInvocationId] =
+        createComponentBundle({
+          baseName,
+          session,
+          declParamIds: [
+            declParamId = DeclParam.create({ nameId: nameCopyId, payload }),
+          ],
+        })
+
+      if (oneOf(C.string, C.number, C.null)(payload)) {
+        Invocation.withId(wrapperInvocationId).invocations.insert(
+          Invocation.create({
+            type: PARAM_INVOCATION,
+            nameId: nameCopyId,
+            callParamIds: [CallParam.create({ declParamId })],
+          })
+        )
+        DeclParam.withId(declParamId).incrementUsage()
+        Invocation.update({ closed: false })
+      }
 
       Invocation.withId(targetInvocationId).invocations.insert(
         Invocation.create({
