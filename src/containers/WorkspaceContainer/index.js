@@ -1,8 +1,10 @@
 import React from 'react'
 
-import { Workspace, Frame } from 'components'
+import { Workspace } from 'components'
 import { ToTextContainer } from 'containers'
+import { emitter } from 'middleware/spyMiddleware'
 
+import makeReduxStackblitzUpdateReconciler from './makeReduxStackblitzUpdateReconciler'
 import download from './download'
 import toStackBlitz from './toStackBlitz'
 import embedStackBlitz from './embedStackBlitz'
@@ -23,7 +25,6 @@ export default class WorkspaceContainer extends React.PureComponent {
       embedWidth: 0,
       toText: false,
       cbName: null,
-      vm: null,
     }
   }
 
@@ -38,13 +39,13 @@ export default class WorkspaceContainer extends React.PureComponent {
         setTimeout(() => {
           this.setState({
             embedWidth: Math.max(document.body.clientWidth * 0.3, 250),
-            vm,
-            interval: setInterval(this.updateEmbed, 2500),
           })
+          this.vm = vm
+          emitter.addListener(makeReduxStackblitzUpdateReconciler(this.updateEmbed, vm))
         }, 500)
       })
     } else {
-      WorkspaceContainer.onTextFinishActions[cbName](fileTree, this.state)
+      WorkspaceContainer.onTextFinishActions[cbName](fileTree, this)
     }
   }
 
@@ -86,7 +87,7 @@ export default class WorkspaceContainer extends React.PureComponent {
     const { clientX } = e
     this.setState({
       embedWidth: Math.min(
-        Math.max(document.body.clientWidth - clientX, 10),
+        Math.max(document.body.clientWidth - clientX, 2),
         (document.body.clientWidth - this.state.width - 10)
       ),
     })
@@ -120,11 +121,7 @@ export default class WorkspaceContainer extends React.PureComponent {
           embedStackBlitz: this.handleStartPreview,
         }}
       />,
-      this.state.toText && (
-        <Frame>
-          <ToTextContainer key="toText" onFinish={this.onToTextFinish} />
-        </Frame>
-      ),
+      this.state.toText && <ToTextContainer key="toText" onFinish={this.onToTextFinish} />,
     ]
   }
 }

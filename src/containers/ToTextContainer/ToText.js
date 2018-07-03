@@ -1,5 +1,7 @@
 import { set } from 'lodash'
+import ReactDOM from 'react-dom'
 import React from 'react'
+
 import { DIR, SC } from 'constantz'
 import { lastItem } from 'utils'
 import { EditorContainer } from 'containers'
@@ -16,6 +18,8 @@ import postProcessFileTree from './postProcessFileTree'
  * to loop through the files, until all files have been copied. ToText is then unmounted.
  */
 export default class ToText extends React.Component {
+  static target = document.getElementById('frame').contentDocument.body
+
   constructor(props) {
     super(props)
     const { files, rootFiles } = props
@@ -113,6 +117,9 @@ export default class ToText extends React.Component {
   render() {
     const { currentFileId } = this.state
 
-    return <EditorContainer currentFileId={currentFileId} />
+    return ReactDOM.createPortal(
+      <EditorContainer currentFileId={currentFileId} />,
+      this.constructor.target,
+    )
   }
 }

@@ -14,7 +14,7 @@ const PropContainer = props => <Prop {...props} />
 PropContainer.propTypes = forbidExtraProps({
   declarationId: T.number.isRequired,
   prop: T.shape(declParamPropTypes).isRequired,
-  isLast: T.bool.isRequired,
+  skipFinalComma: T.bool.isRequired,
   connectDragSource: T.func.isRequired,
 })
 
