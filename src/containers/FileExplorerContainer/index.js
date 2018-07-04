@@ -1,3 +1,5 @@
+import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
@@ -10,12 +12,29 @@ import { moveFile, resetProject } from 'duck'
 
 import { FileExplorer } from './components'
 
-const FileExplorerContainer = props => (
+const FileExplorerContainer = ({
+  connectDropTarget,
+  moveFile, // dnd only
+  ...props
+}) => (
   <div>
-    {props.connectDropTarget(<div style={{ position: 'absolute', top: 0, bottom: 0, width: '100%' }} />)}
+    {connectDropTarget(<div style={{ position: 'absolute', top: 0, bottom: 0, width: '100%' }} />)}
     <FileExplorer {...props} />
   </div>
 )
+
+/*
+  propTypes
+*/
+FileExplorerContainer.propTypes = forbidExtraProps({
+  // connect
+  rootFiles: T.arrayOf(T.number).isRequired,
+  resetProject: T.func.isRequired,
+  moveFile: T.func.isRequired,
+  // dnd
+  connectDropTarget: T.func.isRequired,
+})
+
 
 const mapStateToProps = createStructuredSelector({
   rootFiles: selectRootFiles,

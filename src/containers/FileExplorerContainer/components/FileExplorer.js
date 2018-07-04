@@ -1,3 +1,5 @@
+import T from 'prop-types'
+import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
@@ -16,6 +18,17 @@ const FileExplorer = ({ rootFiles, resetProject }) => (
     ))}
   </React.Fragment>
 )
+
+
+/*
+  propTypes
+*/
+FileExplorer.propTypes = forbidExtraProps({
+  // container
+  rootFiles: T.arrayOf(T.number).isRequired,
+  resetProject: T.func.isRequired,
+})
+
 
 export default styled(FileExplorer).as.div`
   user-select: none;
