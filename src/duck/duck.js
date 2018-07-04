@@ -19,6 +19,7 @@ import {
   PROPERTY_ACCESS,
   VAR_INVOCATION,
   ES_KEYWORDS,
+  SC,
 } from 'constantz'
 
 import { getInitialState, initializeFromData, addNewContainer, createComponentBundle } from './tasks'
@@ -425,7 +426,11 @@ export default function appReducer(state, action) {
 
       // insert new file with the declaration into directory
       File.withId(dirId).children.insert(
-        File.create({ nameId: newNameId, declarationIds: [newDeclarationId] })
+        File.create({
+          type: SC,
+          nameId: newNameId,
+          declarationIds: [newDeclarationId],
+        })
       )
 
       return session.state
