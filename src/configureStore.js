@@ -14,7 +14,7 @@ const composeEnhancers = (typeof window === 'object' && window.__REDUX_DEVTOOLS_
 
 export default function configureStore(history) {
   const middleware = applyMiddleware(routerMiddleware(history), spyMiddleware)
-  const enhancer = composeEnhancers(middleware, persistState())
+  const enhancer = composeEnhancers(middleware, persistState(undefined, persistConfig))
 
   return createStore(
     combineReducers({
@@ -25,3 +25,11 @@ export default function configureStore(history) {
   )
 }
 
+const persistSlicer = () => ({ app: { present }, ...state }) => ({
+  ...state,
+  app: present, // { present } - nope, undoable appears to reinitialize without past/future/etc keys
+})
+
+const persistConfig = {
+  slicer: persistSlicer,
+}
