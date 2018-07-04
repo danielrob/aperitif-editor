@@ -9,6 +9,7 @@ import { getInitialState } from './tasks'
 export default undoable(reduceReducers, {
   groupBy: groupByActionTypes([UPDATE_NAME, UPDATE_DECLARATION]),
   filter: excludeAction(['@@INIT', '@@router/LOCATION_CHANGE']), // for persistence rehydration
+  limit: 20,
 })
 
 function reduceReducers(state = getInitialState(), action) {
