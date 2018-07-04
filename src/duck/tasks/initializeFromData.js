@@ -28,6 +28,7 @@ export default function initializeFromData(state, apiResponse) {
       rootFiles: [...session.state.editor.rootFiles, indexFile],
       currentFileId: C.array.of.object(apiResponse) ? 10 : 7,
       selectedFileId: C.array.of.object(apiResponse) ? 10 : 7,
+      projectInitialized: true,
     },
   }
 }

@@ -29,7 +29,13 @@ export default class WorkspaceContainer extends React.PureComponent {
   }
 
   /* Project Exporting / Embed */
-  startToText = cbName => this.setState({ toText: true, cbName })
+  startToText = cbName => {
+    // Note: ToText won't start until there is a currentFileId, so choice between
+    // preventing setting new incoming cb's or not garuanteeing original.
+    if (!this.state.toText) {
+      this.setState({ toText: true, cbName })
+    }
+  }
 
   onToTextFinish = fileTree => {
     const { cbName } = this.state
@@ -38,7 +44,7 @@ export default class WorkspaceContainer extends React.PureComponent {
       embedStackBlitz(fileTree).then(vm => {
         setTimeout(() => {
           this.setState({
-            embedWidth: Math.max(document.body.clientWidth * 0.3, 250),
+            embedWidth: Math.max(document.body.clientWidth * 0.33, 250),
           })
           this.vm = vm
           emitter.addListener(makeReduxStackblitzUpdateReconciler(this.updateEmbed, vm))

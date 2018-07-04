@@ -46,6 +46,7 @@ export default function getInitialState() {
       rootFiles,
       currentFileId: null,
       selectedFileId: null,
+      projectInitialized: false,
     },
     preferences: {
       semis: false,
