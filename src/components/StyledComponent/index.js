@@ -42,15 +42,17 @@ class StyledComponent extends React.PureComponent {
         />
         {' '}={' '}styled.<Input {...tagInput} /><Backtick />
         <TextAreaActivator
-          render={({ over, lock, onLock, onUnlock }) => (over || lock) ? (
-            <TemplateStringTextArea
-              value={text}
-              onChange={this.onChange}
-              onFocus={onLock}
-              onBlur={onUnlock}
-            />
-          ) : (
-            <Pre>{text}</Pre>
+          render={({ displayTextArea, onLock, onUnlock }) => (
+            <React.Fragment>
+              <TemplateStringTextArea
+                style={displayTextArea ? {} : { display: 'none' }}
+                value={text}
+                onChange={this.onChange}
+                onFocus={onLock}
+                onBlur={onUnlock}
+              />
+              <Pre shouldDisplay={!displayTextArea}>{text || '\n'}</Pre>
+            </React.Fragment>
           )}
         />
         <Backtick />

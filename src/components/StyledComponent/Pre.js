@@ -3,6 +3,7 @@ import theme from 'theme-proxy'
 
 // ff text selection adds newlines around pre elements
 const Pre = styled.div`
+  ${props => !props.shouldDisplay && 'display: none;'}
   white-space: pre;
   margin: 0;
   padding: 5px 0 5px 0;

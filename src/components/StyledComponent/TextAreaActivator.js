@@ -1,5 +1,8 @@
 import React from 'react'
 
+/*
+  Determines whether a text area or pre should be displayed
+*/
 export default class TextAreaActivator extends React.Component {
   state = {
     over: false,
@@ -13,11 +16,12 @@ export default class TextAreaActivator extends React.Component {
 
   render() {
     const { render } = this.props
+    const { over, lock } = this.state
 
     return (
       <span onMouseOver={this.onMouseOver} onMouseLeave={this.onMouseLeave}>
         {render({
-          ...this.state,
+          displayTextArea: over || lock,
           onLock: this.onLock,
           onUnlock: this.onUnlock,
         })}
