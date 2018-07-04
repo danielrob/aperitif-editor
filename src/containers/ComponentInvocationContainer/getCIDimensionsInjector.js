@@ -28,6 +28,9 @@ const getCIDimensionsInjector = Component =>
       }
       // hacks gonna be hacks: somehow misses a dimensions update without this
       setTimeout(() => {
+        if (!this.componentInvocation.current) { // since this is async (part of above hack)
+          return
+        }
         const { clientHeight, clientWidth } = this.componentInvocation.current
         const { componentSnapshot } = this.state
         if (
