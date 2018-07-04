@@ -25,10 +25,18 @@ export default function configureStore(history) {
   )
 }
 
-const persistSlicer = () => ({ app: { present }, ...state }) => ({
-  ...state,
-  app: present, // { present } - nope, undoable appears to reinitialize without past/future/etc keys
-})
+const persistSlicer = () => ({ app: { past, index, limit, ...app }, ...state }) => {
+  const pastLimited = past.slice(0, 10)
+  return ({
+    ...state,
+    app: {
+      ...app,
+      past: pastLimited,
+      index: pastLimited.length + 1,
+      limit: pastLimited.length + 2,
+    },
+  })
+}
 
 const persistConfig = {
   slicer: persistSlicer,

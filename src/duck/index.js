@@ -1,4 +1,4 @@
-import undoable, { groupByActionTypes } from 'redux-undo'
+import undoable, { groupByActionTypes, excludeAction } from 'redux-undo'
 
 import coreReducer, { UPDATE_NAME, UPDATE_DECLARATION } from './duck'
 import editorReducer from './editor'
@@ -8,6 +8,7 @@ import { getInitialState } from './tasks'
 
 export default undoable(reduceReducers, {
   groupBy: groupByActionTypes([UPDATE_NAME, UPDATE_DECLARATION]),
+  filter: excludeAction(['@@INIT', '@@router/LOCATION_CHANGE']), // for persistence rehydration
 })
 
 function reduceReducers(state = getInitialState(), action) {
