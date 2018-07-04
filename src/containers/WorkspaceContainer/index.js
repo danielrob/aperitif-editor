@@ -1,5 +1,8 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect'
 
+import { selectCurrentFileId } from 'selectors'
 import { Workspace } from 'components'
 import { ToTextContainer } from 'containers'
 import { emitter } from 'middleware/spyMiddleware'
@@ -10,7 +13,7 @@ import toStackBlitz from './toStackBlitz'
 import embedStackBlitz from './embedStackBlitz'
 import embedUpdate from './embedUpdate'
 
-export default class WorkspaceContainer extends React.PureComponent {
+class WorkspaceContainer extends React.PureComponent {
   static onTextFinishActions = {
     download,
     toStackBlitz,
@@ -113,6 +116,8 @@ export default class WorkspaceContainer extends React.PureComponent {
   }
 
   render() {
+    const { toText } = this.state
+    const { currentFileId } = this.props
     return [
       <Workspace
         key="workspace"
@@ -127,7 +132,14 @@ export default class WorkspaceContainer extends React.PureComponent {
           embedStackBlitz: this.handleStartPreview,
         }}
       />,
-      this.state.toText && <ToTextContainer key="toText" onFinish={this.onToTextFinish} />,
+      toText && currentFileId && <ToTextContainer key="toText" onFinish={this.onToTextFinish} />,
     ]
   }
 }
+
+
+const mapStateToProps = createStructuredSelector({
+  currentFileId: selectCurrentFileId,
+})
+
+export default connect(mapStateToProps)(WorkspaceContainer)

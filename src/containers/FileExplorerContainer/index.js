@@ -6,7 +6,7 @@ import { DropTarget } from 'react-dnd'
 import { selectRootFiles } from 'selectors'
 import { DIR, FILE } from 'constantz'
 import { compose } from 'utils'
-import { moveFile } from 'duck'
+import { moveFile, resetProject } from 'duck'
 
 import { FileExplorer } from './components'
 
@@ -21,7 +21,7 @@ const mapStateToProps = createStructuredSelector({
   rootFiles: selectRootFiles,
 })
 
-const mapDispatchToProps = { moveFile }
+const mapDispatchToProps = { moveFile, resetProject }
 
 // target
 const dropzoneTarget = {

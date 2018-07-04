@@ -21,8 +21,9 @@ import {
   ES_KEYWORDS,
 } from 'constantz'
 
-import { initializeFromData, addNewContainer, createComponentBundle } from './tasks'
+import { getInitialState, initializeFromData, addNewContainer, createComponentBundle } from './tasks'
 
+export const RESET_PROJECT = 'RESET_PROJECT'
 export const INTIALIZE_APP = 'INTIALIZE_APP'
 export const NEW_COMPONENT_PLEASE = 'NEW_COMPONENT_PLEASE'
 export const NEW_CONTAINER_PLEASE = 'NEW_CONTAINER_PLEASE'
@@ -52,6 +53,10 @@ export default function appReducer(state, action) {
   const { Name, DeclParam, CallParam, Declaration, Invocation, File } = session
 
   switch (action.type) {
+    case RESET_PROJECT: {
+      return getInitialState()
+    }
+
     case INTIALIZE_APP: {
       return initializeFromData(state, action.payload)
     }
@@ -714,6 +719,10 @@ export default function appReducer(state, action) {
       return state
   }
 }
+
+export const resetProject = createAction(
+  RESET_PROJECT
+)
 
 export const initializeApp = createAction(
   INTIALIZE_APP

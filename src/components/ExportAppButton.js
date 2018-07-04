@@ -6,9 +6,10 @@ const ExportAppButton = styled.button.attrs({
 })`
   user-select: none;
   position: absolute;
-  top: ${props => (props.position || 1) * 20}px;
-  right: ${props => props.left ? 'auto' : '20px'};
-  left: ${props => props.left ? '20px' : 'auto'};
+  ${props => (props.top === 0 || props.top) && `top: ${props.top}px;`}
+  ${props => (props.bottom === 0 || props.bottom) && `bottom: ${props.bottom}px;`}
+  ${props => (props.left === 0 || props.left) && `left: ${props.left}px;`}
+  ${props => (props.right === 0 || props.right) && `right: ${props.right}px;`}
   border: 1px solid black;
   padding: 3px;
   font-size: 10px;

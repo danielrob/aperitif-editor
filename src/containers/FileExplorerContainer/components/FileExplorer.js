@@ -2,10 +2,12 @@ import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
+import { ExportAppButton } from 'components'
 import { FileContainer } from '../containers'
 
-const FileExplorer = ({ rootFiles }) => (
+const FileExplorer = ({ rootFiles, resetProject }) => (
   <React.Fragment>
+    <ExportAppButton onClick={resetProject} position={0.1} left={0} bottom={0} text="New Project" />
     {rootFiles.map(fileId => (
       <FileContainer
         key={fileId}

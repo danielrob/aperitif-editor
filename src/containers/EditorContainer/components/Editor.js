@@ -46,8 +46,8 @@ class Editor extends React.PureComponent {
     const { imports, declarations, defaultExport, workspaceActions: wAs } = this.props
     return (
       <React.Fragment>
-        <ExportAppButton onClick={wAs.exportToStackBlitz} position={1} text="Export to StackBlitz" />
-        <ExportAppButton onClick={wAs.downloadApp} position={2.5} text="Download" />
+        <ExportAppButton onClick={wAs.exportToStackBlitz} top={20} right={20} text="Export to StackBlitz" />
+        <ExportAppButton onClick={wAs.downloadApp} top={50} right={20} text="Download" />
         <Imports key="imports" imports={imports} />
         {declarations.map(declaration => {
           const { type, declarationId } = declaration
