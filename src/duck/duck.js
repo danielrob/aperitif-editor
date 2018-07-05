@@ -22,7 +22,13 @@ import {
   SC,
 } from 'constantz'
 
-import { getInitialState, initializeFromData, addNewContainer, createComponentBundle } from './tasks'
+import {
+  getInitialState,
+  initializeFromData,
+  addNewContainer,
+  createComponentBundle,
+  getRecursiveInvocationAndMaybeRelatedEntitiesRemover,
+} from './tasks'
 
 export const RESET_PROJECT = 'RESET_PROJECT'
 export const INTIALIZE_APP = 'INTIALIZE_APP'
@@ -715,8 +721,10 @@ export default function appReducer(state, action) {
         }
         CallParam.delete()
       })
-      // delete the invocation
-      Invocation.withId(sourceInvocationId).delete()
+
+      const remover = getRecursiveInvocationAndMaybeRelatedEntitiesRemover(session)
+      remover(sourceInvocationId)
+
       return session.state
     }
 

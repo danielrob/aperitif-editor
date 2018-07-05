@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import orm from 'orm'
 import { pascalCase } from 'utils'
-import { DIR, SC, STYLED_COMPONENT } from 'constantz'
+import { DIR, SC, STYLED_COMPONENT, INDEX_NAME_ID } from 'constantz'
 
 const createComponentBundle = ({
   baseName,
@@ -14,7 +14,6 @@ const createComponentBundle = ({
   /* names - for the new component bundle */
   const componentName = getNewComponentName(Name.all().ref(), pascalCase(baseName))
   const componentNameId = Name.create(componentName)
-  const indexNameId = Name.create('index')
   const wrapperNameId = Name.create(`${componentName}Wrapper`)
 
   // NEW COMPONENT WRAPPER
@@ -45,7 +44,7 @@ const createComponentBundle = ({
     nameId: componentNameId,
     type: DIR,
     children: [
-      File.create({ nameId: indexNameId, declarationIds: [newComponentDeclarationId] }),
+      File.create({ nameId: INDEX_NAME_ID, declarationIds: [newComponentDeclarationId] }),
       File.create({ nameId: wrapperNameId, type: SC, declarationIds: [wrapperDeclarationId] }),
     ],
   })

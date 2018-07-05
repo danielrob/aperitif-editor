@@ -12,6 +12,12 @@ class Model {
     this.hasManyRelations = {}
 
     this.initializeFields(modelClass.fields, orm)
+
+    Object.defineProperty(this, 'length', {
+      get() {
+        return this.privateGetLength()
+      },
+    })
   }
 
   initializeFields = (fields = {}, orm) => {
@@ -169,6 +175,13 @@ class Model {
 
   // non-chainable
   ref = () => this.currentQueryResult.result
+
+  // .length property
+  privateGetLength = () => {
+    const { result, isSet } = this.currentQueryResult
+    invariant(isSet, '.length property should only be used on set results (full or partial tables)')
+    return Object.keys(result).length
+  }
 
   create = newModel => {
     const getModelData = this.getModelData()
