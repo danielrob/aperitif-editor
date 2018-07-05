@@ -6,7 +6,7 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { compose } from 'utils'
-import { DIR, FILE, STYLED_COMPONENT } from 'constantz'
+import { DIR, FILE, STYLED_COMPONENT, JSON_TYPE } from 'constantz'
 import { changeFile, moveDeclarationToFile, moveFile } from 'duck'
 import { makeSelectFile } from 'selectors'
 import { filePropTypes } from 'model-prop-types'
@@ -69,7 +69,9 @@ FileContainer.defaultProps = {
 }
 
 
-/* connect */
+/*
+  connect
+*/
 const makeMapStateToProps = () => {
   const getFile = makeSelectFile()
   return (state, props) => ({
@@ -80,16 +82,21 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = { changeFile, moveDeclarationToFile, moveFile }
 
 
-/* dnd */
-// source
-const getType = ({ file: { isDirectory } }) => (isDirectory ? DIR : FILE)
+/*
+  dnd - source
+*/
+const getDragType = ({ file: { isDirectory, type } }) => (
+  (isDirectory && DIR) ||
+  (type === JSON_TYPE && JSON_TYPE) ||
+  FILE
+)
 
 const sourceSpec = {
   beginDrag(props) {
     const { file: { fileId, isDirectory, declarationIds, name }, parentName } = props
     const dropName = (name.includes('index') && parentName) || name
     return {
-      type: getType(props),
+      type: getDragType(props),
       fileId,
       isDirectory,
       declarationIds,
@@ -111,11 +118,18 @@ const sourceCollect = (connect, monitor) => ({
   isDragging: monitor.isDragging(),
 })
 
-// target
+
+/*
+  dnd - target
+*/
+const getAcceptableTypes = ({ file: { isDirectory } }) => isDirectory ?
+  [STYLED_COMPONENT, FILE, DIR, JSON_TYPE] : []
+
 const dropzoneTarget = {
   drop(props, monitor) {
     const { fileId, moveDeclarationToFile, moveFile } = props
     switch (monitor.getItemType()) {
+      case JSON_TYPE:
       case DIR:
       case FILE: {
         const { fileId: sourceFileId } = monitor.getItem()
@@ -145,13 +159,11 @@ const targetCollect = connect => ({
   connectDropTarget: connect.dropTarget(),
 })
 
-const getTargetTypes = ({ file: { isDirectory } }) => isDirectory ?
-  [STYLED_COMPONENT, FILE, DIR] : []
-
-
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
-  DragSource(getType, sourceSpec, sourceCollect),
-  DropTarget(getTargetTypes, dropzoneTarget, targetCollect)
+  DragSource(getDragType, sourceSpec, sourceCollect),
+  DropTarget(getAcceptableTypes, dropzoneTarget, targetCollect)
 )(FileContainer)
