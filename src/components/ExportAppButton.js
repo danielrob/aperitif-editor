@@ -6,6 +6,7 @@ const ExportAppButton = styled.button.attrs({
 })`
   user-select: none;
   position: absolute;
+  ${props => props.fixed && 'position: fixed;'}
   ${props => (props.top === 0 || props.top) && `top: ${props.top}px;`}
   ${props => (props.bottom === 0 || props.bottom) && `bottom: ${props.bottom}px;`}
   ${props => (props.left === 0 || props.left) && `left: ${props.left}px;`}
@@ -14,6 +15,7 @@ const ExportAppButton = styled.button.attrs({
   padding: 3px;
   font-size: 10px;
   border-radius: 3px;
+  background-color: white;
   &:hover {
     color: white;
     background-color: #010431bb;
