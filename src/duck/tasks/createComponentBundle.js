@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import orm from 'orm'
 import { pascalCase } from 'utils'
-import { DIR, SC, STYLED_COMPONENT, INDEX_NAME_ID } from 'constantz'
+import { DIR, SC, STYLED_COMPONENT, INDEX_NAME_ID, COMPONENTS_FILE_ID } from 'constantz'
 
 const createComponentBundle = ({
   baseName,
@@ -49,7 +49,7 @@ const createComponentBundle = ({
     ],
   })
 
-  File.withId(session.state.editor.rootFiles[0]).children.insert(directoryId)
+  File.withId(COMPONENTS_FILE_ID).children.insert(directoryId)
 
   // refresh session data
   orm.session({

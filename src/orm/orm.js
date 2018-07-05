@@ -1,6 +1,14 @@
 import Models from './models'
 
 class ORM {
+  constructor() {
+    Object.defineProperty(this, 'currentFile', {
+      get() {
+        return this.state && this.state.files[this.state.editor.currentFileId]
+      },
+    })
+  }
+
   registeredModels = {}
   state = {}
 

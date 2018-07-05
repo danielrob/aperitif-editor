@@ -46,8 +46,17 @@ class Editor extends React.PureComponent {
     const { imports, declarations, defaultExport, workspaceActions: wAs } = this.props
     return (
       <React.Fragment>
+        {/* Miscellaneous */}
         <ExportAppButton onClick={wAs.exportToStackBlitz} top={20} right={20} text="Export to StackBlitz" />
         <ExportAppButton onClick={wAs.downloadApp} top={50} right={20} text="Download" />
+        <ReactTooltip
+          id="prop"
+          effect="solid"
+          showDelay={150}
+          getContent={dataTip => <pre>{dataTip}</pre>}
+        />
+
+        {/* Text */}
         <Imports key="imports" imports={imports} />
         {declarations.map(declaration => {
           const { type, declarationId } = declaration
@@ -60,12 +69,6 @@ class Editor extends React.PureComponent {
           )
         })}
         <DefaultExport nameId={defaultExport} />
-        <ReactTooltip
-          id="prop"
-          effect="solid"
-          showDelay={150}
-          getContent={dataTip => <pre>{dataTip}</pre>}
-        />
         <br /* The POSIX standard EOF newline. */ />
       </React.Fragment>
     )

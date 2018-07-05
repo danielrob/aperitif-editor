@@ -14,5 +14,7 @@ export const oneOf = (...fns) => item =>
 export const sortAlphabetically = (a, b) => (a < b && '-1') || (b < a && '1') || 0
 export const toArray = obj => Object.entries(obj).map(([, value]) => value)
 export const lastItem = arr => arr[arr.length - 1]
+export const pD = fn => (e, ...args) => { e.preventDefault(); fn(...args) }
+export const pDsP = fn => (e, ...args) => { e.preventDefault(); e.stopPropagation(); fn(...args) }
 
 export { default as camelCase } from 'camelcase'

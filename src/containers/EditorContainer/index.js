@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { createStructuredSelector } from 'reselect'
 import { KeyPressListeners, AperitifPostContainer } from 'containers'
+import { AddComponentTooltip } from 'components'
 import { FILE, PROP, STYLED_COMPONENT, COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
 import { compose } from 'utils'
 import { mergeFile, removeProp, removeChildInvocation } from 'duck'
@@ -33,6 +34,7 @@ class EditorContainer extends React.PureComponent {
     return connectDropTarget(
       <div style={{ overflow: 'auto' }}>
         <KeyPressListeners />
+        <AddComponentTooltip />
         {props.currentFileId ? <Editor {...props} /> : <AperitifPostContainer />}
       </div>
     )

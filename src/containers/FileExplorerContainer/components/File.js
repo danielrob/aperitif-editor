@@ -3,6 +3,7 @@ import { forbidExtraProps, or, explicitNull } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
 
+import { COMPONENTS_FILE_ID, CONTAINERS_FILE_ID } from 'constantz'
 import { NameInput } from 'containers'
 import { filePropTypes } from 'model-prop-types'
 
@@ -14,13 +15,13 @@ class File extends React.PureComponent {
     const {
       file,
       file: {
+        fileId,
         nameId,
         name,
         extension,
         fileChildren,
         isSelected,
-        isContainersFolder = name === 'containers',
-        isComponentsFolder = name === 'components',
+        isEmptyDir,
       },
       parentName,
       isDragging,
@@ -38,7 +39,11 @@ class File extends React.PureComponent {
           {connectDragPreview(
             <div style={{ display: 'inline-block' }}>
               {!isIndex && parentName ? (
-                <NameInput nameId={nameId} pointer shouldActivateOnClick={isSelected} />
+                <NameInput
+                  nameId={nameId}
+                  pointer
+                  shouldActivateOnClick={isSelected || isEmptyDir}
+                />
               ) : (
                 displayName
               )}
@@ -46,8 +51,8 @@ class File extends React.PureComponent {
             { captureDraggingState: true }
           )}
           {extension}
-          {isComponentsFolder && <AddComponentButton left="10" />}
-          {isContainersFolder && <AddContainerButton left="10" />}
+          {fileId === COMPONENTS_FILE_ID && <AddComponentButton left="10" />}
+          {fileId === CONTAINERS_FILE_ID && <AddContainerButton left="10" />}
         </NoWrap>
         {fileChildren.map(fileId => (
           <FileContainer

@@ -45,6 +45,7 @@ export const filePropTypes = {
   isDirectory: T.bool.isRequired,
   isCurrent: T.bool.isRequired,
   isSelected: T.bool.isRequired,
+  isEmptyDir: T.bool.isRequired,
   containsCurrent: T.bool.isRequired,
 }
 

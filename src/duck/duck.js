@@ -1,9 +1,11 @@
 import C from 'check-types'
+import ReactTooltip from 'react-tooltip'
 import { createAction } from 'redux-actions'
 import { singular } from 'pluralize'
 import { pascalCase, camelCase, oneOf } from 'utils'
 import orm from 'orm'
 import {
+  SC,
   PROPS,
   componentDeclarationTypes,
   PARAM_INVOCATION,
@@ -19,7 +21,7 @@ import {
   PROPERTY_ACCESS,
   VAR_INVOCATION,
   ES_KEYWORDS,
-  SC,
+  COMPONENTS_FILE_ID,
 } from 'constantz'
 
 import {
@@ -32,7 +34,8 @@ import {
 
 export const RESET_PROJECT = 'RESET_PROJECT'
 export const INTIALIZE_APP = 'INTIALIZE_APP'
-export const NEW_COMPONENT_PLEASE = 'NEW_COMPONENT_PLEASE'
+export const NEW_COMPONENT_BUNDLE_PLEASE = 'NEW_COMPONENT_BUNDLE_PLEASE'
+export const NEW_COMPONENT_STYLED_PLEASE = 'NEW_COMPONENT_STYLED_PLEASE'
 export const NEW_CONTAINER_PLEASE = 'NEW_CONTAINER_PLEASE'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_CHILDREN'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE'
@@ -68,14 +71,41 @@ export default function appReducer(state, action) {
       return initializeFromData(state, action.payload)
     }
 
-    case NEW_COMPONENT_PLEASE: {
-      createComponentBundle({ baseName: 'NewComponent', session })
+    case NEW_COMPONENT_BUNDLE_PLEASE: {
+      const { toComponents } = action.meta || {}
+      const parentId = (toComponents && COMPONENTS_FILE_ID) ||
+        session.currentFile.parentId ||
+        COMPONENTS_FILE_ID
+
+      createComponentBundle({ baseName: 'NewComponent', session, parentId })
       return session.state
     }
+
+
+    case NEW_COMPONENT_STYLED_PLEASE: {
+      const nameId = Name.create('NewComponent')
+      const parentId = session.currentFile.parentId || COMPONENTS_FILE_ID
+      File.withId(parentId).children.insert(
+        File.create({
+          type: SC,
+          nameId,
+          declarationIds: [
+            Declaration.create({
+              nameId,
+              type: STYLED_COMPONENT,
+              tag: 'div',
+            }),
+          ],
+        })
+      )
+      return session.state
+    }
+
 
     case NEW_CONTAINER_PLEASE: {
       return addNewContainer(session, action.payload, 'New')
     }
+
 
     case CONVERT_TO_CLASS_COMPONENT: {
       const { declarationId } = action.payload
@@ -551,7 +581,7 @@ export default function appReducer(state, action) {
         targetPosition
       )
       Invocation.update({ closed: false, inline: false })
-
+      ReactTooltip.rebuild()
       return session.state
     }
 
@@ -741,8 +771,12 @@ export const initializeApp = createAction(
   INTIALIZE_APP
 )
 
-export const newComponentPlease = createAction(
-  NEW_COMPONENT_PLEASE
+export const newComponentBundlePlease = createAction(
+  NEW_COMPONENT_BUNDLE_PLEASE
+)
+
+export const newStyledComponentPlease = createAction(
+  NEW_COMPONENT_STYLED_PLEASE
 )
 
 export const newContainerPlease = createAction(
