@@ -4,7 +4,7 @@ import { CHANGE_FILE, OPEN_API_INPUT_SCREEN, UPDATE_NAME, UPDATE_DECLARATION } f
 export default function makeReduxStackblitzUpdateReconciler(doUpdate) {
   const debounceSlow = debounce(doUpdate, 500)
 
-  return ({ action }) => {
+  return ({ action }) => setTimeout(() => {
     switch (action.type) {
       // do nothing
       case OPEN_API_INPUT_SCREEN:
@@ -22,5 +22,5 @@ export default function makeReduxStackblitzUpdateReconciler(doUpdate) {
       default:
         doUpdate()
     }
-  }
+  })
 }

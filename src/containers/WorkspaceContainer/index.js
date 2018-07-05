@@ -50,7 +50,7 @@ class WorkspaceContainer extends React.PureComponent {
             embedWidth: Math.max(document.body.clientWidth * 0.33, 250),
           })
           this.vm = vm
-          emitter.addListener(makeReduxStackblitzUpdateReconciler(this.updateEmbed, vm))
+          emitter.addListener(makeReduxStackblitzUpdateReconciler(this.updateEmbed))
         }, 500)
       })
     } else {

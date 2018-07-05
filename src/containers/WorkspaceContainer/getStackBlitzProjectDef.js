@@ -19,12 +19,8 @@ export default function getStackBlitzProjectDef(fileTree) {
       'styled-components': 'latest',
       'prop-types': 'latest',
     },
-    // settings: {
-    //   compile: {
-    //     trigger: 'auto' | 'keystroke' | 'save',
-    //     action: 'hmr' | 'refresh',
-    //     clearConsole: boolean,
-    //   },
-    // },
+    settings: {
+      clearConsole: false,
+    },
   }
 }
