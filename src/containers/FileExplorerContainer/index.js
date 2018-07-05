@@ -4,6 +4,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { DropTarget } from 'react-dnd'
+import { ActionCreators as UndoableActionCreators } from 'redux-undo'
 
 import { selectRootFiles } from 'selectors'
 import { DIR, FILE } from 'constantz'
@@ -31,6 +32,8 @@ FileExplorerContainer.propTypes = forbidExtraProps({
   rootFiles: T.arrayOf(T.number).isRequired,
   resetProject: T.func.isRequired,
   moveFile: T.func.isRequired,
+  undo: T.func.isRequired,
+  redo: T.func.isRequired,
   // dnd
   connectDropTarget: T.func.isRequired,
 })
@@ -40,7 +43,12 @@ const mapStateToProps = createStructuredSelector({
   rootFiles: selectRootFiles,
 })
 
-const mapDispatchToProps = { moveFile, resetProject }
+const mapDispatchToProps = {
+  moveFile,
+  resetProject,
+  undo: UndoableActionCreators.undo,
+  redo: UndoableActionCreators.redo,
+}
 
 // target
 const dropzoneTarget = {

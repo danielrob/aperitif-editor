@@ -4,10 +4,10 @@ import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
-import { ExportAppButton } from 'components'
+import { ExportAppButton, HumanEditUndoIcon, HumanEditRedoIcon } from 'components'
 import { FileContainer } from '../containers'
 
-const FileExplorer = ({ rootFiles, resetProject }) => (
+const FileExplorer = ({ rootFiles, resetProject, undo, redo }) => (
   <React.Fragment>
     <ExportAppButton
       onClick={resetProject}
@@ -16,6 +16,8 @@ const FileExplorer = ({ rootFiles, resetProject }) => (
       bottom={15}
       text="New Project"
     />
+    <ExportAppButton onClick={undo} fixed left={200} bottom={15} text={<HumanEditUndoIcon />} />
+    <ExportAppButton onClick={redo} fixed left={230} bottom={15} text={<HumanEditRedoIcon />} />
     {rootFiles.map(fileId => (
       <FileContainer
         key={fileId}
@@ -34,6 +36,8 @@ FileExplorer.propTypes = forbidExtraProps({
   // container
   rootFiles: T.arrayOf(T.number).isRequired,
   resetProject: T.func.isRequired,
+  undo: T.func.isRequired,
+  redo: T.func.isRequired,
 })
 
 
