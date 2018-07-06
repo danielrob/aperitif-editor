@@ -1,0 +1,51 @@
+{
+  "id": "58e800aa9ebaaa01c586f630",
+  "badges": {
+    "votes": 0,
+    "viewingMemberVoted": false,
+    "subscribed": false,
+    "fogbugz": "",
+    "checkItems": 0,
+    "checkItemsChecked": 0,
+    "comments": 0,
+    "attachments": 1,
+    "description": true,
+    "due": null,
+    "dueComplete": false
+  },
+  "checkItemStates": [
+
+  ],
+  "closed": false,
+  "dateLastActivity": "2017-04-07T21:26:00.365Z",
+  "desc": "Allows you to stay on top of the progress of any project by sending updates to Slack channels when activity occurs on Trello cards, lists, and boards. Customizable.\n\nRead more: http://blog.trello.com/slack-power-up-trello-alerts",
+  "descData": {
+    "emoji": {
+
+    }
+  },
+  "due": null,
+  "dueComplete": false,
+  "email": "mattcowan+2k9ubwvzo7kk6xm8d08+2o19bzxhxca6rnhbq5s+1j517ulwv4@boards.trello.com",
+  "idBoard": "4d5ea62fd76aa1136000000c",
+  "idChecklists": [
+
+  ],
+  "idLabels": [
+
+  ],
+  "idList": "58e7fee3e06e4001f1cc3658",
+  "idMembers": [
+
+  ],
+  "idShort": 1579,
+  "idAttachmentCover": "58e801c30f51ca01a6dd6745",
+  "manualCoverAttachment": false,
+  "labels": [
+
+  ],
+  "name": "Trello Alerts for Slack",
+  "pos": 131071,
+  "shortUrl": "https://trello.com/c/SDmaAwz9",
+  "url": "https://trello.com/c/SDmaAwz9/1579-trello-alerts-for-slack"
+}

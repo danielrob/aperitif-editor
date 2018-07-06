@@ -1,3 +1,4 @@
+import { trim } from 'lodash'
 import T from 'prop-types'
 import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
@@ -7,8 +8,8 @@ import { createStructuredSelector } from 'reselect'
 import { selectProjectInitialized } from 'selectors'
 import { initializeApp, newContainerPlease } from 'duck'
 
+import exampleData from './examples'
 import getJSON from './getJSON'
-import apiArrayResponse from './apiArrayResponse.json'
 import AperitifPost from './AperitifPost'
 
 class AperitifPostContainer extends React.PureComponent {
@@ -18,12 +19,19 @@ class AperitifPostContainer extends React.PureComponent {
   }
 
   onChange = e => {
-    this.setState({ textarea: e.target.value, error: null })
+    const textarea = trim(e.target.value)
+    const { error } = getJSON(textarea)
+
+    this.setState({ textarea, error: (textarea && error) || null })
   }
 
-  populate = () => {
+  onFocus = () => {
+    this.setState({ error: null })
+  }
+
+  populate = key => () => {
     this.setState({
-      textarea: JSON.stringify(apiArrayResponse, null, 2),
+      textarea: JSON.stringify(exampleData[key], null, 2),
     })
   }
 
@@ -52,8 +60,10 @@ class AperitifPostContainer extends React.PureComponent {
         projectIsInitalized={projectIsInitalized}
         submit={this.submit}
         populate={this.populate}
+        canSubmit={!!textarea}
         input={{
           onChange: this.onChange,
+          onFocus: this.onFocus,
           value: textarea,
         }}
         meta={{

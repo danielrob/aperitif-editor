@@ -34,7 +34,7 @@ const PropTypes = ({ props, nameId }) => !!props.length && (
 export default PropTypes
 
 const getPropType = (payload, pTName = 'PropTypes', nested) => {
-  if (C.null(payload)) {
+  if (!payload) {
     return `${pTName}.any`
   }
   if (C.string(payload)) {

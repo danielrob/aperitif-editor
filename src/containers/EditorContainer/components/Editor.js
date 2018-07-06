@@ -43,12 +43,22 @@ class Editor extends React.PureComponent {
   }
 
   render() {
-    const { imports, declarations, defaultExport, workspaceActions: wAs } = this.props
+    const {
+      imports,
+      declarations,
+      defaultExport,
+      workspaceActions: { exportToStackBlitz, downloadApp },
+    } = this.props
     return (
       <React.Fragment>
         {/* Miscellaneous */}
-        <ExportAppButton onClick={wAs.exportToStackBlitz} top={20} right={20} text="Export to StackBlitz" />
-        <ExportAppButton onClick={wAs.downloadApp} top={50} right={20} text="Download" />
+        <ExportAppButton
+          onClick={exportToStackBlitz}
+          top={20}
+          right={20}
+          text="Export to StackBlitz"
+        />
+        <ExportAppButton onClick={downloadApp} top={50} right={20} text="Download" />
         <ReactTooltip
           id="prop"
           effect="solid"
@@ -75,7 +85,6 @@ class Editor extends React.PureComponent {
   }
 }
 
-
 /*
   propTypes
 */
@@ -94,7 +103,6 @@ Editor.defaultProps = {
   dragItem: false,
   workspaceActions: {},
 }
-
 
 /*
   style + export

@@ -412,7 +412,7 @@ export default function appReducer(state, action) {
         .insert(sourceInvocationId, insertPosition)
 
       // open target
-      Invocation.update({ closed: false })
+      Invocation.update({ closed: false, inline: false })
 
       return session.state
     }

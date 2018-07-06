@@ -4,6 +4,7 @@ import styled from 'styled-components'
 const ExportAppButton = styled.button.attrs({
   children: props => props.text,
 })`
+  z-index: 1;
   user-select: none;
   position: absolute;
   ${props => props.fixed && 'position: fixed;'}

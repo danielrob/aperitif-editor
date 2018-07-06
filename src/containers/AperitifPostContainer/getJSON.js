@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash'
 import C from 'check-types'
 
 export default function getJSON(value) {
@@ -17,9 +18,16 @@ export default function getJSON(value) {
   }
 
   if (json) {
-    if (C.object(json) || C.array.of.object(json)) {
+    if (isEmpty(json) || (C.array(json) && json.every(obj => isEmpty(obj)))) {
+      return {
+        error: 'The example must be non-empty',
+      }
+    }
+
+    if ((C.object(json) || C.array.of.object(json))) {
       return { json }
     }
+
     error = 'The response shape must be an array of objects or an object'
   }
   return { error }
