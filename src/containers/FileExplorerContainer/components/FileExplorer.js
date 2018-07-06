@@ -4,7 +4,7 @@ import React from 'react'
 import styled from 'styled-as-components'
 import theme from 'theme-proxy'
 
-import { ExportAppButton, HumanEditUndoIcon, HumanEditRedoIcon } from 'components'
+import { ExportAppButton, HumanEditUndoIcon, HumanEditRedoIcon, StarOnGithub, IssueOnGithub } from 'components'
 import { FileContainer } from '../containers'
 
 const FileExplorer = ({ rootFiles, resetProject, undo, redo }) => (
@@ -12,12 +12,14 @@ const FileExplorer = ({ rootFiles, resetProject, undo, redo }) => (
     <ExportAppButton
       onClick={resetProject}
       fixed
-      left={2}
+      left={5}
       bottom={15}
       text="New Project"
     />
     <ExportAppButton onClick={undo} fixed left={200} bottom={15} text={<HumanEditUndoIcon />} />
     <ExportAppButton onClick={redo} fixed left={230} bottom={15} text={<HumanEditRedoIcon />} />
+    <StarOnGithub hide={rootFiles.length < 3} />
+    <IssueOnGithub hide={rootFiles.length < 3} />
     {rootFiles.map(fileId => (
       <FileContainer
         key={fileId}
