@@ -18,6 +18,7 @@ export default styled(PropDropzone).as.div`
   position: relative;
   padding: 0 300px 0 200px;
   margin-left: -200px;
+  white-space: pre;
   > * {
     display: inline-block;
     border-radius: 6px;
