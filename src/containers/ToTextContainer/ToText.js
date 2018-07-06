@@ -67,21 +67,29 @@ export default class ToText extends React.Component {
 
     set(fileTree, namePath, copyNodeText(this.hiddenNodeRef.current))
 
+    let node
     // walk project's file tree - start by going up if needed
-    let node = lastItem(currentTraversal)
-
-    while (node.id !== 'root' && node.currentIndex === node.max) {
-      currentTraversal.pop()
+    do {
       node = lastItem(currentTraversal)
-    }
 
-    if (node.id === 'root' && node.currentIndex === node.max) {
-      this.props.onFinish(postProcessFileTree(fileTree, semis))
-      return
-    }
+      while (node.id !== 'root' && node.currentIndex === node.max) {
+        currentTraversal.pop()
+        node = lastItem(currentTraversal)
+      }
 
-    // next item
-    node.currentIndex += 1
+      if (node.id === 'root' && node.currentIndex === node.max) {
+        this.props.onFinish(postProcessFileTree(fileTree, semis))
+        return
+      }
+
+      // next item
+      node.currentIndex += 1
+    } while (
+      files[node.children[node.currentIndex]].type === DIR &&
+      !files[node.children[node.currentIndex]].children.length
+    )
+
+    // if directory and no children, call the go up again code
 
     // go down if needed
     let file = files[node.children[node.currentIndex]]
@@ -91,7 +99,6 @@ export default class ToText extends React.Component {
         id: file.id,
         children: file.children,
         currentIndex: 0,
-        shouldIncrement: false,
         max: file.children.length - 1,
       })
       file = files[file.children[0]]
