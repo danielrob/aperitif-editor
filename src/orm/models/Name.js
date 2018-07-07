@@ -15,7 +15,6 @@ class Name extends Model {
       return create(name)
     }
   }
-  value = () => this.ref().value
 }
 
 Name.modelName = 'Name'

@@ -5,25 +5,25 @@ export default function getRecursiveInvocationAndMaybeRelatedEntitiesRemover(ses
   const { DeclParam, Declaration, Invocation, File } = session
 
   function maybeRemoveInvocationsDeclaration(invocationId) {
-    const { declarationId: targetDeclarationId } = Invocation.withId(invocationId).ref()
+    const { declarationId: targetDeclarationId } = Invocation.withId(invocationId)
     // remove any files related to that declaration
     if (
       Invocation.where(({ declarationId }) => declarationId === targetDeclarationId).length === 1
     ) {
-      const { fileId } = Declaration.withId(targetDeclarationId).ref()
-      const { parentId, nameId } = File.withId(fileId).ref()
+      const { fileId } = Declaration.withId(targetDeclarationId)
+      const { parentId, nameId } = File.withId(fileId)
 
       Declaration.declParams.forEach(id => DeclParam.withId(id).delete())
       Declaration.invocations.forEach(id => recurseOnInvocations(id))
 
       File.withId(fileId).declarations.remove(targetDeclarationId)
 
-      if (!File.declarations.length()) {
+      if (!File.declarations.length) {
         File.withId(fileId).delete()
       }
 
       if (nameId === INDEX_NAME_ID) {
-        const { parentId: superId } = File.withId(parentId).ref()
+        const { parentId: superId } = File.withId(parentId)
         File.withId(parentId).delete() // FIXME: memory leak if random files in this directory
         File.withId(superId).children.remove(parentId)
       } else {

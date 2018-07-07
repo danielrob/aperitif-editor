@@ -16,7 +16,7 @@ class Model {
 
     Object.defineProperty(this, 'length', {
       get() {
-        return this.privateGetLength()
+        return this.getLength()
       },
     })
   }
@@ -34,7 +34,7 @@ class Model {
           break
         }
         case 'fk': {
-          setTimeout(() => { // oh beautiful hacks: wait until all models are registered
+          setTimeout(() => { // waits until all models are registered for two-way relations
             invariant(orm[modelName], `Did not find model ${modelName} in registry.`)
             this.foreignKeys[key] = orm[modelName].stateKey
             this.defaultProps[key] = null
@@ -66,20 +66,39 @@ class Model {
             findIndex: cb => this.bindArrayMethod(key, 'findIndex', cb),
             includes: cb => this.bindArrayMethod(key, 'includes', cb),
             forEach: cb => this.bindArrayMethod(key, 'forEach', cb),
-            length: () => this.getModelData()[this.currentQueryResult.result.id][key].length,
           }
+          const that = this
+          Object.defineProperty(this[modelKey], 'length', {
+            get() {
+              return that.getModelData()[that.currentQueryResult.result.id][key].length
+            },
+          })
 
           if (modelName) {
             this.hasManyRelations = {
               ...this.hasManyRelations,
               [key]: { modelName, methodName },
             }
+            setTimeout(() => {
+              Object.defineProperty(this.session[modelName], methodName, {
+                get() {
+                  return this.session[modelName].getProperty(methodName)
+                },
+              })
+            })
           }
           break
         }
         default: {
           invariant(true, 'field must have a type')
         }
+      }
+      if (!(type === 'array' && !key.endsWith('Ids'))) {
+        Object.defineProperty(this, key, {
+          get() {
+            return this.getProperty(key)
+          },
+        })
       }
     })
   }
@@ -175,13 +194,23 @@ class Model {
   }
 
   // non-chainable
-  ref = () => this.currentQueryResult.result
+  ref = () => {
+    const { result, isSet } = this.currentQueryResult
+    invariant(isSet, 'ref is experimentally limited to setResults, you shouldn\'t need this')
+    return result
+  }
 
   // .length property
-  privateGetLength = () => {
+  getLength = () => {
     const { result, isSet } = this.currentQueryResult
     invariant(isSet, '.length property should only be used on set results (full or partial tables)')
     return Object.keys(result).length
+  }
+
+  getProperty = key => {
+    const { result, isSet } = this.currentQueryResult
+    invariant(!isSet, 'model properties cannot be accessed when there are multiple current results')
+    return result[key]
   }
 
   create = newModel => {
@@ -228,10 +257,10 @@ class Model {
       },
     })
 
-    Object.keys(mergeProps).forEach(key => {
+    Object.entries(mergeProps).forEach(([key, items]) => {
       const hasManyModel = this.hasManyRelations[key]
       if (hasManyModel) {
-        mergeProps[key].forEach(relationModelId => {
+        items.forEach(relationModelId => {
           this.session[hasManyModel.modelName].withId(relationModelId).update({
             [hasManyModel.methodName || `${this.modelName.toLowerCase()}Id`]: result.id,
           })
@@ -246,12 +275,10 @@ class Model {
     invariant(!isSet, 'migrating multiple entities at once is not supported')
 
     return this.update(
-      Object.keys(mergeFunctions).reduce(
-        (out, key) => ({
+      Object.entries(mergeFunctions).reduce(
+        (out, [key, mergeFunction]) => ({
           ...out,
-          [key]: C.function(mergeFunctions[key])
-            ? mergeFunctions[key](currentData[key], currentData)
-            : mergeFunctions[key], // might just be a raw value
+          [key]: mergeFunction(currentData[key], currentData),
         }),
         {}
       )

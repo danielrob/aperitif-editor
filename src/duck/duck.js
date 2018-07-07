@@ -110,7 +110,7 @@ export default function appReducer(state, action) {
 
     case CONVERT_TO_CLASS_COMPONENT: {
       const { declarationId } = action.payload
-      const { invocationIds, declParamIds } = Declaration.withId(declarationId).ref()
+      const { invocationIds, declParamIds } = Declaration.withId(declarationId)
 
       Declaration.declarations.insert(
         Declaration.create({
@@ -134,18 +134,18 @@ export default function appReducer(state, action) {
       Declaration.withId(declarationId)
 
       // noop if there is more than a render method
-      if (Declaration.ref().declarationIds.length > 1) {
+      if (Declaration.declarationIds.length > 1) {
         return session.state
       }
 
       const renderDeclId = Declaration.declarations.find(
-        id => Declaration.withId(id).name.value() === 'render'
+        id => Declaration.withId(id).name.value === 'render'
       )
 
-      const { declarationIds: constId, invocationIds } = Declaration.withId(renderDeclId).ref()
+      const { declarationIds: constId, invocationIds } = Declaration.withId(renderDeclId)
       Declaration.delete()
 
-      const { declParamids } = Declaration.withId(constId).ref()
+      const { declParamids } = Declaration.withId(constId)
       Declaration.delete()
 
       Declaration.withId(declarationId).update({
@@ -164,8 +164,8 @@ export default function appReducer(state, action) {
         targetInvocationId,
         prop: { paramId },
       } = action.payload
-      const { nameId, payload } = DeclParam.withId(paramId).ref()
-      const copyNameId = Name.create(camelCase(Name.withId(nameId).value()))
+      const { nameId, payload } = DeclParam.withId(paramId)
+      const copyNameId = Name.create(camelCase(Name.withId(nameId).value))
 
       DeclParam.withId(paramId).incrementUsage()
 
@@ -201,7 +201,7 @@ export default function appReducer(state, action) {
       )
 
 
-      if (Invocation.declaration.ref().type !== STYLED_COMPONENT) {
+      if (Invocation.declaration.type !== STYLED_COMPONENT) {
         // add children declaration param to the source declaration
         Invocation.declaration.declParams.insert(REACT_CHILDREN_DECLARATION_PARAM_ID)
 
@@ -220,16 +220,16 @@ export default function appReducer(state, action) {
 
       let sourceFileId = fileId
       if (isDirectory) {
-        sourceFileId = File.withId(fileId).children.find(id => File.withId(id).name.value() === 'index')
+        sourceFileId = File.withId(fileId).children.find(id => File.withId(id).name.value === 'index')
       }
 
       const declarationId = File.withId(sourceFileId).declarations.find(id =>
-        componentDeclarationTypes.includes(Declaration.withId(id).ref().type)
+        componentDeclarationTypes.includes(Declaration.withId(id).type)
       )
 
       Invocation.withId(targetInvocationId).invocations.insert(
         Invocation.create({
-          nameId: Declaration.withId(declarationId).ref().nameId,
+          nameId: Declaration.withId(declarationId).nameId,
           declarationId,
         }),
         targetPosition
@@ -247,31 +247,32 @@ export default function appReducer(state, action) {
       const { sourceFileId, targetFileId } = action.payload
 
       // find directory containing source file
-      const dirId = File.withId(sourceFileId).ref().parentId
+      const dirId = File.withId(sourceFileId).parentId
 
       // remove from that directory children
       File.withId(dirId).children.remove(sourceFileId)
 
       // delete the dragged file
-      const { declarationIds } = File.withId(sourceFileId).ref()
+      const { declarationIds } = File.withId(sourceFileId)
       File.delete()
 
       // migrate the dragged files declarations to the targetFile
       File.withId(targetFileId).migrate({ declarationIds: ids => [...ids, ...declarationIds] })
 
-      // If ony index remaining collapse e.g. App->index.js => App.js
-      if (File.withId(dirId).children.length() === 1) {
-        const dirsDirId = File.withId(dirId).ref().parentId
-        const dirsDirRef = File.withId(dirId).ref()
-        const indexFileId = dirsDirRef.children[0]
+      // If ony index remaining in this directory collapse e.g. App->index.js => App.js
+      if (File.withId(dirId).children.length === 1) {
+        const { children, nameId, parentId: dirsDirId } = File
+        const indexFileId = children.first()
 
-        // rename the index file to the directory name
-        File.withId(indexFileId).update({
-          nameId: dirsDirRef.nameId,
-        })
+        // delete the directory
+        File.delete()
+
+        // rename the index file to the deleted directorys name
+        File.withId(indexFileId).update({ nameId })
 
         // remove from that directory children
         File.withId(dirsDirId).children.remove(dirId)
+
         // Add the previous index file instead
         File.withId(dirsDirId).children.insert(indexFileId)
       }
@@ -287,12 +288,12 @@ export default function appReducer(state, action) {
 
       // make any index.js that includes a component declaration a proxy to it's parent
       if (
-        File.withId(sourceFileId).name.value() === 'index' &&
+        File.withId(sourceFileId).name.value === 'index' &&
         File.declarations.find(
-          id => componentDeclarationTypes.includes(Declaration.withId(id).ref().type)
+          id => componentDeclarationTypes.includes(Declaration.withId(id).type)
         )
       ) {
-        sourceFileId = File.ref().parentId
+        sourceFileId = File.parentId
         if (targetDirectoryId === sourceFileId) {
           return state
         }
@@ -336,8 +337,8 @@ export default function appReducer(state, action) {
       }
 
       if (suffix) {
-        Name.withId(nameId).update(`${Name.value()}${suffix || ''}`)
-        alert(`${name} => ${Name.withId(nameId).value()}`) // eslint-disable-line no-alert
+        Name.withId(nameId).update(`${Name.value}${suffix || ''}`)
+        alert(`${name} => ${Name.withId(nameId).value}`) // eslint-disable-line no-alert
       }
 
       return {
@@ -354,9 +355,9 @@ export default function appReducer(state, action) {
       const { targetDirectoryId, declarationId } = action.payload
       const { editor: { currentFileId } } = state
 
-      const { nameId } = Declaration.withId(declarationId).ref()
+      const { nameId } = Declaration.withId(declarationId)
 
-      if (File.withId(currentFileId).declarations.length() === 1) {
+      if (File.withId(currentFileId).declarations.length === 1) {
         return session.state
       }
 
@@ -385,7 +386,6 @@ export default function appReducer(state, action) {
       if (targetInvocationId === sourceParentId) {
         const oldPosition = Invocation
           .withId(sourceParentId)
-          .ref()
           .invocationIds
           .findIndex(id => id === sourceInvocationId)
         if (oldPosition < targetPosition) {
@@ -425,7 +425,7 @@ export default function appReducer(state, action) {
       } = action
       DeclParam.withId(paramId).incrementUsage()
 
-      const name = Name.withId(nameId).value()
+      const name = Name.withId(nameId).value
       const newNameId = Name.create(pascalCase(name))
       const callParamIds = paramName
         ? [CallParam.create({ nameId: Name.create(paramName), declParamId: paramId })]
@@ -457,7 +457,7 @@ export default function appReducer(state, action) {
       Invocation.update({ inline: false })
 
       // get the current directory
-      const dirId = File.withId(state.editor.currentFileId).ref().parentId
+      const dirId = File.withId(state.editor.currentFileId).parentId
 
       // insert new file with the declaration into directory
       File.withId(dirId).children.insert(
@@ -480,7 +480,7 @@ export default function appReducer(state, action) {
       } = action.payload
       DeclParam.withId(paramId).incrementUsage()
 
-      const name = Name.withId(nameId).value()
+      const name = Name.withId(nameId).value
 
       // params
       const payloadDeclParams = Object.keys(payload).map(key =>
@@ -520,7 +520,7 @@ export default function appReducer(state, action) {
         prop: { paramId, nameId, payload },
       } = action.payload
       DeclParam.withId(paramId).incrementUsage()
-      const name = Name.withId(nameId).value()
+      const name = Name.withId(nameId).value
 
       // payload is certfied checkTypes.array.of.object 🚀
       // some level of uniformity in payload data is assumed
@@ -590,7 +590,7 @@ export default function appReducer(state, action) {
         prop: { paramId, nameId },
       } = action.payload
       DeclParam.withId(paramId).incrementUsage()
-      const baseName = Name.withId(nameId).value()
+      const baseName = Name.withId(nameId).value
 
       const [componentNameId, newComponentDeclarationId] = createComponentBundle({
         baseName,
@@ -626,7 +626,7 @@ export default function appReducer(state, action) {
         prop: { paramId, nameId, payload },
       } = action.payload
       DeclParam.withId(paramId).incrementUsage()
-      const baseName = Name.withId(nameId).value()
+      const baseName = Name.withId(nameId).value
       const nameCopyId = Name.create(camelCase(baseName))
 
       let declParamId
@@ -699,15 +699,15 @@ export default function appReducer(state, action) {
         return session.state
       }
 
-      const nameIds = altIds.map(id => DeclParam.withId(id).ref().nameId)
-      if (Object.keys(CallParam.where(({ nameId }) => nameIds.includes(nameId)).ref()).length > 1) {
+      const nameIds = altIds.map(id => DeclParam.withId(id).nameId)
+      if (Object.keys(CallParam.where(({ nameId }) => nameIds.includes(nameId))).length > 1) {
         if (!confirm('this prop is passed by multiple useages of this component, confirm deletion?')) { // eslint-disable-line
           return session.state
         }
       }
 
       altIds.forEach(paramId => {
-        const { nameId: declParamNameId } = DeclParam.withId(paramId).ref()
+        const { nameId: declParamNameId } = DeclParam.withId(paramId)
         // remove declParam
         DeclParam.delete()
         // remove declParam from the component declaration's declParams
@@ -719,7 +719,7 @@ export default function appReducer(state, action) {
           .each(({ id: invocationId, callParamIds }) => {
             // find any (the) passed prop (callParam) with same effective nameId
             const sourceCallParamId = callParamIds.find(id =>
-              CallParam.withId(id).ref().nameId === declParamNameId
+              CallParam.withId(id).nameId === declParamNameId
             )
             if (sourceCallParamId) {
               // remove it, and remove it from the invocation callParams
@@ -738,7 +738,7 @@ export default function appReducer(state, action) {
       Invocation.withId(sourceParentId).invocations.remove(sourceInvocationId)
       // remove any call params
       Invocation.withId(sourceInvocationId).callParams.forEach(id => {
-        const { declParamId } = CallParam.withId(id).ref()
+        const { declParamId } = CallParam.withId(id)
         if (declParamId) {
           DeclParam.withId(declParamId).decrementUsage()
         }
