@@ -4,3 +4,4 @@ export { default as ParamInvocationContainer } from '../../ParamInvocationContai
 export { default as ReorderDropzoneContainer } from './ReorderDropzoneContainer'
 export { default as PropDropzoneContainer } from './PropDropzoneContainer'
 export { default as OpenTagContainer } from './OpenTagContainer'
+export { default as CallParamDragContainer } from './CallParamDragContainer'

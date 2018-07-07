@@ -6,16 +6,18 @@ import styled from 'styled-as-components'
 
 import theme from 'theme-proxy'
 import { invocationPropTypes } from 'model-prop-types'
-import { PROP, PROPS_SPREAD } from 'constantz'
+import { PROP, PROPS_SPREAD, CALL_PARAM } from 'constantz'
 import { indent } from 'utils'
 import { JSX } from 'components'
 import { Name, NameInput } from 'containers'
+import { CallParamDragContainer } from '../containers'
 
 const OpenTag = ({
   isOverOpenTag,
   dragItem,
   depth,
   invocation: {
+    invocationId,
     callParams,
     closed,
     hasPropsSpread,
@@ -23,9 +25,12 @@ const OpenTag = ({
     nameId,
   },
 }) => {
+  // three types of drop
   const spreadPropsIsOver = isOverOpenTag && dragItem.type === PROPS_SPREAD
   const propIsOver = isOverOpenTag && dragItem.type === PROP &&
     canDropPropToOpenTag(callParams, pseudoSpreadPropsName, dragItem)
+  const callParamIsOver = isOverOpenTag && dragItem.type === CALL_PARAM &&
+    canDropCallParamToOpenTag(callParams, dragItem)
 
   const [keyParams, standardCallParams] = partition(callParams, p => p.name === 'key')
   const keyParam = keyParams[0]
@@ -33,23 +38,27 @@ const OpenTag = ({
   return (
     <React.Fragment>
       {indent(depth)}{'<'}<NameInput pointer nameId={nameId} />
+      {/* key= special case */}
       {keyParam && (
         <span>
           {' '}<Name nameId={keyParam.nameId} />={'{'}<JSX invocationId={keyParam.valueInvocationId} depth={0} />{'}'}
         </span>
       )}
+      {/* PROPS_SPREAD Dropzone */}
       {(hasPropsSpread || spreadPropsIsOver) && (
         <span className="spread-props-attribute">
           {' {'}...props{'}'}
         </span>
-        )}
+      )}
+      {/* spread props */}
       {pseudoSpreadPropsName && (
         <span className="spread-props-attribute">
           {' {'}...{pseudoSpreadPropsName}{'}'}
         </span>
-        )}
+      )}
+      {/* PROP Dropzone */}
       {propIsOver && (
-        <span className="new-attribute-preview">
+        <NewAttributePreview>
           {' '}
           <Name
             nameId={dragItem.nameId}
@@ -62,24 +71,27 @@ const OpenTag = ({
             )}
           />
           {'}'}
-        </span>
+        </NewAttributePreview>
       )}
-      {standardCallParams.map(({ id, valueInvocationId, declIsSpreadMember, nameId, invokeNameId, valueString }) =>
-      valueInvocationId ? (
-        <span key={id}>
-          {' '}<NameInput nameId={nameId} />={'{'}<JSX invocationId={valueInvocationId} inline depth={0} />{'}'}
-        </span>
-      ) :
-      !((hasPropsSpread || spreadPropsIsOver) && declIsSpreadMember) && (
-        <span key={id}>
+      {/* CALL_PARAM Dropzone */}
+      {callParamIsOver && (
+        <NewAttributePreview>
           {' '}
-          <NameInput nameId={nameId} />
-          =
-          {'{'}
-          {declIsSpreadMember && 'props.'}
-          {valueString || <Name nameId={invokeNameId} />}
-          {'}'}
-        </span>
+          <React.Fragment>
+            {dragItem.name}={'{'}
+            {dragItem.declIsSpreadMember && 'props.'}
+            {dragItem.name}
+          </React.Fragment>
+        </NewAttributePreview>
+      )}
+      {/* normal call params */}
+      {standardCallParams.map(callParam => (
+        <CallParamDragContainer
+          callParam={callParam}
+          spreadPropsIsOverTag={spreadPropsIsOver}
+          tagHasPropsSpread={hasPropsSpread}
+          invocationId={invocationId}
+        />
       ))}
       {closed && ' /'}
       {'>'}
@@ -98,16 +110,20 @@ OpenTag.propTypes = forbidExtraProps({
   dragItem: T.shape({ type: T.string }).isRequired,
 })
 
+const NewAttributePreview = styled.span`
+  color: ${theme.color.darkgreen};
+  transition: 250ms;
+`
+
 /* style, export */
 export default styled(OpenTag).as.div`
   ${props => props.invocation.inline && 'display: inline-block;'}
-  .new-attribute-preview {
-    color: ${theme.color.darkgreen};
-    transition: 250ms;
-  }
 `
 
 // helpers
 export const canDropPropToOpenTag = (targetCallParams, pseudoSpreadPropsName, propBeingDragged) =>
   !targetCallParams.find(({ declParamId }) => declParamId === propBeingDragged.paramId)
   && pseudoSpreadPropsName !== propBeingDragged.name
+
+export const canDropCallParamToOpenTag = (targetCallParams, callParamBeingDragged) =>
+  !targetCallParams.find(({ name }) => name === callParamBeingDragged.name)

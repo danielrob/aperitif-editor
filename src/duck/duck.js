@@ -30,6 +30,7 @@ import {
   addNewContainer,
   createComponentBundle,
   getRecursiveInvocationAndMaybeRelatedEntitiesRemover,
+  getRecursivePropRemover,
 } from './tasks'
 
 export const RESET_PROJECT = 'RESET_PROJECT'
@@ -47,6 +48,7 @@ export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
 export const MOVE_INVOCATION = 'MOVE_INVOCATION'
+export const MOVE_CALL_PARAM = 'MOVE_CALL_PARAM'
 export const MOVE_FILE = 'MOVE_FILE'
 export const MERGE_FILE = 'MERGE_FILE'
 export const MOVE_DECLARATION_TO_FILE = 'MOVE_DECLARATION_TO_FILE'
@@ -405,7 +407,40 @@ export default function appReducer(state, action) {
         .invocations
         .insert(sourceInvocationId, insertPosition)
 
-      // open target
+      return session.state
+    }
+
+
+    case MOVE_CALL_PARAM: {
+      const {
+        paramId,
+        targetInvocationId,
+        sourceInvocationId,
+      } = action.payload
+
+      const declParamId = getRecursivePropRemover(session)(
+        sourceInvocationId, // declarationId
+        paramId, // declParamId
+        { keep: true }
+      )
+
+      // remove from source
+      Invocation
+        .withId(sourceInvocationId)
+        .callParams
+        .remove(paramId)
+
+      // add to target
+      Invocation
+        .withId(targetInvocationId)
+        .callParams
+        .insert(paramId)
+
+      // move declaration id
+      Invocation
+        .declaration
+        .declParams
+        .insert(declParamId)
 
       return session.state
     }
@@ -745,8 +780,7 @@ export default function appReducer(state, action) {
         CallParam.delete()
       })
 
-      const remover = getRecursiveInvocationAndMaybeRelatedEntitiesRemover(session)
-      remover(sourceInvocationId)
+      getRecursiveInvocationAndMaybeRelatedEntitiesRemover(session)(sourceInvocationId)
 
       return session.state
     }
@@ -821,6 +855,10 @@ export const moveInvocation = createAction(
   MOVE_INVOCATION
 )
 
+export const moveCallParam = createAction(
+  MOVE_CALL_PARAM
+)
+
 export const mergeFile = createAction(
   MERGE_FILE
 )
@@ -859,7 +897,7 @@ export const moveParamToSpread = createAction(
 
 export const addPropsSpreadToComponentInvocation = createAction(
   UPDATE_INVOCATION,
-  ({ invocationId }) => ({
+  ({ targetInvocationId: invocationId }) => ({
     invocationId,
     hasPropsSpread: true,
   })

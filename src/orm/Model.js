@@ -25,8 +25,8 @@ class Model {
     this.defaultProps = {}
     this.foreignKeys = {}
 
-    Object.keys(fields).forEach(key => {
-      const { type, defaultValue, modelName, methodName } = fields[key]
+    Object.entries(fields).concat([['id', {}]]).forEach(([key, field]) => {
+      const { type, defaultValue, modelName, methodName } = field
 
       switch (type) {
         case 'attr': {
@@ -36,7 +36,7 @@ class Model {
         case 'fk': {
           setTimeout(() => { // waits until all models are registered for two-way relations
             invariant(orm[modelName], `Did not find model ${modelName} in registry.`)
-            this.foreignKeys[key] = orm[modelName].stateKey
+            this.foreignKeys[key] = orm[modelName]
             this.defaultProps[key] = null
             if (key.endsWith('Id')) {
               Object.defineProperty(this, key.replace('Id', ''), {
@@ -163,8 +163,8 @@ class Model {
 
   find = iteratee => {
     const modelData = this.getModelData()
-    const found = Object.keys(modelData).find(
-      key => iteratee(modelData[key].id, modelData[key], modelData)
+    const [found] = Object.entries(modelData).find(
+      ([, model]) => iteratee(model.id, model, modelData)
     )
     return found ? this.withId(found) : null
   }
@@ -188,17 +188,13 @@ class Model {
 
   each = iteratee => {
     const modelData = this.currentQueryResult.result
-    Object.keys(modelData).forEach(key =>
-      iteratee(modelData[key], modelData[key].id, modelData)
+    Object.entries(modelData).forEach(([, model]) =>
+      iteratee(model, model.id, modelData)
     )
   }
 
   // non-chainable
-  ref = () => {
-    const { result, isSet } = this.currentQueryResult
-    invariant(isSet, 'ref is experimentally limited to setResults, you shouldn\'t need this')
-    return result
-  }
+  ref = () => this.currentQueryResult.result
 
   // .length property
   getLength = () => {
@@ -285,7 +281,7 @@ class Model {
     )
   }
 
-  delete = () => {
+  delete = (...cascades) => {
     const { result, isSet } = this.currentQueryResult
     const modelId = result.id
     const nextModelData = {
@@ -295,6 +291,13 @@ class Model {
     invariant(!isSet, 'deleting multiple entities at once is not supported')
 
     delete nextModelData[modelId]
+
+    cascades.forEach(key => {
+      const model = this.foreignKeys[key]
+      if (model) {
+        model.withId(result[key]).delete()
+      }
+    })
 
     this.setModelData(nextModelData)
   }

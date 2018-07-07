@@ -19,12 +19,12 @@ export default function getRecursiveInvocationAndMaybeRelatedEntitiesRemover(ses
       File.withId(fileId).declarations.remove(targetDeclarationId)
 
       if (!File.declarations.length) {
-        File.withId(fileId).delete()
+        File.withId(fileId).delete(nameId !== INDEX_NAME_ID && 'nameId')
       }
 
       if (nameId === INDEX_NAME_ID) {
         const { parentId: superId } = File.withId(parentId)
-        File.withId(parentId).delete() // FIXME: memory leak if random files in this directory
+        File.withId(parentId).delete('nameId')
         File.withId(superId).children.remove(parentId)
       } else {
         File.withId(parentId).children.remove(fileId)

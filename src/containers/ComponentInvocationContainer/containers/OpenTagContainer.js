@@ -5,11 +5,11 @@ import { DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
 import { invocationPropTypes } from 'model-prop-types'
-import { addAttributeToComponentInvocation, addPropsSpreadToComponentInvocation } from 'duck'
-import { DraggableTypes } from 'constantz'
+import { addAttributeToComponentInvocation, addPropsSpreadToComponentInvocation, moveCallParam } from 'duck'
+import { PROP, CALL_PARAM, PROPS_SPREAD } from 'constantz'
 import { compose } from 'utils'
 
-import { OpenTag, canDropPropToOpenTag } from '../components'
+import { OpenTag, canDropPropToOpenTag, canDropCallParamToOpenTag } from '../components'
 
 class OpenTagContainer extends React.PureComponent {
   render() {
@@ -34,6 +34,9 @@ class OpenTagContainer extends React.PureComponent {
 }
 
 
+/*
+  PropTypes
+*/
 OpenTagContainer.propTypes = {
   depth: T.number.isRequired,
 
@@ -50,34 +53,54 @@ OpenTagContainer.propTypes = {
 }
 
 
-/* connect */
+/*
+  connect
+*/
 const mapDispatchToProps = {
   addAttributeToComponentInvocation,
   addPropsSpreadToComponentInvocation,
+  moveCallParam,
 }
 
-/* dnd */
+
+/*
+  dnd - target
+*/
+const dropTypes = [PROP, PROPS_SPREAD, CALL_PARAM]
+
 const dropzoneTarget = {
   drop(props, monitor) {
+    const { invocation: { invocationId: targetInvocationId } } = props
+
     switch (monitor.getItemType()) {
-      case DraggableTypes.PROP: {
-        const {
-          invocation: { invocationId: targetInvocationId },
-          addAttributeToComponentInvocation,
-        } = props
+      case PROP: {
+        const { addAttributeToComponentInvocation } = props
         return addAttributeToComponentInvocation({ targetInvocationId, prop: monitor.getItem() })
       }
-      case DraggableTypes.PROPS_SPREAD: {
-        const { invocation: { invocationId }, addPropsSpreadToComponentInvocation } = props
-        return addPropsSpreadToComponentInvocation({ invocationId })
+      case PROPS_SPREAD: {
+        const { addPropsSpreadToComponentInvocation } = props
+        return addPropsSpreadToComponentInvocation({ targetInvocationId })
       }
-      default:
+      case CALL_PARAM: {
+        const { paramId, sourceInvocationId } = monitor.getItem()
+        const { moveCallParam } = props
+        return moveCallParam({ paramId, targetInvocationId, sourceInvocationId })
+      }
+      // no default
     }
   },
 
   canDrop(props, monitor) {
     const { invocation: { callParams, pseudoSpreadPropsName } } = props
-    return canDropPropToOpenTag(callParams, pseudoSpreadPropsName, monitor.getItem())
+    switch (monitor.getItemType()) {
+      case PROP: {
+        return canDropPropToOpenTag(callParams, pseudoSpreadPropsName, monitor.getItem())
+      }
+      case CALL_PARAM: {
+        return canDropCallParamToOpenTag(callParams, monitor.getItem())
+      }
+      // no default
+    }
   },
 }
 
@@ -90,12 +113,12 @@ const collect = (connect, monitor) => ({
   },
 })
 
-/* compose export */
+
+/*
+  compose export
+*/
 export default compose(
   connect(null, mapDispatchToProps),
-  DropTarget([
-    DraggableTypes.PROP,
-    DraggableTypes.PROPS_SPREAD,
-  ], dropzoneTarget, collect)
+  DropTarget(dropTypes, dropzoneTarget, collect)
 )(OpenTagContainer)
 

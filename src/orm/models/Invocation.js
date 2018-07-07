@@ -9,7 +9,7 @@ Invocation.stateKey = 'invocations'
 
 Invocation.fields = {
   nameId: fk('Name'),
-  declarationId: fk('Declaration'),
+  declarationId: fk('Declaration'), // Not required
   source: attr(null),
   callParamIds: array([], 'CallParam', 'invocationId'),
   invocationIds: array(),

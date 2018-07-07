@@ -82,6 +82,7 @@ export const PARAM_INVOCATION = 'param invocation' // also draggable
 export const PROP = 'prop'
 export const PROPS_SPREAD = '...props'
 export const FILE = 'file'
+export const CALL_PARAM = 'call param'
 
 export const DraggableTypes = {
   PROP,
@@ -90,6 +91,7 @@ export const DraggableTypes = {
   PROPS_SPREAD,
   FILE,
   DIR,
+  CALL_PARAM,
 }
 
 

@@ -1,12 +1,24 @@
 import T from 'prop-types'
 import { fileTypesArray, declarationTypesArray, exportTypesArray } from 'constantz'
 
+// call param
+export const callParamPropTypes = {
+  id: T.number.isRequired,
+  valueInvocationId: T.number,
+  declIsSpreadMember: T.bool.isRequired,
+  name: T.string.isRequired,
+  nameId: T.number.isRequired,
+  invokeNameId: T.number.isRequired,
+  valueString: T.string,
+}
+
+
 // makeSelectInvocation
 export const invocationPropTypes = T.shape({
   invocationId: T.number.isRequired,
   nameId: T.number.isRequired,
   invocationIds: T.arrayOf(T.number).isRequired,
-  callParams: T.arrayOf(T.object).isRequired,
+  callParams: T.arrayOf(callParamPropTypes).isRequired,
   hasPropsSpread: T.bool.isRequired,
   pseudoSpreadPropsName: T.string,
   inline: T.bool.isRequired,
@@ -22,7 +34,7 @@ export const paramInvocationPropTypes = T.shape({
 })
 
 
-// param
+// decl param
 export const declParamPropTypes = {
   id: T.number.isRequired,
   nameId: T.number.isRequired,
@@ -31,6 +43,7 @@ export const declParamPropTypes = {
   invokeCount: T.number.isRequired,
   altIds: T.arrayOf(T.number).isRequired,
 }
+
 
 // makeSelectFile
 export const filePropTypes = {
