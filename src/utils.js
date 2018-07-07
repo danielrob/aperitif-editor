@@ -16,5 +16,6 @@ export const toArray = obj => Object.entries(obj).map(([, value]) => value)
 export const lastItem = arr => arr[arr.length - 1]
 export const pD = fn => (e, ...args) => { e.preventDefault(); fn(...args) }
 export const pDsP = fn => (e, ...args) => { e.preventDefault(); e.stopPropagation(); fn(...args) }
+export const isUrl = str => str.startsWith('http')
 
 export { default as camelCase } from 'camelcase'

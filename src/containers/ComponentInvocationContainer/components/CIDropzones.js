@@ -6,7 +6,7 @@ import styled from 'styled-as-components'
 import { singular } from 'pluralize'
 
 import theme from 'theme-proxy'
-import { camelCase, pascalCase, indent, oneOf } from 'utils'
+import { camelCase, pascalCase, indent, oneOf, isUrl } from 'utils'
 import { Name } from 'containers'
 import { PROP, PARAM_INVOCATION, DIR, FILE, COMPONENT_INVOCATION } from 'constantz'
 import {
@@ -38,11 +38,25 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
             {/* prop options */}
             {[PROP].includes(type) && (
               <React.Fragment>
-                {oneOf(C.string, C.number, C.null)(payload) && (
+                {
+                //  <styled.div>{item}</styled.div>
+                }
+                {oneOf(C.string, C.number, C.null)(payload) && !isUrl(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyled">
                     {'<styled.div>'}{'{'}{name}{'}'}{'</styled.div>'}
                   </PropDropzoneContainer>
                 )}
+                {
+                //  <styled.a href={item} />
+                }
+                {C.string(payload) && isUrl(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyledUrl">
+                    {`<styled.a href={${name}} />`}
+                  </PropDropzoneContainer>
+                )}
+                {
+                // <Item item={item} />
+                }
                 {oneOf(C.string, C.number, C.null, C.array.of.object)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithAttribute">
                     {'<'}{pascalCase(name)}
@@ -50,16 +64,27 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
                     {'/>'}
                   </PropDropzoneContainer>
                 )}
+                {
+                // {name}
+                }
                 {oneOf(C.string, C.number, C.null)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="asParamInvocation">
                     {`{${name}}`}
                   </PropDropzoneContainer>
                 )}
+                {
+                // <Item {...item} />
+                }
                 {C.object(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithSpread">
                     {`<${pascalCase(name)} ...{${name}} />`}
                   </PropDropzoneContainer>
                 )}
+                {/*
+                   <Item>
+                    {item}
+                   </Item>
+                */}
                 {oneOf(C.string, C.number, C.null)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithChild">
                     {'<'}{pascalCase(name)}{'>'}<br />
@@ -67,6 +92,11 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
                     {'</'}{pascalCase(name)}{'>'}
                   </PropDropzoneContainer>
                 )}
+                {/*
+                  {items.map(item => (
+                    <Item key={item.id} {...item} />
+                  ))}
+                */}
                 {oneOf(C.array.of.object)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newWithMap">
                     {'{'}{name}.map({singular(name)} => (<br />

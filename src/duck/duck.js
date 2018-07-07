@@ -42,6 +42,7 @@ export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_ATTRIBUTE = 'ADD_NEW_COMPONENT
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_SPREAD'
 export const ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP = 'ADD_NEW_COMPONENT_TO_INVOCATION_WITH_MAP'
 export const ADD_NEW_STYLED_COMPONENT_TO_INVOCATION = 'ADD_NEW_STYLED_COMPONENT_TO_INVOCATION'
+export const ADD_NEW_STYLED_URL_TO_INVOCATION = 'ADD_NEW_STYLED_URL_TO_INVOCATION'
 export const ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION = 'ADD_ATTRIBUTE_TO_COMPONENT_INVOCATION'
 export const ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION = 'ADD_INVOCATION_FROM_FILE_TO_COMPONENT_INVOCATION'
 export const ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD = 'ADD_PARAM_AS_COMPONENT_INVOCATION_CHILD'
@@ -412,7 +413,7 @@ export default function appReducer(state, action) {
         .insert(sourceInvocationId, insertPosition)
 
       // open target
-      Invocation.update({ closed: false, inline: false })
+      Invocation.update({ closed: false })
 
       return session.state
     }
@@ -420,27 +421,35 @@ export default function appReducer(state, action) {
 
     case ADD_NEW_STYLED_COMPONENT_TO_INVOCATION: {
       const {
-        targetInvocationId,
-        targetPosition,
-        prop: { paramId, nameId },
-      } = action.payload
-
+        payload: {
+          targetInvocationId,
+          targetPosition,
+          prop: { paramId, nameId },
+        },
+        meta: {
+          tag = 'div',
+          paramName,
+        } = {},
+      } = action
       DeclParam.withId(paramId).incrementUsage()
 
       const name = Name.withId(nameId).value()
-
       const newNameId = Name.create(pascalCase(name))
+      const callParamIds = paramName
+        ? [CallParam.create({ nameId: Name.create(paramName), declParamId: paramId })]
+        : []
 
       const newDeclarationId = Declaration.create({
         nameId: newNameId,
         type: STYLED_COMPONENT,
-        tag: 'div',
+        tag,
       })
 
       // Add new invocation to targetInvocation with param invocation child
       Invocation.withId(targetInvocationId).invocations.insert(
         Invocation.create({
           nameId: newNameId,
+          callParamIds,
           invocationIds: [
             Invocation.create({
               nameId,
@@ -455,10 +464,8 @@ export default function appReducer(state, action) {
       )
       Invocation.update({ closed: false, inline: false })
 
-      // find the current directory
-      const dirId = Object.keys(File.all().ref()).find(id =>
-        File.withId(id).children.includes(state.editor.currentFileId)
-      )
+      // get the current directory
+      const dirId = File.withId(state.editor.currentFileId).ref().parentId
 
       // insert new file with the declaration into directory
       File.withId(dirId).children.insert(
@@ -801,6 +808,15 @@ export const addNewComponentToInvocationWithMap = createAction(
 
 export const addNewStyledComponentToInvocation = createAction(
   ADD_NEW_STYLED_COMPONENT_TO_INVOCATION
+)
+
+export const addNewStyledUrlToInvocation = createAction(
+  ADD_NEW_STYLED_COMPONENT_TO_INVOCATION,
+  null,
+  () => ({
+    tag: 'a',
+    paramName: 'href',
+  })
 )
 
 export const addAttributeToComponentInvocation = createAction(

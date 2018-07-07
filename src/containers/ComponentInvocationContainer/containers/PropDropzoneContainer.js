@@ -14,6 +14,7 @@ import {
   addNewComponentToInvocationWithAttribute,
   addNewComponentToInvocationWithChildren,
   addNewStyledComponentToInvocation,
+  addNewStyledUrlToInvocation,
   moveInvocation,
 } from 'duck'
 
@@ -37,6 +38,7 @@ const dropActionMap = {
   newWithAttribute: 'addNewComponentToInvocationWithAttribute',
   newWithChild: 'addNewComponentToInvocationWithChildren',
   newStyled: 'addNewStyledComponentToInvocation',
+  newStyledUrl: 'addNewStyledUrlToInvocation',
 }
 
 PropDropzoneContainer.propTypes = forbidExtraProps({
@@ -53,6 +55,7 @@ PropDropzoneContainer.propTypes = forbidExtraProps({
   addNewComponentToInvocationWithAttribute: T.func.isRequired,
   addNewComponentToInvocationWithChildren: T.func.isRequired,
   addNewStyledComponentToInvocation: T.func.isRequired,
+  addNewStyledUrlToInvocation: T.func.isRequired,
   moveInvocation: T.func.isRequired,
 
   // React Dnd
@@ -73,6 +76,7 @@ const mapDispatchToProps = {
   addNewComponentToInvocationWithAttribute,
   addNewComponentToInvocationWithChildren,
   addNewStyledComponentToInvocation,
+  addNewStyledUrlToInvocation,
   moveInvocation,
 }
 

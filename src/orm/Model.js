@@ -1,3 +1,4 @@
+import C from 'check-types'
 import invariant from 'invariant'
 
 export const required = 'required'
@@ -248,7 +249,9 @@ class Model {
       Object.keys(mergeFunctions).reduce(
         (out, key) => ({
           ...out,
-          [key]: mergeFunctions[key](currentData[key], currentData),
+          [key]: C.function(mergeFunctions[key])
+            ? mergeFunctions[key](currentData[key], currentData)
+            : mergeFunctions[key], // might just be a raw value
         }),
         {}
       )
