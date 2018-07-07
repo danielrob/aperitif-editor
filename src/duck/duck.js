@@ -59,6 +59,7 @@ export const UPDATE_NAME = 'UPDATE_NAME'
 export const UPDATE_DECLARATION = 'UPDATE_DECLARATION'
 export const UPDATE_DECL_PARAM = 'UPDATE_DECL_PARAM'
 export const REMOVE_PROP = 'REMOVE_PROP'
+export const REMOVE_CALL_PARAM = 'REMOVE_CALL_PARAM'
 export const REMOVE_CHILD_INVOCATION = 'REMOVE_CHILD_INVOCATION'
 
 export default function appReducer(state, action) {
@@ -766,6 +767,27 @@ export default function appReducer(state, action) {
       return session.state
     }
 
+    case REMOVE_CALL_PARAM: {
+      const {
+        sourceInvocationId,
+        paramId,
+      } = action.payload
+
+      getRecursivePropRemover(session)(
+        sourceInvocationId,
+        paramId,
+        { keep: true }
+      )
+
+      if (CallParam.withId(paramId).declParamId) {
+        DeclParam.withId(CallParam.withId(paramId).declParamId).decrementUsage()
+      }
+      CallParam.withId(paramId).delete()
+      Invocation.withId(sourceInvocationId).callParams.remove(paramId)
+
+      return session.state
+    }
+
 
     case REMOVE_CHILD_INVOCATION: {
       const { sourceInvocationId, sourceParentId } = action.payload
@@ -905,6 +927,10 @@ export const addPropsSpreadToComponentInvocation = createAction(
 
 export const removeProp = createAction(
   REMOVE_PROP
+)
+
+export const removeCallParam = createAction(
+  REMOVE_CALL_PARAM
 )
 
 export const removeChildInvocation = createAction(

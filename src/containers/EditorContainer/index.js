@@ -7,9 +7,16 @@ import { createStructuredSelector } from 'reselect'
 
 import { KeyPressListeners, AperitifPostContainer } from 'containers'
 import { AddComponentTooltip } from 'components'
-import { FILE, PROP, STYLED_COMPONENT, COMPONENT_INVOCATION, PARAM_INVOCATION } from 'constantz'
+import {
+  FILE,
+  PROP,
+  STYLED_COMPONENT,
+  COMPONENT_INVOCATION,
+  PARAM_INVOCATION,
+  CALL_PARAM,
+} from 'constantz'
 import { compose } from 'utils'
-import { mergeFile, removeProp, removeChildInvocation } from 'duck'
+import { mergeFile, removeProp, removeChildInvocation, removeCallParam } from 'duck'
 import { selectDeclarations, selectCurrentFileId } from 'selectors'
 import {
   getCurrentFileImports,
@@ -17,7 +24,6 @@ import {
   selectCurrentFileDeclarations,
 } from './selectors'
 import { Editor } from './components'
-
 
 /*
   Component
@@ -41,7 +47,6 @@ class EditorContainer extends React.PureComponent {
     )
   }
 }
-
 
 /*
   propTypes
@@ -74,7 +79,6 @@ EditorContainer.defaultProps = {
   workspaceActions: {},
 }
 
-
 /*
   connect
 */
@@ -92,13 +96,13 @@ const mapDispatchToProps = {
   mergeFile,
   removeProp,
   removeChildInvocation,
+  removeCallParam,
 }
-
 
 /*
   dnd
 */
-const dropTypes = [FILE, PROP, COMPONENT_INVOCATION, PARAM_INVOCATION]
+const dropTypes = [FILE, PROP, COMPONENT_INVOCATION, PARAM_INVOCATION, CALL_PARAM]
 
 const dropTarget = {
   canDrop(props, monitor) {
@@ -150,6 +154,12 @@ const dropTarget = {
           altIds,
           invokeCount,
         })
+      }
+
+      case CALL_PARAM: {
+        const { removeCallParam } = props
+        const { paramId, sourceInvocationId } = monitor.getItem()
+        return removeCallParam({ paramId, sourceInvocationId })
       }
 
       case PARAM_INVOCATION:
