@@ -33,7 +33,6 @@ const createComponentBundle = ({
         nameId: wrapperNameId,
         source: null,
         invocationIds,
-        closed: !invocationIds.length,
         declarationId: wrapperDeclarationId,
       })),
     ],

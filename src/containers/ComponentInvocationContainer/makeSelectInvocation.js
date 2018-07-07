@@ -16,7 +16,6 @@ const makeSelectInvocation = () => createSelector(
       invocationIds,
       callParamIds,
       inline,
-      closed,
       pseudoSpreadPropsNameId,
       hasPropsSpread,
     } = invocation
@@ -51,7 +50,6 @@ const makeSelectInvocation = () => createSelector(
         }
       }),
       inline,
-      closed: !!closed,
       pseudoSpreadPropsName: pseudoSpreadPropsNameId ? names[pseudoSpreadPropsNameId].value : null,
       hasPropsSpread,
     }

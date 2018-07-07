@@ -97,7 +97,6 @@ export default function addNewContainer(session, apiResponse, _baseName) {
       Invocation.create({
         nameId: wrapperNameId,
         callParamIds: [],
-        closed: true,
         declarationId: wrapperDeclarationId,
       }),
     ],
@@ -154,7 +153,6 @@ export default function addNewContainer(session, apiResponse, _baseName) {
                         }),
                       ],
                       pseudoSpreadPropsNameId: mapPseudoParamNameId,
-                      closed: true,
                     }),
                   ],
                 }),
@@ -234,7 +232,6 @@ export default function addNewContainer(session, apiResponse, _baseName) {
   if (payloadIsObject) {
     componentInvocation = Invocation.create({
       nameId: componentNameId,
-      closed: true,
       declarationId: componentDeclarationId,
       pseudoSpreadPropsNameId: dataNameId,
     })
@@ -253,7 +250,6 @@ export default function addNewContainer(session, apiResponse, _baseName) {
           }),
         }),
       ],
-      closed: true,
     })
   }
 

@@ -200,7 +200,6 @@ export default function appReducer(state, action) {
         targetPosition
       )
 
-      Invocation.update({ closed: false })
 
       if (Invocation.declaration.ref().type !== STYLED_COMPONENT) {
         // add children declaration param to the source declaration
@@ -210,7 +209,6 @@ export default function appReducer(state, action) {
         Invocation.withId(
           Invocation.declaration.invocations.first()
         ).invocations.insert(REACT_CHILDREN_INVOCATION_ID)
-        Invocation.update({ closed: false })
       }
 
       return session.state
@@ -232,14 +230,12 @@ export default function appReducer(state, action) {
       Invocation.withId(targetInvocationId).invocations.insert(
         Invocation.create({
           nameId: Declaration.withId(declarationId).ref().nameId,
-          closed: true,
           declarationId,
         }),
         targetPosition
       )
 
       Invocation.update({
-        closed: false,
         inline: false,
       })
 
@@ -403,9 +399,6 @@ export default function appReducer(state, action) {
         .invocations
         .remove(sourceInvocationId)
 
-      // possibly close source
-      Invocation.migrate({ closed: (_, ref) => !ref.invocationIds.length })
-
       // add to target
       Invocation
         .withId(targetInvocationId)
@@ -413,7 +406,6 @@ export default function appReducer(state, action) {
         .insert(sourceInvocationId, insertPosition)
 
       // open target
-      Invocation.update({ closed: false })
 
       return session.state
     }
@@ -462,7 +454,7 @@ export default function appReducer(state, action) {
         }),
         targetPosition
       )
-      Invocation.update({ closed: false, inline: false })
+      Invocation.update({ inline: false })
 
       // get the current directory
       const dirId = File.withId(state.editor.currentFileId).ref().parentId
@@ -511,12 +503,11 @@ export default function appReducer(state, action) {
           declarationId: newComponentDeclarationId,
           callParamIds: [],
           pseudoSpreadPropsNameId: nameId,
-          closed: true,
         }),
         targetPosition
       )
 
-      Invocation.update({ closed: false, inline: false })
+      Invocation.update({ inline: false })
 
       return session.state
     }
@@ -579,7 +570,6 @@ export default function appReducer(state, action) {
                     }),
                   ],
                   pseudoSpreadPropsNameId: mapPseudoParamNameId,
-                  closed: true,
                 }),
               ],
             }),
@@ -587,7 +577,7 @@ export default function appReducer(state, action) {
         }),
         targetPosition
       )
-      Invocation.update({ closed: false, inline: false })
+      Invocation.update({ inline: false })
       ReactTooltip.rebuild()
       return session.state
     }
@@ -623,7 +613,7 @@ export default function appReducer(state, action) {
         }),
         targetPosition
       )
-      Invocation.update({ closed: false, inline: false })
+      Invocation.update({ inline: false })
 
       return session.state
     }
@@ -658,7 +648,6 @@ export default function appReducer(state, action) {
           })
         )
         DeclParam.withId(declParamId).incrementUsage()
-        Invocation.update({ closed: false })
       }
 
       Invocation.withId(targetInvocationId).invocations.insert(
@@ -666,11 +655,10 @@ export default function appReducer(state, action) {
           nameId: componentNameId,
           callParamIds: [CallParam.create({ nameId: nameCopyId, declParamId: paramId })],
           declarationId: newComponentDeclarationId,
-          closed: true,
         }),
         targetPosition
       )
-      Invocation.update({ closed: false, inline: false })
+      Invocation.update({ inline: false })
 
       return session.state
     }
@@ -748,8 +736,6 @@ export default function appReducer(state, action) {
       const { sourceInvocationId, sourceParentId } = action.payload
       // remove source from parent
       Invocation.withId(sourceParentId).invocations.remove(sourceInvocationId)
-      // and close parent if need be
-      Invocation.migrate({ closed: (_, { invocationIds }) => !invocationIds.length })
       // remove any call params
       Invocation.withId(sourceInvocationId).callParams.forEach(id => {
         const { declParamId } = CallParam.withId(id).ref()

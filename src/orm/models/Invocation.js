@@ -15,7 +15,6 @@ Invocation.fields = {
   invocationIds: array(),
   // type specific items
   type: attr(COMPONENT_INVOCATION),
-  closed: attr(false),
   hasPropsSpread: attr(false),
   pseudoSpreadPropsNameId: fk('Name'),
   inline: attr(false),

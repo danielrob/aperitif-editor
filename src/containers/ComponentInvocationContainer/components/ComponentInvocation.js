@@ -13,7 +13,11 @@ import { InvocationChildren, CloseTag, CIDropzones } from './'
 const ComponentInvocation = ({
   depth,
   invocation,
-  invocation: { invocationId, invocationIds, closed, inline },
+  invocation: {
+    invocationId,
+    invocationIds,
+    closed,
+  },
   connectDropTarget,
   connectClosingDropTarget,
   isOverCIT1,

@@ -21,7 +21,7 @@ class ComponentInvocationContainer extends React.PureComponent {
       componentInvocationRef,
       isDragging,
       parentIsInline,
-      invocation: { closed, inline, ...invocation },
+      invocation: { invocationIds, inline, ...invocation },
       invocationId, // selector / dnd only
       parentId, // dnd only
       ciDimensions, // dnd only
@@ -30,7 +30,7 @@ class ComponentInvocationContainer extends React.PureComponent {
 
     const { isOverCIT1, isOverCIT2 } = props
     const isOverCI = isOverCIT1 || isOverCIT2
-    const isClosed = closed && (!isOverCI || C.boolean(props.dragItem.payload))
+    const isClosed = !invocationIds.length && (!isOverCI || C.boolean(props.dragItem.payload))
     const displayInline = (parentIsInline || inline) && !isOverCI
 
     // https://github.com/react-dnd/react-dnd/issues/998
@@ -43,6 +43,7 @@ class ComponentInvocationContainer extends React.PureComponent {
             invocation={{
               closed: isClosed,
               inline: displayInline,
+              invocationIds,
               ...invocation,
             }}
           />
