@@ -8,6 +8,7 @@ const createComponentBundle = ({
   session,
   declParamIds = [],
   invocationIds = [],
+  tagPrediction = 'div',
 }) => {
   const { Name, Declaration, Invocation, File } = session
 
@@ -20,7 +21,7 @@ const createComponentBundle = ({
   const wrapperDeclarationId = Declaration.create({
     nameId: wrapperNameId,
     type: STYLED_COMPONENT,
-    tag: 'div',
+    tag: tagPrediction,
   })
 
   // NEW COMPONENT

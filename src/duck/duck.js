@@ -452,10 +452,10 @@ export default function appReducer(state, action) {
         payload: {
           targetInvocationId,
           targetPosition,
-          prop: { paramId, nameId },
+          prop: { paramId, nameId, payload },
         },
         meta: {
-          tag = 'div',
+          tag,
           paramName,
         } = {},
       } = action
@@ -470,7 +470,7 @@ export default function appReducer(state, action) {
       const newDeclarationId = Declaration.create({
         nameId: newNameId,
         type: STYLED_COMPONENT,
-        tag,
+        tag: tag || (oneOf(C.string, C.number, C.null)(payload) ? 'span' : 'div'),
       })
 
       // Add new invocation to targetInvocation with param invocation child
@@ -673,6 +673,7 @@ export default function appReducer(state, action) {
           declParamIds: [
             declParamId = DeclParam.create({ nameId: nameCopyId, payload }),
           ],
+          tagPrediction: oneOf(C.string, C.number, C.null)(payload) ? 'span' : 'div',
         })
 
       if (oneOf(C.string, C.number, C.null)(payload)) {

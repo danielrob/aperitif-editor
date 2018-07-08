@@ -39,11 +39,11 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
             {[PROP].includes(type) && (
               <React.Fragment>
                 {
-                //  <styled.div>{item}</styled.div>
+                //  <styled.span>{item}</styled.span>
                 }
                 {oneOf(C.string, C.number, C.null)(payload) && !isUrl(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyled">
-                    {'<styled.div>'}{'{'}{name}{'}'}{'</styled.div>'}
+                    {'<styled.span>'}{'{'}{name}{'}'}{'</styled.span>'}
                   </PropDropzoneContainer>
                 )}
                 {
