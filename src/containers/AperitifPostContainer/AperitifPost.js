@@ -8,6 +8,7 @@ import theme from 'theme-proxy'
 
 import githubIssues from './gh-issues.png'
 import trelloCard from './trello-card.png'
+import twitter from './twitter.png'
 
 // It's called AperitifPost because original idea was to have a Postman like experience here
 class AperitifPost extends React.PureComponent {
@@ -73,6 +74,7 @@ class AperitifPost extends React.PureComponent {
         {!validJsonEntered && (
           <div>
             <Image onClick={populate('github-issues')} src={githubIssues} alt="github issues" />
+            <Image onClick={populate('twitter')} src={twitter} alt="twitter tweets" />
             <Image onClick={populate('trello-card')} src={trelloCard} alt="trello card" />
           </div>
         )}

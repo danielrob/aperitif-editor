@@ -1,0 +1,793 @@
+[
+    {
+        "created_at": "Wed Jun 27 16:20:07 +0000 2018",
+        "id": 1012007680335122437,
+        "id_str": "1012007680335122437",
+        "text": "RT @dan_abramov: Did you know: you can use React as a &lt;script&gt; tag without npm! 🤔 Here’s a handy guide: https://t.co/gJwqp3ADJf https://t.c…",
+        "truncated": false,
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "user_mentions": [
+                {
+                    "screen_name": "dan_abramov",
+                    "name": "Dan Abramov",
+                    "id": 70345946,
+                    "id_str": "70345946",
+                    "indices": [
+                        3,
+                        15
+                    ]
+                }
+            ],
+            "urls": [
+                {
+                    "url": "https://t.co/gJwqp3ADJf",
+                    "expanded_url": "https://reactjs.org/docs/add-react-to-a-website.html",
+                    "display_url": "reactjs.org/docs/add-react…",
+                    "indices": [
+                        110,
+                        133
+                    ]
+                }
+            ]
+        },
+        "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Lite</a>",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 1566463268,
+            "id_str": "1566463268",
+            "name": "React",
+            "screen_name": "reactjs",
+            "location": "",
+            "description": "React is a declarative, efficient, and flexible JavaScript library for building user interfaces.",
+            "url": "http://t.co/EF5xem8t5W",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "url": "http://t.co/EF5xem8t5W",
+                            "expanded_url": "http://facebook.github.io/react/",
+                            "display_url": "facebook.github.io/react/",
+                            "indices": [
+                                0,
+                                22
+                            ]
+                        }
+                    ]
+                },
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 239201,
+            "friends_count": 263,
+            "listed_count": 3500,
+            "created_at": "Wed Jul 03 18:58:09 +0000 2013",
+            "favourites_count": 2613,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": true,
+            "verified": false,
+            "statuses_count": 2001,
+            "lang": "en",
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": false,
+            "profile_background_color": "C0DEED",
+            "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_tile": false,
+            "profile_image_url": "http://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1566463268/1470764371",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "has_extended_profile": false,
+            "default_profile": true,
+            "default_profile_image": false,
+            "following": true,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "none"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "retweeted_status": {
+            "created_at": "Wed Jun 27 15:32:31 +0000 2018",
+            "id": 1011995700748521477,
+            "id_str": "1011995700748521477",
+            "text": "Did you know: you can use React as a &lt;script&gt; tag without npm! 🤔 Here’s a handy guide: https://t.co/gJwqp3ADJf https://t.co/emaHVR6B7A",
+            "truncated": false,
+            "entities": {
+                "hashtags": [],
+                "symbols": [],
+                "user_mentions": [],
+                "urls": [
+                    {
+                        "url": "https://t.co/gJwqp3ADJf",
+                        "expanded_url": "https://reactjs.org/docs/add-react-to-a-website.html",
+                        "display_url": "reactjs.org/docs/add-react…",
+                        "indices": [
+                            93,
+                            116
+                        ]
+                    }
+                ],
+                "media": [
+                    {
+                        "id": 1011995695748931584,
+                        "id_str": "1011995695748931584",
+                        "indices": [
+                            117,
+                            140
+                        ],
+                        "media_url": "http://pbs.twimg.com/media/DgtUuTdW4AAd0as.jpg",
+                        "media_url_https": "https://pbs.twimg.com/media/DgtUuTdW4AAd0as.jpg",
+                        "url": "https://t.co/emaHVR6B7A",
+                        "display_url": "pic.twitter.com/emaHVR6B7A",
+                        "expanded_url": "https://twitter.com/dan_abramov/status/1011995700748521477/photo/1",
+                        "type": "photo",
+                        "sizes": {
+                            "thumb": {
+                                "w": 150,
+                                "h": 150,
+                                "resize": "crop"
+                            },
+                            "small": {
+                                "w": 680,
+                                "h": 325,
+                                "resize": "fit"
+                            },
+                            "large": {
+                                "w": 1894,
+                                "h": 904,
+                                "resize": "fit"
+                            },
+                            "medium": {
+                                "w": 1200,
+                                "h": 573,
+                                "resize": "fit"
+                            }
+                        }
+                    }
+                ]
+            },
+            "extended_entities": {
+                "media": [
+                    {
+                        "id": 1011995695748931584,
+                        "id_str": "1011995695748931584",
+                        "indices": [
+                            117,
+                            140
+                        ],
+                        "media_url": "http://pbs.twimg.com/media/DgtUuTdW4AAd0as.jpg",
+                        "media_url_https": "https://pbs.twimg.com/media/DgtUuTdW4AAd0as.jpg",
+                        "url": "https://t.co/emaHVR6B7A",
+                        "display_url": "pic.twitter.com/emaHVR6B7A",
+                        "expanded_url": "https://twitter.com/dan_abramov/status/1011995700748521477/photo/1",
+                        "type": "photo",
+                        "sizes": {
+                            "thumb": {
+                                "w": 150,
+                                "h": 150,
+                                "resize": "crop"
+                            },
+                            "small": {
+                                "w": 680,
+                                "h": 325,
+                                "resize": "fit"
+                            },
+                            "large": {
+                                "w": 1894,
+                                "h": 904,
+                                "resize": "fit"
+                            },
+                            "medium": {
+                                "w": 1200,
+                                "h": 573,
+                                "resize": "fit"
+                            }
+                        }
+                    }
+                ]
+            },
+            "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Lite</a>",
+            "in_reply_to_status_id": null,
+            "in_reply_to_status_id_str": null,
+            "in_reply_to_user_id": null,
+            "in_reply_to_user_id_str": null,
+            "in_reply_to_screen_name": null,
+            "user": {
+                "id": 70345946,
+                "id_str": "70345946",
+                "name": "Dan Abramov",
+                "screen_name": "dan_abramov",
+                "location": "London, England",
+                "description": "Working on @reactjs. Co-author of Redux and Create React App. Building tools for humans.",
+                "url": null,
+                "entities": {
+                    "description": {
+                        "urls": []
+                    }
+                },
+                "protected": false,
+                "followers_count": 127567,
+                "friends_count": 819,
+                "listed_count": 2699,
+                "created_at": "Mon Aug 31 08:28:07 +0000 2009",
+                "favourites_count": 47722,
+                "utc_offset": null,
+                "time_zone": null,
+                "geo_enabled": false,
+                "verified": false,
+                "statuses_count": 50457,
+                "lang": "en",
+                "contributors_enabled": false,
+                "is_translator": false,
+                "is_translation_enabled": false,
+                "profile_background_color": "000000",
+                "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+                "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+                "profile_background_tile": false,
+                "profile_image_url": "http://pbs.twimg.com/profile_images/906557353549598720/oapgW_Fp_normal.jpg",
+                "profile_image_url_https": "https://pbs.twimg.com/profile_images/906557353549598720/oapgW_Fp_normal.jpg",
+                "profile_link_color": "FFB738",
+                "profile_sidebar_border_color": "000000",
+                "profile_sidebar_fill_color": "000000",
+                "profile_text_color": "000000",
+                "profile_use_background_image": false,
+                "has_extended_profile": false,
+                "default_profile": false,
+                "default_profile_image": false,
+                "following": true,
+                "follow_request_sent": false,
+                "notifications": false,
+                "translator_type": "none"
+            },
+            "geo": null,
+            "coordinates": null,
+            "place": null,
+            "contributors": null,
+            "is_quote_status": false,
+            "retweet_count": 397,
+            "favorite_count": 1176,
+            "favorited": false,
+            "retweeted": false,
+            "possibly_sensitive": false,
+            "lang": "en"
+        },
+        "is_quote_status": false,
+        "retweet_count": 397,
+        "favorite_count": 0,
+        "favorited": false,
+        "retweeted": false,
+        "possibly_sensitive": false,
+        "lang": "en"
+    },
+    {
+        "created_at": "Thu Jun 07 21:41:23 +0000 2018",
+        "id": 1004840772347277312,
+        "id_str": "1004840772347277312",
+        "text": "You Probably Don't Need Derived State\n\nhttps://t.co/HHkAXV0Vda",
+        "truncated": false,
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "user_mentions": [],
+            "urls": [
+                {
+                    "url": "https://t.co/HHkAXV0Vda",
+                    "expanded_url": "https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html",
+                    "display_url": "reactjs.org/blog/2018/06/0…",
+                    "indices": [
+                        39,
+                        62
+                    ]
+                }
+            ]
+        },
+        "source": "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 1566463268,
+            "id_str": "1566463268",
+            "name": "React",
+            "screen_name": "reactjs",
+            "location": "",
+            "description": "React is a declarative, efficient, and flexible JavaScript library for building user interfaces.",
+            "url": "http://t.co/EF5xem8t5W",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "url": "http://t.co/EF5xem8t5W",
+                            "expanded_url": "http://facebook.github.io/react/",
+                            "display_url": "facebook.github.io/react/",
+                            "indices": [
+                                0,
+                                22
+                            ]
+                        }
+                    ]
+                },
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 239201,
+            "friends_count": 263,
+            "listed_count": 3500,
+            "created_at": "Wed Jul 03 18:58:09 +0000 2013",
+            "favourites_count": 2613,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": true,
+            "verified": false,
+            "statuses_count": 2001,
+            "lang": "en",
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": false,
+            "profile_background_color": "C0DEED",
+            "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_tile": false,
+            "profile_image_url": "http://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1566463268/1470764371",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "has_extended_profile": false,
+            "default_profile": true,
+            "default_profile_image": false,
+            "following": true,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "none"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "is_quote_status": false,
+        "retweet_count": 297,
+        "favorite_count": 821,
+        "favorited": false,
+        "retweeted": false,
+        "possibly_sensitive": false,
+        "lang": "en"
+    },
+    {
+        "created_at": "Tue May 29 17:50:50 +0000 2018",
+        "id": 1001521260482904064,
+        "id_str": "1001521260482904064",
+        "text": "It's my birthday! 🎊\n\nToday marks 5 years since React was open sourced. 🎂 Feeling grateful to have had a chance to h… https://t.co/uIEEhcTolM",
+        "truncated": true,
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "user_mentions": [],
+            "urls": [
+                {
+                    "url": "https://t.co/uIEEhcTolM",
+                    "expanded_url": "https://twitter.com/i/web/status/1001521260482904064",
+                    "display_url": "twitter.com/i/web/status/1…",
+                    "indices": [
+                        117,
+                        140
+                    ]
+                }
+            ]
+        },
+        "source": "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 1566463268,
+            "id_str": "1566463268",
+            "name": "React",
+            "screen_name": "reactjs",
+            "location": "",
+            "description": "React is a declarative, efficient, and flexible JavaScript library for building user interfaces.",
+            "url": "http://t.co/EF5xem8t5W",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "url": "http://t.co/EF5xem8t5W",
+                            "expanded_url": "http://facebook.github.io/react/",
+                            "display_url": "facebook.github.io/react/",
+                            "indices": [
+                                0,
+                                22
+                            ]
+                        }
+                    ]
+                },
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 239201,
+            "friends_count": 263,
+            "listed_count": 3500,
+            "created_at": "Wed Jul 03 18:58:09 +0000 2013",
+            "favourites_count": 2613,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": true,
+            "verified": false,
+            "statuses_count": 2001,
+            "lang": "en",
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": false,
+            "profile_background_color": "C0DEED",
+            "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_tile": false,
+            "profile_image_url": "http://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1566463268/1470764371",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "has_extended_profile": false,
+            "default_profile": true,
+            "default_profile_image": false,
+            "following": true,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "none"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "is_quote_status": false,
+        "retweet_count": 2822,
+        "favorite_count": 9652,
+        "favorited": true,
+        "retweeted": true,
+        "lang": "en"
+    },
+    {
+        "created_at": "Thu May 24 01:14:18 +0000 2018",
+        "id": 999458533518131200,
+        "id_str": "999458533518131200",
+        "text": "React 16.4 is out, with support for an oft-requested new feature: pointer events!\n\nHuge thanks to @PhilippSpiess fo… https://t.co/8EXNNW4Ht3",
+        "truncated": true,
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "user_mentions": [
+                {
+                    "screen_name": "PhilippSpiess",
+                    "name": "Philipp",
+                    "id": 24545598,
+                    "id_str": "24545598",
+                    "indices": [
+                        98,
+                        112
+                    ]
+                }
+            ],
+            "urls": [
+                {
+                    "url": "https://t.co/8EXNNW4Ht3",
+                    "expanded_url": "https://twitter.com/i/web/status/999458533518131200",
+                    "display_url": "twitter.com/i/web/status/9…",
+                    "indices": [
+                        117,
+                        140
+                    ]
+                }
+            ]
+        },
+        "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 1566463268,
+            "id_str": "1566463268",
+            "name": "React",
+            "screen_name": "reactjs",
+            "location": "",
+            "description": "React is a declarative, efficient, and flexible JavaScript library for building user interfaces.",
+            "url": "http://t.co/EF5xem8t5W",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "url": "http://t.co/EF5xem8t5W",
+                            "expanded_url": "http://facebook.github.io/react/",
+                            "display_url": "facebook.github.io/react/",
+                            "indices": [
+                                0,
+                                22
+                            ]
+                        }
+                    ]
+                },
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 239201,
+            "friends_count": 263,
+            "listed_count": 3500,
+            "created_at": "Wed Jul 03 18:58:09 +0000 2013",
+            "favourites_count": 2613,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": true,
+            "verified": false,
+            "statuses_count": 2001,
+            "lang": "en",
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": false,
+            "profile_background_color": "C0DEED",
+            "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_tile": false,
+            "profile_image_url": "http://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1566463268/1470764371",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "has_extended_profile": false,
+            "default_profile": true,
+            "default_profile_image": false,
+            "following": true,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "none"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "is_quote_status": false,
+        "retweet_count": 742,
+        "favorite_count": 1432,
+        "favorited": false,
+        "retweeted": false,
+        "possibly_sensitive": false,
+        "lang": "en"
+    },
+    {
+        "created_at": "Tue May 15 00:27:26 +0000 2018",
+        "id": 996185249754185728,
+        "id_str": "996185249754185728",
+        "text": "RT @sophiebits: 👀 Looks like the React Devtools extension on the Chrome webstore now has over 1,000,000 users. That's over a million develo…",
+        "truncated": false,
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "user_mentions": [
+                {
+                    "screen_name": "sophiebits",
+                    "name": "Sophie Alpert",
+                    "id": 5697222,
+                    "id_str": "5697222",
+                    "indices": [
+                        3,
+                        14
+                    ]
+                }
+            ],
+            "urls": []
+        },
+        "source": "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 1566463268,
+            "id_str": "1566463268",
+            "name": "React",
+            "screen_name": "reactjs",
+            "location": "",
+            "description": "React is a declarative, efficient, and flexible JavaScript library for building user interfaces.",
+            "url": "http://t.co/EF5xem8t5W",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "url": "http://t.co/EF5xem8t5W",
+                            "expanded_url": "http://facebook.github.io/react/",
+                            "display_url": "facebook.github.io/react/",
+                            "indices": [
+                                0,
+                                22
+                            ]
+                        }
+                    ]
+                },
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 239201,
+            "friends_count": 263,
+            "listed_count": 3500,
+            "created_at": "Wed Jul 03 18:58:09 +0000 2013",
+            "favourites_count": 2613,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": true,
+            "verified": false,
+            "statuses_count": 2001,
+            "lang": "en",
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": false,
+            "profile_background_color": "C0DEED",
+            "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_tile": false,
+            "profile_image_url": "http://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_normal.png",
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1566463268/1470764371",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "has_extended_profile": false,
+            "default_profile": true,
+            "default_profile_image": false,
+            "following": true,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "none"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "retweeted_status": {
+            "created_at": "Tue May 15 00:18:09 +0000 2018",
+            "id": 996182915057774592,
+            "id_str": "996182915057774592",
+            "text": "👀 Looks like the React Devtools extension on the Chrome webstore now has over 1,000,000 users. That's over a millio… https://t.co/WmS5uqZKkE",
+            "truncated": true,
+            "entities": {
+                "hashtags": [],
+                "symbols": [],
+                "user_mentions": [],
+                "urls": [
+                    {
+                        "url": "https://t.co/WmS5uqZKkE",
+                        "expanded_url": "https://twitter.com/i/web/status/996182915057774592",
+                        "display_url": "twitter.com/i/web/status/9…",
+                        "indices": [
+                            117,
+                            140
+                        ]
+                    }
+                ]
+            },
+            "source": "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
+            "in_reply_to_status_id": null,
+            "in_reply_to_status_id_str": null,
+            "in_reply_to_user_id": null,
+            "in_reply_to_user_id_str": null,
+            "in_reply_to_screen_name": null,
+            "user": {
+                "id": 5697222,
+                "id_str": "5697222",
+                "name": "Sophie Alpert",
+                "screen_name": "sophiebits",
+                "location": "California, USA",
+                "description": "🍓🍊🍋🍏🐋🍇 I like fixing things. eng manager of @reactjs at FB. occasional writer. 💎🌸 she/her. empathy, intersectional feminism, kindness.",
+                "url": "https://t.co/qobzMr2EtJ",
+                "entities": {
+                    "url": {
+                        "urls": [
+                            {
+                                "url": "https://t.co/qobzMr2EtJ",
+                                "expanded_url": "https://sophiebits.com/",
+                                "display_url": "sophiebits.com",
+                                "indices": [
+                                    0,
+                                    23
+                                ]
+                            }
+                        ]
+                    },
+                    "description": {
+                        "urls": []
+                    }
+                },
+                "protected": false,
+                "followers_count": 27349,
+                "friends_count": 674,
+                "listed_count": 604,
+                "created_at": "Tue May 01 23:04:08 +0000 2007",
+                "favourites_count": 14252,
+                "utc_offset": null,
+                "time_zone": null,
+                "geo_enabled": true,
+                "verified": false,
+                "statuses_count": 5158,
+                "lang": "en",
+                "contributors_enabled": false,
+                "is_translator": false,
+                "is_translation_enabled": false,
+                "profile_background_color": "000000",
+                "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+                "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+                "profile_background_tile": false,
+                "profile_image_url": "http://pbs.twimg.com/profile_images/901699146993737729/mi3uhA15_normal.jpg",
+                "profile_image_url_https": "https://pbs.twimg.com/profile_images/901699146993737729/mi3uhA15_normal.jpg",
+                "profile_banner_url": "https://pbs.twimg.com/profile_banners/5697222/1458792300",
+                "profile_link_color": "0099CC",
+                "profile_sidebar_border_color": "000000",
+                "profile_sidebar_fill_color": "FFFFFF",
+                "profile_text_color": "000000",
+                "profile_use_background_image": false,
+                "has_extended_profile": true,
+                "default_profile": false,
+                "default_profile_image": false,
+                "following": false,
+                "follow_request_sent": false,
+                "notifications": false,
+                "translator_type": "regular"
+            },
+            "geo": null,
+            "coordinates": null,
+            "place": null,
+            "contributors": null,
+            "is_quote_status": false,
+            "retweet_count": 174,
+            "favorite_count": 1022,
+            "favorited": false,
+            "retweeted": false,
+            "lang": "en"
+        },
+        "is_quote_status": false,
+        "retweet_count": 174,
+        "favorite_count": 0,
+        "favorited": false,
+        "retweeted": false,
+        "lang": "en"
+    }
+]
