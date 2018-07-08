@@ -1,3 +1,4 @@
+import { debounce } from 'lodash'
 import React from 'react'
 
 /*
@@ -10,7 +11,11 @@ export default class TextAreaActivator extends React.Component {
   }
 
   onMouseOver = () => this.setState({ over: true })
-  onMouseLeave = () => this.setState({ over: false })
+  onMouseLeave = debounce(() => {
+    if (this.state.over) {
+      this.setState({ over: false })
+    }
+  }, 100)
   onLock = () => this.setState({ lock: true })
   onUnlock = () => this.setState({ lock: false })
 
