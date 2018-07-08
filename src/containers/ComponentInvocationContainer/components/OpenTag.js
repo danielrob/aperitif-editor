@@ -37,7 +37,7 @@ const OpenTag = ({
 
   return (
     <React.Fragment>
-      {indent(depth)}{'<'}<NameInput pointer nameId={nameId} />
+      {indent(depth)}{'<'}<NameInput nameId={nameId} />
       {/* key= special case */}
       {keyParam && (
         <span>

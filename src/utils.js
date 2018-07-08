@@ -18,5 +18,9 @@ export const lastItem = arr => arr[arr.length - 1]
 export const pD = fn => (e, ...args) => { e.preventDefault(); fn(...args) }
 export const pDsP = fn => (e, ...args) => { e.preventDefault(); e.stopPropagation(); fn(...args) }
 export const isUrl = s => C.string(s) && s.startsWith('http')
+export const isImageUrl = s => isUrl(s) && s.match(/(.jpg|.jpeg|.png|.gif)$/)
+export const isNonImageUrl = s => isUrl(s) && !isImageUrl(s)
+export const not = fn => (...args) => !fn(...args)
+export const all = (...fns) => (...args) => fns.reduce((f, g) => f && g(...args), true)
 
 export { default as camelCase } from 'camelcase'

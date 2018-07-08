@@ -6,7 +6,7 @@ import styled from 'styled-as-components'
 import { singular } from 'pluralize'
 
 import theme from 'theme-proxy'
-import { camelCase, pascalCase, indent, oneOf, isUrl } from 'utils'
+import { camelCase, pascalCase, indent, oneOf, isUrl, isNonImageUrl, isImageUrl, not, all } from 'utils'
 import { Name } from 'containers'
 import { PROP, PARAM_INVOCATION, DIR, FILE, COMPONENT_INVOCATION } from 'constantz'
 import {
@@ -41,7 +41,7 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
                 {
                 //  <styled.span>{item}</styled.span>
                 }
-                {oneOf(C.string, C.number, C.null)(payload) && !isUrl(payload) && (
+                {all(oneOf(C.string, C.number, C.null), not(isUrl))(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyled">
                     {'<styled.span>'}{'{'}{name}{'}'}{'</styled.span>'}
                   </PropDropzoneContainer>
@@ -49,9 +49,17 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
                 {
                 //  <styled.a href={item} />
                 }
-                {C.string(payload) && isUrl(payload) && (
+                {all(C.string, isNonImageUrl)(payload) && (
                   <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyledUrl">
                     {`<styled.a href={${name}} />`}
+                  </PropDropzoneContainer>
+                )}
+                {
+                //  <styled.img src={item} />
+                }
+                {isImageUrl(payload) && (
+                  <PropDropzoneContainer {...dropZoneProps} dropActionKey="newStyledImg">
+                    {`<styled.img src={${name}} />`}
                   </PropDropzoneContainer>
                 )}
                 {

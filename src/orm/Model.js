@@ -1,4 +1,3 @@
-import C from 'check-types'
 import invariant from 'invariant'
 
 export const required = 'required'

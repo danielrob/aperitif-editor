@@ -15,6 +15,7 @@ import {
   addNewComponentToInvocationWithChildren,
   addNewStyledComponentToInvocation,
   addNewStyledUrlToInvocation,
+  addStyledImgToInvocation,
   moveInvocation,
 } from 'duck'
 
@@ -39,6 +40,7 @@ const dropActionMap = {
   newWithChild: 'addNewComponentToInvocationWithChildren',
   newStyled: 'addNewStyledComponentToInvocation',
   newStyledUrl: 'addNewStyledUrlToInvocation',
+  newStyledImg: 'addStyledImgToInvocation',
 }
 
 PropDropzoneContainer.propTypes = forbidExtraProps({
@@ -79,6 +81,7 @@ const mapDispatchToProps = {
   addNewComponentToInvocationWithChildren,
   addNewStyledComponentToInvocation,
   addNewStyledUrlToInvocation,
+  addStyledImgToInvocation,
   moveInvocation,
 }
 

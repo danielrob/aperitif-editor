@@ -457,6 +457,7 @@ export default function appReducer(state, action) {
         meta: {
           tag,
           paramName,
+          skipChild,
         } = {},
       } = action
       DeclParam.withId(paramId).incrementUsage()
@@ -478,7 +479,7 @@ export default function appReducer(state, action) {
         Invocation.create({
           nameId: newNameId,
           callParamIds,
-          invocationIds: [
+          invocationIds: skipChild ? [] : [
             Invocation.create({
               nameId,
               type: PARAM_INVOCATION,
@@ -859,6 +860,16 @@ export const addNewStyledUrlToInvocation = createAction(
   () => ({
     tag: 'a',
     paramName: 'href',
+  })
+)
+
+export const addStyledImgToInvocation = createAction(
+  ADD_NEW_STYLED_COMPONENT_TO_INVOCATION,
+  null,
+  () => ({
+    tag: 'img',
+    paramName: 'src',
+    skipChild: true,
   })
 )
 
