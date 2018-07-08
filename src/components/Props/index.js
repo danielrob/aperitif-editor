@@ -52,7 +52,9 @@ const Props = ({ props: allProps, declarationId, depth, parentheses }) => {
 }
 
 
-/* propTypes */
+/*
+  propTypes
+*/
 Props.propTypes = forbidExtraProps({
   props: T.arrayOf(T.shape(declParamPropTypes)).isRequired,
   declarationId: T.number.isRequired,

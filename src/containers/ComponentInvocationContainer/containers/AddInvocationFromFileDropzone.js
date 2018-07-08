@@ -40,12 +40,16 @@ AddInvocationFromFileDropzone.propTypes = forbidExtraProps({
 })
 
 
-/* connect */
+/*
+  connect
+*/
 const mapDispatchToProps = {
   addInvocationFromFileToCI,
 }
 
-/* dnd */
+/*
+  dnd
+*/
 const dropzoneTarget = {
   drop(props, monitor) {
     const { addInvocationFromFileToCI, targetInvocationId, targetPosition } = props
@@ -60,7 +64,9 @@ const collect = (connect, monitor) => ({
   isOver: monitor.isOver(),
 })
 
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   connect(null, mapDispatchToProps),
   DropTarget([FILE, DIR], dropzoneTarget, collect)

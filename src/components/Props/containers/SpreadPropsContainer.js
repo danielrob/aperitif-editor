@@ -34,15 +34,18 @@ SpreadPropsContainer.propTypes = {
   declarationId: T.number.isRequired,
 }
 
-/* connect */
+/*
+  connect
+*/
 const mapDispatchToProps = { moveParamToSpread }
 
 const mapStateToProps = createStructuredSelector({
   names: selectNames,
 })
 
-/* dnd */
-// source
+/*
+  dnd - source
+*/
 const sourceSpec = {
   beginDrag(props) {
     return props
@@ -54,7 +57,9 @@ const sourceCollect = (connect, monitor) => ({
   isDragging: monitor.isDragging(),
 })
 
-// target
+/*
+  dnd - target
+*/
 const dropzoneTarget = {
   drop(props, monitor) {
     const { declarationId, moveParamToSpread } = props
@@ -72,7 +77,9 @@ const targetCollect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   DragSource(DraggableTypes.PROPS_SPREAD, sourceSpec, sourceCollect),

@@ -91,7 +91,10 @@ ComponentInvocationContainer.defaultProps = {
   parentIsInline: false,
 }
 
-/* connect */
+
+/*
+  connect
+*/
 const makeMapStateToProps = () => {
   const getInvocation = makeSelectInvocation()
   return (state, props) => ({
@@ -101,8 +104,10 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = { }
 
-/* dnd */
-// source
+
+/*
+  dnd - source
+*/
 const propSource = {
   beginDrag(props) {
     const { invocationId, ciDimensions, depth, parentId } = props
@@ -125,7 +130,10 @@ const sourceCollect = (connect, monitor) => ({
   isDragging: monitor.isDragging(),
 })
 
-// target
+
+/*
+  dnd - target
+*/
 const dropzoneTarget = {}
 
 const targetCollect = (connect, monitor) => ({
@@ -139,7 +147,10 @@ const targetTwoCollect = (connect, monitor) => ({
   isOverCIT2: getIsValidOver(monitor),
 })
 
-/* compose export */
+
+/*
+  compose export
+*/
 export default compose(
   connect(makeMapStateToProps, mapDispatchToProps),
   getCIDimensionsInjector,

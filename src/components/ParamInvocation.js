@@ -45,7 +45,9 @@ const ParamInvocation = ({
 )
 
 
-/* propTypes */
+/* 
+  propTypes
+*/
 ParamInvocation.propTypes = forbidExtraProps({
   // passed by parent
   parentId: T.number.isRequired,

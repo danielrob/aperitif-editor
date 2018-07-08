@@ -43,10 +43,14 @@ ReorderDropzoneContainer.propTypes = {
 }
 
 
-/* connect */
+/*
+  connect
+*/
 const mapDispatchToProps = { moveInvocation }
 
-/* dnd */
+/*
+  dnd
+*/
 const dropzoneTarget = {
   drop(props) {
     const {
@@ -69,7 +73,9 @@ const collect = connect => ({
   connectDropTarget: connect.dropTarget(),
 })
 
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   connect(null, mapDispatchToProps),
   DropTarget(COMPONENT_INVOCATION, dropzoneTarget, collect)

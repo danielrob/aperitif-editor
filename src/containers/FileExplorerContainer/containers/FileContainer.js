@@ -42,7 +42,9 @@ class FileContainer extends React.PureComponent {
 }
 
 
-/* propTypes */
+/*
+  propTypes
+*/
 FileContainer.propTypes = forbidExtraProps({
   // passed by parent / file explorer
   fileId: T.number.isRequired,

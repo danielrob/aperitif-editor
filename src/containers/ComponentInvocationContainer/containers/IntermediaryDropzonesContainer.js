@@ -35,7 +35,9 @@ IntermediaryDropzonesContainer.defaultProps = {
   dragItem: null,
 }
 
-/* dnd */
+/*
+  dnd
+*/
 // target
 const dropzoneTarget = {}
 
@@ -45,7 +47,9 @@ const targetCollect = (connect, monitor) => ({
   dragItem: monitor.getItem(),
 })
 
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   DropTarget(acceptedDropTypes, dropzoneTarget, targetCollect)
 )(IntermediaryDropzonesContainer)

@@ -13,8 +13,9 @@ class DraggableDeclaration extends React.PureComponent {
   }
 }
 
-/* dnd */
-// source
+/*
+  dnd - source
+*/
 const sourceSpec = {
   beginDrag(props) {
     const { declarationId } = props
@@ -30,7 +31,9 @@ const sourceCollect = (connect) => ({
 })
 
 
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   DragSource(({ type }) => type, sourceSpec, sourceCollect),
 )(DraggableDeclaration)

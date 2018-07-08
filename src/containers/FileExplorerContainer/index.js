@@ -63,7 +63,9 @@ const targetCollect = (connect) => ({
   connectDropTarget: connect.dropTarget(),
 })
 
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   DropTarget([FILE, DIR], dropzoneTarget, targetCollect)

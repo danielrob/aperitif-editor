@@ -39,7 +39,9 @@ const CallParam = ({
     </span>
   )
 
-/* propTypes */
+/*
+  propTypes
+*/
 CallParam.propTypes = forbidExtraProps({
   invocationId: T.number.isRequired,
   spreadPropsIsOverTag: T.bool.isRequired,

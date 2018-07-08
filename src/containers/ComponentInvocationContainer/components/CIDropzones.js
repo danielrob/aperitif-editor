@@ -122,7 +122,9 @@ const CIDropzones = ({ invocationId, position, dragItem, depth, shouldDisplay })
 }
 
 
-/* propTypes */
+/*
+  propTypes
+*/
 CIDropzones.propTypes = {
   invocationId: T.number.isRequired,
   shouldDisplay: T.bool.isRequired,
@@ -136,7 +138,9 @@ CIDropzones.defaultProps = {
 }
 
 
-/* Zones */
+/*
+  Zones
+*/
 const Zones = styled.div`
   display: flex;
   flex-direction: column;
@@ -144,7 +148,9 @@ const Zones = styled.div`
 `
 
 
-/* style, export */
+/*
+  style, export
+*/
 export default styled(CIDropzones).as.div`
   display: ${props => props.shouldDisplay ? 'flex' : 'none'};
   line-height: 1.4;

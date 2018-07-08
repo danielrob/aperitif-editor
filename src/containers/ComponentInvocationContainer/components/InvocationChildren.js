@@ -40,7 +40,9 @@ const InvocationChildren = ({
     []
   )
 
-/* propTypes */
+/*
+  propTypes
+*/
 InvocationChildren.propTypes = {
   invocation: invocationPropTypes.isRequired,
   depth: T.number.isRequired,

@@ -68,7 +68,9 @@ PropDropzoneContainer.defaultProps = {
 }
 
 
-/* connect */
+/*
+  connect
+*/
 const mapDispatchToProps = {
   addParamAsComponentInvocationChild,
   addNewComponentToInvocationWithMap,
@@ -80,7 +82,9 @@ const mapDispatchToProps = {
   moveInvocation,
 }
 
-/* dnd */
+/*
+  dnd - target
+*/
 const dropzoneTarget = {
   drop(props, monitor) {
     switch (monitor.getItemType()) {
@@ -122,7 +126,9 @@ const collect = (connect, monitor) => ({
   isOver: monitor.isOver(),
 })
 
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   connect(null, mapDispatchToProps),
   DropTarget([PROP, PARAM_INVOCATION], dropzoneTarget, collect)

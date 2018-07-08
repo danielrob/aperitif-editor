@@ -49,7 +49,9 @@ it('TModel', () => {
   expect(session.state).toEqual({ tmodels: {}, hi: 'hi' })
 })
 
-/* TestModel */
+/*
+  TestModel
+*/
 class TestModel extends Model {}
 
 TestModel.modelName = 'TModel'

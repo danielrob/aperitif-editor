@@ -26,7 +26,9 @@ const ParamInvocationContainer = ({
   />
 )
 
-/* propTypes */
+/*
+  propTypes
+*/
 ParamInvocationContainer.propTypes = forbidExtraProps({
   // passed by parent
   invocationId: T.number.isRequired,
@@ -43,7 +45,9 @@ ParamInvocationContainer.propTypes = forbidExtraProps({
 })
 
 
-/* connect */
+/*
+  connect
+*/
 const makeMapStateToProps = () => {
   const getInvocation = makeSelectParamInvocation()
   return (state, props) => ({
@@ -51,7 +55,9 @@ const makeMapStateToProps = () => {
   })
 }
 
-/* dnd */
+/*
+  dnd
+*/
 const propSource = {
   beginDrag(props) {
     const {
@@ -76,7 +82,9 @@ const collect = (connect, monitor) => ({
   isPIDragging: monitor.isDragging(),
 })
 
-/* compose export */
+/*
+  compose export
+*/
 export default compose(
   connect(makeMapStateToProps, {}),
   DragSource(PARAM_INVOCATION, propSource, collect)

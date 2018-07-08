@@ -38,7 +38,9 @@ const mapDispatchToProps = {
   redo,
 }
 
-/* compose export */
+/*
+  compose export
+*/
 export default connect(
   null,
   mapDispatchToProps

@@ -10,7 +10,9 @@ import { Prop } from '../components'
 
 const PropContainer = props => <Prop {...props} />
 
-/* propTypes */
+/*
+  propTypes
+*/
 PropContainer.propTypes = forbidExtraProps({
   declarationId: T.number.isRequired,
   prop: T.shape(declParamPropTypes).isRequired,
@@ -18,7 +20,9 @@ PropContainer.propTypes = forbidExtraProps({
   connectDragSource: T.func.isRequired,
 })
 
-/* dnd */
+/*
+  dnd
+*/
 const propSource = {
   beginDrag({ prop: { id, nameId, name, payload, invokeCount, altIds }, declarationId }) {
     ReactTooltip.hide() // disable tooltips
@@ -42,5 +46,7 @@ const collect = connect => ({
   connectDragSource: connect.dragSource(),
 })
 
-/* compose export */
+/*
+  compose export
+*/
 export default DragSource(PROP, propSource, collect)(PropContainer)

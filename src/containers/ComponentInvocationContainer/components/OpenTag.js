@@ -99,7 +99,9 @@ const OpenTag = ({
   )
 }
 
-/* propTypes */
+/*
+  propTypes
+*/
 OpenTag.propTypes = forbidExtraProps({
   invocation: invocationPropTypes.isRequired,
   depth: T.number.isRequired,
@@ -115,7 +117,9 @@ const NewAttributePreview = styled.span`
   transition: 250ms;
 `
 
-/* style, export */
+/*
+  style, export
+*/
 export default styled(OpenTag).as.div`
   ${props => props.invocation.inline && 'display: inline-block;'}
 `

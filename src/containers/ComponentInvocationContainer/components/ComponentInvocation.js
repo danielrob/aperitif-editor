@@ -67,7 +67,9 @@ const ComponentInvocation = ({
   </React.Fragment>
 )
 
-/* propTypes */
+/*
+  propTypes
+*/
 ComponentInvocation.propTypes = forbidExtraProps({
   // parent
   depth: T.number.isRequired,
@@ -93,7 +95,9 @@ ComponentInvocation.defaultProps = {
   type: null,
 }
 
-/* style, export */
+/*
+  style, export
+*/
 export default styled(ComponentInvocation).as.span`
   color: ${theme.colors.darkgreen};
   padding-left: 0;
