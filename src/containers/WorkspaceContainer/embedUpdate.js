@@ -9,6 +9,8 @@ export default function embedStackBlitz(fileTree, { vm }) {
   vm.applyFsDiff({
     create: files,
     destroy: Object.keys(previousFileTree || {}),
+  }).then(() => {
+    vm.editor.openFile('note.md')
   })
 
   previousFileTree = files
