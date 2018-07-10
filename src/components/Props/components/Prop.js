@@ -6,9 +6,11 @@ import { declParamPropTypes } from 'model-prop-types'
 
 import { spaces } from 'utils'
 import { Name } from 'containers'
+import { EyeSlashIcon } from 'components'
 
 const Prop = ({ prop: { nameId, payload }, skipFinalComma, connectDragSource }) => (
   <React.Fragment>
+    <EyeSlashIcon className="hide" />
     {connectDragSource(
       <span
         style={{
@@ -33,5 +35,20 @@ Prop.propTypes = {
 }
 
 export default styled(Prop).as.span`
+  position: relative;
   cursor: pointer;
+  .hide {
+    position: absolute;
+    top: 5px;
+    left: -35px;
+    color: #010431cc;
+    opacity: 0.01;
+    padding: 5px 8px;
+    margin: -5px 8px;
+    box-sizing: content-box;
+    &:hover {
+      opacity: 1;
+    }
+    transition: 0.2s ease-in;
+  }
 `
