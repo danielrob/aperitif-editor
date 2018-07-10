@@ -1,4 +1,3 @@
-import C from 'check-types'
 import { PROJECT_INDEX, INDEX_NAME_ID, exportTypes } from 'constantz'
 import orm from 'orm'
 import addNewContainer from './addNewContainer'

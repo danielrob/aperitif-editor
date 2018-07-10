@@ -9,7 +9,7 @@ const IssueOnGithub = () => (
     aria-label="Star danielrob/aperitif-editor on GitHub"
     data-size="large"
   >
-    Ideas/bugs 🙏
+    Ideas/bugs <span role="img" aria-label="thank you">🙏</span>
   </a>
 )
 
