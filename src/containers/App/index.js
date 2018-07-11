@@ -10,7 +10,7 @@ export default class App extends Component {
     return (
       <AppWrapper>
         <Helmet titleTemplate="%s - Aperitif" defaultTitle="Aperitif">
-          <meta name="description" content="Aperitif - A React Editor" />
+          <meta name="description" content="🍸🍹 An editor for starting React apps and features based on API data" />
         </Helmet>
         <Switch>
           <Route exact path="/" component={WorkspaceContainer} />
