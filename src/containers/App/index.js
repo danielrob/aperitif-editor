@@ -3,18 +3,17 @@ import { Helmet } from 'react-helmet'
 import { Switch, Route } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { WelcomePage, NotFoundPage, WorkspaceContainer } from 'containers'
+import { NotFoundPage, WorkspaceContainer } from 'containers'
 
 export default class App extends Component {
   render() {
     return (
       <AppWrapper>
         <Helmet titleTemplate="%s - Aperitif" defaultTitle="Aperitif">
-          <meta name="description" content="React Aperitif Editor" />
+          <meta name="description" content="Aperitif - A React Editor" />
         </Helmet>
         <Switch>
-          <Route exact path="/" component={WelcomePage} />
-          <Route path="/editor" component={WorkspaceContainer} />
+          <Route exact path="/" component={WorkspaceContainer} />
           <Route path="" component={NotFoundPage} />
         </Switch>
       </AppWrapper>

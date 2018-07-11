@@ -1,6 +1,6 @@
 import C from 'check-types'
 import classNames from 'classnames'
-import camelCase from 'camelcase'
+import camelCase from './camelcase'
 
 export const addClassNames = (...args) => ({ className: classNames(...args) })
 export const capitalize = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : undefined
@@ -23,4 +23,4 @@ export const isNonImageUrl = s => isUrl(s) && !isImageUrl(s)
 export const not = fn => (...args) => !fn(...args)
 export const all = (...fns) => (...args) => fns.reduce((f, g) => f && g(...args), true)
 
-export { default as camelCase } from 'camelcase'
+export { default as camelCase } from './camelcase'

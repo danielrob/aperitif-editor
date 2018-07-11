@@ -2,13 +2,13 @@ import React from 'react'
 
 import GithubButton from './GithubButton'
 
-const IssueOnGithub = () => (
+const IssueOnGithub = ({ hide }) => !hide && (
   <GithubButton left="58%">
     <a href="https://github.com/danielrob/aperitif">
       <IssueOpenIcon />
-      Ideas/bugs{' '}
-      <span role="img" aria-label="thank you">
-        🙏
+      Get involved{' '}
+      <span role="img" aria-label="let's do this">
+        🚀
       </span>
     </a>
   </GithubButton>

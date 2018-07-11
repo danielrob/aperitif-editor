@@ -5,9 +5,9 @@ import styled from 'styled-as-components'
 
 
 import theme from 'theme-proxy'
+import { Logo } from 'components'
 
 import githubIssues from './gh-issues.png'
-import trelloCard from './trello-card.png'
 import twitter from './twitter.png'
 
 // It's called AperitifPost because original idea was to have a Postman like experience here
@@ -31,10 +31,12 @@ class AperitifPost extends React.PureComponent {
             'What api endpoint data will this container be responsible for?'
           ) : (
             <span>
-              Welcome to the react app (or feature) starter editor.
+              <br />
+              <Logo />
+              Welcome to the React app (or feature) starter editor.
               <br />
               <br />
-              Aperitif uses the response shapes of api endpoints intelligently.
+              Aperitif uses sample API data to help create React code.
               <br />
             </span>
           )}
@@ -44,7 +46,7 @@ class AperitifPost extends React.PureComponent {
           name="apiResponseData"
           cols="1000"
           rows="1000"
-          placeholder="Paste a sample api endpoint json response here... or click an example endpoint/data shape below." // → ←
+          placeholder="Paste an APIs JSON response here... or click an example response below to try it out." // → ←
           {...input}
         />
         <Error error={error}>{error}</Error>
@@ -55,8 +57,9 @@ class AperitifPost extends React.PureComponent {
             <br />
             Browse the files, try dragging props onto the existing JSX,
             renaming components, and adding styles. When you're done, download or export
-            to StackBlitz to continue editing. For more tips, actions, and tutorials,
-            see here.
+            to StackBlitz to continue editing.
+            <br />
+            <br />
           </p>
         )}
         <Button
@@ -69,13 +72,10 @@ class AperitifPost extends React.PureComponent {
           onClick={() => input.onChange({ target: '' })}
           text="Back"
         />
-        <br />
-        <br />
         {!validJsonEntered && (
           <div>
             <Image onClick={populate('github-issues')} src={githubIssues} alt="github issues" />
             <Image onClick={populate('twitter')} src={twitter} alt="twitter tweets" />
-            <Image onClick={populate('trello-card')} src={trelloCard} alt="trello card" />
           </div>
         )}
       </React.Fragment>
@@ -113,6 +113,7 @@ const IntroText = styled.p`
 `
 
 const TextArea = styled.textarea`
+  // margin-top: 15px;
   white-space: pre;
   resize:  none;
   border: 1px solid #ccc;

@@ -1,3 +1,4 @@
+import C from 'check-types'
 import T from 'prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
@@ -14,7 +15,7 @@ const Prop = ({ prop: { nameId, payload }, skipFinalComma, connectDragSource }) 
         style={{
           userSelect: 'text',
         }}
-        data-tip={JSstringify(payload, null, 2, { maxDepth: 2, maxValues: 10 })}
+        data-tip={getDataTip(payload)}
         data-for="prop"
         data-delay-show="100"
       >
@@ -35,3 +36,15 @@ Prop.propTypes = {
 export default styled(Prop).as.span`
   cursor: pointer;
 `
+
+const getDataTip = payload =>
+  JSstringify(payload, replacer, 2, { maxDepth: 2, maxValues: 15 })
+    .replace(/undefined,\n/g, '')
+    .replace(/undefined\n/g, '  ...\n')
+
+const replacer = (value, indentation, stringify) => {
+  if (C.string(value) && value.length > 70) {
+    return stringify(`${value.substring(0, 70)}...`)
+  }
+  return stringify(value)
+}

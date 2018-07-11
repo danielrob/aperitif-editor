@@ -2,7 +2,7 @@ import React from 'react'
 
 import GithubButton from './GithubButton'
 
-const StarOnGithub = () => (
+const StarOnGithub = ({ hide }) => !hide && (
   <GithubButton left="40%" leftCalc="calc(58% - 155px)">
     <a href="https://github.com/danielrob/aperitif">
       <Star />

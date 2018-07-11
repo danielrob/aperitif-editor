@@ -3,6 +3,9 @@ import { createSelector } from 'reselect'
 import { DIR, SC } from 'constantz'
 import { sortAlphabetically } from 'utils'
 
+/*
+  Base selectors
+*/
 export const selectProjectInitialized = s => s.app.present.editor.projectInitialized
 export const selectCurrentFileId = (s, p) => p.currentFileId || s.app.present.editor.currentFileId
 export const selectSelectedFileId = s => s.app.present.editor.selectedFileId
@@ -16,8 +19,9 @@ export const selectDeclParams = s => s.app.present.declParams || {}
 export const selectPreferences = s => s.app.present.preferences
 export const selectSemis = s => s.app.present.preferences.semis
 
+
 /*
-  Atomic model selectors
+  Model selector creators - `makeSelect${modelName}`
 */
 export const makeSelectInvocation = () => createSelector(
   selectInvocations,
@@ -31,9 +35,6 @@ export const makeSelectInvocation = () => createSelector(
   }
 )
 
-/*
-  Single Model selectors - `makeSelect${modelName}`
-*/
 export const makeSelectName = () => (state, props) => selectNames(state)[props.nameId]
 
 export const makeSelectDeclaration = () => createSelector(
