@@ -72,7 +72,7 @@ export default function appReducer(state, action) {
     }
 
     case INTIALIZE_APP: {
-      return initializeFromData(state, action.payload)
+      return initializeFromData(state, action.payload, action.meta)
     }
 
     case NEW_COMPONENT_BUNDLE_PLEASE: {
@@ -819,7 +819,9 @@ export const resetProject = createAction(
 )
 
 export const initializeApp = createAction(
-  INTIALIZE_APP
+  INTIALIZE_APP,
+  null,
+  (data, baseName) => baseName || 'Items',
 )
 
 export const newComponentBundlePlease = createAction(

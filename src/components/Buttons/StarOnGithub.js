@@ -4,7 +4,7 @@ import GithubButton from './GithubButton'
 
 const StarOnGithub = ({ hide }) => !hide && (
   <GithubButton left="40%" leftCalc="calc(58% - 155px)">
-    <a href="https://github.com/danielrob/aperitif">
+    <a href="https://github.com/danielrob/aperitif-editor" target="_blank" rel="noopener noreferrer">
       <Star />
       Star on Github{' '}
       <span role="img" aria-label="ribbon">

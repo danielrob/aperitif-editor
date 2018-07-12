@@ -29,15 +29,16 @@ class AperitifPostContainer extends React.PureComponent {
     this.setState({ error: null })
   }
 
-  populate = key => () => {
+  populate = (key, baseName) => () => {
     this.setState({
       textarea: JSON.stringify(exampleData[key], null, 2),
+      baseName,
     })
   }
 
   submit = () => {
     const { initializeApp, newContainerPlease, projectIsInitalized } = this.props
-    const { textarea } = this.state
+    const { textarea, baseName } = this.state
     const { error, json } = getJSON(textarea)
 
     if (error) {
@@ -47,7 +48,7 @@ class AperitifPostContainer extends React.PureComponent {
     if (projectIsInitalized) {
       newContainerPlease(json)
     } else {
-      initializeApp(json)
+      initializeApp(json, baseName)
     }
   }
 

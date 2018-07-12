@@ -2,12 +2,12 @@ import { PROJECT_INDEX, INDEX_NAME_ID, exportTypes } from 'constantz'
 import orm from 'orm'
 import addNewContainer from './addNewContainer'
 
-export default function initializeFromData(state, apiResponse) {
+export default function initializeFromData(state, apiResponse, baseName) {
   const session = orm.session(state)
 
   const { Declaration, File } = session
 
-  addNewContainer(session, apiResponse, 'Items')
+  addNewContainer(session, apiResponse, baseName)
 
   // files
   const indexFile = File.create({

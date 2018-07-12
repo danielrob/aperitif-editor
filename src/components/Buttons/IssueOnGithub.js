@@ -4,7 +4,7 @@ import GithubButton from './GithubButton'
 
 const IssueOnGithub = ({ hide }) => !hide && (
   <GithubButton left="58%">
-    <a href="https://github.com/danielrob/aperitif">
+    <a href="https://github.com/danielrob/aperitif-editor" target="_blank" rel="noopener noreferrer">
       <IssueOpenIcon />
       Get involved{' '}
       <span role="img" aria-label="let's do this">

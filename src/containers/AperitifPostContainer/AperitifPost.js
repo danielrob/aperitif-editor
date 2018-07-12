@@ -2,6 +2,7 @@ import T from 'prop-types'
 import { forbidExtraProps } from 'airbnb-prop-types'
 import React from 'react'
 import styled from 'styled-as-components'
+import ReactTooltip from 'react-tooltip'
 
 
 import theme from 'theme-proxy'
@@ -9,9 +10,15 @@ import { Logo } from 'components'
 
 import githubIssues from './gh-issues.png'
 import twitter from './twitter.png'
+import nothingtodo from './nothingtodo.png'
 
 // It's called AperitifPost because original idea was to have a Postman like experience here
 class AperitifPost extends React.PureComponent {
+  componentDidUpdate() {
+    ReactTooltip.hide()
+    ReactTooltip.show()
+  }
+
   render() {
     const {
       projectIsInitalized,
@@ -65,7 +72,7 @@ class AperitifPost extends React.PureComponent {
         <Button
           canSubmit={validJsonEntered}
           onClick={submit}
-          text={projectIsInitalized ? 'Add Container' : 'Get Apetizers'}
+          text={projectIsInitalized ? 'Add Container' : 'Get Appetizers'}
         />
         <Button
           canSubmit={validJsonEntered}
@@ -73,11 +80,38 @@ class AperitifPost extends React.PureComponent {
           text="Back"
         />
         {!validJsonEntered && (
-          <div>
-            <Image onClick={populate('github-issues')} src={githubIssues} alt="github issues" />
-            <Image onClick={populate('twitter')} src={twitter} alt="twitter tweets" />
-          </div>
+          <Examples>
+            <em>Samples:</em>
+            <br />
+            <Image
+              onClick={populate('github-issues', 'GithubIssues')}
+              src={githubIssues}
+              alt="github issues"
+              data-tip="(Re)create a user interface for a list of github issues"
+              data-for="sample-description"
+            />
+            <Image
+              onClick={populate('twitter', 'Tweets')}
+              src={twitter}
+              alt="twitter tweets"
+              data-tip="(Re)create a user interface for a list of tweets"
+              data-for="sample-description"
+            />
+            <Image
+              onClick={populate('nothingtodo', 'NothingToDoLists')}
+              src={nothingtodo}
+              alt="nothing to do app"
+              data-tip="Lists of relaxing thoughts, and things you don't have to do"
+              data-for="sample-description"
+            />
+          </Examples>
         )}
+        <ReactTooltip
+          id="sample-description"
+          effect="solid"
+          showDelay={100}
+          getContent={dataTip => <pre>{dataTip}</pre>}
+        />
       </React.Fragment>
     )
   }
@@ -113,7 +147,6 @@ const IntroText = styled.p`
 `
 
 const TextArea = styled.textarea`
-  // margin-top: 15px;
   white-space: pre;
   resize:  none;
   border: 1px solid #ccc;
@@ -137,18 +170,19 @@ const TextArea = styled.textarea`
 const Button = styled.button.attrs({
   children: props => props.text,
 })`
-  ${props => !props.canSubmit && 'visibility: hidden;'} white-space: nowrap;
+  ${props => !props.canSubmit && 'display: none;'}
+  white-space: nowrap;
   color: black;
   padding: 6px;
   background-color: #e6e6e6;
+  border: 3px solid #e6e6e6;
+  border-radius: 5px;
+  margin: 4px;
   &:hover {
     background-color: #010431;
     border: 3px solid #010431;
     color: #ccc;
   }
-  border: 3px solid #e6e6e6;
-  border-radius: 5px;
-  margin: 4px;
 `
 
 const Image = styled.img`
@@ -157,6 +191,10 @@ const Image = styled.img`
   height: 80px;
   border-radius: 10px;
   margin: 10px;
+`
+
+const Examples = styled.div`
+  margin-top: 15px;
 `
 
 
