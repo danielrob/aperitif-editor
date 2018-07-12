@@ -19,10 +19,14 @@ const FileIcon = ({ file: { name, isCurrent, type, isDirectory, containsCurrent 
 const Pointer = styled.span.attrs({
   children: '👉',
 })`
-  margin-left: -13px;
-  margin-right: -7px;
+  margin-left: -25px;
+  margin-right: 2px;
   position: relative;
   bottom: -2px;
+  font-size: 20px;
+  display: inline-block;
+  margin-top: -4px;
+  margin-bottom: -4px;
 `
 
 export default styled(FileIcon).as.span``
