@@ -107,7 +107,8 @@ export default function appReducer(state, action) {
 
 
     case NEW_CONTAINER_PLEASE: {
-      return addNewContainer(session, action.payload, 'New')
+      addNewContainer(session, action.payload, action.meta)
+      return session.state
     }
 
 
@@ -833,7 +834,9 @@ export const newStyledComponentPlease = createAction(
 )
 
 export const newContainerPlease = createAction(
-  NEW_CONTAINER_PLEASE
+  NEW_CONTAINER_PLEASE,
+  null,
+  (data, baseName) => baseName || 'Data',
 )
 
 export const addNewComponentToInvocationWithChildren = createAction(

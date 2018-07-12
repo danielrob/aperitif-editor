@@ -38,22 +38,27 @@ class AperitifPostContainer extends React.PureComponent {
 
   submit = () => {
     const { initializeApp, newContainerPlease, projectIsInitalized } = this.props
-    const { textarea, baseName } = this.state
+    const { textarea } = this.state
+    let { baseName } = this.state
     const { error, json } = getJSON(textarea)
+
+    if (document.getElementById('baseName') && !baseName) {
+      baseName = document.getElementById('baseName').value
+    }
 
     if (error) {
       return this.setState({ error })
     }
 
     if (projectIsInitalized) {
-      newContainerPlease(json)
+      newContainerPlease(json, baseName)
     } else {
       initializeApp(json, baseName)
     }
   }
 
   render() {
-    const { projectIsInitalized } = this.state
+    const { projectIsInitalized } = this.props
     const { error, textarea } = this.state
 
     return (

@@ -11,6 +11,7 @@ import { Logo } from 'components'
 import githubIssues from './gh-issues.png'
 import twitter from './twitter.png'
 import nothingtodo from './nothingtodo.png'
+import initializeFromData from '../../duck/tasks/initializeFromData';
 
 // It's called AperitifPost because original idea was to have a Postman like experience here
 class AperitifPost extends React.PureComponent {
@@ -35,7 +36,7 @@ class AperitifPost extends React.PureComponent {
       <React.Fragment>
         <IntroText>
           {projectIsInitalized ? (
-            'What api endpoint data will this container be responsible for?'
+            'What data will this container be responsible for?'
           ) : (
             <span>
               <br />
@@ -53,11 +54,16 @@ class AperitifPost extends React.PureComponent {
           name="apiResponseData"
           cols="1000"
           rows="1000"
-          placeholder="Paste an APIs JSON response here... or click an example response below to try it out." // → ←
+          placeholder={
+            projectIsInitalized
+              ? 'Paste another API JSON response here...'
+              : 'Paste an APIs JSON response here... or' +
+              'click an example response below to try it out.'
+          }
           {...input}
         />
         <Error error={error}>{error}</Error>
-        {validJsonEntered && (
+        {validJsonEntered && !projectIsInitalized && (
           <p>
             Great! You're now going to load an editor with drag and drop, and which intelligently understands React.
             <br />
@@ -67,6 +73,13 @@ class AperitifPost extends React.PureComponent {
             to StackBlitz to continue editing.
             <br />
             <br />
+          </p>
+        )}
+        {validJsonEntered && projectIsInitalized && (
+          <p>
+            Great! What's a base name for this data?
+            <br />
+            <BaseNameInput id="baseName" type="text" placeholder="enter name" />
           </p>
         )}
         <Button
@@ -79,7 +92,7 @@ class AperitifPost extends React.PureComponent {
           onClick={() => input.onChange({ target: '' })}
           text="Back"
         />
-        {!validJsonEntered && (
+        {!validJsonEntered && !projectIsInitalized && (
           <Examples>
             <em>Samples:</em>
             <br />
@@ -195,6 +208,14 @@ const Image = styled.img`
 
 const Examples = styled.div`
   margin-top: 15px;
+`
+
+const BaseNameInput = styled.input`
+  border: 1px solid #ccc;
+  outline: default;
+  padding: 7px;
+  margin: 4px 0;
+  border-radius: 4px;
 `
 
 
