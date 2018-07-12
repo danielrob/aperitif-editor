@@ -57,7 +57,7 @@ class AperitifPost extends React.PureComponent {
           placeholder={
             projectIsInitalized
               ? 'Paste another API JSON response here...'
-              : 'Paste an APIs JSON response here... or' +
+              : 'Paste an API JSON response here... or ' +
               'click an example response below to try it out.'
           }
           {...input}
