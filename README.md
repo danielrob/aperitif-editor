@@ -23,6 +23,8 @@
 
 Aperitif uses JSON you provide and a drag and drop interface to help you quickly flesh out an app or feature intelligently. It allows you to interact with React code by dragging things like props, files, and components to quickly create a component tree, as well as adding styles via styled-components.
 
+For a longer introduction, [see the medium post announcing Aperitif](https://medium.com/@danielrob/introducing-aperitif-the-react-app-or-feature-starter-editor-4d7e392bd887). 
+
 ### How can I use it?
 
 - It's deployed at [https://aperitif.netlify.com/](https://aperitif.netlify.com/)
